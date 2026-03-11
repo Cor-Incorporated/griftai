@@ -14,7 +14,7 @@ export const name = import.meta.env.SITE_NAME || 'Grift';
 /** Site description for SEO and meta tags */
 export const description =
   import.meta.env.SITE_DESCRIPTION ||
-  '開発案件の見積に、説明できる理由を。これまでの実績と市場感を整理し、相手に伝わる提案の土台をつくる日本向けベータ版。';
+  '開発案件の見積に、説明できる理由を。これまでの実績と市場感を整理し、相手に伝わる提案の土台をつくる。現在はベータ提供中。';
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';

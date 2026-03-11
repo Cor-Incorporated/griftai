@@ -73,10 +73,10 @@ const containerClass = align === 'center' ? `${maxWidthClass} mx-auto` : maxWidt
 <section class:list={['py-section', bgClass]}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class:list={[containerClass, alignClass]}>
-      <h1 class:list={['font-bold text-text leading-tight tracking-tight', titleSizeClass]}>
+      <h1 class:list={['font-bold text-balance text-text leading-[1.15]', titleSizeClass]}>
         {title}
       </h1>
-      {subtitle && <p class="mt-6 text-lg text-text-muted leading-relaxed">{subtitle}</p>}
+      {subtitle && <p class="mt-6 text-pretty text-lg leading-8 text-text-muted">{subtitle}</p>}
       <slot />
     </div>
   </div>

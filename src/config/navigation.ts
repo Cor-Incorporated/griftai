@@ -18,16 +18,8 @@ export const navigation: Navigation = {
    * - cta: Call-to-action buttons on the right
    */
   header: {
-    main: [
-      { label: '課題', href: '/#problem' },
-      { label: '仕組み', href: '/#solution' },
-      { label: '料金', href: '/pricing' },
-      { label: 'FAQ', href: '/faq' },
-    ],
-    cta: [
-      { label: 'Cor.inc', href: 'https://cor-jp.com/', variant: 'ghost' },
-      { label: 'ベータ相談をする', href: 'https://cor-jp.com/contact/', variant: 'primary' },
-    ],
+    main: [],
+    cta: [{ label: '自社の案件で使えるか相談する', href: 'https://cor-jp.com/contact/', variant: 'primary' }],
   },
 
   /**
@@ -42,14 +34,14 @@ export const navigation: Navigation = {
       { label: '問い合わせ', href: 'https://cor-jp.com/contact/' },
     ],
     solutions: [
-      { label: 'AI開発見積', href: '/#proposal' },
-      { label: 'GitHub実績分析', href: '/#github-intelligence' },
-      { label: '市場 evidence', href: '/#market-evidence' },
-      { label: '運用と精度改善', href: '/#intelligence-loop' },
+      { label: '見積の理由づけ', href: '/#proof' },
+      { label: '提案の標準化', href: '/#value' },
+      { label: '使いどころ', href: '/#scenarios' },
+      { label: '導入の流れ', href: '/#flow' },
     ],
     resources: [
       { label: '日本市場向け Beta', href: '/#hero' },
-      { label: 'ベータ pricing', href: '/pricing' },
+      { label: 'ベータ料金', href: '/pricing' },
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],

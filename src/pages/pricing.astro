@@ -12,98 +12,82 @@ const plans = [
     name: 'Solo Beta',
     price: '¥9,800',
     caption: '/ 月',
-    description: '個人やソロ開発者向け。案件整理と見積の型化を始めたい人向けです。',
-    features: [
-      '1ワークスペース / 1ユーザー',
-      '月5案件まで',
-      '基本ヒアリング整理',
-      'GitHub 実績分析の基本表示',
-      'メールサポート',
-    ],
+    fit: '個人の受託、紹介案件、副業案件の見積を型化したい人向け',
+    features: ['1ユーザー', '月5案件まで', '相談整理の基本フロー', 'GitHub 実績分析の基本表示'],
   },
   {
     name: 'Studio Beta',
     price: '¥29,800',
     caption: '/ 月',
-    description:
-      '2-5人規模の AI / Web 受託チーム向け。営業資料としての再現性を作りたいチームに最適です。',
+    fit: '2-5人で提案の再現性を作りたい小規模チーム向け',
     features: [
-      '1ワークスペース / 5ユーザーまで',
+      '5ユーザーまで',
       '月20案件まで',
       'GitHub / Repository Intelligence',
-      'Three-Way Proposal ベータ',
-      '優先サポート',
+      '提案理由の整理支援',
     ],
     highlighted: true,
-  },
-  {
-    name: 'Growth Beta',
-    price: '¥79,800',
-    caption: '/ 月',
-    description: '提案標準化や承認フローまで見据える小規模開発会社向けです。',
-    features: [
-      '1ワークスペース / 10ユーザーまで',
-      '月50案件まで',
-      'Studio Beta の全内容',
-      '引き継ぎ支援の優先提供対象',
-      '導入オンボーディング',
-    ],
   },
   {
     name: 'Enterprise',
     price: '要問い合わせ',
     caption: '',
-    description: '高いセキュリティ要件、個別導入、契約対応が必要な組織向けです。',
-    features: ['個別見積', '導入支援', '権限設計', '価格ポリシー相談', '契約対応'],
+    fit: '権限設計、セキュリティ要件、契約対応が必要な組織向け',
+    features: ['個別見積', '導入支援', '権限設計', '契約対応'],
   },
 ];
 
-const fitGuides = [
+const chooseGuides = [
   {
-    title: 'Solo Beta が向くケース',
-    body: '案件相談のたびに見積の作り方がぶれる、GitHub 実績を営業資料に変えたい、まずは一人で型化したい場合。',
+    title: '個人でまず試したい',
+    body: 'Solo Beta から始めるのが自然です。毎回の見積のぶれを減らし、自分の案件で型が作れるかを確認する段階に向いています。',
   },
   {
-    title: 'Studio Beta が向くケース',
-    body: '小規模チームで提案の再現性を上げたい、Three-Way Proposal を使って価格説明の土台を作りたい場合。',
+    title: '2-5人で提案を標準化したい',
+    body: 'Studio Beta が中心です。代表だけが説明できる見積から、チームで共有できる提案理由へ寄せたい会社に向いています。',
   },
   {
-    title: 'Growth Beta / Enterprise が向くケース',
-    body: '受託比率が高い、案件数が増えてきた、導入支援や運用レビュー、セキュリティ要件まで含めて整えたい場合。',
+    title: '導入条件を個別に詰めたい',
+    body: '権限、契約、支援体制まで含めるなら Enterprise を前提にご相談ください。',
   },
+];
+
+const nextSteps = [
+  '問い合わせフォームから、案件の種類やチーム規模を送る',
+  '3営業日以内に、使いどころと適合プランの一次回答を受ける',
+  '必要に応じて、ベータ導入またはテスター条件を個別にすり合わせる',
 ];
 
 const pricingFaqs = [
   {
     question: 'この価格は正式版の価格ですか？',
     answer:
-      'いいえ。現在表示しているのはベータ料金です。価格や機能範囲は、ベータ期間中に変更される場合があります。',
+      'いいえ。現在表示しているのはベータ料金です。価格や提供範囲は、ベータ期間中に見直す場合があります。',
+  },
+  {
+    question: '最初から課金が始まりますか？',
+    answer: 'いいえ。まずは案件や使いどころを伺い、ベータとして合うかを確認する進め方です。',
   },
   {
     question: 'アルファテスター向けの無償利用はありますか？',
     answer:
-      'あります。検証内容や協力範囲に応じて、無償または特別価格でご案内する可能性があります。詳細はお問い合わせください。',
+      'あります。検証内容や協力範囲に応じて、無償または特別価格をご案内する可能性があります。',
   },
   {
-    question: 'セルフサーブでそのまま申し込めますか？',
+    question: 'どのプランを選べばよいか分からないです。',
     answer:
-      '初期リリースでは自動課金や LP 内フォームを設けません。すべて Cor.inc の問い合わせ窓口での個別案内に寄せます。',
-  },
-  {
-    question: 'Enterprise は何が違いますか？',
-    answer:
-      '高いセキュリティ要件、権限設計、運用支援、契約対応など、標準プランを超える条件を個別に整理します。',
+      '会社規模よりも、誰が見積を作るか、どれだけ属人化しているか、どの頻度で案件相談が来るか、で選ぶ方が実態に合います。',
   },
 ];
 ---
 
 <MarketingLayout
   title={`ベータ料金 - ${siteConfig.name}`}
-  description="Grift Beta の料金プランとベータ提供方針。"
+  description="Grift Beta の料金プランと、どの会社がどのプランから始めるべきかの目安。"
 >
   <PageHeader
     title="ベータ料金"
-    subtitle="正式版の定価ではなく、ベータ期間中の価格です。アルファテスター向けの無償または特別価格の相談も受け付けます。"
+    subtitle="正式版の定価ではありません。まずは、どの使いどころから始めるべきかを判断しやすいように、現在のベータ料金を公開しています。"
   />
 
   <section class="bg-background py-section">
@@ -111,13 +95,14 @@ const pricingFaqs = [
       <div
         class="rounded-2xl border border-primary/30 bg-primary/5 p-5 text-sm leading-7 text-text-muted"
       >
-        <p class="font-semibold text-text">価格表示に関する注意</p>
+        <p class="font-semibold text-text">価格表示に関する前提</p>
         <p class="mt-2">
-          現時点の価格は <span class="font-medium text-text">ベータ料金</span> です。機能範囲やプラン構成は、ベータ検証の結果に応じて更新される場合があります。
+          今の料金は <span class="font-medium text-text">ベータ料金</span>
+          です。正式版の価格ではなく、アルファテスター向けの無償または特別価格も含めて運用します。
         </p>
       </div>
 
-      <div class="mt-10 grid gap-6 xl:grid-cols-4">
+      <div class="mt-10 grid gap-6 lg:grid-cols-3">
         {
           plans.map((plan) => (
             <article
@@ -127,10 +112,8 @@ const pricingFaqs = [
               ]}
             >
               <p class="text-lg font-semibold text-text">{plan.name}</p>
-              <p class="mt-3 min-h-18 text-pretty text-sm leading-7 text-text-muted">
-                {plan.description}
-              </p>
-              <div class="mt-7 min-h-16">
+              <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">{plan.fit}</p>
+              <div class="mt-6">
                 <p class="text-4xl font-bold tabular-nums text-text">{plan.price}</p>
                 {plan.caption && <p class="mt-1 text-sm text-text-muted">{plan.caption}</p>}
               </div>
@@ -151,7 +134,7 @@ const pricingFaqs = [
                     : 'border border-border text-text hover:bg-background',
                 ]}
               >
-                {plan.name === 'Enterprise' ? 'Enterprise を相談する' : 'ベータ相談をする'}
+                {plan.name === 'Enterprise' ? '個別導入を相談する' : 'このプランで相談する'}
               </a>
             </article>
           ))
@@ -163,14 +146,14 @@ const pricingFaqs = [
   <section class="bg-surface py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-primary">プランの選び方</p>
+        <p class="text-sm font-semibold text-primary">どのプランから始めるべきか</p>
         <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          どのプランから始めるべきか。
+          会社規模ではなく、見積の悩み方で選ぶ方が失敗しません。
         </h2>
       </div>
       <div class="mt-10 grid gap-6 lg:grid-cols-3">
         {
-          fitGuides.map((guide) => (
+          chooseGuides.map((guide) => (
             <article class="rounded-2xl border border-border bg-background p-6">
               <h3 class="text-xl font-semibold text-text">{guide.title}</h3>
               <p class="mt-3 text-pretty leading-7 text-text-muted">{guide.body}</p>
@@ -183,11 +166,32 @@ const pricingFaqs = [
 
   <FAQSection
     title="料金に関する FAQ"
-    subtitle="正式版の料金ではなくベータ期間中の価格である点を前提に、よく聞かれる内容をまとめています。"
+    subtitle="価格だけでなく、申し込みの進め方やベータ期間中の扱いも含めて、先に確認されやすい内容をまとめています。"
     faqs={pricingFaqs}
     variant="accordion"
     background="default"
   />
+
+  <section class="bg-surface py-section">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="rounded-3xl border border-border bg-background p-8 sm:p-10">
+        <p class="text-sm font-semibold text-primary">問い合わせ後の流れ</p>
+        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+          何を送ればよくて、最初に何が進むのか。
+        </h2>
+        <ol class="mt-8 grid gap-4 lg:grid-cols-3">
+          {
+            nextSteps.map((step, index) => (
+              <li class="rounded-2xl border border-border bg-surface p-5">
+                <p class="text-sm font-semibold text-primary">STEP {index + 1}</p>
+                <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{step}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -195,19 +199,19 @@ const pricingFaqs = [
         class="rounded-3xl border border-border bg-surface p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
       >
         <div class="max-w-2xl">
-          <p class="text-sm font-semibold text-primary">問い合わせ</p>
+          <p class="text-sm font-semibold text-primary">次の一歩</p>
           <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-            プラン選定に迷う場合は、案件状況を添えてご相談ください。
+            料金表だけで決めず、いま抱えている案件相談を前提にご相談ください。
           </h2>
           <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            ベータ版では、料金より先に「どの検証を行いたいか」を一緒に整理した方が早いケースが多いです。
+            ベータ版では、料金より先に「この案件で本当に役立つか」を一緒に確認した方が早いケースが多いです。お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡します。
           </p>
         </div>
         <a
           href={contactUrl}
           class="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark lg:mt-0"
         >
-          Cor.inc に問い合わせる
+          導入相談をする
         </a>
       </div>
     </div>

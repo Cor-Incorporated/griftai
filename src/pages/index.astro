@@ -1,0 +1,428 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+
+const challenges = [
+  {
+    title: 'AI案件の価格が案件ごとにぶれる',
+    body: '要件が曖昧なまま相談が始まり、営業経験や空気感で価格が揺れやすい状態を減らします。',
+  },
+  {
+    title: '技術力を営業資料に変えづらい',
+    body: '小規模チームでも GitHub 実績を根拠に変換し、提案で説明できる材料を作る前提で設計しています。',
+  },
+  {
+    title: '見積のあとが続かない',
+    body: '相談、要件整理、提案、承認、引き継ぎまでを一本の流れとして扱うのが Grift の前提です。',
+  },
+];
+
+const capabilities = [
+  '曖昧な相談を要件に寄せるヒアリング設計',
+  'GitHub 実績をもとにした Repository Intelligence',
+  '市場 evidence を使った価格根拠づくり',
+  'Three-Way Proposal による比較しやすい提案',
+  '運用データを返して精度を上げる intelligence loop',
+  'ベータ期間は日本市場向けのユースケースに集中',
+];
+
+const workflows = [
+  '相談内容を整理する',
+  '要件と前提を揃える',
+  'GitHub 実績と市場 evidence を重ねる',
+  '提案価格と判断材料を揃える',
+  '必要に応じて引き継ぎへつなぐ',
+];
+
+const faqPreview = [
+  {
+    q: 'ベータ版ではどこまで使えますか？',
+    a: '初期ベータでは、GitHub 実績の可視化、見積根拠づくり、提案に必要な情報設計を中心に順次提供します。',
+  },
+  {
+    q: 'LP 内に問い合わせフォームはありますか？',
+    a: '初期リリースでは設置せず、Cor株式会社の既存問い合わせフォームへ集約します。',
+  },
+  {
+    q: 'AI の見積はどこまで信用できますか？',
+    a: '単一の AI 出力で完結させず、GitHub 実績と市場 evidence を重ね、人間の判断材料として使う前提です。',
+  },
+];
+---
+
+<MarketingLayout
+  title="AI開発の見積を、勘ではなく根拠で出す"
+  description="Grift Beta は、日本の小規模 AI 開発チーム向けに、GitHub実績と市場証拠をもとに見積・提案を整理する上流工程インテリジェンスです。"
+>
+  <section id="hero" class="border-b border-border">
+    <div
+      class="mx-auto grid max-w-7xl gap-16 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:px-8 lg:py-28"
+    >
+      <div class="space-y-8">
+        <div
+          class="inline-flex items-center rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-text-muted"
+        >
+          日本市場向け Beta
+        </div>
+        <div class="space-y-5">
+          <h1
+            class="max-w-4xl text-4xl font-semibold leading-tight text-balance text-text sm:text-5xl lg:text-6xl"
+          >
+            AI開発の見積を、
+            <br />
+            勘ではなく根拠で出す。
+          </h1>
+          <p class="max-w-2xl text-lg text-text-muted text-pretty">
+            Grift は、GitHub 実績と市場 evidence
+            を重ねて、AI開発の見積・提案を整理する日本向けの上流工程インテリジェンスです。まずはベータ版として、小規模な
+            AI 受託チームとソロ開発者の実務に寄せて構築します。
+          </p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a
+            href="https://cor-jp.com/contact/"
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
+          >
+            ベータ版について相談する
+          </a>
+          <a
+            href="/pricing"
+            class="inline-flex items-center justify-center rounded-md border border-border bg-surface px-5 py-3 text-base font-medium text-text transition-colors hover:border-primary hover:text-primary"
+          >
+            ベータ料金を見る
+          </a>
+        </div>
+        <p class="text-sm text-text-muted text-pretty">
+          すべての CTA は現時点で Cor株式会社の問い合わせ窓口へ接続します。LP
+          内の独自フォームは、後から追加しやすい構成で設計します。
+        </p>
+      </div>
+
+      <aside class="rounded-2xl border border-border bg-surface p-6">
+        <div class="space-y-6">
+          <div class="space-y-2">
+            <p class="text-sm font-semibold uppercase text-text-muted">Grift が解くこと</p>
+            <h2 class="text-2xl font-semibold text-balance text-text">
+              見積の不透明さを、提案に耐える形へ変える
+            </h2>
+          </div>
+          <div class="grid gap-4">
+            <div class="rounded-xl border border-border bg-background p-4">
+              <p class="text-sm font-semibold text-text">適正価格</p>
+              <p class="mt-2 text-sm text-text-muted text-pretty">
+                価格を安売りや強気相場感だけで決めず、内部実績と外部 evidence
+                を並べて判断する前提を作ります。
+              </p>
+            </div>
+            <div class="rounded-xl border border-border bg-background p-4">
+              <p class="text-sm font-semibold text-text">GitHub で証明する</p>
+              <p class="mt-2 text-sm text-text-muted text-pretty">
+                実力を肩書きではなく、Repository Intelligence と Velocity
+                の文脈で説明しやすくします。
+              </p>
+            </div>
+            <div class="rounded-xl border border-border bg-background p-4">
+              <p class="text-sm font-semibold text-text">使うほど精度を上げる</p>
+              <p class="mt-2 text-sm text-text-muted text-pretty">
+                見積と実績の差を返して、次の提案を少しずつ現実に近づける設計思想を持ちます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="problem" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="max-w-3xl space-y-4">
+      <p class="text-sm font-semibold uppercase text-primary">課題</p>
+      <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+        AI導入や DX外注の相談は、要件が曖昧なまま始まりやすい。
+      </h2>
+      <p class="text-lg text-text-muted text-pretty">
+        SEO の観点でも、役に立つ情報を出せるサイトは「誰のどんな課題をどう解くか」が明確です。Grift
+        の LP
+        では、単なるツール説明ではなく、AI開発の見積、要件定義、提案のどこで困るのかを先に言語化します。
+      </p>
+    </div>
+    <div class="mt-10 grid gap-6 lg:grid-cols-3">
+      {
+        challenges.map((item) => (
+          <article class="rounded-2xl border border-border bg-surface p-6">
+            <h3 class="text-xl font-semibold text-balance text-text">{item.title}</h3>
+            <p class="mt-3 text-sm text-text-muted text-pretty">{item.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="solution" class="border-y border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+        <div class="space-y-4">
+          <p class="text-sm font-semibold uppercase text-primary">概要</p>
+          <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+            Grift は、AI開発の見積を作る前工程を整理するためのベータ版です。
+          </h2>
+          <p class="text-lg text-text-muted text-pretty">
+            いまの時点で約束できるのは、何でも完全自動化することではありません。相談内容を構造化し、GitHub
+            実績と市場情報を重ね、提案の根拠を整えることです。ベータ版であることを明示しつつ、営業と要件定義のあいだにある曖昧さを減らします。
+          </p>
+        </div>
+        <div id="capabilities" class="grid gap-4 sm:grid-cols-2">
+          {
+            capabilities.map((item) => (
+              <div class="rounded-2xl border border-border bg-background p-5 text-sm text-text-muted text-pretty">
+                {item}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proposal" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="max-w-3xl space-y-4">
+      <p class="text-sm font-semibold uppercase text-primary">Three-Way Proposal</p>
+      <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+        市場相場、自社実績、最終提案を、同じ画面で比較しやすくする。
+      </h2>
+      <p class="text-lg text-text-muted text-pretty">
+        Grift の提案は、相場だけを見るわけでも、自社都合だけで決めるわけでもありません。市場
+        evidence と GitHub 実績の両方を並べ、最終提案額の説明責任を持たせる方向で設計しています。
+      </p>
+    </div>
+    <div class="mt-10 grid gap-6 lg:grid-cols-3">
+      <div class="rounded-2xl border border-border bg-surface p-6">
+        <p class="text-sm font-semibold text-primary">1. 自社実績</p>
+        <h3 class="mt-3 text-2xl font-semibold text-text">GitHub 実績ベース</h3>
+        <p class="mt-4 text-sm text-text-muted text-pretty">
+          類似案件の開発履歴、Velocity、継続性をもとに、どこまで現実的に遂行できるかを確認します。
+        </p>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-6">
+        <p class="text-sm font-semibold text-primary">2. 市場相場</p>
+        <h3 class="mt-3 text-2xl font-semibold text-text">複数ソース evidence</h3>
+        <p class="mt-4 text-sm text-text-muted text-pretty">
+          単一ソースではなく、複数ソースで裏づけた価格レンジと引用を揃え、市場感を説明しやすくします。
+        </p>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-6">
+        <p class="text-sm font-semibold text-primary">3. 最終提案</p>
+        <h3 class="mt-3 text-2xl font-semibold text-text">提案に耐える見積</h3>
+        <p class="mt-4 text-sm text-text-muted text-pretty">
+          受注したい価格ではなく、説明できる価格へ寄せることで、失注リスクと安売りの両方を減らします。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="github-intelligence" class="border-y border-border bg-surface">
+    <div
+      class="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-8"
+    >
+      <div class="space-y-4">
+        <p class="text-sm font-semibold uppercase text-primary">GitHub 実績分析</p>
+        <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+          小規模チームでも、GitHub の積み上げを営業資料に変えやすくする。
+        </h2>
+        <p class="text-lg text-text-muted text-pretty">
+          受託や AI導入支援では、技術力があっても説明のしかたで負けやすいことがあります。Grift
+          は、Repository Intelligence
+          を使って、口頭では伝えにくい実績を提案の材料へ変える方向を目指します。
+        </p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">Repository Discovery</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            Organization や個人の repository を整理し、何を作ってきたかを把握しやすくします。
+          </p>
+        </div>
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">Velocity Metric</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            速度だけでなく、継続性や更新の厚みを見て、提案で語れる数値へ寄せます。
+          </p>
+        </div>
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">類似案件の裏づけ</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            類似ケースとの比較材料を持ち、受けるべき案件かどうかの判断にもつなげます。
+          </p>
+        </div>
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">営業武器としての可視化</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            営業が強い会社ではなく、実績のある会社が勝ちやすくなる状態を狙います。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="market-evidence" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+      <div class="space-y-4">
+        <p class="text-sm font-semibold uppercase text-primary">市場エビデンス</p>
+        <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+          相場感ではなく、相場の根拠を残す。
+        </h2>
+        <p class="text-lg text-text-muted text-pretty">
+          SEO や GEO の観点でも、検索ユーザーは「本当に比較できる情報」を求めます。Grift の LP
+          でも、価格を強気に見せるより、どういう evidence
+          を集めて比較するかを明示することを優先します。
+        </p>
+      </div>
+      <div class="space-y-4 rounded-2xl border border-border bg-surface p-6">
+        <div class="rounded-xl border border-border bg-background p-4">
+          <p class="text-sm font-semibold text-text">複数ソースで cross-validate</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            一つの検索結果を鵜呑みにせず、複数ソースで重なりを見る前提を持ちます。
+          </p>
+        </div>
+        <div class="rounded-xl border border-border bg-background p-4">
+          <p class="text-sm font-semibold text-text">citation を残す</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            価格レンジだけでなく、どこから引いたかを後から説明できるようにします。
+          </p>
+        </div>
+        <div class="rounded-xl border border-border bg-background p-4">
+          <p class="text-sm font-semibold text-text">矛盾はそのまま見せる</p>
+          <p class="mt-2 text-sm text-text-muted text-pretty">
+            合意しない evidence があるときは、人間レビュー前提で扱うのがベータの正しい姿勢です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="intelligence-loop" class="border-y border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="max-w-3xl space-y-4">
+        <p class="text-sm font-semibold uppercase text-primary">Intelligence Loop</p>
+        <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+          出した見積で終わらず、次の提案を少しずつ良くする。
+        </h2>
+        <p class="text-lg text-text-muted text-pretty">
+          Grift
+          の中核は、一回の見積生成ではなく、見積と実績の差を返していく思想です。ベータ版では成熟しきっていない部分もありますが、「使うほど精度が上がる」方向性を明示しておくことがプロダクト価値の軸になります。
+        </p>
+      </div>
+      <ol class="mt-10 grid gap-4 lg:grid-cols-5">
+        {
+          workflows.map((step, index) => (
+            <li class="rounded-2xl border border-border bg-background p-5">
+              <p class="text-sm font-semibold text-primary">STEP {index + 1}</p>
+              <p class="mt-3 text-sm text-text-muted text-pretty">{step}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div
+      class="grid gap-8 rounded-3xl border border-border bg-surface p-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(260px,0.9fr)] lg:p-10"
+    >
+      <div class="space-y-4">
+        <p class="text-sm font-semibold uppercase text-primary">ベータ料金</p>
+        <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+          ベータ版の価格は、今の成熟度に合わせて公開する。
+        </h2>
+        <p class="text-lg text-text-muted text-pretty">
+          今は正式版価格ではなくベータ料金を公開し、アルファテスター向けの無償または特別価格の可能性も残します。小規模チームが試しやすく、それでいて価値が弱く見えない水準に置きます。
+        </p>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">Solo Beta</p>
+          <p class="mt-2 text-2xl font-semibold text-text">¥9,800 / 月</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-background p-5">
+          <p class="text-sm font-semibold text-text">Studio Beta</p>
+          <p class="mt-2 text-2xl font-semibold text-text">¥29,800 / 月</p>
+        </div>
+        <a
+          href="/pricing"
+          class="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
+        >
+          料金とプラン詳細を見る
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div class="space-y-4">
+          <p class="text-sm font-semibold uppercase text-primary">FAQ Preview</p>
+          <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+            ベータ版として、過剰に約束しない。
+          </h2>
+          <p class="text-lg text-text-muted text-pretty">
+            実績がまだ限定的な段階では、成果を盛るよりも、何ができて何がこれからかを明確に書く方が信頼されます。FAQ
+            では、対象ユーザー、機能範囲、データの扱い、価格、問い合わせ導線を先回りして説明します。
+          </p>
+          <a
+            href="/faq"
+            class="inline-flex items-center justify-center rounded-md border border-border bg-background px-5 py-3 text-base font-medium text-text transition-colors hover:border-primary hover:text-primary"
+          >
+            FAQ をすべて見る
+          </a>
+        </div>
+        <div class="space-y-4">
+          {
+            faqPreview.map((item) => (
+              <article class="rounded-2xl border border-border bg-surface p-6">
+                <h3 class="text-lg font-semibold text-balance text-text">{item.q}</h3>
+                <p class="mt-3 text-sm text-text-muted text-pretty">{item.a}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="rounded-3xl border border-border bg-background p-8 lg:p-10">
+        <div class="max-w-3xl space-y-4">
+          <p class="text-sm font-semibold uppercase text-primary">問い合わせ</p>
+          <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+            AI開発の見積、提案、上流工程の整備について相談したい場合は、Cor株式会社へ。
+          </h2>
+          <p class="text-lg text-text-muted text-pretty">
+            現時点では、ベータ案内、Enterprise 相談、アルファテスター相談を含め、すべて
+            Cor株式会社の問い合わせ窓口で受け付けます。日本語ファーストで運用し、後から LP
+            内フォームへ移行しやすい構成で実装します。
+          </p>
+        </div>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="https://cor-jp.com/contact/"
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
+          >
+            Cor株式会社に問い合わせる
+          </a>
+          <a
+            href="https://cor-jp.com/"
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-md border border-border bg-surface px-5 py-3 text-base font-medium text-text transition-colors hover:border-primary hover:text-primary"
+          >
+            Cor株式会社のサイトを見る
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>

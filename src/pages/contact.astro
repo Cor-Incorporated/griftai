@@ -1,0 +1,85 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import PageHeader from '@sections/content/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+import { contactMethods, siteConfig } from '@/config';
+
+const contactUrl = 'https://cor-jp.com/contact/';
+---
+
+<MarketingLayout
+  title={`お問い合わせ - ${siteConfig.name}`}
+  description="Grift Beta の問い合わせ窓口。初期リリースでは Cor.inc の既存フォームへご案内します。"
+>
+  <PageHeader
+    title="お問い合わせ"
+    subtitle="初期リリースでは LP 内フォームを設置せず、Cor.inc の既存問い合わせ窓口へご案内します。将来的に自前フォームへ差し替えやすい構成で設計しています。"
+  />
+
+  <section class="bg-background py-section">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <article class="rounded-3xl border border-border bg-surface p-8">
+          <p class="text-sm font-semibold text-primary">相談窓口</p>
+          <h2 class="mt-3 text-balance text-3xl font-bold text-text">
+            ベータ相談は Cor.inc のフォームへ。
+          </h2>
+          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
+            ベータ利用、アルファテスター、Enterprise
+            相談のいずれも、当面は既存の問い合わせ導線に集約します。案件の概要、想定するチーム規模、相談したい内容が分かるとスムーズです。
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={contactUrl}
+              class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark"
+            >
+              Cor.inc お問い合わせフォームへ
+            </a>
+            <a
+              href="https://cor-jp.com/"
+              class="inline-flex items-center justify-center rounded-md border border-border px-6 py-3 font-medium text-text transition-colors hover:bg-background"
+            >
+              Cor.inc のサイトを見る
+            </a>
+          </div>
+        </article>
+
+        <article class="rounded-3xl border border-border bg-surface p-8">
+          <p class="text-sm font-semibold text-primary">事前にあるとよい情報</p>
+          <h2 class="mt-3 text-2xl font-bold text-text">問い合わせ時にあると助かる情報</h2>
+          <ul class="mt-6 space-y-4 text-text-muted">
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-1 size-5 text-primary" />
+              <span>案件の種類: 新規開発、追加開発、改修、比較検討など</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-1 size-5 text-primary" />
+              <span>チーム規模: 個人、2-5人、10人前後など</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-1 size-5 text-primary" />
+              <span>GitHub 実績の分析を使いたいかどうか</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-1 size-5 text-primary" />
+              <span>ベータ利用、アルファテスター、Enterprise 相談のどれに近いか</span>
+            </li>
+          </ul>
+          <div class="mt-8 space-y-3">
+            {
+              contactMethods.map((method) => (
+                <a
+                  href={method.href}
+                  class="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-text transition-colors hover:border-primary/40"
+                >
+                  <Icon name={method.icon} class="size-4 text-primary" />
+                  <span>{method.value}</span>
+                </a>
+              ))
+            }
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>

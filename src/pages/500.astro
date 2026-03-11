@@ -1,0 +1,14 @@
+---
+import ErrorLayout from '@/layouts/ErrorLayout.astro';
+import ErrorPage from '@components/error/ErrorPage.astro';
+
+Astro.response.status = 500;
+---
+
+<ErrorLayout title="サーバーエラー" description="サーバー側で問題が発生しました。">
+  <ErrorPage
+    code={500}
+    title="サーバーエラー"
+    message="現在、サーバー側で問題が発生しています。時間をおいて再度お試しください。継続する場合は Cor.inc までお問い合わせください。"
+  />
+</ErrorLayout>

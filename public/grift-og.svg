@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Grift Open Graph">
+  <rect width="1200" height="630" fill="#F7F1E6" />
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="#FFFDF8" stroke="#E3D7C4" stroke-width="4" />
+  <g fill="#C77726">
+    <rect x="120" y="126" width="128" height="128" rx="28" />
+    <path d="M166 162h32c17.673 0 32 14.327 32 32s-14.327 32-32 32h-32v-64Zm24 20v24h10c6.627 0 12-5.373 12-12s-5.373-12-12-12h-10Z" fill="#FFFDF8" />
+  </g>
+  <text x="120" y="332" fill="#33261A" font-size="64" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-weight="700">
+    AI開発の見積を、勘ではなく根拠で出す。
+  </text>
+  <text x="120" y="396" fill="#6E5A49" font-size="28" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    GitHub実績と市場 evidence をもとに、仕様・見積・提案の前工程を整える日本市場向け Beta
+  </text>
+  <g transform="translate(120 454)">
+    <rect width="244" height="72" rx="18" fill="#F3EBDD" stroke="#E3D7C4" />
+    <text x="26" y="45" fill="#6E5A49" font-size="28" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">griftai.org</text>
+  </g>
+</svg>

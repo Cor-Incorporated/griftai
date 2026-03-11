@@ -21,12 +21,12 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
     aria-label="Main navigation"
   >
     <a href="/" class="flex items-center gap-3 text-text">
-      <span
-        class="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
-      >
-        G
-      </span>
-      <span class="text-base font-semibold">{siteConfig.name}</span>
+      <img
+        src="/grift-wordmark.jpg"
+        alt={`${siteConfig.name} ロゴ`}
+        class="h-8 w-auto rounded-sm"
+        loading="eager"
+      />
     </a>
 
     {

@@ -12,20 +12,15 @@ const plans = [
     name: 'Solo Beta',
     price: '¥9,800',
     caption: '/ 月',
-    fit: '個人の受託、紹介案件、副業案件の見積を型化したい人向け',
-    features: ['1ユーザー', '月5案件まで', '相談整理の基本フロー', 'GitHub 実績分析の基本表示'],
+    fit: '個人の受託や紹介案件で、見積の迷いを減らしたい方向け',
+    features: ['1ユーザー', '月5案件まで', '相談整理の基本フロー', '実績整理の基本表示'],
   },
   {
     name: 'Studio Beta',
     price: '¥29,800',
     caption: '/ 月',
-    fit: '2-5人で提案の再現性を作りたい小規模チーム向け',
-    features: [
-      '5ユーザーまで',
-      '月20案件まで',
-      'GitHub / Repository Intelligence',
-      '提案理由の整理支援',
-    ],
+    fit: '2-5人で、提案の理由をチームで共有したい方向け',
+    features: ['5ユーザーまで', '月20案件まで', '開発実績の整理支援', '提案理由の整理支援'],
     highlighted: true,
   },
   {
@@ -40,11 +35,11 @@ const plans = [
 const chooseGuides = [
   {
     title: '個人でまず試したい',
-    body: 'Solo Beta から始めるのが自然です。毎回の見積のぶれを減らし、自分の案件で型が作れるかを確認する段階に向いています。',
+    body: 'Solo Beta から始めるのが自然です。毎回の見積のぶれを減らし、自分の案件で型が作れるかを確かめる段階に向いています。',
   },
   {
     title: '2-5人で提案を標準化したい',
-    body: 'Studio Beta が中心です。代表だけが説明できる見積から、チームで共有できる提案理由へ寄せたい会社に向いています。',
+    body: 'Studio Beta が中心です。代表だけが説明できる見積から、チームで共有できる提案理由へ変えていきたいときに向いています。',
   },
   {
     title: '導入条件を個別に詰めたい',
@@ -83,7 +78,7 @@ const pricingFaqs = [
 
 <MarketingLayout
   title={`ベータ料金 - ${siteConfig.name}`}
-  description="Grift Beta の料金プランと、どの会社がどのプランから始めるべきかの目安。"
+  description="Grift Beta の料金プランと、どの人やチームがどのプランから始めるべきかの目安。"
 >
   <PageHeader
     title="ベータ料金"
@@ -107,17 +102,17 @@ const pricingFaqs = [
           plans.map((plan) => (
             <article
               class:list={[
-                'rounded-3xl border p-7 shadow-sm',
+                'flex h-full flex-col rounded-3xl border p-7 shadow-sm',
                 plan.highlighted ? 'border-primary/40 bg-primary/5' : 'border-border bg-surface',
               ]}
             >
               <p class="text-lg font-semibold text-text">{plan.name}</p>
-              <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">{plan.fit}</p>
+              <p class="mt-3 min-h-14 text-pretty text-sm leading-7 text-text-muted">{plan.fit}</p>
               <div class="mt-6">
                 <p class="text-4xl font-bold tabular-nums text-text">{plan.price}</p>
                 {plan.caption && <p class="mt-1 text-sm text-text-muted">{plan.caption}</p>}
               </div>
-              <ul class="mt-7 space-y-3 text-sm text-text-muted">
+              <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
                 {plan.features.map((feature) => (
                   <li class="flex gap-3">
                     <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
@@ -148,7 +143,7 @@ const pricingFaqs = [
       <div class="max-w-3xl">
         <p class="text-sm font-semibold text-primary">どのプランから始めるべきか</p>
         <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          会社規模ではなく、見積の悩み方で選ぶ方が失敗しません。
+          チームの大きさではなく、どこで見積に悩むかで選ぶ方が合っています。
         </h2>
       </div>
       <div class="mt-10 grid gap-6 lg:grid-cols-3">

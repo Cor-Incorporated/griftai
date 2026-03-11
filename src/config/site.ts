@@ -14,7 +14,7 @@ export const name = import.meta.env.SITE_NAME || 'Grift';
 /** Site description for SEO and meta tags */
 export const description =
   import.meta.env.SITE_DESCRIPTION ||
-  'AI案件の見積に理由を持たせる。GitHub実績と市場相場をもとに、提案価格を説明できる状態をつくる日本市場向けベータ版。';
+  '開発案件の見積に、説明できる理由を。これまでの実績と市場感を整理し、相手に伝わる提案の土台をつくる日本向けベータ版。';
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';
@@ -23,7 +23,7 @@ export const url = import.meta.env.SITE_URL || 'https://griftai.org';
 export const author = import.meta.env.SITE_AUTHOR || 'Cor.inc';
 
 /** Path to logo file (relative to /public) */
-export const logo = '';
+export const logo = '/grift-mark.jpg';
 
 /** Path to Open Graph image (relative to /public) */
 export const ogImage = '/grift-og.svg';

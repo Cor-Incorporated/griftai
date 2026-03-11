@@ -80,8 +80,8 @@ const hasCategories = categories.length > 0;
     {
       hasHeading && (
         <div class="text-center mb-12">
-          {title && <h2 class="text-2xl sm:text-3xl font-bold text-text">{title}</h2>}
-          {subtitle && <p class="mt-4 text-lg text-text-muted">{subtitle}</p>}
+          {title && <h2 class="text-2xl sm:text-3xl font-bold text-balance text-text">{title}</h2>}
+          {subtitle && <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">{subtitle}</p>}
         </div>
       )
     }
@@ -93,13 +93,15 @@ const hasCategories = categories.length > 0;
           {variant === 'accordion'
             ? faqs.map((faq) => (
                 <details class="group">
-                  <summary class="flex items-center justify-between cursor-pointer list-none p-4 rounded-lg bg-surface hover:bg-surface/80 transition-colors">
-                    <span class="font-medium text-text pr-4">{faq.question}</span>
+                  <summary class="flex cursor-pointer list-none items-center justify-between rounded-2xl border border-border bg-surface p-4 transition-colors hover:bg-surface/80">
+                    <span class="pr-4 font-medium text-text">{faq.question}</span>
                     <span class="flex-shrink-0 text-text-muted group-open:rotate-180 transition-transform">
                       <Icon name="lucide:chevron-down" class="w-5 h-5" />
                     </span>
                   </summary>
-                  <div class="px-4 pt-4 pb-2 text-text-muted leading-relaxed">{faq.answer}</div>
+                  <div class="px-4 pb-2 pt-4 text-pretty leading-7 text-text-muted">
+                    {faq.answer}
+                  </div>
                 </details>
               ))
             : faqs.map((faq) => (
@@ -118,20 +120,20 @@ const hasCategories = categories.length > 0;
         <div class="space-y-12">
           {categories.map((category, categoryIndex) => (
             <div class:list={[categoryIndex === categories.length - 1 && 'mb-0']}>
-              <h2 class="text-xl font-bold text-text mb-6 pb-2 border-b border-border">
+              <h2 class="mb-6 border-b border-border pb-2 text-xl font-bold text-text">
                 {category.name}
               </h2>
               <div class="space-y-6">
                 {variant === 'accordion'
                   ? category.faqs.map((faq) => (
                       <details class="group">
-                        <summary class="flex items-center justify-between cursor-pointer list-none p-4 rounded-lg bg-surface hover:bg-surface/80 transition-colors">
-                          <span class="font-medium text-text pr-4">{faq.question}</span>
+                        <summary class="flex cursor-pointer list-none items-center justify-between rounded-2xl border border-border bg-surface p-4 transition-colors hover:bg-surface/80">
+                          <span class="pr-4 font-medium text-text">{faq.question}</span>
                           <span class="flex-shrink-0 text-text-muted group-open:rotate-180 transition-transform">
                             <Icon name="lucide:chevron-down" class="w-5 h-5" />
                           </span>
                         </summary>
-                        <div class="px-4 pt-4 pb-2 text-text-muted leading-relaxed">
+                        <div class="px-4 pb-2 pt-4 text-pretty leading-7 text-text-muted">
                           {faq.answer}
                         </div>
                       </details>

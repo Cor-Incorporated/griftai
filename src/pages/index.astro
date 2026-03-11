@@ -33,6 +33,65 @@ const workflows = [
   '必要に応じて引き継ぎへつなぐ',
 ];
 
+const flowDiagram = [
+  {
+    step: '01',
+    title: '相談を受ける',
+    body: '「AI を入れたい」「外注したい」など、まだ曖昧な相談を前提に受け止めます。',
+  },
+  {
+    step: '02',
+    title: '前提を揃える',
+    body: '要件、体制、納期、未知の論点を見える化し、見積できる状態まで寄せます。',
+  },
+  {
+    step: '03',
+    title: '根拠を重ねる',
+    body: 'GitHub 実績と市場 evidence を並べ、価格の説明責任を持てる材料を作ります。',
+  },
+  {
+    step: '04',
+    title: '提案につなぐ',
+    body: 'その場しのぎの概算ではなく、相手に渡せる提案資料の形へ整えます。',
+  },
+];
+
+const scenarios = [
+  {
+    label: 'Scenario 01',
+    persona: 'ソロ開発者',
+    title: '「安すぎたかもしれない」を減らしたい一人開発者',
+    summary:
+      '紹介で AI 案件の相談は来るが、見積のたびに価格がぶれる。実績は GitHub にあるのに、提案ではうまく伝えきれないケースです。',
+    situation: '夜に DM で相談が来て、翌朝までに概算を返したい。',
+    grift:
+      '相談内容を要件に寄せ、過去の repository 実績と市場レンジを重ねて、無理のない提案価格の材料を揃えます。',
+    outcome: '「安く受けすぎた」「高く見せすぎて失注した」の両方を避けやすくなります。',
+  },
+  {
+    label: 'Scenario 02',
+    persona: '小規模受託チーム',
+    title: '代表一人の営業に依存している 3-5 人チーム',
+    summary:
+      '提案の質が代表の経験に寄っていて、メンバーに引き継ぎにくい。案件数が増えるほど、見積の再現性がボトルネックになるケースです。',
+    situation: '受注を増やしたいが、誰が見積しても一定水準にしたい。',
+    grift:
+      'Three-Way Proposal の考え方で、相場、自社実績、最終提案を同じ画面で比較し、説明の型をチームで共有しやすくします。',
+    outcome: '提案の属人性を下げつつ、価格の根拠を社内でも顧客にも説明しやすくします。',
+  },
+  {
+    label: 'Scenario 03',
+    persona: '発注側 PM / CTO',
+    title: '複数社の見積を比較したい発注側の担当者',
+    summary:
+      'ベンダーから提案は来るが、どれが高いのか安いのか、技術的な裏づけがあるのか判断しづらい。比較表だけでは意思決定できないケースです。',
+    situation: '社内説明のために、価格だけでなく妥当性の根拠も必要になる。',
+    grift:
+      '市場 evidence と GitHub 実績の見え方を揃え、確認すべき論点や追加質問の材料を用意します。',
+    outcome: '金額比較ではなく、どの提案が現実的かを判断しやすくなります。',
+  },
+];
+
 const faqPreview = [
   {
     q: 'ベータ版ではどこまで使えますか？',
@@ -220,6 +279,59 @@ const faqPreview = [
     </div>
   </section>
 
+  <section id="flow-visual" class="border-y border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div class="space-y-4">
+          <p class="text-sm font-semibold uppercase text-primary">図で見る流れ</p>
+          <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+            相談から提案まで、どこで何を整えるのか。
+          </h2>
+          <p class="text-lg text-text-muted text-pretty">
+            人が不安になるのは、価格そのものだけではなく「どうしてその金額なのか」が見えないときです。Grift
+            は、見積の前にある曖昧さを整理し、根拠を重ね、提案として渡せる状態までの流れを扱います。
+          </p>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-background p-6 lg:p-8">
+          <div class="grid gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+            {
+              flowDiagram.map((item, index) => (
+                <>
+                  <article class="rounded-2xl border border-border bg-surface p-5">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-sm font-semibold text-primary tabular-nums">
+                        {item.step}
+                      </span>
+                      <span class="size-2 rounded-full bg-primary/40" />
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold text-balance text-text">{item.title}</h3>
+                    <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
+                  </article>
+                  {index < flowDiagram.length - 1 && (
+                    <div class="hidden items-center justify-center lg:flex" aria-hidden="true">
+                      <div class="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-lg text-primary">
+                        →
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))
+            }
+          </div>
+          <div class="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
+            <p class="text-sm font-semibold text-text">
+              重要なのは、いきなり AI に金額を決めさせないことです。
+            </p>
+            <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">
+              ベータ版では、最終判断を人間レビュー前提にしながら、提案に必要な材料を揃えることを優先しています。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="github-intelligence" class="border-y border-border bg-surface">
     <div
       class="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-8"
@@ -322,6 +434,51 @@ const faqPreview = [
           ))
         }
       </ol>
+    </div>
+  </section>
+
+  <section id="scenarios" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="max-w-3xl space-y-4">
+      <p class="text-sm font-semibold uppercase text-primary">使われるシナリオ</p>
+      <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+        どんな場面で、誰の判断を助けるのか。
+      </h2>
+      <p class="text-lg text-text-muted text-pretty">
+        LP で価値が伝わるのは、機能一覧よりも「自分の状況に近い」と感じられるときです。Grift
+        は、価格に迷う人、提案を標準化したいチーム、比較判断したい発注側のそれぞれに意味があります。
+      </p>
+    </div>
+    <div class="mt-10 grid gap-6 xl:grid-cols-3">
+      {
+        scenarios.map((scenario) => (
+          <article class="rounded-3xl border border-border bg-surface p-6">
+            <div class="flex items-center justify-between gap-4">
+              <p class="text-sm font-semibold text-primary">{scenario.label}</p>
+              <span class="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-text-muted">
+                {scenario.persona}
+              </span>
+            </div>
+            <h3 class="mt-5 text-2xl font-semibold text-balance text-text">{scenario.title}</h3>
+            <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">{scenario.summary}</p>
+            <div class="mt-6 space-y-4">
+              <div class="rounded-2xl border border-border bg-background p-4">
+                <p class="text-sm font-semibold text-text">よくある状況</p>
+                <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">
+                  {scenario.situation}
+                </p>
+              </div>
+              <div class="rounded-2xl border border-border bg-background p-4">
+                <p class="text-sm font-semibold text-text">Grift が入るポイント</p>
+                <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{scenario.grift}</p>
+              </div>
+              <div class="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                <p class="text-sm font-semibold text-text">期待できる変化</p>
+                <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{scenario.outcome}</p>
+              </div>
+            </div>
+          </article>
+        ))
+      }
     </div>
   </section>
 

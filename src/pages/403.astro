@@ -1,0 +1,14 @@
+---
+import ErrorLayout from '@/layouts/ErrorLayout.astro';
+import ErrorPage from '@components/error/ErrorPage.astro';
+
+Astro.response.status = 403;
+---
+
+<ErrorLayout title="アクセスできません" description="このページにアクセスする権限がありません。">
+  <ErrorPage
+    code={403}
+    title="アクセスできません"
+    message="このページにアクセスする権限がありません。誤りの可能性がある場合は、Cor.inc の問い合わせ窓口までご連絡ください。"
+  />
+</ErrorLayout>

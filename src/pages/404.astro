@@ -1,0 +1,15 @@
+---
+import ErrorLayout from '@/layouts/ErrorLayout.astro';
+import ErrorPage from '@components/error/ErrorPage.astro';
+---
+
+<ErrorLayout
+  title="ページが見つかりません"
+  description="お探しのページは存在しないか、移動された可能性があります。"
+>
+  <ErrorPage
+    code={404}
+    title="ページが見つかりません"
+    message="お探しのページは移動、削除、または公開終了している可能性があります。トップページまたは各メニューから再度ご確認ください。"
+  />
+</ErrorLayout>

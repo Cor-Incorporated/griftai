@@ -1,53 +1,85 @@
-# Grift Landing Blueprint
+# Grift Landing
 
-このリポジトリは、`BenevolentDirector` 内の README / `docs/v2` / 各 service README を根拠に、Grift のランディングページを設計するためのドキュメント集です。
+`griftai.org` 向けの日本語ファーストな Astro ランディングサイトです。`Virex` をベースに、Grift Beta の訴求、料金、FAQ、法務ページを実装しています。
 
-目的は 3 つです。
+## 目的
 
-1. 既存ドキュメントから「誰のための、何を解決するシステムか」を抽出する
-2. 抽出結果を LP のポジショニング、情報設計、訴求に変換する
-3. Astro ベースの SPA を作るための要件を、実装前に固定する
+- 日本市場向けに `Grift Beta` の価値を明確に伝える
+- `Cor.inc` の既存問い合わせ導線へ確実につなぐ
+- AI 開発の見積、提案、GitHub 実績分析に関する高意図キーワードの受け皿を作る
 
-## Deliverables
+## 現在の公開対象ページ
 
-- `docs/01-source-extraction.md`
-  - 既存ドキュメントから抽出した事実、価値提案、ターゲット、差別化要因
-- `docs/02-persona-positioning.md`
-  - 想定ペルソナ、JTBD、刺さる論点、避けるべき訴求
-- `docs/03-astro-spa-requirements.md`
-  - Astro ベース SPA の要件定義、情報設計、機能要件、非機能要件
-- `docs/04-content-strategy.md`
-  - どんなコピーを書けば刺さるか、各セクションで何を言うべきか
-- `docs/05-beta-launch-decisions.md`
-  - `griftai.org` 前提の beta pricing、FAQ、法務ページ方針、CTA 導線、残論点
-- `docs/06-privacy-draft.md`
-  - Grift Beta 用のプライバシーポリシー草案
-- `docs/07-terms-draft.md`
-  - Grift Beta 用の利用規約草案
+- `/`
+- `/pricing`
+- `/faq`
+- `/contact`
+- `/privacy`
+- `/terms`
 
-## Intended Outcome
+不要な英語テンプレートページ、ダッシュボード、ブログ、ドキュメントルートは初期リリース対象から外しています。
 
-この設計書を元に、次の段階で以下へ移れます。
+## 実装方針
 
-- Astro プロジェクト初期化
-- LP のビジュアルデザイン
-- コピーライティング
-- CTA 導線と計測の実装
+- 日本語ファースト
+- canonical は `https://griftai.org`
+- 主要 CTA は `https://cor-jp.com/contact/`
+- 料金表示は正式版ではなく `Beta pricing`
+- LP 内の独自フォームは未実装
+  後から追加しやすい構成でページを分離しています。
 
-## Source Scope
+## 設計ドキュメント
 
-主な抽出元:
+企画と要件定義は `planning/blueprint-docs/` に保存しています。
 
-- ルート `README.md`
-- `docs/v2/README.md`
-- `docs/v2/architecture-overview.md`
-- `docs/v2/implementation-roadmap.md`
-- `docs/v2/adr-0002-multi-source-market-intelligence.md`
-- `docs/v2/adr-0004-operational-intelligence-loop.md`
-- `docs/v2/adr-0012-cross-tenant-anonymous-intelligence.md`
-- `docs/v2/adr-0016-product-integration-estimation-research.md`
-- `docs/v2/cross-tenant-intelligence-architecture.md`
-- `apps/web/README.md`
-- `services/control-api/README.md`
-- `services/intelligence-worker/README.md`
-- `services/llm-gateway/README.md`
+- `planning/blueprint-docs/01-source-extraction.md`
+- `planning/blueprint-docs/02-persona-positioning.md`
+- `planning/blueprint-docs/03-astro-spa-requirements.md`
+- `planning/blueprint-docs/04-content-strategy.md`
+- `planning/blueprint-docs/05-beta-launch-decisions.md`
+- `planning/blueprint-docs/06-privacy-draft.md`
+- `planning/blueprint-docs/07-terms-draft.md`
+
+## 開発
+
+```bash
+npm install
+npm run dev
+```
+
+主な確認コマンド:
+
+```bash
+npm run build
+npm run check
+```
+
+## CI / Deploy
+
+GitHub Actions では、PR と branch push ごとに以下を実行します。
+
+- `npm run check`
+- `npm run build`
+
+`main` への push では、以下の secret が設定されている場合のみ Cloudflare Pages へ production deploy します。
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+workflow では project 名を `griftai` として扱っています。Cloudflare Pages 側の project 名が異なる場合は `.github/workflows/ci.yml` を合わせて修正してください。
+
+## CI / CD
+
+GitHub Actions では、PR と主要 branch push で `npm run build` と `npm run check` を実行します。`main` への push または manual 実行時のみ、Cloudflare Pages への production deploy を試行します。
+
+Cloudflare Pages deploy を有効にするには、GitHub Secrets に以下を設定してください。
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+workflow 上の Pages project 名は `griftai` を前提にしています。別名で作成する場合は `.github/workflows/ci.yml` を調整してください。
+
+## 備考
+
+- デザインシステムと Astro 構成は `Virex` をベースにしています。
+- ただし公開サイトとしては Grift 用に大幅に簡略化し、テンプレート由来の公開ルートは削除しています。

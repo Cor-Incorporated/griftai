@@ -1,0 +1,126 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import FAQSection from '@sections/content/FAQSection.astro';
+import PageHeader from '@sections/content/PageHeader.astro';
+import { siteConfig } from '@/config';
+
+const faqCategories = [
+  {
+    name: '対象ユーザー',
+    faqs: [
+      {
+        question: 'Grift は誰向けのサービスですか？',
+        answer:
+          '主な対象は、日本のソロ開発者、小規模 AI 受託チーム、受託開発会社です。特に、案件相談を仕様化し、見積の根拠を説明しやすくしたいチーム向けに設計しています。',
+      },
+      {
+        question: '発注側 PM / CTO でも使えますか？',
+        answer:
+          'はい。発注側が、複数ベンダーの見積比較や妥当性確認の材料として使うことも想定しています。',
+      },
+      {
+        question: '日本語サイトなのはなぜですか？',
+        answer:
+          '初期ベータは日本市場向けに絞って展開するためです。SEO と問い合わせ導線も日本語前提で整えています。',
+      },
+    ],
+  },
+  {
+    name: 'ベータ版の機能範囲',
+    faqs: [
+      {
+        question: 'ベータ版では何が使えますか？',
+        answer:
+          '案件整理、GitHub 実績の可視化、見積根拠づくりに近い機能を中心に順次提供します。構想上の全機能が一般提供済みという意味ではありません。',
+      },
+      {
+        question: '見積は完全自動で出ますか？',
+        answer:
+          '完全自動化を約束するものではありません。ベータ段階では、人が最終判断しやすい形で根拠を整理することを重視しています。',
+      },
+      {
+        question: 'GitHub 連携は必須ですか？',
+        answer:
+          '必須ではありません。ただし、GitHub 実績を使うことで、開発力や再現性を営業資料として示しやすくなります。',
+      },
+    ],
+  },
+  {
+    name: '料金と導入',
+    faqs: [
+      {
+        question: '料金は正式版の価格ですか？',
+        answer:
+          'いいえ。現在表示しているのはベータ料金です。価格や機能範囲は、ベータ期間中に変更される場合があります。',
+      },
+      {
+        question: 'アルファテスター向けの無償利用はありますか？',
+        answer:
+          'あります。検証内容や協力範囲に応じて、無償または特別価格でご案内する可能性があります。',
+      },
+      {
+        question: 'LP からそのまま申し込めますか？',
+        answer:
+          '初期リリースでは LP 内フォームを設けません。すべて Cor.inc の問い合わせ窓口に集約し、後から自前フォームへ差し替えやすい設計にしています。',
+      },
+    ],
+  },
+  {
+    name: 'データと安全性',
+    faqs: [
+      {
+        question: '顧客データは学習に使われますか？',
+        answer:
+          '無断で学習利用する前提ではありません。匿名化、opt-in、テナント分離を前提とした設計方針で扱います。',
+      },
+      {
+        question: 'cross-tenant benchmark とは何ですか？',
+        answer:
+          '個社データをそのまま横断利用するのではなく、匿名化・集計された benchmark を価値に変える考え方です。実運用では opt-in とガバナンスが前提です。',
+      },
+      {
+        question: '問い合わせ先はどこですか？',
+        answer:
+          '現時点では Cor.inc の問い合わせ窓口に集約しています。https://cor-jp.com/contact/ からご相談ください。',
+      },
+    ],
+  },
+];
+---
+
+<MarketingLayout
+  title={`FAQ - ${siteConfig.name}`}
+  description="Grift Beta の対象ユーザー、機能範囲、料金、データ方針に関するよくある質問。"
+>
+  <PageHeader
+    title="FAQ"
+    subtitle="Grift Beta に関して最初に確認されやすい質問を、日本市場向けの前提に合わせてまとめています。"
+  />
+
+  <FAQSection categories={faqCategories} variant="accordion" background="default" />
+
+  <section class="bg-surface py-section">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div
+        class="rounded-3xl border border-border bg-background p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
+      >
+        <div class="max-w-2xl">
+          <p class="text-sm font-semibold text-primary">追加相談</p>
+          <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+            FAQ で判断しきれない場合は、案件の前提ごと共有してください。
+          </h2>
+          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
+            Grift
+            は「全員に同じ返答を返す」よりも、案件タイプやチーム体制に応じた相談を前提としたベータ版です。
+          </p>
+        </div>
+        <a
+          href="https://cor-jp.com/contact/"
+          class="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark lg:mt-0"
+        >
+          Cor.inc に相談する
+        </a>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>

@@ -19,7 +19,13 @@ export const navigation: Navigation = {
    */
   header: {
     main: [],
-    cta: [{ label: '自社の案件で使えるか相談する', href: 'https://cor-jp.com/contact/', variant: 'primary' }],
+    cta: [
+      {
+        label: '自社の案件で使えるか相談する',
+        href: 'https://cor-jp.com/contact/',
+        variant: 'primary',
+      },
+    ],
   },
 
   /**

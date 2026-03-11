@@ -131,28 +131,33 @@ const faqPreview = [
 
 <MarketingLayout
   title="開発案件の見積に、説明できる理由を"
-  description="Grift Beta は、これまでの実績と市場感をもとに、提案価格を説明できる状態をつくる日本向けのベータ版です。"
+  description="Grift は、これまでの実績と市場感をもとに、提案価格を説明できる状態をつくるプロダクトです。現在はベータ提供中です。"
 >
   <section id="hero" class="border-b border-border bg-background">
     <div
-      class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-24"
+      class="mx-auto grid max-w-7xl items-start gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24"
     >
       <div class="space-y-6">
-        <div
-          class="inline-flex items-center rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-text-muted"
-        >
-          フリーランスから小規模チームまで使えるベータ版
+        <div class="inline-flex items-center gap-2 text-sm font-medium text-primary">
+          <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
+          現在はベータ提供中
+          <span class="text-text-muted">フリーランスから小規模チームまで</span>
         </div>
         <div class="space-y-4">
           <h1
-            class="max-w-3xl text-4xl font-semibold leading-[1.15] text-balance text-text sm:text-5xl lg:text-6xl"
+            class="max-w-3xl text-4xl font-semibold leading-[1.1] text-text sm:text-5xl lg:text-6xl"
           >
-            これまでの実績を、見積の説得力に変える。
+            <span class="block">これまでの実績を、</span>
+            <span class="block">見積の説得力に変える。</span>
           </h1>
           <p class="max-w-3xl text-lg leading-8 text-text-muted text-pretty">
-            Grift Beta は、これまでの実績や市場感を整理し、
-            <span class="font-medium text-text">「なぜこの見積なのか」</span>
-            を相手に伝えやすくするためのベータ版です。AI 導入、システム開発、DX 相談など、要件が曖昧な段階でも見積の叩き台を整えやすくします。
+            Grift は、これまでの実績や市場感を整理し、開発案件の見積に理由を持たせるプロダクトです。
+          </p>
+          <p class="text-2xl font-semibold leading-tight text-text sm:text-3xl">
+            「なぜこの見積なのか」
+          </p>
+          <p class="max-w-3xl text-lg leading-8 text-text-muted text-pretty">
+            を相手に伝えやすくします。いまはベータ提供中ですが、正式版を見据えて、実案件の相談から磨いています。
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -165,40 +170,43 @@ const faqPreview = [
             自分たちの案件で使えるか相談する
           </a>
         </div>
-        <div class="grid gap-3 text-sm text-text-muted sm:grid-cols-3">
-          <div class="rounded-xl border border-border bg-surface px-4 py-3">
-            実績を伝えやすくする
-          </div>
-          <div class="rounded-xl border border-border bg-surface px-4 py-3">
-            価格の理由を言語化する
-          </div>
-          <div class="rounded-xl border border-border bg-surface px-4 py-3">
-            見積の属人化を減らす
-          </div>
-        </div>
+        <ul class="grid gap-3 text-sm text-text-muted sm:grid-cols-3">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
+            <span>実績を伝えやすくする</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
+            <span>価格の理由を言語化する</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
+            <span>見積の属人化を減らす</span>
+          </li>
+        </ul>
       </div>
 
       <aside class="rounded-3xl border border-border bg-surface p-6 lg:p-8">
         <p class="text-sm font-semibold text-primary">こんな相談が来たときに使う</p>
-        <div class="mt-4 rounded-2xl border border-border bg-background p-5">
+        <div class="mt-4 rounded-2xl bg-background px-5 py-4">
           <p class="text-sm leading-7 text-text-muted text-pretty">
             「まだ要件は固まり切っていないのですが、まず概算感を知りたいです」
           </p>
         </div>
-        <div class="mt-6 space-y-3">
-          <div class="rounded-2xl border border-border bg-background p-4">
+        <div class="mt-6 divide-y divide-border rounded-2xl border border-border bg-background">
+          <div class="p-4">
             <p class="text-sm font-semibold text-text">確認したい論点</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
               何が未確定で、どこまでを今回の見積に含めるか。
             </p>
           </div>
-          <div class="rounded-2xl border border-border bg-background p-4">
+          <div class="p-4">
             <p class="text-sm font-semibold text-text">価格の根拠</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
               これまでの実績と市場感を並べ、なぜその価格になるかを説明できる状態にする。
             </p>
           </div>
-          <div class="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <div class="bg-primary/5 p-4">
             <p class="text-sm font-semibold text-text">返せるアウトプット</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
               ただの概算ではなく、顧客と話を進めやすい提案の土台。
@@ -212,8 +220,9 @@ const faqPreview = [
   <section id="problem" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="max-w-3xl space-y-4">
       <p class="text-sm font-semibold text-primary">こんな悩みがある方へ</p>
-      <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-        見積の作り方より、見積の説明のしかたに困っている方へ。
+      <h2 class="max-w-2xl text-3xl font-semibold leading-[1.18] text-text sm:text-4xl">
+        <span class="block">見積の作り方より、</span>
+        <span class="block">見積の説明に困っている方へ。</span>
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
         必要なのは機能の説明より、見積で迷う場面を減らせることです。Grift

@@ -135,28 +135,32 @@ const faqPreview = [
 >
   <section id="hero" class="border-b border-border bg-background">
     <div
-      class="mx-auto grid max-w-7xl items-start gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24"
+      class="mx-auto grid max-w-7xl items-start gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24"
     >
       <div class="space-y-6">
-        <div class="inline-flex items-center gap-2 text-sm font-medium text-primary">
+        <div class="inline-flex flex-wrap items-center gap-2 text-sm font-medium text-primary">
           <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
           現在はベータ提供中
           <span class="text-text-muted">フリーランスから小規模チームまで</span>
         </div>
         <div class="space-y-4">
           <h1
-            class="max-w-3xl text-4xl font-semibold leading-[1.1] text-text sm:text-5xl lg:text-6xl"
+            class="max-w-3xl text-3xl font-semibold leading-[1.12] text-text sm:text-5xl lg:text-6xl"
           >
             <span class="block">これまでの実績を、</span>
             <span class="block">見積の説得力に変える。</span>
           </h1>
-          <p class="max-w-3xl text-lg leading-8 text-text-muted text-pretty">
+          <p
+            class="max-w-3xl text-base leading-7 text-text-muted text-pretty sm:text-lg sm:leading-8"
+          >
             Grift は、これまでの実績や市場感を整理し、開発案件の見積に理由を持たせるプロダクトです。
           </p>
-          <p class="text-2xl font-semibold leading-tight text-text sm:text-3xl">
+          <p class="text-xl font-semibold leading-tight text-text sm:text-3xl">
             「なぜこの見積なのか」
           </p>
-          <p class="max-w-3xl text-lg leading-8 text-text-muted text-pretty">
+          <p
+            class="max-w-3xl text-base leading-7 text-text-muted text-pretty sm:text-lg sm:leading-8"
+          >
             を相手に伝えやすくします。いまはベータ提供中ですが、正式版を見据えて、実案件の相談から磨いています。
           </p>
         </div>
@@ -165,7 +169,7 @@ const faqPreview = [
             href="https://cor-jp.com/contact/"
             target="_blank"
             rel="noreferrer"
-            class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
+            class="inline-flex w-full items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark sm:w-auto"
           >
             自分たちの案件で使えるか相談する
           </a>
@@ -186,7 +190,7 @@ const faqPreview = [
         </ul>
       </div>
 
-      <aside class="rounded-3xl border border-border bg-surface p-6 lg:p-8">
+      <aside class="rounded-3xl border border-border bg-surface p-5 sm:p-6 lg:p-8">
         <p class="text-sm font-semibold text-primary">こんな相談が来たときに使う</p>
         <div class="mt-4 rounded-2xl bg-background px-5 py-4">
           <p class="text-sm leading-7 text-text-muted text-pretty">
@@ -378,12 +382,12 @@ const faqPreview = [
         {
           pricingPreview.map((item) => (
             <article class="rounded-2xl border border-border bg-background p-5">
-              <div class="flex items-center justify-between gap-4">
+              <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p class="text-base font-semibold text-text">{item.name}</p>
                   <p class="mt-1 text-sm text-text-muted">{item.fit}</p>
                 </div>
-                <p class="text-lg font-semibold tabular-nums text-text">{item.price}</p>
+                <p class="shrink-0 text-lg font-semibold tabular-nums text-text">{item.price}</p>
               </div>
             </article>
           ))

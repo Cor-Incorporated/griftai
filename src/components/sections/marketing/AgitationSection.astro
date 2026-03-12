@@ -41,7 +41,7 @@ const points: AgitationPoint[] = [
 >
   <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="fade-in-section max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-primary">このまま放置すると</p>
+      <p class="text-sm font-semibold text-secondary">このまま放置すると</p>
       <h2 class="text-3xl font-semibold leading-[1.18] text-background sm:text-4xl">
         その見積、このまま続けますか？
       </h2>
@@ -54,7 +54,7 @@ const points: AgitationPoint[] = [
       {
         points.map((point) => (
           <article class="relative rounded-2xl border border-background/10 bg-background/5 p-6 backdrop-blur-sm">
-            <div class="mb-4 flex size-14 items-center justify-center rounded-full border border-primary/40 bg-primary/15 text-2xl font-bold tabular-nums text-primary">
+            <div class="mb-4 flex size-14 items-center justify-center rounded-full border border-secondary/40 bg-secondary/15 text-2xl font-bold tabular-nums text-secondary">
               {point.step}
             </div>
             <p class="text-base leading-7 text-background/80 text-pretty">{point.text}</p>

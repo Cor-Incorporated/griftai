@@ -3,15 +3,15 @@
 
 @theme {
   /* Brand Colors */
-  --color-primary: oklch(0.68 0.14 230);
-  --color-primary-dark: oklch(0.6 0.13 232);
+  --color-primary: oklch(0.5 0.15 230);
+  --color-primary-dark: oklch(0.45 0.13 232);
   --color-secondary: oklch(0.76 0.08 215);
 
   /* Semantic Colors */
   --color-background: oklch(0.992 0.004 235);
   --color-surface: oklch(0.978 0.006 230);
   --color-text: oklch(0.25 0.03 250);
-  --color-text-muted: oklch(0.53 0.02 245);
+  --color-text-muted: oklch(0.43 0.02 245);
   --color-border: oklch(0.9 0.015 235);
 
   /* Dashboard Status Colors - Light Mode */

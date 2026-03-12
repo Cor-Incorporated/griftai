@@ -25,7 +25,13 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run lint && npm run format:check && astro check"
+    "check": "npm run lint && npm run format:check && astro check",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test e2e/smoke.spec.ts",
+    "test:e2e:a11y": "playwright test e2e/a11y.spec.ts",
+    "test:e2e:all": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test": "npm run test:unit && npm run build && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
@@ -40,6 +46,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
@@ -50,6 +58,7 @@
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18"
   }
 }

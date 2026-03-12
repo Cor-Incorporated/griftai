@@ -42,6 +42,11 @@ Desktop.ini
 coverage/
 *.lcov
 
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
 # caches
 .cache/
 .eslintcache

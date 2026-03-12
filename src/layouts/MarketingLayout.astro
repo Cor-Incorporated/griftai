@@ -98,6 +98,10 @@ const isHome = Astro.url.pathname === '/';
       }
     };
 
-    document.addEventListener('astro:page-load', initScrollAnimations);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    } else {
+      initScrollAnimations();
+    }
   </script>
 </BaseLayout>

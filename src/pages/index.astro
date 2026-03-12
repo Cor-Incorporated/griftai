@@ -556,7 +556,7 @@ const faqPreview = [
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  const initSectionAnimations = (): void => {
     const sections = document.querySelectorAll<HTMLElement>('.section-animate');
     if (sections.length === 0) return;
 
@@ -575,5 +575,11 @@ const faqPreview = [
     for (const section of sections) {
       observer.observe(section);
     }
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSectionAnimations);
+  } else {
+    initSectionAnimations();
+  }
 </script>

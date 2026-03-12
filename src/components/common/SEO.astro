@@ -106,7 +106,13 @@ const breadcrumbSchema = {
 <meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
 <meta name="author" content={siteConfig.author} />
-{tags.length > 0 && <meta name="keywords" content={tags.join(', ')} />}
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+<meta
+  name="keywords"
+  content={tags.length > 0
+    ? tags.join(', ')
+    : 'AI見積,受託開発,見積自動化,開発見積ツール,フリーランス見積,DX見積,GitHub連携,市場相場'}
+/>
 
 <link rel="canonical" href={canonicalURL} />
 

@@ -155,7 +155,189 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* Reduced motion preference */
+/* ==========================================================================
+   Typography — Japanese-optimized rhythm
+   ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, 3.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+p,
+li,
+dd,
+blockquote {
+  line-height: 1.9;
+}
+
+/* ==========================================================================
+   Section rhythm — dividers, alternating backgrounds
+   ========================================================================== */
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-border), transparent);
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+/* Alternating section tint — apply to even sections for subtle warmth */
+.section-alt {
+  background-color: oklch(0.985 0.005 80);
+}
+
+/* ==========================================================================
+   Scroll-triggered animations
+   ========================================================================== */
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+.stagger-children.is-visible > *:nth-child(1) {
+  transition-delay: 0ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-children.is-visible > *:nth-child(2) {
+  transition-delay: 100ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-children.is-visible > *:nth-child(3) {
+  transition-delay: 200ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-children.is-visible > *:nth-child(4) {
+  transition-delay: 300ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-children.is-visible > *:nth-child(5) {
+  transition-delay: 400ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-children.is-visible > *:nth-child(6) {
+  transition-delay: 500ms;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Card interactions — lift, hover, glow
+   ========================================================================== */
+
+.card-lift {
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 24px -4px oklch(0 0 0 / 0.08),
+    0 2px 8px -2px oklch(0 0 0 / 0.04);
+}
+
+/* Subtle pulse animation for comparison bars */
+@keyframes bar-shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.bar-pulse {
+  animation: bar-shimmer 3s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   AgitationSection — grain texture overlay
+   ========================================================================== */
+
+.grain-bg {
+  position: relative;
+}
+.grain-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ==========================================================================
+   Hero accent line
+   ========================================================================== */
+
+.hero-accent-line {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-primary),
+    var(--color-secondary),
+    transparent
+  );
+}
+
+/* ==========================================================================
+   Responsive — touch targets, fluid type
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  a,
+  button,
+  summary,
+  [role='button'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion preference
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -164,5 +346,11 @@ select:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .fade-in-section,
+  .stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

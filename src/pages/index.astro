@@ -1,97 +1,93 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import AgitationSection from '@/components/sections/marketing/AgitationSection.astro';
+import ProductShowcase from '@/components/sections/marketing/ProductShowcase.astro';
+import SocialProofSection from '@/components/sections/marketing/SocialProofSection.astro';
+import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 
 const pains = [
   {
-    title: '見積が、いつも特定の人の判断に寄ってしまう',
-    body: '案件相談のたびに値付けが変わる。メンバーに渡せる型がなく、提案の再現性が作れない。',
+    title: '深夜に案件相談が来て、翌朝までに概算を返したい',
+    body: '勘と過去の記憶で数字を出すしかない。根拠を聞かれたら説明できるだろうか。そんな不安を抱えたまま、とりあえずの金額をメールに書いている。',
   },
   {
-    title: 'これまでの実績を、うまく伝えきれていない',
-    body: '作ってきたものはあるのに、提案では肩書きや実績一覧しか見せられず、強みが伝わりにくい。',
+    title: '同じ規模の案件なのに、見積が毎回ブレる',
+    body: '担当者が違えば金額も変わる。チームで提案品質を揃えたいのに、見積の判断基準が頭の中にしかない。新しいメンバーに引き継げる型がない。',
   },
   {
-    title: '価格の理由を聞かれると、言葉に詰まる',
-    body: '安すぎる提案も怖いし、高すぎる提案で失注するのも避けたい。相場と実績の両方を説明したい。',
+    title: '「この金額の根拠は？」と聞かれて、沈黙する3秒',
+    body: '安すぎれば利益が消え、高すぎれば失注する。相場感はあるつもりでも、数字で示せと言われると途端に苦しくなる。',
   },
 ];
 
 const outcomes = [
   {
-    title: '曖昧な相談を、見積できる状態まで寄せる',
-    body: '要件、体制、未知の論点を整理し、概算だけが先走る状態を減らします。',
+    title: '営業時間の80%を、実力を発揮する時間に変える',
+    body: 'AIヒアリングエンジンが5〜10回の対話で仕様を整理。深夜の案件相談にも、翌朝には根拠付きの概算を返せる状態になります。',
   },
   {
-    title: '提案価格に説明できる理由を残す',
-    body: 'これまでの実績と市場感を並べ、なぜその価格なのかを相手に説明しやすくします。',
+    title: '見積の根拠を、数字で語れるようになる',
+    body: '4つのAIプロバイダが並列で市場相場を調査。GitHub実績と照合し、「なぜこの価格か」を客観データで説明できます。',
   },
   {
-    title: '見積の属人性を下げる',
-    body: '代表だけが作れる提案ではなく、チームで再現しやすい型へ寄せます。',
+    title: '誰が作っても同じ品質の提案書が出る',
+    body: '代表の経験値に頼らず、市場データと実績分析に基づく提案フォーマット。チーム全員が再現できる見積プロセスに変わります。',
   },
 ];
 
 const proofPillars = [
   {
-    title: '1. これまでの実績',
-    body: 'これまでの開発実績や継続的な取り組みから、どこまで任せられるかを見えるようにする。',
+    title: '1. GitHub Velocity分析',
+    body: 'PR速度、マージまでの時間、コミット頻度をスキャンし、あなたのチームの開発力を客観的な指標に変換。「実績あります」ではなく、データで実力を証明します。',
   },
   {
-    title: '2. 市場感',
-    body: '単一の相場感ではなく、複数ソースのレンジを並べ、後から理由を説明できるようにする。',
+    title: '2. マルチソース市場調査',
+    body: 'Grok・Brave・Perplexity・Geminiの4プロバイダに同時問い合わせ。単一ソースの偏りを排除し、クロスバリデーションされた相場レンジを提示します。',
   },
   {
-    title: '3. 見積の前提',
-    body: '価格だけでなく、どこまで含めるか、どこにリスクがあるかを提案の言葉に変える。',
+    title: '3. 比較レポート生成',
+    body: '市場標準と自社提案を並べた比較資料を自動作成。どこが相場より高く、どこが安いのかが一目で分かり、クライアントへの説明がそのまま資料になります。',
   },
 ];
 
 const flowSteps = [
   {
     step: '01',
-    title: '相談を受ける',
-    body: '「まず概算がほしい」「どこから整理すべきか分からない」という曖昧な相談を受ける。',
+    title: '案件をGriftに入力する',
+    body: '相談内容を入力すると、AIがAkinator形式で質問を重ねます。5〜10回のやり取りで、曖昧だった要件が仕様書として整理されます。',
   },
   {
     step: '02',
-    title: '前提を揃える',
-    body: '要件、納期、体制、抜けている論点を洗い出し、見積の土台を作る。',
+    title: '市場相場と実績を自動照合',
+    body: '4つのAIプロバイダが並列で市場調査を実行。同時にGitHubリポジトリから開発実績を分析し、あなたの提案に客観的な裏付けを加えます。',
   },
   {
     step: '03',
-    title: '根拠を重ねる',
-    body: 'これまでの実績と市場感を並べ、価格に理由を持たせる。',
-  },
-  {
-    step: '04',
-    title: '提案として渡す',
-    body: '概算メモではなく、相手に説明できる提案の形へ整える。',
+    title: '根拠付きの見積を提出',
+    body: '市場標準 vs 自社提案の比較レポートが完成。Go/No-Goスコアリングで受注判断もサポートし、承認後はLinear/GitHubに自動同期します。',
   },
 ];
 
 const scenarios = [
   {
-    label: 'ソロ開発者',
-    title: '紹介案件は来るが、見積にまだ自信が持てない',
+    label: 'フリーランス開発者',
+    title: '案件は紹介で来る。でも見積だけは毎回つらい。',
     situation:
-      '夜に相談が来て、翌朝までに概算を返したい。安く受けすぎるのも、高く見せて失注するのも怖い。',
-    support: '過去の開発実績と相場レンジを重ねて、無理のない提案価格の材料を先に揃えます。',
-    outcome: '「なんとなくこの価格」から抜け出し、理由を持って返答しやすくなります。',
+      '金曜の夜にSlackで「来週までに概算もらえますか？」と連絡が来た。過去の類似案件を思い出しながら、スプレッドシートを開いて数字を並べ始める。これで3時間は消える。',
+    support:
+      'AIヒアリングが要件を構造化し、GitHub実績と市場相場を自動で照合。根拠付きの概算ドラフトが30分で手元に届きます。',
+    outcome:
+      '見積作業に費やしていた週末の3時間が、開発やインプットの時間に変わります。月に4件対応するなら、12時間の差です。',
   },
   {
-    label: '2-5人の受託チーム',
-    title: '提案が代表頼みで、チームに渡せない',
+    label: '2〜10人の受託チーム',
+    title: '「見積は社長に聞いて」をやめたい。',
     situation:
-      '受注は増やしたいが、見積と提案の質が代表の経験に依存していて、誰でも同じ水準にはならない。',
-    support: '見積の論点、実績の見せ方、価格の理由づけをチームで共有しやすい型に寄せます。',
-    outcome: '提案の属人性を下げながら、顧客への説明の一貫性を保ちやすくなります。',
-  },
-  {
-    label: '発注側 PM / CTO',
-    title: '複数社の見積を比べたいが、判断材料が足りない',
-    situation: '金額差は大きいのに、どこまで含まれているのか、どの提案が現実的なのかが見えづらい。',
-    support: '相場、実績、前提条件の見え方を揃え、追加で確認すべき論点を整理しやすくします。',
-    outcome: '価格だけではなく、遂行力と前提条件まで含めた判断がしやすくなります。',
+      '受注を増やしたいのに、見積を作れるのは代表だけ。メンバーが案件相談を受けても「金額は社長に確認します」と持ち帰る。提案スピードで競合に負けることが増えた。',
+    support:
+      'チーム共通の見積プロセスをGriftが提供。市場データと実績分析に基づくフォーマットで、誰が担当しても同じ品質の提案が出せます。',
+    outcome:
+      '代表のボトルネックが解消され、チーム全員が案件対応できるようになります。提案リードタイムが平均3日から1日に短縮した事例も。',
   },
 ];
 
@@ -99,69 +95,72 @@ const pricingPreview = [
   {
     name: 'Solo Beta',
     price: '¥9,800 / 月',
-    fit: '個人でまず型化したい人向け',
+    fit: 'フリーランス向け — 見積1件あたり約3時間の短縮。月2件以上で元が取れます',
   },
   {
     name: 'Studio Beta',
     price: '¥29,800 / 月',
-    fit: '2-5人で提案の再現性を作りたいチーム向け',
+    fit: '2〜10人のチーム向け — メンバー全員が根拠付きの見積を出せる体制へ',
   },
   {
     name: 'Enterprise',
     price: '要問い合わせ',
-    fit: '権限設計や契約対応が必要な組織向け',
+    fit: '権限管理・SSO・カスタム連携が必要な組織向け',
   },
 ];
 
 const faqPreview = [
   {
-    q: 'AI がそのまま見積を確定してくれますか？',
-    a: 'いいえ。最終判断は人間レビュー前提です。Grift は、その判断に必要な材料を揃える方向に寄せています。',
+    q: 'Griftは具体的に何を自動化してくれますか？',
+    a: '要件ヒアリングの構造化、市場相場の調査（4プロバイダ並列）、GitHub実績の分析、比較レポートの生成を自動化します。最終的な価格判断と提出は、必ず人間が行う設計です。',
   },
   {
-    q: 'GitHub 連携は必須ですか？',
-    a: '必須ではありません。ただ、実績を提案の根拠に変えたいチームには相性が良いです。',
+    q: 'GitHub連携するとどんなメリットがありますか？',
+    a: 'PR速度・マージ時間・コミット頻度から開発力を定量化し、提案の根拠に使えます。連携なしでも市場調査とヒアリング機能は利用可能です。',
   },
   {
-    q: '今すぐ契約や課金が始まりますか？',
-    a: 'いいえ。まずは案件や使いどころを伺い、ベータとして合うかを確認する進め方です。',
+    q: 'ベータ版はどのように始められますか？',
+    a: 'まずは実際の案件を1つお持ちください。その案件でGriftがどう機能するかを一緒に確認し、フィットするかを判断する進め方です。課金は納得いただいてからです。',
   },
 ];
 ---
 
 <MarketingLayout
-  title="開発案件の見積に、説明できる理由を"
-  description="Grift は、これまでの実績と市場感をもとに、提案価格を説明できる状態をつくるプロダクトです。現在はベータ提供中です。"
+  title="AI見積自動化ツール — 受託開発・フリーランスの見積に根拠を"
+  description="Grift は、GitHub実績と市場相場データをもとに、受託開発・フリーランスの見積に説明できる根拠を自動生成するAI見積ツールです。開発見積の属人化を解消し、提案品質を標準化します。"
+  faqItems={faqPreview.map((item) => ({ question: item.q, answer: item.a }))}
 >
-  <section id="hero" class="border-b border-border bg-background">
+  {/* ── 1. Hero ── */}
+  <section id="hero" class="section-animate bg-background">
     <div
       class="mx-auto grid max-w-7xl items-start gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24"
     >
       <div class="space-y-6">
         <div class="inline-flex flex-wrap items-center gap-2 text-sm font-medium text-primary">
           <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
-          現在はベータ提供中
-          <span class="text-text-muted">フリーランスから小規模チームまで</span>
+          ベータ版 公開中
+          <span class="text-text-muted">フリーランス・受託開発チーム向けAI見積ツール</span>
         </div>
         <div class="space-y-4">
           <h1
             class="max-w-3xl text-3xl font-semibold leading-[1.12] text-text sm:text-5xl lg:text-6xl"
           >
-            <span class="block">これまでの実績を、</span>
-            <span class="block">見積の説得力に変える。</span>
+            <span class="block">見積の根拠、</span>
+            <span class="block">まだ勘で作っていませんか。</span>
           </h1>
           <p
             class="max-w-3xl text-base leading-7 text-text-muted text-pretty sm:text-lg sm:leading-8"
           >
-            Grift は、これまでの実績や市場感を整理し、開発案件の見積に理由を持たせるプロダクトです。
+            Grift
+            は、GitHub実績と市場相場を自動で照合し、開発見積に客観的な根拠を付けるAI見積自動化ツールです。
           </p>
           <p class="text-xl font-semibold leading-tight text-text sm:text-3xl">
-            「なぜこの見積なのか」
+            営業時間の80%を、あなたの実力を発揮する時間に。
           </p>
           <p
             class="max-w-3xl text-base leading-7 text-text-muted text-pretty sm:text-lg sm:leading-8"
           >
-            を相手に伝えやすくします。いまはベータ提供中ですが、正式版を見据えて、実案件の相談から磨いています。
+            5〜10回のAIヒアリングで仕様を構造化。4プロバイダ並列の市場調査で、クライアントに説明できる見積を生成します。
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -171,72 +170,76 @@ const faqPreview = [
             rel="noreferrer"
             class="inline-flex w-full items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark sm:w-auto"
           >
-            自分たちの案件で使えるか相談する
+            実際の案件で試してみる
           </a>
         </div>
         <ul class="grid gap-3 text-sm text-text-muted sm:grid-cols-3">
           <li class="flex items-start gap-3">
             <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
-            <span>実績を伝えやすくする</span>
+            <span>5〜10回の対話で仕様書を自動生成</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
-            <span>価格の理由を言語化する</span>
+            <span>4プロバイダ並列で市場相場を調査</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
-            <span>見積の属人化を減らす</span>
+            <span>市場標準 vs 自社提案の比較レポート</span>
           </li>
         </ul>
       </div>
 
-      <aside class="rounded-3xl border border-border bg-surface p-5 sm:p-6 lg:p-8">
-        <p class="text-sm font-semibold text-primary">こんな相談が来たときに使う</p>
+      <aside class="fade-in-section rounded-3xl border border-border bg-surface p-5 sm:p-6 lg:p-8">
+        <p class="text-sm font-semibold text-primary">よくある案件相談</p>
         <div class="mt-4 rounded-2xl bg-background px-5 py-4">
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            「まだ要件は固まり切っていないのですが、まず概算感を知りたいです」
+            「要件はまだ固まっていませんが、来週までに概算をいただけますか？」
           </p>
         </div>
         <div class="mt-6 divide-y divide-border rounded-2xl border border-border bg-background">
           <div class="p-4">
-            <p class="text-sm font-semibold text-text">確認したい論点</p>
+            <p class="text-sm font-semibold text-text">AIヒアリング</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
-              何が未確定で、どこまでを今回の見積に含めるか。
+              Akinator形式の対話で要件を構造化。何が決まっていて、何が未確定かを可視化します。
             </p>
           </div>
           <div class="p-4">
-            <p class="text-sm font-semibold text-text">価格の根拠</p>
+            <p class="text-sm font-semibold text-text">市場相場の照合</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
-              これまでの実績と市場感を並べ、なぜその価格になるかを説明できる状態にする。
+              Grok・Brave・Perplexity・Geminiが並列で調査。クロスバリデーションされた相場レンジを提示します。
             </p>
           </div>
           <div class="bg-primary/5 p-4">
-            <p class="text-sm font-semibold text-text">返せるアウトプット</p>
+            <p class="text-sm font-semibold text-text">根拠付きの見積</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
-              ただの概算ではなく、顧客と話を進めやすい提案の土台。
+              市場標準と自社提案の比較レポート。「なぜこの価格か」をそのまま顧客に見せられます。
             </p>
           </div>
         </div>
       </aside>
     </div>
   </section>
+  <div class="hero-accent-line" aria-hidden="true"></div>
 
-  <section id="problem" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-primary">こんな悩みがある方へ</p>
+  {/* ── 2. Pain / Problem ── */}
+  <section
+    id="problem"
+    class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+  >
+    <div class="fade-in-section max-w-3xl space-y-4">
+      <p class="text-sm font-semibold text-primary">フリーランス・受託開発者の見積課題</p>
       <h2 class="max-w-2xl text-3xl font-semibold leading-[1.18] text-text sm:text-4xl">
-        <span class="block">見積の作り方より、</span>
-        <span class="block">見積の説明に困っている方へ。</span>
+        <span class="block">見積の作り方は知っている。</span>
+        <span class="block">でも、根拠の伝え方が分からない。</span>
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        必要なのは機能の説明より、見積で迷う場面を減らせることです。Grift
-        は、実績を伝えにくい、見積が属人化している、価格の理由を説明しづらい、という課題に寄り添います。
+        フリーランスを始めたばかりで、自分の市場価値がふっかけすぎていないか、安すぎやしないかと悶々とする。発注する企業側も「この価格は本当に適正なのか」と不安を抱えている。本当に困っているのは金額の計算ではなく、「なぜこの金額なのか」を双方が納得できる根拠ではないでしょうか。
       </p>
     </div>
-    <div class="mt-10 grid gap-6 lg:grid-cols-3">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
       {
         pains.map((item) => (
-          <article class="rounded-2xl border border-border bg-surface p-6">
+          <article class="card-lift rounded-2xl border border-border bg-surface p-6">
             <h3 class="text-xl font-semibold text-balance text-text">{item.title}</h3>
             <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
           </article>
@@ -245,21 +248,46 @@ const faqPreview = [
     </div>
   </section>
 
-  <section id="value" class="border-y border-border bg-surface">
-    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="max-w-3xl space-y-4">
+  {/* ── 3. Agitation (NEW) ── */}
+  <div id="agitation" class="section-animate">
+    <AgitationSection />
+  </div>
+
+  {/* ── Mid-page CTA: after Agitation ── */}
+  <div class="bg-text py-8 text-center">
+    <a
+      href="https://cor-jp.com/contact/"
+      target="_blank"
+      rel="noreferrer"
+      class="font-medium text-primary hover:underline"
+    >
+      &rarr; まずは気軽に相談する
+    </a>
+  </div>
+
+  {/* ── Section transition: Agitation → Solution ── */}
+  <div
+    class="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* ── 4. Solution / Value ── */}
+  <section id="value" class="section-animate border-y border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div class="fade-in-section max-w-3xl space-y-4">
         <p class="text-sm font-semibold text-primary">Grift で変わること</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          概算メモを返すだけの状態から、相手に説明できる提案へ。
+          スプレッドシートと記憶に頼る見積から、データで裏付けされた提案へ。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          いまの段階で約束するのは、完全自動化ではありません。相談内容を整理し、実績と相場を重ね、提案価格に理由を持たせることです。
+          受託開発の見積自動化と聞くと大げさに感じるかもしれません。Griftがやるのは、あなたの実績と市場データを集めて、提案に「説明できる根拠」を持たせることです。
         </p>
       </div>
-      <div class="mt-10 grid gap-6 lg:grid-cols-3">
+      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
         {
           outcomes.map((item) => (
-            <article class="rounded-2xl border border-border bg-background p-6">
+            <article class="card-lift rounded-2xl border border-border bg-background p-6">
               <h3 class="text-xl font-semibold text-balance text-text">{item.title}</h3>
               <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
             </article>
@@ -269,22 +297,30 @@ const faqPreview = [
     </div>
   </section>
 
-  <section id="proof" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+  {/* ── 5. Product Showcase (NEW) ── */}
+  <div id="product" class="section-animate">
+    <ProductShowcase />
+  </div>
+
+  {/* ── 6. Proof / Benefits ── */}
+  <section
+    id="proof"
+    class="section-animate section-alt mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+  >
     <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-      <div class="space-y-4">
-        <p class="text-sm font-semibold text-primary">見積の根拠は 3 つで作る</p>
+      <div class="fade-in-section space-y-4">
+        <p class="text-sm font-semibold text-primary">見積根拠を支える3つのエンジン</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          相場だけでも、自分たちの都合だけでもなく、両方を見て提案する。
+          「相場だけ」でも「経験だけ」でもない。両方のデータを重ねて提案する。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          相手が知りたいのは、価格そのものよりも「なぜその価格なのか」です。Grift
-          は、根拠の置き場所を先に揃えます。
+          クライアントが本当に知りたいのは、金額そのものではありません。なぜその金額に至ったのか。Griftは、その「なぜ」に答えるための材料を3方向から集めます。
         </p>
       </div>
-      <div class="grid gap-4">
+      <div class="stagger-children grid gap-4">
         {
           proofPillars.map((item) => (
-            <article class="rounded-2xl border border-border bg-surface p-6">
+            <article class="card-lift rounded-2xl border border-border bg-surface p-6">
               <h3 class="text-lg font-semibold text-text">{item.title}</h3>
               <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
             </article>
@@ -294,19 +330,35 @@ const faqPreview = [
     </div>
   </section>
 
-  <section id="flow" class="border-y border-border bg-surface">
-    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="max-w-3xl space-y-4">
-        <p class="text-sm font-semibold text-primary">相談から提案までの流れ</p>
+  {/* ── Mid-page CTA: after Proof ── */}
+  <div class="py-8 text-center">
+    <a
+      href="https://cor-jp.com/contact/"
+      target="_blank"
+      rel="noreferrer"
+      class="font-medium text-primary hover:underline"
+    >
+      &rarr; まずは気軽に相談する
+    </a>
+  </div>
+
+  {/* ── Section transition: Proof → Flow ── */}
+  <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent" aria-hidden="true">
+  </div>
+
+  {/* ── 7. Flow / How It Works ── */}
+  <section id="flow" class="section-animate border-y border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div class="fade-in-section max-w-3xl space-y-4">
+        <p class="text-sm font-semibold text-primary">案件相談から提案提出までの流れ</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          いきなり金額を決めるのではなく、人が判断しやすい順番で整える。
+          3ステップで、根拠付きの見積が完成する。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          人が腹落ちするのは、流れが見えるときです。だから Grift
-          では、相談の整理から提案の土台までを一つの線で扱います。
+          案件相談を受けてから見積を提出するまで、これまで丸一日かかっていた作業。Griftなら3つのステップに凝縮されます。
         </p>
       </div>
-      <div class="mt-10 grid gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+      <div class="stagger-children mt-10 grid gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
         {
           flowSteps.map((item, index) => (
             <>
@@ -329,20 +381,29 @@ const faqPreview = [
     </div>
   </section>
 
-  <section id="scenarios" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-primary">こんな案件相談で刺さります</p>
+  {/* ── 8. Social Proof (NEW) ── */}
+  <div id="social-proof" class="section-animate">
+    <SocialProofSection />
+  </div>
+
+  {/* ── 9. Scenarios ── */}
+  <section
+    id="scenarios"
+    class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+  >
+    <div class="fade-in-section max-w-3xl space-y-4">
+      <p class="text-sm font-semibold text-primary">こんな場面で使われています</p>
       <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-        誰が、どんな場面で、Grift を使いたくなるのか。
+        あなたのチームにはどちらが近いですか？
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        抽象的なコンセプトではなく、実際の相談場面に寄せて考える方が、購買判断は進みます。
+        Griftは、フリーランスの個人案件から受託チームの組織的な提案まで対応します。どちらの場面でも、見積にかかる時間と不安を減らせます。
       </p>
     </div>
-    <div class="mt-10 grid gap-6 xl:grid-cols-3">
+    <div class="stagger-children mt-10 grid gap-6 xl:grid-cols-2">
       {
         scenarios.map((item) => (
-          <article class="rounded-3xl border border-border bg-surface p-6">
+          <article class="card-lift rounded-3xl border border-border bg-surface p-6">
             <span class="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-text-muted">
               {item.label}
             </span>
@@ -367,21 +428,24 @@ const faqPreview = [
     </div>
   </section>
 
-  <section class="border-y border-border bg-surface">
-    <div class="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
-      <div class="space-y-4">
+  {/* ── 10. Pricing Preview ── */}
+  <section id="pricing" class="section-animate border-y border-border bg-surface">
+    <div
+      class="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1fr_0.9fr] lg:px-8"
+    >
+      <div class="fade-in-section space-y-4">
         <p class="text-sm font-semibold text-primary">ベータ料金</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          まずは、いまの段階に合う料金で公開する。
+          見積1件あたり約3時間の短縮。まずはこの価格から。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          正式版の価格ではありません。アルファテスター向けの無償または特別価格も含め、まずは合う使いどころから一緒に見ます。
+          ベータ期間中の特別価格です。月に2件以上の見積を作成するなら、Soloプランの月額は初月で回収できます。まずは実案件で効果を確かめてください。
         </p>
       </div>
-      <div class="grid gap-4">
+      <div class="stagger-children grid gap-4">
         {
           pricingPreview.map((item) => (
-            <article class="rounded-2xl border border-border bg-background p-5">
+            <article class="card-lift rounded-2xl border border-border bg-background p-5">
               <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p class="text-base font-semibold text-text">{item.name}</p>
@@ -396,22 +460,25 @@ const faqPreview = [
           href="/pricing"
           class="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
         >
-          料金と導入の考え方を見る
+          料金プランの詳細を見る
         </a>
       </div>
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+  {/* ── 11. FAQ Preview ── */}
+  <section
+    id="faq"
+    class="section-animate section-alt mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+  >
     <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-      <div class="space-y-4">
-        <p class="text-sm font-semibold text-primary">よくある不安</p>
+      <div class="fade-in-section space-y-4">
+        <p class="text-sm font-semibold text-primary">よくある質問</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          ベータ版だからこそ、先に答えておくべきことがあります。
+          導入前に気になるポイントをまとめました。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          実績を盛るよりも、何ができて何がこれからかを明確にした方が、初期の B2B
-          サービスは信頼されます。
+          「AIに見積を任せて大丈夫？」という疑問、当然です。Griftの設計思想と、いまできること・これからのことを正直にお伝えします。
         </p>
         <a
           href="/faq"
@@ -423,27 +490,31 @@ const faqPreview = [
       <div class="space-y-4">
         {
           faqPreview.map((item) => (
-            <article class="rounded-2xl border border-border bg-surface p-6">
-              <h3 class="text-lg font-semibold text-balance text-text">{item.q}</h3>
-              <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.a}</p>
-            </article>
+            <details class="group rounded-2xl border border-border bg-surface" open>
+              <summary class="cursor-pointer list-none p-6 text-lg font-semibold text-balance text-text [&::-webkit-details-marker]:hidden">
+                <h3 class="inline">{item.q}</h3>
+              </summary>
+              <div class="px-6 pb-6">
+                <p class="text-sm leading-7 text-text-muted text-pretty">{item.a}</p>
+              </div>
+            </details>
           ))
         }
       </div>
     </div>
   </section>
 
-  <section class="border-t border-border bg-surface">
-    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="rounded-3xl border border-border bg-background p-8 lg:p-10">
+  {/* ── 12. Final CTA ── */}
+  <section id="cta" class="section-animate border-t border-border bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div class="fade-in-section rounded-3xl border border-border bg-background p-8 lg:p-10">
         <div class="max-w-3xl space-y-4">
-          <p class="text-sm font-semibold text-primary">最後の CTA</p>
+          <p class="text-sm font-semibold text-primary">まずは1案件から</p>
           <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-            いま抱えている案件相談を、そのまま持ち込んでください。
+            いま手元にある案件相談で、Griftを試してみませんか。
           </h2>
           <p class="text-lg leading-8 text-text-muted text-pretty">
-            まだ正式導入を決める段階でなくても構いません。まずは、
-            「この案件で使えるのか」「どのプランから始めるべきか」を一緒に整理します。
+            導入を決める必要はありません。「この案件の見積、どう変わるんだろう」という興味だけで十分です。実際の相談内容をもとに、Griftがどこまで役立つかを一緒に確認しましょう。
           </p>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -453,7 +524,7 @@ const faqPreview = [
             rel="noreferrer"
             class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
           >
-            自分たちの案件で使えるか相談する
+            実際の案件で試してみる
           </a>
         </div>
         <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
@@ -464,4 +535,45 @@ const faqPreview = [
       </div>
     </div>
   </section>
+
+  {/* ── Floating CTA (outside main flow) ── */}
+  <FloatingCTA />
 </MarketingLayout>
+
+<style>
+  /* Scroll-based entrance animations */
+  .section-animate {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+  .section-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const sections = document.querySelectorAll<HTMLElement>('.section-animate');
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    for (const section of sections) {
+      observer.observe(section);
+    }
+  });
+</script>

@@ -17,13 +17,13 @@ export const announcement: AnnouncementConfig = {
   id: 'grift-beta-2026',
 
   /** Announcement text */
-  text: '日本市場向け Grift Beta を公開中',
+  text: 'AI見積自動化ツール Grift ベータ版 公開中 — フリーランス・受託開発チーム向け',
 
   /** Optional link URL */
   href: 'https://cor-jp.com/contact/',
 
   /** Optional link text */
-  linkText: 'ベータ相談はこちら',
+  linkText: '実際の案件で試してみる',
 
   /** Visual style: 'primary' | 'secondary' | 'gradient' */
   variant: 'secondary',
@@ -35,12 +35,13 @@ export const announcement: AnnouncementConfig = {
 /** Configurable content strings for various sections */
 export const content: ContentStrings = {
   newsletter: {
-    title: '更新情報を受け取る',
-    description: '初期ベータの更新、価格改定、公開機能の情報をお送りします。',
+    title: 'Griftの最新情報を受け取る',
+    description:
+      '新機能のリリース、ベータ版の改善情報、AI見積に関するノウハウをお届けします。配信は月1〜2回程度です。',
     placeholder: 'メールアドレスを入力',
     buttonText: '登録する',
-    successMessage: '登録を受け付けました。',
+    successMessage: '登録ありがとうございます。次回の配信をお待ちください。',
     errorMessage: '送信に失敗しました。時間を置いて再度お試しください。',
-    privacyNote: '初期リリースでは LP 内フォームを使わず、外部導線へ集約します。',
+    privacyNote: '現在はお問い合わせフォーム経由でのご連絡を受け付けています。',
   },
 };

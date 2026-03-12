@@ -1,0 +1,141 @@
+---
+/**
+ * ProductShowcase - Product output visualization
+ *
+ * @description
+ * Shows what the user actually gets from Grift — a styled HTML representation
+ * of the estimation report output. Uses dashboard-like aesthetic with color
+ * coding for market vs. proposal comparison.
+ *
+ * @example
+ * ```astro
+ * <ProductShowcase />
+ * ```
+ */
+
+interface ReportRow {
+  /** Label for the metric */
+  label: string;
+  /** Value to display */
+  value: string;
+  /** Optional color variant */
+  variant?: 'market' | 'proposal' | 'delta' | 'default';
+}
+
+const reportRows: ReportRow[] = [
+  { label: '市場相場', value: '¥480万', variant: 'market' },
+  { label: '自社提案', value: '¥420万', variant: 'proposal' },
+  { label: '差分', value: '市場比 12.5% コスト削減', variant: 'delta' },
+];
+
+const summaryItems = [
+  { label: '工数内訳', value: 'フロント 2.0人月 / バックエンド 1.5人月 / インフラ 0.5人月' },
+  {
+    label: '市場ソース',
+    value: 'クラウドソーシング / エージェント / SES / 直接取引（4プロバイダ中央値）',
+  },
+  { label: '速度指標', value: 'GitHub 直近6ヶ月の平均マージ速度から算出' },
+];
+
+const variantStyles = {
+  market: 'text-info',
+  proposal: 'text-success',
+  delta: 'text-primary',
+  default: 'text-text',
+};
+---
+
+<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+  <div class="fade-in-section max-w-3xl space-y-4">
+    <p class="text-sm font-semibold text-primary">アウトプットのイメージ</p>
+    <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+      Grift が出す見積レポート
+    </h2>
+    <p class="text-lg leading-8 text-text-muted text-pretty">
+      実績と市場感を重ねた見積の根拠が、このような形で整理されます。
+    </p>
+  </div>
+
+  <div
+    class="fade-in-section mt-10 rounded-3xl border border-border bg-surface p-5 shadow-lg sm:p-6 lg:p-8"
+  >
+    {/* Report header */}
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-xs font-medium text-text-muted">見積レポート</p>
+        <p class="mt-1 text-lg font-semibold text-text">ECサイトリニューアル案件</p>
+      </div>
+      <span
+        class="inline-flex w-fit items-center rounded-full border border-success/30 bg-success-bg px-3 py-1 text-xs font-medium text-success"
+      >
+        レポート生成済み
+      </span>
+    </div>
+
+    <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
+      {/* Price comparison card */}
+      <div class="card-lift rounded-2xl border border-border bg-background p-5">
+        <p class="text-sm font-semibold text-text">価格比較</p>
+        <div class="mt-4 space-y-4">
+          {
+            reportRows.map((row) => (
+              <div class="flex items-baseline justify-between gap-4">
+                <span class="text-sm text-text-muted">{row.label}</span>
+                <span
+                  class:list={[
+                    'text-right font-bold tabular-nums',
+                    row.variant === 'delta' ? 'text-base' : 'text-2xl',
+                    variantStyles[row.variant ?? 'default'],
+                  ]}
+                >
+                  {row.value}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Visual bar comparison */}
+        <div class="mt-6 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs text-text-muted">
+              <span>市場相場</span>
+              <span>¥480万</span>
+            </div>
+            <div class="mt-1 h-3 w-full rounded-full bg-info/20">
+              <div class="bar-pulse h-3 rounded-full bg-info" style="width: 100%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-xs text-text-muted">
+              <span>自社提案</span>
+              <span>¥420万</span>
+            </div>
+            <div class="mt-1 h-3 w-full rounded-full bg-success/20">
+              <div class="bar-pulse h-3 rounded-full bg-success" style="width: 87.5%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary card */}
+      <div class="card-lift rounded-2xl border border-border bg-background p-5">
+        <p class="text-sm font-semibold text-text">根拠サマリー</p>
+        <div class="mt-4 space-y-4">
+          {
+            summaryItems.map((item) => (
+              <div>
+                <p class="text-xs font-medium text-primary">{item.label}</p>
+                <p class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.value}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-center text-xs text-text-muted">
+      ※ サンプルデータです。実際のレポートは案件内容に応じて生成されます。
+    </p>
+  </div>
+</section>

@@ -70,7 +70,7 @@ const { heroSelector = '#hero' } = Astro.props;
 </div>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  const initFloatingCta = (): void => {
     const floatingCta = document.getElementById('floating-cta') as HTMLElement | null;
     const closeButton = document.getElementById('floating-cta-close') as HTMLElement | null;
 
@@ -114,5 +114,11 @@ const { heroSelector = '#hero' } = Astro.props;
       hide();
       observer.disconnect();
     });
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingCta);
+  } else {
+    initFloatingCta();
+  }
 </script>

@@ -10,9 +10,7 @@ test.describe('Accessibility — WCAG 2 AA', () => {
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(500);
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
     const critical = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
@@ -24,9 +22,7 @@ test.describe('Accessibility — WCAG 2 AA', () => {
   test('pricing page has no critical a11y violations', async ({ page }) => {
     await page.goto('/pricing/');
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
     const critical = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
@@ -38,9 +34,7 @@ test.describe('Accessibility — WCAG 2 AA', () => {
   test('faq page has no critical a11y violations', async ({ page }) => {
     await page.goto('/faq/');
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
     const critical = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'

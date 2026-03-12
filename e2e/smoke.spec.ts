@@ -23,7 +23,15 @@ test.describe('Landing page smoke tests', () => {
   });
 
   test('all major sections become visible after scroll animations', async ({ page }) => {
-    const sectionIds = ['#problem', '#agitation', '#value', '#product', '#flow', '#pricing', '#cta'];
+    const sectionIds = [
+      '#problem',
+      '#agitation',
+      '#value',
+      '#product',
+      '#flow',
+      '#pricing',
+      '#cta',
+    ];
 
     for (const id of sectionIds) {
       const section = page.locator(id);
@@ -97,4 +105,3 @@ test.describe('Key pages load correctly', () => {
     });
   }
 });
-

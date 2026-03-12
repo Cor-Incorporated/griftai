@@ -14,6 +14,7 @@ const plans = [
     fit: '個人の受託案件で、見積の迷いを減らしたい方',
     roi: '見積1件あたり約3時間短縮。月2件で元が取れます。',
     features: ['1ユーザー', '月5案件', 'AIヒアリング', '基本見積レポート', 'GitHub連携（1 org）'],
+    href: 'https://buy.stripe.com/test_7sY28sbdNfyPbeJ1Oh9k400',
   },
   {
     name: 'Studio Beta',
@@ -30,6 +31,7 @@ const plans = [
       'チーム共有',
     ],
     highlighted: true,
+    href: 'https://buy.stripe.com/test_fZu28s81BfyP96BakN9k401',
   },
   {
     name: 'Custom',
@@ -44,6 +46,7 @@ const plans = [
       'Linear/GitHub自動同期',
       '専任サポート',
     ],
+    href: contactUrl,
   },
 ];
 
@@ -142,7 +145,9 @@ const onboardingSteps = [
                 ))}
               </ul>
               <a
-                href={contactUrl}
+                href={plan.href}
+                target={plan.name === 'Custom' ? '_blank' : undefined}
+                rel={plan.name === 'Custom' ? 'noreferrer' : undefined}
                 class:list={[
                   'mt-8 inline-flex w-full items-center justify-center rounded-md px-5 py-3 text-sm font-medium transition-colors',
                   plan.highlighted
@@ -150,7 +155,7 @@ const onboardingSteps = [
                     : 'border border-border text-text hover:bg-background',
                 ]}
               >
-                {plan.name === 'Custom' ? '個別導入を相談する' : 'このプランで相談する'}
+                {plan.name === 'Custom' ? '個別導入を相談する' : 'このプランで始める'}
               </a>
             </article>
           ))

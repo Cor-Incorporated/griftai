@@ -96,16 +96,19 @@ const pricingPreview = [
     name: 'Solo Beta',
     price: '¥9,800 / 月',
     fit: 'フリーランス向け — 見積1件あたり約3時間の短縮。月2件以上で元が取れます',
+    href: 'https://buy.stripe.com/test_7sY28sbdNfyPbeJ1Oh9k400',
   },
   {
     name: 'Studio Beta',
     price: '¥29,800 / 月',
     fit: '2〜10人のチーム向け — メンバー全員が根拠付きの見積を出せる体制へ',
+    href: 'https://buy.stripe.com/test_fZu28s81BfyP96BakN9k401',
   },
   {
-    name: 'Enterprise',
-    price: '要問い合わせ',
+    name: 'Custom',
+    price: '要相談',
     fit: '権限管理・SSO・カスタム連携が必要な組織向け',
+    href: 'https://cor-jp.com/contact/',
   },
 ];
 
@@ -445,7 +448,12 @@ const faqPreview = [
       <div class="stagger-children grid gap-4">
         {
           pricingPreview.map((item) => (
-            <article class="card-lift rounded-2xl border border-border bg-background p-5">
+            <a
+              href={item.href}
+              target={item.name === 'Custom' ? '_blank' : undefined}
+              rel={item.name === 'Custom' ? 'noreferrer' : undefined}
+              class="card-lift block rounded-2xl border border-border bg-background p-5 no-underline transition-colors hover:border-primary/40"
+            >
               <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p class="text-base font-semibold text-text">{item.name}</p>
@@ -453,7 +461,7 @@ const faqPreview = [
                 </div>
                 <p class="shrink-0 text-lg font-semibold tabular-nums text-text">{item.price}</p>
               </div>
-            </article>
+            </a>
           ))
         }
         <a

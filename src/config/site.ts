@@ -14,7 +14,7 @@ export const name = import.meta.env.SITE_NAME || 'Grift';
 /** Site description for SEO and meta tags */
 export const description =
   import.meta.env.SITE_DESCRIPTION ||
-  '開発案件の見積に、説明できる理由を。これまでの実績と市場感を整理し、相手に伝わる提案の土台をつくる。現在はベータ提供中。';
+  'Grift — フリーランス・受託開発チームのためのAI見積自動化ツール。GitHub実績と市場相場データを照合し、開発見積に説明できる根拠を自動生成。見積の属人化を解消し、提案品質を標準化します。';
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';

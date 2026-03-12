@@ -1,0 +1,126 @@
+---
+/**
+ * SocialProofSection - Trust building section for beta stage
+ *
+ * @description
+ * Builds trust through beta status transparency, team credentials,
+ * and technology trust signals. No fake testimonials — honest beta messaging.
+ *
+ * @example
+ * ```astro
+ * <SocialProofSection />
+ * ```
+ */
+
+import { Icon } from 'astro-icon/components';
+
+interface TechSignal {
+  /** Lucide icon name */
+  icon: string;
+  /** Technology/integration name */
+  name: string;
+}
+
+const techSignals: TechSignal[] = [
+  { icon: 'lucide:github', name: 'GitHub 連携' },
+  { icon: 'lucide:brain', name: 'Claude AI' },
+  { icon: 'lucide:bar-chart-3', name: '4プロバイダ市場調査' },
+  { icon: 'lucide:shield-check', name: 'データ暗号化' },
+];
+---
+
+<section class="border-y border-border bg-surface">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    {/* Beta status */}
+    <div class="text-center">
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary"
+      >
+        <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
+        現在、限定ベータとして提供中
+      </span>
+    </div>
+
+    <div class="stagger-children mt-12 grid gap-8 lg:grid-cols-2">
+      {/* Founder story */}
+      <article class="card-lift rounded-2xl border border-border bg-background p-6">
+        <p class="text-sm font-semibold text-primary">創業者の話</p>
+        <h3 class="mt-3 text-xl font-semibold text-balance text-text">
+          「自分の実力をフルに発揮したいだけなのに、なぜ見積で消耗しているんだろう。」
+        </h3>
+        <div class="mt-4 space-y-3">
+          <p class="text-sm leading-7 text-text-muted text-pretty">
+            複数の大きなプロジェクトを並行して走らせていた頃、いちばん時間を食っていたのは開発ではなく、顧客との要件すり合わせでした。抽象的な要望に対して何度もコミュニケーションを重ね、ようやく合意した内容が翌週にはひっくり返る。「バグ報告」として実装した機能が、実は新規追加だったと後から分かり、顧客とトラブルになったこともあります。
+          </p>
+          <p class="text-sm leading-7 text-text-muted text-pretty">
+            フリーランスを始めたばかりの人が、本来作りたいものに投下すべきリソースを見積作業に奪われている。自分の市場価値がふっかけすぎていないか、安すぎやしないか、後から悶々とする。同じ不安は発注する企業側にもあって、「この価格は本当に適正なのか」と常に疑念を抱えている。
+          </p>
+          <p class="text-sm leading-7 text-text-muted text-pretty">
+            AIの普及で制作の垣根が下がり、価格競争はさらに厳しくなる時代。見積や顧客対応が足枷であり続けるのはおかしい。作り手が自分の実力をフルに発揮できる世界を、このツールで作りたい。それがGriftの出発点です。
+          </p>
+        </div>
+        <div class="mt-6 flex items-center gap-4 rounded-xl border border-border bg-surface p-4">
+          <img
+            src="/images/profile.png"
+            alt="寺田 康佑"
+            width="56"
+            height="56"
+            class="size-14 shrink-0 rounded-full object-cover"
+            loading="lazy"
+          />
+          <div>
+            <p class="text-sm font-semibold text-text">寺田 康佑</p>
+            <p class="text-xs text-text-muted">Cor.inc 代表</p>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
+          <img
+            src="/images/logo_with_text.png"
+            alt="Cor.Inc"
+            width="40"
+            height="40"
+            class="size-10 shrink-0 rounded-lg object-contain"
+            loading="lazy"
+          />
+          <div>
+            <p class="text-sm font-semibold text-text">
+              Backed by
+              <a
+                href="https://cor-jp.com"
+                target="_blank"
+                rel="noreferrer"
+                class="text-primary transition-colors hover:text-primary-dark"
+              >
+                Cor.inc
+              </a>
+            </p>
+            <p class="text-xs text-text-muted">cor-jp.com</p>
+          </div>
+        </div>
+      </article>
+
+      {/* Technology trust signals */}
+      <article class="card-lift rounded-2xl border border-border bg-background p-6">
+        <p class="text-sm font-semibold text-primary">技術スタック</p>
+        <h3 class="mt-3 text-xl font-semibold text-balance text-text">
+          信頼できる技術基盤の上に構築
+        </h3>
+        <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
+          見積の根拠を作るために、開発実績の解析と市場データの収集を組み合わせています。
+        </p>
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          {
+            techSignals.map((signal) => (
+              <div class="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
+                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Icon name={signal.icon} class="size-5 text-primary" aria-hidden="true" />
+                </div>
+                <p class="text-sm font-medium text-text">{signal.name}</p>
+              </div>
+            ))
+          }
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

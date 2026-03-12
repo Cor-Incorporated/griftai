@@ -1,0 +1,77 @@
+---
+import { siteConfig } from '@/config';
+
+interface Props {
+  type: 'software' | 'faq' | 'organization';
+  faqItems?: Array<{ question: string; answer: string }>;
+}
+
+const { type, faqItems = [] } = Astro.props;
+
+const softwareApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Grift',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  description:
+    '受託開発・フリーランス向けAI見積自動化ツール。GitHub実績と市場相場データに基づいた根拠ある見積を、AIが自動生成します。',
+  offers: {
+    '@type': 'AggregateOffer',
+    lowPrice: '9800',
+    highPrice: '49800',
+    priceCurrency: 'JPY',
+    offerCount: '3',
+  },
+  provider: {
+    '@type': 'Organization',
+    name: 'Cor.inc',
+    url: 'https://cor-jp.com',
+  },
+};
+
+const faqPageSchema =
+  faqItems.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Cor.inc',
+  url: 'https://cor-jp.com',
+  logo: `${siteConfig.url}/logo.svg`,
+  sameAs: [],
+};
+---
+
+{
+  type === 'software' && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(softwareApplicationSchema)}
+    />
+  )
+}
+{
+  type === 'faq' && faqPageSchema && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
+  )
+}
+{
+  type === 'organization' && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+  )
+}

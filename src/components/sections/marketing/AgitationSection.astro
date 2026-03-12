@@ -1,0 +1,66 @@
+---
+/**
+ * AgitationSection - PAS framework "Agitation" section
+ *
+ * @description
+ * Shows what happens if the persona does NOTHING about their estimation problems.
+ * Escalating urgency with a professional, thoughtful tone suitable for Japanese B2B.
+ *
+ * @example
+ * ```astro
+ * <AgitationSection />
+ * ```
+ */
+
+interface AgitationPoint {
+  /** Escalation step number */
+  step: number;
+  /** Point description */
+  text: string;
+}
+
+const points: AgitationPoint[] = [
+  {
+    step: 1,
+    text: '値下げ交渉で「根拠は？」と聞かれるたびに、曖昧な返答を繰り返す',
+  },
+  {
+    step: 2,
+    text: '代表しか見積を出せない構造が固定化し、受注キャパシティに天井ができる',
+  },
+  {
+    step: 3,
+    text: '競合が客観データで提案してきた時、勘と経験だけでは勝てなくなる',
+  },
+];
+---
+
+<section
+  class="grain-bg border-y border-border bg-text"
+  style="background: linear-gradient(135deg, oklch(0.25 0.03 250), oklch(0.18 0.02 240));"
+>
+  <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="fade-in-section max-w-3xl space-y-4">
+      <p class="text-sm font-semibold text-primary">このまま放置すると</p>
+      <h2 class="text-3xl font-semibold leading-[1.18] text-background sm:text-4xl">
+        その見積、このまま続けますか？
+      </h2>
+      <p class="text-lg leading-8 text-background/60 text-pretty">
+        いまは回っているかもしれません。でも、見積に根拠がない状態を放置すると、少しずつ選択肢が狭まっていきます。
+      </p>
+    </div>
+
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+      {
+        points.map((point) => (
+          <article class="relative rounded-2xl border border-background/10 bg-background/5 p-6 backdrop-blur-sm">
+            <div class="mb-4 flex size-14 items-center justify-center rounded-full border border-primary/40 bg-primary/15 text-2xl font-bold tabular-nums text-primary">
+              {point.step}
+            </div>
+            <p class="text-base leading-7 text-background/80 text-pretty">{point.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import Header from '@layout/Header.astro';
 import Footer from '@layout/Footer.astro';
 import AnnouncementBar from '@layout/AnnouncementBar.astro';
+import StructuredData from '@components/common/StructuredData.astro';
 import { siteConfig } from '@/config';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
+  faqItems?: Array<{ question: string; answer: string }>;
 }
 
 const {
@@ -26,9 +28,11 @@ const {
   modifiedDate,
   author,
   tags,
+  faqItems,
 } = Astro.props;
 
 const { announcement } = siteConfig;
+const isHome = Astro.url.pathname === '/';
 ---
 
 <BaseLayout
@@ -41,6 +45,9 @@ const { announcement } = siteConfig;
   author={author}
   tags={tags}
 >
+  <StructuredData type="organization" />
+  {isHome && <StructuredData type="software" />}
+  {faqItems && faqItems.length > 0 && <StructuredData type="faq" faqItems={faqItems} />}
   <div class="flex flex-col min-h-screen">
     {
       announcement.enabled && (
@@ -60,4 +67,37 @@ const { announcement } = siteConfig;
     </main>
     <Footer />
   </div>
+
+  <script>
+    const initScrollAnimations = (): void => {
+      const targets = document.querySelectorAll('.fade-in-section, .stagger-children');
+      if (targets.length === 0) return;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        for (const el of targets) {
+          el.classList.add('is-visible');
+        }
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries: IntersectionObserverEntry[]) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      for (const el of targets) {
+        observer.observe(el);
+      }
+    };
+
+    document.addEventListener('astro:page-load', initScrollAnimations);
+  </script>
 </BaseLayout>

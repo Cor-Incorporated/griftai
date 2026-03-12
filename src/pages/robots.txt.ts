@@ -8,27 +8,22 @@ export const GET: APIRoute = () => {
 User-agent: *
 Allow: /
 
-# Disallow template-only or non-launch routes
+# Disallow non-public routes only
 Disallow: /api/
-Disallow: /_astro/
 Disallow: /dashboard/
 Disallow: /login/
 Disallow: /register/
 Disallow: /forgot-password/
-Disallow: /about/
-Disallow: /careers/
-Disallow: /customers/
-Disallow: /demo/
-Disallow: /docs/
-Disallow: /enterprise/
-Disallow: /features/
-Disallow: /integrations/
-Disallow: /roadmap/
-Disallow: /security/
-Disallow: /status/
-Disallow: /testimonials/
-Disallow: /blog/
-Disallow: /changelog/
+
+# Explicitly allow Google AI / Gemini crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
 
 # Sitemap location
 Sitemap: ${siteConfig.url}/sitemap-index.xml

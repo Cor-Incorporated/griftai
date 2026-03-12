@@ -1,0 +1,118 @@
+---
+/**
+ * FloatingCTA - Mobile-first floating CTA bar
+ *
+ * @description
+ * A fixed bottom CTA bar that appears after scrolling past the hero section.
+ * Uses IntersectionObserver for scroll detection. Primarily visible on mobile,
+ * shown as a subtle bar on desktop. Includes dismiss functionality.
+ *
+ * @example
+ * ```astro
+ * <FloatingCTA />
+ * ```
+ *
+ * @example With custom hero selector
+ * ```astro
+ * <FloatingCTA heroSelector="#hero" />
+ * ```
+ */
+
+interface Props {
+  /** CSS selector for the hero section to observe */
+  heroSelector?: string;
+}
+
+const { heroSelector = '#hero' } = Astro.props;
+---
+
+<div
+  id="floating-cta"
+  class="fixed inset-x-0 bottom-0 z-50 translate-y-full transition-transform duration-300 ease-out"
+  data-hero-selector={heroSelector}
+  aria-hidden="true"
+>
+  <div class="border-t border-border bg-background/80 px-4 py-3 backdrop-blur-lg sm:py-2">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
+      <p class="hidden text-sm text-text-muted sm:block">無料・5分で完了</p>
+      <div class="flex flex-1 items-center gap-3 sm:flex-none">
+        <a
+          href="https://cor-jp.com/contact/"
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex flex-1 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark sm:flex-none"
+        >
+          まずは相談する
+        </a>
+        <button
+          type="button"
+          id="floating-cta-close"
+          class="flex size-8 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface hover:text-text"
+          aria-label="閉じる"
+        >
+          <svg
+            class="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const floatingCta = document.getElementById('floating-cta') as HTMLElement | null;
+    const closeButton = document.getElementById('floating-cta-close') as HTMLElement | null;
+
+    if (!floatingCta || !closeButton) return;
+
+    const heroSelector = floatingCta.dataset.heroSelector ?? '#hero';
+    const heroSection = document.querySelector(heroSelector);
+
+    if (!heroSection) return;
+
+    let dismissed = false;
+
+    const show = (): void => {
+      if (dismissed) return;
+      floatingCta.classList.remove('translate-y-full');
+      floatingCta.setAttribute('aria-hidden', 'false');
+    };
+
+    const hide = (): void => {
+      floatingCta.classList.add('translate-y-full');
+      floatingCta.setAttribute('aria-hidden', 'true');
+    };
+
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            hide();
+          } else {
+            show();
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(heroSection);
+
+    closeButton.addEventListener('click', () => {
+      dismissed = true;
+      hide();
+      observer.disconnect();
+    });
+  });
+</script>

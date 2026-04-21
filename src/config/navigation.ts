@@ -46,8 +46,8 @@ export const navigation: Navigation = {
       { label: '導入の流れ', href: '/#flow' },
     ],
     resources: [
-      { label: '日本市場向け Beta', href: '/#hero' },
-      { label: 'ベータ料金', href: '/pricing' },
+      { label: 'アルファテスト', href: '/#hero' },
+      { label: '料金プラン', href: '/pricing' },
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],

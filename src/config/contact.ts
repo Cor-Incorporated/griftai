@@ -42,12 +42,12 @@ export const contactMethods: ContactMethod[] = [
 export const contactFAQs: ContactFAQ[] = [
   {
     question: '問い合わせはどこに送られますか？',
-    answer: '初期ベータでは、すべて Cor.inc の既存問い合わせ窓口に集約します。',
+    answer: 'アルファテスト中は、すべて Cor.inc の既存問い合わせ窓口に集約します。',
   },
   {
     question: 'LP 内にフォームはありますか？',
     answer:
-      '初期リリースでは設置しません。後から差し替えやすいように実装しつつ、現在は既存の問い合わせ導線を使います。',
+      '設置していません。後から差し替えやすいように実装しつつ、現在は既存の問い合わせ導線を使います。',
   },
   {
     question: 'Enterprise 相談も同じ窓口ですか？',

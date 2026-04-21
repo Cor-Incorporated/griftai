@@ -17,7 +17,7 @@ export const announcement: AnnouncementConfig = {
   id: 'grift-beta-2026',
 
   /** Announcement text */
-  text: 'AI見積自動化ツール Grift ベータ版 公開中 — フリーランス・受託開発チーム向け',
+  text: 'AI見積自動化ツール Grift — プライベートアルファテスト募集中',
 
   /** Optional link URL */
   href: 'https://cor-jp.com/contact/',

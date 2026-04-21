@@ -6,85 +6,65 @@ import { siteConfig } from '@/config';
 
 const contactUrl = 'https://cor-jp.com/contact/';
 
-const plans = [
-  {
-    name: 'Solo Beta',
-    price: '¥9,800',
-    caption: '/ 月',
-    fit: '個人の受託案件で、見積の迷いを減らしたい方',
-    roi: '見積1件あたり約3時間短縮。月2件で元が取れます。',
-    features: ['1ユーザー', '月5案件', 'AIヒアリング', '基本見積レポート', 'GitHub連携（1 org）'],
-    href: 'https://buy.stripe.com/test_7sY28sbdNfyPbeJ1Oh9k400',
-  },
-  {
-    name: 'Studio Beta',
-    price: '¥29,800',
-    caption: '/ 月',
-    fit: 'チームで見積品質を標準化したい2〜5人のチーム',
-    roi: 'チーム全員が同じ品質の見積を出せる。属人化からの解放。',
-    features: [
-      '5ユーザー',
-      '月20案件',
-      '全機能',
-      '市場調査詳細レポート',
-      'GitHub連携（3 orgs）',
-      'チーム共有',
-    ],
-    highlighted: true,
-    href: 'https://buy.stripe.com/test_fZu28s81BfyP96BakN9k401',
-  },
-  {
-    name: 'Custom',
-    price: '要相談',
-    caption: '',
-    fit: '6人以上のチームや、独自のワークフロー連携が必要な方',
-    roi: '',
-    features: [
-      'ユーザー数無制限',
-      '案件数無制限',
-      'API連携',
-      'Linear/GitHub自動同期',
-      '専任サポート',
-    ],
-    href: contactUrl,
-  },
+const alphaTestCard = {
+  name: 'プライベートアルファテスト',
+  price: '無料',
+  caption: 'フィードバックと引換に早期アクセス',
+  description:
+    '現在アルファ開発中です。実際の案件でGriftを無料で試し、フィードバックを提供いただいた方に早期アクセス権を付与します。',
+  features: [
+    'AIヒアリング（仕様の構造化）',
+    '基本見積レポート',
+    'GitHub連携（Velocity分析）',
+    '個別サポート（開発チーム直接）',
+  ],
+};
+
+const plannedFeatures = [
+  'マルチプロバイダ市場調査（複数AIソースによる相場クロスバリデーション）',
+  'Go/No-Goスコアリング（受注判断の定量化）',
+  'Linear / GitHub自動同期（承認済み見積からタスクを自動生成）',
+  'チーム共有と権限管理',
 ];
 
 const selectionGuides = [
   {
-    condition: '年間の見積件数が10件以下',
-    recommendation: 'Solo Beta',
-    body: '個人で受ける案件の見積を効率化するなら、まずはSolo Betaで十分です。月5案件まで対応でき、AIヒアリングと基本レポートで見積作業を短縮できます。',
+    condition: 'アルファテストに参加したい',
+    recommendation: 'プライベートアルファテスト',
+    body: '実際の案件でGriftを無料で試せます。フィードバックを通じて製品の改善にご協力いただける方を募集しています。月5案件まで対応可能です。',
   },
   {
-    condition: 'チームメンバーが見積を出す場合がある',
-    recommendation: 'Studio Beta',
-    body: '代表や上流エンジニアだけでなくメンバーも見積を出す体制なら、Studio Betaが向いています。見積プロセスをチームで共有し、ブラックボックス化した提案品質の属人化を解消します。',
+    condition: 'チームでの導入を検討している',
+    recommendation: 'お問い合わせください',
+    body: '2〜10人のチームでの利用を想定しています。チーム体制や案件規模をお聞かせいただければ、アルファテストから段階的に対応をご案内します。',
   },
   {
     condition: '既存ツール（Linear, GitHub）と自動連携したい',
-    recommendation: 'Custom',
-    body: '既存の開発ワークフローにGriftを組み込みたい場合は、Customプランでの個別対応が必要です。API連携やLinear/GitHub自動同期に対応します。',
+    recommendation: '開発予定 — ご要望をお聞かせください',
+    body: 'Linear/GitHub連携は開発ロードマップに含まれています。連携したいツールやワークフローをお聞かせいただければ、優先度の検討に活用させていただきます。',
   },
 ];
 
 const pricingFaqs = [
   {
-    question: '無料トライアルはありますか？',
+    question: 'アルファテストは無料ですか？',
     answer:
-      '現在はベータ版のため、まずはお問い合わせいただき、実際の案件でお試しいただく形をとっています。',
+      'はい。アルファテスト期間中は無料でご利用いただけます。実際の案件でGriftをお試しいただき、フィードバックを提供していただくことが参加条件です。',
   },
   {
-    question: '年額割引はありますか？',
-    answer: 'ベータ期間中は月額のみです。正式版で年額プランの導入を検討しています。',
+    question: '正式リリース後の料金はどうなりますか？',
+    answer:
+      '正式リリース時に料金体系を設定する予定です。アルファテスト参加者には移行時の優遇を検討しています。',
   },
   {
-    question: '途中でプランを変更できますか？',
-    answer: 'はい。月単位でアップグレード・ダウングレードが可能です。',
+    question: '途中でやめることはできますか？',
+    answer:
+      'はい。いつでもアルファテストを終了できます。データはお客様のアカウント内でのみ利用されます。',
   },
   {
-    question: '支払い方法は？',
-    answer: 'クレジットカード（Stripe経由）でのお支払いとなります。',
+    question: 'どのような案件に使えますか？',
+    answer:
+      '新規開発、追加開発、改修、バグ修正など、受託開発全般の見積に対応予定です。アルファ版では一部機能が限定されています。',
   },
 ];
 
@@ -94,8 +74,8 @@ const onboardingSteps = [
     body: '現在の見積プロセスや課題をお聞かせください',
   },
   {
-    title: 'ベータ案内',
-    body: '利用イメージに合うか確認し、アカウントを発行します',
+    title: 'アルファテストご案内',
+    body: '利用イメージに合うか確認し、アクセスを提供します',
   },
   {
     title: '利用開始',
@@ -106,60 +86,51 @@ const onboardingSteps = [
 
 <MarketingLayout
   title={`料金プラン — 受託開発・フリーランスのAI見積自動化 | ${siteConfig.name}`}
-  description="Grift の料金プラン。フリーランスのSolo Betaから受託チームのStudio Betaまで、AI見積自動化の導入費用と含まれる機能をご案内します。"
+  description="Grift の料金プラン。現在プライベートアルファテストを実施中。フリーランス・受託開発チームのAI見積自動化ツールを無料でお試しいただけます。"
   faqItems={pricingFaqs}
 >
   <PageHeader
-    title="料金プラン"
-    subtitle="受託開発・フリーランスのAI見積自動化。チーム規模と案件数に合わせて選べる3つのプランをご用意しています。"
+    title="プライベートアルファテスト"
+    subtitle="現在アルファ開発中です。実際の案件でGriftを無料で試せるプライベートアルファテストにご招待します。"
   />
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-6 lg:grid-cols-3">
-        {
-          plans.map((plan) => (
-            <article
-              class:list={[
-                'flex h-full flex-col rounded-3xl border p-7 shadow-sm',
-                plan.highlighted ? 'border-primary/40 bg-primary/5' : 'border-border bg-surface',
-              ]}
-            >
-              <p class="text-lg font-semibold text-text">{plan.name}</p>
-              <p class="mt-3 min-h-12 text-pretty text-sm leading-7 text-text-muted">{plan.fit}</p>
-              <div class="mt-6">
-                <p class="text-4xl font-bold tabular-nums text-text">{plan.price}</p>
-                {plan.caption && <p class="mt-1 text-sm text-text-muted">{plan.caption}</p>}
-              </div>
-              {plan.roi && (
-                <p class="mt-4 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm leading-6 text-text">
-                  {plan.roi}
-                </p>
-              )}
-              <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
-                {plan.features.map((feature) => (
-                  <li class="flex gap-3">
-                    <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href={plan.href}
-                target={plan.name === 'Custom' ? '_blank' : undefined}
-                rel={plan.name === 'Custom' ? 'noreferrer' : undefined}
-                class:list={[
-                  'mt-8 inline-flex w-full items-center justify-center rounded-md px-5 py-3 text-sm font-medium transition-colors',
-                  plan.highlighted
-                    ? 'bg-primary text-white hover:bg-primary-dark'
-                    : 'border border-border text-text hover:bg-background',
-                ]}
-              >
-                {plan.name === 'Custom' ? '個別導入を相談する' : 'このプランで始める'}
-              </a>
-            </article>
-          ))
-        }
+      <div class="mx-auto max-w-md">
+        <article
+          class="flex h-full flex-col rounded-3xl border border-primary/40 p-7 shadow-sm bg-primary/5"
+        >
+          <p class="text-lg font-semibold text-text">{alphaTestCard.name}</p>
+          <p class="mt-3 min-h-12 text-pretty text-sm leading-7 text-text-muted">
+            {alphaTestCard.description}
+          </p>
+          <div class="mt-6">
+            <p class="text-4xl font-bold tabular-nums text-text">{alphaTestCard.price}</p>
+            {
+              alphaTestCard.caption && (
+                <p class="mt-1 text-sm text-text-muted">{alphaTestCard.caption}</p>
+              )
+            }
+          </div>
+          <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
+            {
+              alphaTestCard.features.map((feature) => (
+                <li class="flex gap-3">
+                  <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span>{feature}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a
+            href={contactUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="mt-8 inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-3 text-sm font-medium transition-colors text-white hover:bg-primary-dark"
+          >
+            アルファテストに申し込む
+          </a>
+        </article>
       </div>
     </div>
   </section>
@@ -167,15 +138,39 @@ const onboardingSteps = [
   <section class="bg-surface py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-primary">プラン選びの目安</p>
+        <p class="text-sm font-semibold text-primary">開発ロードマップ（予定）</p>
         <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          チームの規模ではなく、見積の頻度と体制で選ぶ。
+          正式リリースに向けた機能開発予定
+        </h2>
+        <p class="mt-4 text-lg leading-8 text-text-muted text-pretty">
+          以下の機能は開発ロードマップに含まれています。アルファテスト参加者のフィードバックを元に、優先度を決定しています。
+        </p>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        {
+          plannedFeatures.map((feature) => (
+            <div class="flex gap-3 rounded-2xl border border-border bg-background p-5">
+              <Icon name="lucide:sparkles" class="mt-0.5 size-5 shrink-0 text-primary" />
+              <p class="text-sm leading-7 text-text-muted text-pretty">{feature}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-background py-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-semibold text-primary">ご案内</p>
+        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+          どのような方に合っているか
         </h2>
       </div>
       <div class="mt-10 grid gap-6 lg:grid-cols-3">
         {
           selectionGuides.map((guide) => (
-            <article class="rounded-2xl border border-border bg-background p-6">
+            <article class="rounded-2xl border border-border bg-surface p-6">
               <p class="text-sm font-semibold text-primary">{guide.condition}</p>
               <h3 class="mt-2 text-xl font-semibold text-text">{guide.recommendation}</h3>
               <p class="mt-3 text-pretty leading-7 text-text-muted">{guide.body}</p>
@@ -189,9 +184,7 @@ const onboardingSteps = [
   <section class="bg-background py-section">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
       <div class="mb-12 text-center">
-        <h2 class="text-2xl font-bold text-balance text-text sm:text-3xl">
-          料金に関するよくある質問
-        </h2>
+        <h2 class="text-2xl font-bold text-balance text-text sm:text-3xl">よくある質問</h2>
       </div>
       <div class="space-y-4">
         {
@@ -244,14 +237,16 @@ const onboardingSteps = [
             まずはいま抱えている案件で、Griftを試してみませんか。
           </h2>
           <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            料金表だけでは判断しにくい部分もあると思います。実際の案件内容をお聞かせいただければ、どのプランが合うかを含めてご案内します。お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡します。
+            料金は発生しません。実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡します。
           </p>
         </div>
         <a
           href={contactUrl}
+          target="_blank"
+          rel="noreferrer"
           class="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark lg:mt-0"
         >
-          導入相談をする
+          アルファテストに申し込む
         </a>
       </div>
     </div>

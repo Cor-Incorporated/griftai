@@ -27,7 +27,7 @@ const outcomes = [
   },
   {
     title: '見積の根拠を、数字で語れるようになる',
-    body: '4つのAIプロバイダが並列で市場相場を調査。GitHub実績と照合し、「なぜこの価格か」を客観データで説明できます。',
+    body: 'AIプロバイダが市場相場を調査。GitHub実績と照合し、「なぜこの価格か」を客観データで説明できます。',
   },
   {
     title: '誰が作っても同じ品質の提案書が出る',
@@ -41,12 +41,12 @@ const proofPillars = [
     body: 'PR速度、マージまでの時間、コミット頻度をスキャンし、あなたのチームの開発力を客観的な指標に変換。「実績あります」ではなく、データで実力を証明します。',
   },
   {
-    title: '2. マルチソース市場調査',
-    body: 'Grok・Brave・Perplexity・Geminiの4プロバイダに同時問い合わせ。単一ソースの偏りを排除し、クロスバリデーションされた相場レンジを提示します。',
+    title: '2. AI市場調査（開発中）',
+    body: '複数のAIプロバイダに市場相場を問い合わせ、クロスバリデーションされた相場レンジを提示します。現在アルファ版では単一プロバイダで調査を検証中です。',
   },
   {
-    title: '3. 比較レポート生成',
-    body: '市場標準と自社提案を並べた比較資料を自動作成。どこが相場より高く、どこが安いのかが一目で分かり、クライアントへの説明がそのまま資料になります。',
+    title: '3. 見積レポート生成',
+    body: '市場標準と自社提案を並べた比較資料を生成します。どこが相場より高く、どこが安いのかが一目で分かり、クライアントへの説明がそのまま資料になります。',
   },
 ];
 
@@ -59,12 +59,12 @@ const flowSteps = [
   {
     step: '02',
     title: '市場相場と実績を自動照合',
-    body: '4つのAIプロバイダが並列で市場調査を実行。同時にGitHubリポジトリから開発実績を分析し、あなたの提案に客観的な裏付けを加えます。',
+    body: 'AIプロバイダが市場調査を実行。同時にGitHubリポジトリから開発実績を分析し、あなたの提案に客観的な裏付けを加えます。',
   },
   {
     step: '03',
     title: '根拠付きの見積を提出',
-    body: '市場標準 vs 自社提案の比較レポートが完成。Go/No-Goスコアリングで受注判断もサポートし、承認後はLinear/GitHubに自動同期します。',
+    body: '市場標準 vs 自社提案の比較レポートが完成。今後はGo/No-Goスコアリングによる受注判断支援や、Linear/GitHubとの自動同期も開発予定です。',
   },
 ];
 
@@ -75,7 +75,7 @@ const scenarios = [
     situation:
       '金曜の夜にSlackで「来週までに概算もらえますか？」と連絡が来た。過去の類似案件を思い出しながら、スプレッドシートを開いて数字を並べ始める。これで3時間は消える。',
     support:
-      'AIヒアリングが要件を構造化し、GitHub実績と市場相場を自動で照合。根拠付きの概算ドラフトが30分で手元に届きます。',
+      'AIヒアリングが要件を構造化し、GitHub実績と市場相場を照合。根拠付きの概算ドラフトを作成します。',
     outcome:
       '見積作業に費やしていた週末の3時間が、開発やインプットの時間に変わります。月に4件対応するなら、12時間の差です。',
   },
@@ -91,39 +91,27 @@ const scenarios = [
   },
 ];
 
-const pricingPreview = [
+const alphaTestInfo = [
   {
-    name: 'Solo Beta',
-    price: '¥9,800 / 月',
-    fit: 'フリーランス向け — 見積1件あたり約3時間の短縮。月2件以上で元が取れます',
-    href: 'https://buy.stripe.com/test_7sY28sbdNfyPbeJ1Oh9k400',
-  },
-  {
-    name: 'Studio Beta',
-    price: '¥29,800 / 月',
-    fit: '2〜10人のチーム向け — メンバー全員が根拠付きの見積を出せる体制へ',
-    href: 'https://buy.stripe.com/test_fZu28s81BfyP96BakN9k401',
-  },
-  {
-    name: 'Custom',
-    price: '要相談',
-    fit: '権限管理・SSO・カスタム連携が必要な組織向け',
-    href: 'https://cor-jp.com/contact/',
+    name: 'アルファテスト',
+    description: '現在、プライベートアルファテスターを募集しています',
+    detail:
+      '実際の案件でGriftを無料で試し、フィードバックを提供いただいた方に早期アクセス権を付与します',
   },
 ];
 
 const faqPreview = [
   {
     q: 'Griftは具体的に何を自動化してくれますか？',
-    a: '要件ヒアリングの構造化、市場相場の調査（4プロバイダ並列）、GitHub実績の分析、比較レポートの生成を自動化します。最終的な価格判断と提出は、必ず人間が行う設計です。',
+    a: '要件ヒアリングの構造化、市場相場の調査、GitHub実績の分析、比較レポートの生成を自動化します。最終的な価格判断と提出は、必ず人間が行う設計です。',
   },
   {
     q: 'GitHub連携するとどんなメリットがありますか？',
     a: 'PR速度・マージ時間・コミット頻度から開発力を定量化し、提案の根拠に使えます。連携なしでも市場調査とヒアリング機能は利用可能です。',
   },
   {
-    q: 'ベータ版はどのように始められますか？',
-    a: 'まずは実際の案件を1つお持ちください。その案件でGriftがどう機能するかを一緒に確認し、フィットするかを判断する進め方です。課金は納得いただいてからです。',
+    q: 'アルファテストに参加するにはどうすればよいですか？',
+    a: 'お問い合わせフォームからご連絡ください。実際の案件でGriftを無料で試せるプライベートアルファテストにご招待します。フィードバックを通じて製品の改善にご協力いただける方を募集しています。',
   },
 ];
 ---
@@ -141,7 +129,7 @@ const faqPreview = [
       <div class="space-y-6">
         <div class="inline-flex flex-wrap items-center gap-2 text-sm font-medium text-primary">
           <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
-          ベータ版 公開中
+          アルファテスト募集中
           <span class="text-text-muted">フリーランス・受託開発チーム向けAI見積ツール</span>
         </div>
         <div class="space-y-4">
@@ -163,7 +151,7 @@ const faqPreview = [
           <p
             class="max-w-3xl text-base leading-7 text-text-muted text-pretty sm:text-lg sm:leading-8"
           >
-            5〜10回のAIヒアリングで仕様を構造化。4プロバイダ並列の市場調査で、クライアントに説明できる見積を生成します。
+            5〜10回のAIヒアリングで仕様を構造化。AI市場調査で、クライアントに説明できる見積を生成します。
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -183,7 +171,7 @@ const faqPreview = [
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
-            <span>4プロバイダ並列で市場相場を調査</span>
+            <span>AIによる市場相場調査</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden="true"></span>
@@ -209,7 +197,7 @@ const faqPreview = [
           <div class="p-4">
             <p class="text-sm font-semibold text-text">市場相場の照合</p>
             <p class="mt-2 text-sm text-text-muted text-pretty">
-              Grok・Brave・Perplexity・Geminiが並列で調査。クロスバリデーションされた相場レンジを提示します。
+              AIプロバイダが市場調査を実行。クロスバリデーションされた相場レンジを提示します。
             </p>
           </div>
           <div class="bg-primary/5 p-4">
@@ -431,44 +419,44 @@ const faqPreview = [
     </div>
   </section>
 
-  {/* ── 10. Pricing Preview ── */}
+  {/* ── 10. Alpha Test CTA ── */}
   <section id="pricing" class="section-animate border-y border-border bg-surface">
     <div
       class="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1fr_0.9fr] lg:px-8"
     >
       <div class="fade-in-section space-y-4">
-        <p class="text-sm font-semibold text-primary">ベータ料金</p>
+        <p class="text-sm font-semibold text-primary">プライベートアルファテスト</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          見積1件あたり約3時間の短縮。まずはこの価格から。
+          まずは実案件で無料で試してみませんか。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          ベータ期間中の特別価格です。月に2件以上の見積を作成するなら、Soloプランの月額は初月で回収できます。まずは実案件で効果を確かめてください。
+          現在アルファ開発中です。実際の案件でGriftを無料で試せるプライベートアルファテストにご招待します。フィードバックを通じて製品改善にご協力いただける方を募集しています。
         </p>
       </div>
       <div class="stagger-children grid gap-4">
         {
-          pricingPreview.map((item) => (
+          alphaTestInfo.map((item) => (
             <a
-              href={item.href}
-              target={item.name === 'Custom' ? '_blank' : undefined}
-              rel={item.name === 'Custom' ? 'noreferrer' : undefined}
+              href="https://cor-jp.com/contact/"
+              target="_blank"
+              rel="noreferrer"
               class="card-lift block rounded-2xl border border-border bg-background p-5 no-underline transition-colors hover:border-primary/40"
             >
-              <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p class="text-base font-semibold text-text">{item.name}</p>
-                  <p class="mt-1 text-sm text-text-muted">{item.fit}</p>
-                </div>
-                <p class="shrink-0 text-lg font-semibold tabular-nums text-text">{item.price}</p>
+              <div class="space-y-2">
+                <p class="text-base font-semibold text-text">{item.name}</p>
+                <p class="text-sm text-text-muted">{item.description}</p>
+                <p class="text-sm leading-7 text-text-muted text-pretty">{item.detail}</p>
               </div>
             </a>
           ))
         }
         <a
-          href="/pricing"
+          href="https://cor-jp.com/contact/"
+          target="_blank"
+          rel="noreferrer"
           class="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-dark"
         >
-          料金プランの詳細を見る
+          アルファテストに申し込む
         </a>
       </div>
     </div>

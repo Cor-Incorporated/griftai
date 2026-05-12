@@ -6,6 +6,7 @@ interface Props {
   description: string;
   image?: string;
   type?: 'website' | 'article';
+  titleTag?: string;
   publishedDate?: Date;
   modifiedDate?: Date;
   author?: string;
@@ -17,6 +18,7 @@ const {
   description,
   image,
   type = 'website',
+  titleTag,
   publishedDate,
   modifiedDate,
   author,
@@ -102,7 +104,7 @@ const breadcrumbSchema = {
 };
 ---
 
-<title>{fullTitle}</title>
+<title>{titleTag || fullTitle}</title>
 <meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
 <meta name="author" content={siteConfig.author} />

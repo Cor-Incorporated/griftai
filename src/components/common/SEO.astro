@@ -6,6 +6,7 @@ interface Props {
   description: string;
   image?: string;
   type?: 'website' | 'article';
+  titleTag?: string;
   publishedDate?: Date;
   modifiedDate?: Date;
   author?: string;
@@ -17,6 +18,7 @@ const {
   description,
   image,
   type = 'website',
+  titleTag,
   publishedDate,
   modifiedDate,
   author,
@@ -25,6 +27,7 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, siteConfig.url);
 const fullTitle = `${title} | ${siteConfig.name}`;
+const documentTitle = titleTag || fullTitle;
 const imageUrl = image || siteConfig.ogImage || undefined;
 const ogImage = imageUrl ? new URL(imageUrl, siteConfig.url).href : undefined;
 
@@ -102,8 +105,8 @@ const breadcrumbSchema = {
 };
 ---
 
-<title>{fullTitle}</title>
-<meta name="title" content={fullTitle} />
+<title>{documentTitle}</title>
+<meta name="title" content={documentTitle} />
 <meta name="description" content={description} />
 <meta name="author" content={siteConfig.author} />
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
@@ -118,7 +121,7 @@ const breadcrumbSchema = {
 
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
-<meta property="og:title" content={fullTitle} />
+<meta property="og:title" content={documentTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:locale" content="ja_JP" />
@@ -132,7 +135,7 @@ const breadcrumbSchema = {
 
 <meta property="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
 <meta property="twitter:url" content={canonicalURL} />
-<meta property="twitter:title" content={fullTitle} />
+<meta property="twitter:title" content={documentTitle} />
 <meta property="twitter:description" content={description} />
 {ogImage && <meta property="twitter:image" content={ogImage} />}
 

@@ -11,6 +11,7 @@ interface Props {
   description: string;
   image?: string;
   type?: 'website' | 'article';
+  titleTag?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -24,6 +25,7 @@ const {
   description,
   image,
   type = 'website',
+  titleTag,
   publishedDate,
   modifiedDate,
   author,
@@ -40,6 +42,7 @@ const isHome = Astro.url.pathname === '/';
   description={description}
   image={image}
   type={type}
+  titleTag={titleTag}
   publishedDate={publishedDate}
   modifiedDate={modifiedDate}
   author={author}

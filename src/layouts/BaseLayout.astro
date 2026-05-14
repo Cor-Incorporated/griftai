@@ -7,6 +7,7 @@ interface Props {
   description: string;
   image?: string;
   type?: 'website' | 'article';
+  titleTag?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -19,6 +20,7 @@ const {
   description,
   image,
   type = 'website',
+  titleTag,
   publishedDate,
   modifiedDate,
   author,
@@ -39,11 +41,38 @@ const {
       description={description}
       image={image}
       type={type}
+      titleTag={titleTag}
       publishedDate={publishedDate}
       modifiedDate={modifiedDate}
       author={author}
       tags={tags}
     />
+    <meta name="google-site-verification" content="OttHDtQkiKDUNOCtDrvci_9l4_DpgbUc65j8UDtS5mA" />
+    <!-- Google Analytics -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-3E8328E5V6"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-3E8328E5V6');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script is:inline>
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', 'wk1nad97m0');
+    </script>
   </head>
   <body class="min-h-screen bg-background text-text antialiased">
     <!-- Skip to main content link for accessibility -->

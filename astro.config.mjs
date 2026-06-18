@@ -21,6 +21,18 @@ export default defineConfig({
           '/privacy/',
           '/terms/',
           '/contact/',
+          // GMO 納品 SEO コンテンツ
+          '/column/',
+          '/ai-estimate-automation/',
+          '/ai-tool-requirement-definition/',
+          '/automation-ai-develop-estimate/',
+          '/automation-tool-requirement/',
+          '/basis-estimate-automation/',
+          '/cost-ai-develop-estimate/',
+          '/create-estimate-automation/',
+          '/market-price-ai-develop/',
+          '/requirement-definition-ai/',
+          '/tool-upstream-process-ai/',
         ]);
 
         const pathname = new URL(page).pathname;

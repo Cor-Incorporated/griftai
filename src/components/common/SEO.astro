@@ -81,6 +81,25 @@ const articleSchema =
       }
     : null;
 
+// GMO 納品コラム配下では、ページ本体の microdata が独自の 3 階層 breadcrumb
+// (Top → コラム一覧 → 記事) を持つため、SEO.astro 側の 2 階層自動 schema を
+// 出すと Google が複数の breadcrumb を観測して rich result を取り合う。
+// 当面はページ側 microdata を権威ソースとし、ここでは出力しない。
+const skipAutoBreadcrumbPaths = new Set([
+  '/column/',
+  '/ai-estimate-automation/',
+  '/ai-tool-requirement-definition/',
+  '/automation-ai-develop-estimate/',
+  '/automation-tool-requirement/',
+  '/basis-estimate-automation/',
+  '/cost-ai-develop-estimate/',
+  '/create-estimate-automation/',
+  '/market-price-ai-develop/',
+  '/requirement-definition-ai/',
+  '/tool-upstream-process-ai/',
+]);
+const shouldEmitAutoBreadcrumb = !skipAutoBreadcrumbPaths.has(Astro.url.pathname);
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -141,7 +160,11 @@ const breadcrumbSchema = {
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+{
+  shouldEmitAutoBreadcrumb && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  )
+}
 {
   articleSchema && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />

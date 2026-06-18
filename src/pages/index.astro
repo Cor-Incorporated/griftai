@@ -4,6 +4,8 @@ import AgitationSection from '@/components/sections/marketing/AgitationSection.a
 import ProductShowcase from '@/components/sections/marketing/ProductShowcase.astro';
 import SocialProofSection from '@/components/sections/marketing/SocialProofSection.astro';
 import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
+import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
+import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
 
 const pains = [
   {
@@ -212,6 +214,9 @@ const faqPreview = [
     </div>
   </section>
   <div class="hero-accent-line" aria-hidden="true"></div>
+
+  {/* ── GMO: サービスメッセージ ── */}
+  <ServiceMessageSection />
 
   {/* ── 2. Pain / Problem ── */}
   <section
@@ -532,6 +537,9 @@ const faqPreview = [
       </div>
     </div>
   </section>
+
+  {/* ── GMO: コラム誘導 + NAP ── */}
+  <ColumnPromoSection />
 
   {/* ── Floating CTA (outside main flow) ── */}
   <FloatingCTA />

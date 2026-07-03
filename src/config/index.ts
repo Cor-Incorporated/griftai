@@ -13,6 +13,7 @@ export * from './navigation';
 export * from './features';
 export * from './content';
 export * from './contact';
+export * from './columns';
 
 // Re-export types for convenience
 export type {

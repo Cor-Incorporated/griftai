@@ -22,38 +22,35 @@ interface AgitationPoint {
 const points: AgitationPoint[] = [
   {
     step: 1,
-    text: '値下げ交渉で「根拠は？」と聞かれるたびに、曖昧な返答を繰り返す',
+    text: '相見積もりでの説明負け',
   },
   {
     step: 2,
-    text: '特定の人しか見積を出せない構造が固定化し、受注キャパシティに天井ができる',
+    text: '根拠なき値引きによる利益圧迫',
   },
   {
     step: 3,
-    text: '競合が客観データで提案してきた時、勘と経験だけでは勝てなくなる',
+    text: '属人化による組織のスケール限界',
   },
 ];
 ---
 
-<section
-  class="grain-bg border-y border-border bg-text"
-  style="background: linear-gradient(135deg, oklch(0.25 0.03 250), oklch(0.18 0.02 240));"
->
+<section class="grain-bg border-y border-border bg-text">
   <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="fade-in-section max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-secondary">このまま放置すると</p>
+      <p class="text-sm font-semibold text-secondary">リスク</p>
       <h2 class="text-3xl font-semibold leading-[1.18] text-background sm:text-4xl">
-        その見積、このまま続けますか？
+        根拠の乏しい見積は、チームの成長を止める
       </h2>
       <p class="text-lg leading-8 text-background/60 text-pretty">
-        いまは回っているかもしれません。でも、見積に根拠がない状態を放置すると、少しずつ選択肢が狭まっていきます。
+        説明材料の少ない見積は、価格交渉や社内説明で不利になりやすく、受注後の認識ズレや赤字リスクにもつながります。
       </p>
     </div>
 
     <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
       {
         points.map((point) => (
-          <article class="relative rounded-2xl border border-background/10 bg-background/5 p-6 backdrop-blur-sm">
+          <article class="relative rounded-2xl border border-background/10 bg-background/5 p-6">
             <div class="mb-4 flex size-14 items-center justify-center rounded-full border border-secondary/40 bg-secondary/15 text-2xl font-bold tabular-nums text-secondary">
               {point.step}
             </div>

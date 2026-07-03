@@ -3,9 +3,8 @@
  * ProductShowcase - Product output visualization
  *
  * @description
- * Shows what the user actually gets from Grift — a styled HTML representation
- * of the estimation report output. Uses dashboard-like aesthetic with color
- * coding for market vs. proposal comparison.
+ * Shows what the user actually gets from Grift: a reference estimate report
+ * that compares project assumptions, internal records, and market evidence.
  *
  * @example
  * ```astro
@@ -23,18 +22,29 @@ interface ReportRow {
 }
 
 const reportRows: ReportRow[] = [
-  { label: '市場相場', value: '¥480万', variant: 'market' },
-  { label: '自社提案', value: '¥420万', variant: 'proposal' },
-  { label: '差分', value: '市場比 12.5% コスト削減', variant: 'delta' },
+  { label: '案件前提', value: 'EC刷新', variant: 'default' },
+  { label: '自社実績', value: '4.0人月', variant: 'proposal' },
+  { label: '市場相場', value: '参考 480万', variant: 'market' },
+  { label: '参考見積', value: '参考 420万', variant: 'delta' },
 ];
 
 const summaryItems = [
-  { label: '工数内訳', value: 'フロント 2.0人月 / バックエンド 1.5人月 / インフラ 0.5人月' },
   {
-    label: '市場ソース',
-    value: 'クラウドソーシング / エージェント / SES / 直接取引（4プロバイダ中央値）',
+    label: '案件前提',
+    value: '相談内容、対象機能、前提条件、不確実な要素を整理します。',
   },
-  { label: '速度指標', value: 'GitHub 直近6ヶ月の平均マージ速度から算出' },
+  {
+    label: '自社実績',
+    value: 'GitHub実績や過去の開発傾向を参考材料として扱います。',
+  },
+  {
+    label: '市場相場',
+    value: '外部情報や類似案件を比較し、価格帯を検討するための参考情報として整理します。',
+  },
+  {
+    label: 'レビュー方針',
+    value: 'Griftの出力は参考情報として扱い、最終判断は人間が行います。',
+  },
 ];
 
 const variantStyles = {
@@ -45,37 +55,35 @@ const variantStyles = {
 };
 ---
 
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+<section class="landing-container landing-section">
   <div class="fade-in-section max-w-3xl space-y-4">
-    <p class="text-sm font-semibold text-primary">アウトプットのイメージ</p>
-    <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-      Grift が出す見積レポート
+    <p class="section-kicker">機能</p>
+    <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
+      AIが参考見積と根拠を整理し、人間の判断を支援
     </h2>
-    <p class="text-lg leading-8 text-text-muted text-pretty">
-      実績と市場感を重ねた見積の根拠が、このような形で整理されます。
+    <p class="type-copy text-lg text-text-muted">
+      GitHub実績や市場相場、類似案件、技術リスクなどをAIが整理。提案前の判断材料を提示します。
     </p>
   </div>
 
-  <div
-    class="fade-in-section mt-10 rounded-3xl border border-border bg-surface p-5 shadow-lg sm:p-6 lg:p-8"
-  >
+  <div class="fade-in-section mt-10 surface-panel p-5 sm:p-6 lg:p-8">
     {/* Report header */}
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p class="text-xs font-medium text-text-muted">見積レポート</p>
-        <p class="mt-1 text-lg font-semibold text-text">ECサイトリニューアル案件</p>
+        <p class="text-xs font-medium text-text-muted">参考見積レポート</p>
+        <p class="mt-1 text-lg font-semibold text-text">案件前提 / 自社実績 / 市場相場</p>
       </div>
       <span
-        class="inline-flex w-fit items-center rounded-full border border-success/30 bg-success-bg px-3 py-1 text-xs font-medium text-success"
+        class="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
       >
-        レポート生成済み
+        人間レビュー前提
       </span>
     </div>
 
     <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
       {/* Price comparison card */}
       <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-sm font-semibold text-text">価格比較</p>
+        <p class="text-sm font-semibold text-text">3つの根拠比較</p>
         <div class="mt-4 space-y-4">
           {
             reportRows.map((row) => (
@@ -100,7 +108,7 @@ const variantStyles = {
           <div>
             <div class="flex items-center justify-between text-xs text-text-muted">
               <span>市場相場</span>
-              <span>¥480万</span>
+              <span>参考 480万</span>
             </div>
             <div class="mt-1 h-3 w-full rounded-full bg-info/20">
               <div class="bar-pulse h-3 rounded-full bg-info" style="width: 100%"></div>
@@ -108,8 +116,8 @@ const variantStyles = {
           </div>
           <div>
             <div class="flex items-center justify-between text-xs text-text-muted">
-              <span>自社提案</span>
-              <span>¥420万</span>
+              <span>参考見積</span>
+              <span>参考 420万</span>
             </div>
             <div class="mt-1 h-3 w-full rounded-full bg-success/20">
               <div class="bar-pulse h-3 rounded-full bg-success" style="width: 87.5%"></div>
@@ -135,7 +143,7 @@ const variantStyles = {
     </div>
 
     <p class="mt-4 text-center text-xs text-text-muted">
-      ※ サンプルデータです。実際のレポートは案件内容に応じて生成されます。
+      ※サンプルデータです。ベータ版の出力は案件内容・連携データ・提供範囲に応じて変わります。最終的な見積金額の決定は人間が行うことを前提としています。
     </p>
   </div>
 </section>

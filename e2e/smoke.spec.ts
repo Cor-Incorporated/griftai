@@ -87,6 +87,29 @@ test.describe('Landing page smoke tests', () => {
     await footer.scrollIntoViewIfNeeded();
     await expect(footer).toBeVisible();
   });
+
+  test('page does not create horizontal overflow', async ({ page }) => {
+    const hasOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth
+    );
+    expect(hasOverflow).toBe(false);
+  });
+
+  test('reduced motion still reveals animated content', async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.goto('/');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+    const hiddenAnimated = await page
+      .locator('.section-animate, .fade-in-section')
+      .evaluateAll(
+        (elements) => elements.filter((element) => getComputedStyle(element).opacity === '0').length
+      );
+
+    expect(hiddenAnimated).toBe(0);
+    await context.close();
+  });
 });
 
 test.describe('Key pages load correctly', () => {

@@ -6,10 +6,10 @@
     <path d="M166 162h32c17.673 0 32 14.327 32 32s-14.327 32-32 32h-32v-64Zm24 20v24h10c6.627 0 12-5.373 12-12s-5.373-12-12-12h-10Z" fill="#FFFDF8" />
   </g>
   <text x="120" y="332" fill="#33261A" font-size="64" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-weight="700">
-    AI開発の見積を、勘ではなく根拠で出す。
+    見積を、勘から根拠へ。
   </text>
   <text x="120" y="396" fill="#6E5A49" font-size="28" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    GitHub実績と市場 evidence をもとに、仕様・見積・提案の前工程を整える日本市場向け Beta
+    受託開発チームの見積根拠を可視化するAI見積支援ツール
   </text>
   <g transform="translate(120 454)">
     <rect width="244" height="72" rx="18" fill="#F3EBDD" stroke="#E3D7C4" />

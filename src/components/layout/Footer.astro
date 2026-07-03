@@ -37,6 +37,16 @@ const legalLinks = filterByFeature(footer.legal);
             {contact.address.city}
             {contact.address.country}
           </p>
+          <p class="pt-2">
+            <a
+              href="https://cor-jp.com/contact/"
+              target="_blank"
+              rel="noreferrer"
+              class="transition-colors hover:text-text"
+            >
+              Team Betaについて相談する
+            </a>
+          </p>
           <p>
             <a
               href="https://cor-jp.com/contact/"
@@ -44,7 +54,7 @@ const legalLinks = filterByFeature(footer.legal);
               rel="noreferrer"
               class="transition-colors hover:text-text"
             >
-              Cor株式会社の問い合わせ窓口へ
+              Estimate Auditについて相談する（発注企業向け）
             </a>
           </p>
         </div>
@@ -137,7 +147,7 @@ const legalLinks = filterByFeature(footer.legal);
       <div
         class="flex flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left"
       >
-        <p class="text-sm text-text-muted">&copy; {currentYear} Cor株式会社. {siteConfig.name}</p>
+        <p class="text-sm text-text-muted">&copy; {currentYear} Cor.株式会社. {siteConfig.name}</p>
         <div class="flex items-center gap-6">
           {
             legalLinks.map((link) => (

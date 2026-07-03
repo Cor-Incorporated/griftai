@@ -21,7 +21,7 @@ export const navigation: Navigation = {
     main: [],
     cta: [
       {
-        label: '自分たちの案件で使えるか相談する',
+        label: 'Team Betaについて相談する',
         href: 'https://cor-jp.com/contact/',
         variant: 'primary',
       },
@@ -35,26 +35,27 @@ export const navigation: Navigation = {
   footer: {
     product: [
       { label: 'トップ', href: '/' },
-      { label: '料金', href: '/pricing' },
+      { label: 'Team Beta', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
-      { label: '問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'コラム', href: '/column/' },
+      { label: 'お問い合わせ', href: 'https://cor-jp.com/contact/' },
     ],
     solutions: [
-      { label: '見積の理由づけ', href: '/#proof' },
-      { label: '提案の標準化', href: '/#value' },
-      { label: '使いどころ', href: '/#scenarios' },
+      { label: '見積根拠の整理', href: '/#proof' },
+      { label: 'チーム共有', href: '/#value' },
+      { label: 'Estimate Audit', href: '/#scenarios' },
       { label: '導入の流れ', href: '/#flow' },
     ],
     resources: [
-      { label: 'アルファテスト', href: '/#hero' },
-      { label: '料金プラン', href: '/pricing' },
+      { label: 'プライベートベータ', href: '/#hero' },
+      { label: '提供条件', href: '/pricing' },
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],
     company: [
-      { label: 'Cor.inc', href: 'https://cor-jp.com/' },
-      { label: 'Cor 会社情報', href: 'https://cor-jp.com/about/' },
-      { label: 'Cor お問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'Cor.株式会社', href: 'https://cor-jp.com/' },
+      { label: '会社情報', href: 'https://cor-jp.com/about/' },
+      { label: 'お問い合わせ', href: 'https://cor-jp.com/contact/' },
       { label: 'GitHub', href: 'https://github.com/Cor-Incorporated' },
     ],
     legal: [

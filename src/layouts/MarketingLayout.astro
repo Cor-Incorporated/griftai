@@ -12,6 +12,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   titleTag?: string;
+  ogTitle?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -26,6 +27,7 @@ const {
   image,
   type = 'website',
   titleTag,
+  ogTitle,
   publishedDate,
   modifiedDate,
   author,
@@ -43,6 +45,7 @@ const isHome = Astro.url.pathname === '/';
   image={image}
   type={type}
   titleTag={titleTag}
+  ogTitle={ogTitle}
   publishedDate={publishedDate}
   modifiedDate={modifiedDate}
   author={author}
@@ -73,7 +76,9 @@ const isHome = Astro.url.pathname === '/';
 
   <script>
     const initScrollAnimations = (): void => {
-      const targets = document.querySelectorAll('.fade-in-section, .stagger-children');
+      const targets = document.querySelectorAll(
+        '.section-animate, .fade-in-section, .stagger-children'
+      );
       if (targets.length === 0) return;
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

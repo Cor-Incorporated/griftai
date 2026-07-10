@@ -1,5 +1,6 @@
 ---
 import { columnArticles } from '@/config';
+import { corCta } from '@/lib/cor-cta';
 
 const displayArticles = columnArticles.map((article) => ({
   ...article,
@@ -7,6 +8,7 @@ const displayArticles = columnArticles.map((article) => ({
   displayCategory: article.landingCategory ?? article.category,
   displaySummary: article.landingSummary ?? article.summary,
 }));
+const contactUrl = corCta.teamBeta('grift-lp-column-promo');
 ---
 
 <section
@@ -25,12 +27,7 @@ const displayArticles = columnArticles.map((article) => ({
         </p>
         <div class="flex flex-col gap-3 sm:flex-row">
           <a href="/column/" class="cta-secondary">コラムを読む</a>
-          <a
-            href="https://cor-jp.com/contact/"
-            target="_blank"
-            rel="noreferrer"
-            class="cta-primary"
-          >
+          <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary">
             Team Betaについて相談する
           </a>
         </div>

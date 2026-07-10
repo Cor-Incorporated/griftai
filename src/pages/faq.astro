@@ -3,8 +3,9 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
 
-const contactUrl = 'https://cor-jp.com/contact/';
+const contactUrl = corCta.teamBeta('grift-faq');
 
 const faqSections = [
   {

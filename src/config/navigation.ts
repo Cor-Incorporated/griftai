@@ -10,6 +10,7 @@
  */
 
 import type { Navigation } from '../lib/types';
+import { corCta, getCorUrl } from '../lib/cor-cta';
 
 export const navigation: Navigation = {
   /**
@@ -22,7 +23,7 @@ export const navigation: Navigation = {
     cta: [
       {
         label: 'Team Betaについて相談する',
-        href: 'https://cor-jp.com/contact/',
+        href: corCta.teamBeta('grift-nav-header'),
         variant: 'primary',
       },
     ],
@@ -38,7 +39,7 @@ export const navigation: Navigation = {
       { label: 'Team Beta', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
       { label: 'コラム', href: '/column/' },
-      { label: 'お問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-product') },
     ],
     solutions: [
       { label: '見積根拠の整理', href: '/#proof' },
@@ -53,9 +54,9 @@ export const navigation: Navigation = {
       { label: 'プライバシー', href: '/privacy' },
     ],
     company: [
-      { label: 'Cor.株式会社', href: 'https://cor-jp.com/' },
-      { label: '会社情報', href: 'https://cor-jp.com/about/' },
-      { label: 'お問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'Cor.株式会社', href: getCorUrl('/') },
+      { label: '会社情報', href: getCorUrl('/about/') },
+      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-company') },
       { label: 'GitHub', href: 'https://github.com/Cor-Incorporated' },
     ],
     legal: [

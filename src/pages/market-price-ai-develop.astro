@@ -1,7 +1,10 @@
 ---
+import { corCta } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
+
+const contactUrl = corCta.teamBeta('grift-column-market-price-ai-develop');
 
 const title = 'AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い';
 const description =
@@ -161,7 +164,7 @@ const description =
 
                 <div class="c-btn u-pb30">
                   <a
-                    href="https://cor-jp.com/contact/"
+                    href={contactUrl}
                     class="c-btn-anchor"
                     target="_blank"
                     rel="noopener noreferrer nofollow">お問い合わせはこちら</a

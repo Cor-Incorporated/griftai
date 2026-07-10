@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { getRobotsMetaContent } from '@/lib/site-env';
 
 interface Props {
   title: string;
@@ -131,7 +132,7 @@ const breadcrumbSchema = {
 <meta name="title" content={documentTitle} />
 <meta name="description" content={description} />
 <meta name="author" content={siteConfig.author} />
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+<meta name="robots" content={getRobotsMetaContent()} />
 <meta
   name="keywords"
   content={tags.length > 0

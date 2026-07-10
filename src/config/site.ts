@@ -7,6 +7,7 @@
  */
 
 import type { LegalConfig, SocialLinks } from '../lib/types';
+import { corCta } from '../lib/cor-cta';
 
 /** Site name displayed in header, footer, and meta tags */
 export const name = import.meta.env.SITE_NAME || 'Grift';
@@ -35,7 +36,7 @@ export const social: SocialLinks = {
 
 /** Legal configuration for privacy policy and terms pages */
 export const legal: LegalConfig = {
-  privacyEmail: 'https://cor-jp.com/contact/',
-  legalEmail: 'https://cor-jp.com/contact/',
+  privacyEmail: corCta.teamBeta('grift-legal-privacy'),
+  legalEmail: corCta.teamBeta('grift-legal-terms'),
   lastUpdated: '2026-03-12',
 };

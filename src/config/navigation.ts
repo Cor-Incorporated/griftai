@@ -19,10 +19,17 @@ export const navigation: Navigation = {
    * - cta: Call-to-action buttons on the right
    */
   header: {
-    main: [],
+    main: [
+      { label: 'できること', href: '/#value' },
+      { label: '対象チーム', href: '/#scenarios' },
+      { label: '料金', href: '/pricing' },
+      { label: 'Team Beta', href: '/team-beta' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
+      { label: 'FAQ', href: '/faq' },
+    ],
     cta: [
       {
-        label: 'Team Betaについて相談する',
+        label: 'Team Betaに相談',
         href: corCta.teamBeta('grift-nav-header'),
         variant: 'primary',
       },
@@ -36,7 +43,9 @@ export const navigation: Navigation = {
   footer: {
     product: [
       { label: 'トップ', href: '/' },
-      { label: 'Team Beta', href: '/pricing' },
+      { label: 'Team Beta', href: '/team-beta' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
+      { label: '料金', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
       { label: 'コラム', href: '/column/' },
       { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-product') },
@@ -44,11 +53,11 @@ export const navigation: Navigation = {
     solutions: [
       { label: '見積根拠の整理', href: '/#proof' },
       { label: 'チーム共有', href: '/#value' },
-      { label: 'Estimate Audit', href: '/#scenarios' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
       { label: '導入の流れ', href: '/#flow' },
     ],
     resources: [
-      { label: 'プライベートベータ', href: '/#hero' },
+      { label: 'Team Beta', href: '/team-beta' },
       { label: '提供条件', href: '/pricing' },
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },

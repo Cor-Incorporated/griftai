@@ -127,6 +127,8 @@ test.describe('Key pages load correctly', () => {
   const pages = [
     { path: '/', titlePattern: /Grift/ },
     { path: '/pricing/', titlePattern: /料金|Grift/ },
+    { path: '/team-beta/', titlePattern: /Team Beta|Grift/ },
+    { path: '/estimate-audit/', titlePattern: /Estimate Audit|Grift/ },
     { path: '/faq/', titlePattern: /質問|FAQ|Grift/ },
     { path: '/contact/', titlePattern: /相談|お問い合わせ|Grift/ },
   ];
@@ -138,4 +140,26 @@ test.describe('Key pages load correctly', () => {
       await expect(page).toHaveTitle(titlePattern);
     });
   }
+});
+
+test.describe('Phase 2 product pages', () => {
+  test('team-beta page CTA uses grift-team-beta intent', async ({ page }) => {
+    await page.goto('/team-beta/');
+    const cta = page.locator('a[href*="intent=grift-team-beta"]').first();
+    await expect(cta).toBeVisible();
+    await expect(page.locator('#site-header a[href="/team-beta"]')).toBeVisible();
+  });
+
+  test('estimate-audit page CTA uses estimate-audit intent', async ({ page }) => {
+    await page.goto('/estimate-audit/');
+    const cta = page.locator('a[href*="intent=estimate-audit"]').first();
+    await expect(cta).toBeVisible();
+  });
+
+  test('home shows product demo placeholder without contract-dev CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#product-demo-placeholder')).toBeVisible();
+    const contractDev = page.locator('a[href*="intent=contract-dev"]');
+    await expect(contractDev).toHaveCount(0);
+  });
 });

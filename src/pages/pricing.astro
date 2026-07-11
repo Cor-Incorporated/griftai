@@ -16,6 +16,8 @@ const betaPlans = [
       'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
     cta: 'Team Betaについて相談する',
     href: corCta.teamBeta('grift-pricing-team-beta'),
+    detailHref: '/team-beta/',
+    detailLabel: 'Team Beta の詳細',
     features: [
       'チームワークスペース',
       '案件前提の整理',
@@ -32,6 +34,8 @@ const betaPlans = [
       'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
     cta: '有料トライアルを相談する',
     href: corCta.paidTrial('grift-pricing-paid-trial'),
+    detailHref: '/pricing/',
+    detailLabel: 'このページの案内',
     features: [
       '実案件での利用検証',
       '月1回ヒアリング',
@@ -48,6 +52,8 @@ const betaPlans = [
       '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
     cta: 'Estimate Auditについて相談する',
     href: corCta.estimateAudit('grift-pricing-estimate-audit'),
+    detailHref: '/estimate-audit/',
+    detailLabel: 'Estimate Audit の詳細',
     features: [
       '見積前提の整理',
       '技術リスク確認',
@@ -156,14 +162,22 @@ const onboardingSteps = [
                   </li>
                 ))}
               </ul>
-              <a
-                href={plan.href}
-                target="_blank"
-                rel="noreferrer"
-                class="cta-primary mt-8 w-full text-sm"
-              >
-                {plan.cta}
-              </a>
+              <div class="mt-8 flex flex-col gap-2">
+                <a
+                  href={plan.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="cta-primary w-full text-sm"
+                >
+                  {plan.cta}
+                </a>
+                <a
+                  href={plan.detailHref}
+                  class="text-center text-sm font-medium text-primary hover:underline"
+                >
+                  {plan.detailLabel}
+                </a>
+              </div>
             </article>
           ))
         }

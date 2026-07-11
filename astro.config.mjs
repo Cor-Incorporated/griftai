@@ -17,6 +17,8 @@ export default defineConfig({
         const allowedPaths = new Set([
           '/',
           '/pricing/',
+          '/team-beta/',
+          '/estimate-audit/',
           '/faq/',
           '/privacy/',
           '/terms/',

@@ -8,6 +8,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   titleTag?: string;
+  ogTitle?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -21,6 +22,7 @@ const {
   image,
   type = 'website',
   titleTag,
+  ogTitle,
   publishedDate,
   modifiedDate,
   author,
@@ -42,12 +44,16 @@ const {
       image={image}
       type={type}
       titleTag={titleTag}
+      ogTitle={ogTitle}
       publishedDate={publishedDate}
       modifiedDate={modifiedDate}
       author={author}
       tags={tags}
     />
     <meta name="google-site-verification" content="OttHDtQkiKDUNOCtDrvci_9l4_DpgbUc65j8UDtS5mA" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <!-- Google Analytics -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-3E8328E5V6"></script>
     <script is:inline>

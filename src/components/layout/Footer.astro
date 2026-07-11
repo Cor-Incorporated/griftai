@@ -1,10 +1,13 @@
 ---
 import { siteConfig } from '@/config';
 import type { FeatureFlags, NavigationItem } from '@/lib/types';
+import { corCta } from '@/lib/cor-cta';
 
 const { features, contact, navigation } = siteConfig;
 const { footer } = navigation;
 const currentYear = new Date().getFullYear();
+const teamBetaUrl = corCta.teamBeta('grift-nav-footer');
+const estimateAuditUrl = corCta.estimateAudit('grift-nav-footer-estimate-audit');
 
 const filterByFeature = (items: NavigationItem[]) =>
   items.filter((item) => !item.feature || features[item.feature as keyof FeatureFlags]);
@@ -37,14 +40,24 @@ const legalLinks = filterByFeature(footer.legal);
             {contact.address.city}
             {contact.address.country}
           </p>
-          <p>
+          <p class="pt-2">
             <a
-              href="https://cor-jp.com/contact/"
+              href={teamBetaUrl}
               target="_blank"
               rel="noreferrer"
               class="transition-colors hover:text-text"
             >
-              Cor株式会社の問い合わせ窓口へ
+              Team Betaについて相談する
+            </a>
+          </p>
+          <p>
+            <a
+              href={estimateAuditUrl}
+              target="_blank"
+              rel="noreferrer"
+              class="transition-colors hover:text-text"
+            >
+              Estimate Auditについて相談する（発注企業向け）
             </a>
           </p>
         </div>
@@ -137,7 +150,7 @@ const legalLinks = filterByFeature(footer.legal);
       <div
         class="flex flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left"
       >
-        <p class="text-sm text-text-muted">&copy; {currentYear} Cor株式会社. {siteConfig.name}</p>
+        <p class="text-sm text-text-muted">&copy; {currentYear} Cor.株式会社. {siteConfig.name}</p>
         <div class="flex items-center gap-6">
           {
             legalLinks.map((link) => (

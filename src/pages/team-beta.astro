@@ -1,0 +1,243 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import PageHeader from '@sections/content/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+import { siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
+
+const contactUrl = corCta.teamBeta('grift-team-beta-page');
+const pricingUrl = '/pricing/';
+const estimateAuditUrl = '/estimate-audit/';
+
+const scopeItems = [
+  'チームワークスペースでの案件共有',
+  '案件前提の整理（要件・不確実性・対象範囲）',
+  '参考見積レポート（市場相場・実績の参考材料）',
+  'GitHub 実績の参照（連携可能な範囲）',
+  'レビュー履歴の残し方の検証',
+];
+
+const deliverables = [
+  {
+    title: '参考見積レポート',
+    body: '案件前提・自社実績・市場相場を並べた、人間が確認できる判断材料。',
+  },
+  {
+    title: '見積根拠メモ',
+    body: '「なぜこの金額帯か」をチーム内で引き継げる形で残すためのメモ構成。',
+  },
+  {
+    title: '導入初月の運用メモ',
+    body: '誰が確認し、どこまで AI を使い、最終判断を誰が持つかの進め方。',
+  },
+];
+
+const firstMonthSteps = [
+  {
+    title: '相談・適合確認',
+    body: 'チーム規模・案件タイプ・現状の見積プロセスを共有し、Team Beta の範囲を擦り合わせます。',
+  },
+  {
+    title: '提供条件の案内',
+    body: '月額5万円を基本に、利用人数・サポート・対象案件数を個別にご案内します。',
+  },
+  {
+    title: '初月の実案件投入',
+    body: '1〜2件の実案件で参考見積と根拠メモを試し、フィードバックを共有します。',
+  },
+  {
+    title: '運用の型づくり',
+    body: '担当分担とレビュー観点を整え、チーム内で再現できる見積プロセスに寄せます。',
+  },
+];
+
+const faqs = [
+  {
+    question: '料金はいくらですか？',
+    answer:
+      'Grift Team Beta は月額5万円を基本に個別案内しています。利用範囲・チーム規模・サポート内容に応じてご案内します。',
+  },
+  {
+    question: 'Paid Trial との違いは？',
+    answer:
+      'Paid Trial は3ヶ月15万円を基本とした短期検証向けです。継続的にチームで見積根拠を資産化したい場合は Team Beta を推奨します。',
+  },
+  {
+    question: 'AI が見積金額を決めますか？',
+    answer:
+      'いいえ。最終的な見積金額の決定は人間が行います。Grift は参考見積と根拠の整理を支援します。',
+  },
+];
+---
+
+<MarketingLayout
+  title={`Team Beta — 受託チーム向けAI見積支援 | ${siteConfig.name}`}
+  titleTag="Grift Team Beta｜月額5万円を基本に個別案内"
+  ogTitle="Grift Team Beta｜見積根拠をチームの資産に"
+  description="Grift Team Beta は2〜10人の受託開発チーム向けの有料βです。月額5万円を基本に、案件前提・参考見積・GitHub実績の整理をチームで検証します。"
+  faqItems={faqs}
+>
+  <PageHeader
+    title="Grift Team Beta"
+    subtitle="2〜10人の受託開発チームが、担当者に依存しすぎない見積プロセスをつくるための有料β。月額5万円を基本に個別案内します。"
+  />
+
+  <section class="bg-background py-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <div class="space-y-5">
+          <p class="text-sm font-semibold text-primary">提供条件（ベータ検証中）</p>
+          <h2 class="text-balance text-3xl font-bold text-text sm:text-4xl">
+            見積根拠を、個人の頭の中からチームの資産へ。
+          </h2>
+          <p class="text-pretty text-lg leading-8 text-text-muted">
+            Team Beta
+            は、実案件で参考見積と根拠メモの運用を検証するためのプランです。金額の最終決定は人間が行い、AI
+            は判断材料の整理に使います。
+          </p>
+          <p class="text-3xl font-bold tabular-nums text-text">月額5万円を基本に個別案内</p>
+          <p class="text-sm text-text-muted">
+            利用人数・サポート範囲・対象案件に応じて調整します。
+          </p>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary">
+              Team Betaについて相談する
+            </a>
+            <a href={pricingUrl} class="cta-secondary">料金の全体像を見る</a>
+          </div>
+        </div>
+        <aside class="rounded-3xl border border-border bg-surface p-6 sm:p-8">
+          <p class="text-sm font-semibold text-primary">こんなチーム向け</p>
+          <ul class="mt-5 space-y-3 text-sm leading-7 text-text-muted">
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>見積を代表や一部メンバーに頼っている</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>提案前に「なぜこの金額か」を説明しづらい</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>2〜10人規模で、実案件での検証から始めたい</span>
+            </li>
+          </ul>
+          <p class="mt-6 text-sm text-text-muted">
+            発注企業向けの見積監査は
+            <a href={estimateAuditUrl} class="font-medium text-primary hover:underline"
+              >Estimate Audit</a
+            >
+            をご覧ください。
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-border bg-surface py-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-semibold text-primary">支援範囲</p>
+        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+          Team Beta で検証する範囲
+        </h2>
+      </div>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+        {
+          scopeItems.map((item) => (
+            <li class="flex gap-3 rounded-2xl border border-border bg-background p-5 text-sm leading-7 text-text-muted">
+              <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-background py-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-semibold text-primary">成果物</p>
+        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+          初月から手元に残るもの
+        </h2>
+      </div>
+      <div class="mt-8 grid gap-5 lg:grid-cols-3">
+        {
+          deliverables.map((item) => (
+            <article class="rounded-2xl border border-border bg-surface p-6">
+              <h3 class="text-lg font-semibold text-text">{item.title}</h3>
+              <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">{item.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-border bg-surface py-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-semibold text-primary">導入初月の流れ</p>
+        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+          相談から実案件検証までのイメージ
+        </h2>
+      </div>
+      <ol class="mt-8 grid gap-4 lg:grid-cols-4">
+        {
+          firstMonthSteps.map((step, index) => (
+            <li class="rounded-2xl border border-border bg-background p-5">
+              <p class="text-sm font-semibold text-primary">STEP {index + 1}</p>
+              <h3 class="mt-2 text-lg font-semibold text-text">{step.title}</h3>
+              <p class="mt-2 text-pretty text-sm leading-7 text-text-muted">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="bg-background py-section">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-center text-2xl font-bold text-text sm:text-3xl">よくある質問</h2>
+      <div class="mt-10 space-y-4">
+        {
+          faqs.map((faq) => (
+            <details class="group rounded-2xl border border-border bg-surface">
+              <summary class="flex cursor-pointer list-none items-center justify-between p-5 [&::-webkit-details-marker]:hidden">
+                <span class="pr-4 font-medium text-text">{faq.question}</span>
+                <Icon
+                  name="lucide:chevron-down"
+                  class="size-5 shrink-0 text-text-muted transition-transform group-open:rotate-180"
+                />
+              </summary>
+              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface py-section">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div
+        class="rounded-3xl border border-border bg-background p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
+      >
+        <div class="max-w-2xl">
+          <p class="text-sm font-semibold text-primary">次の一歩</p>
+          <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
+            自分たちの案件で使えるか、まずはご相談ください。
+          </h2>
+          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
+            チーム規模と見積の課題をお聞かせいただければ、Team Beta の適合範囲をご案内します。
+          </p>
+        </div>
+        <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary mt-8 lg:mt-0">
+          Team Betaについて相談する
+        </a>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>

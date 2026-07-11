@@ -1,14 +1,15 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { siteConfig } from '@/config';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 
 const lastUpdated = '2026-03-12';
 const companyName = 'Cor株式会社（Cor.inc）';
 const representative = '代表取締役 寺田 康佑';
 const address = '〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神パインクレスト719号';
 const phone = '070-8561-1659';
-const contactUrl = 'https://cor-jp.com/contact/';
-const legalNoticeUrl = 'https://cor-jp.com/legal/tokushoho/';
+const contactUrl = corCta.teamBeta('grift-legal-privacy');
+const legalNoticeUrl = getCorUrl('/legal/tokushoho/');
 ---
 
 <MarketingLayout
@@ -188,13 +189,6 @@ const legalNoticeUrl = 'https://cor-jp.com/legal/tokushoho/';
             </a>
           </li>
         </ul>
-
-        <h2>備考</h2>
-        <p class="text-pretty">
-          この文書は、Cor.inc の公開情報および `BenevolentDirector` リポジトリ内の Grift v2
-          設計資料をもとに作成した LP 用ドラフトです。
-          正式公開前に、法務確認と実運用フロー確認を行う前提です。
-        </p>
       </div>
     </div>
   </section>

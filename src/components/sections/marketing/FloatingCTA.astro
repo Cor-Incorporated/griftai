@@ -18,35 +18,43 @@
  * ```
  */
 
+import { corCta } from '@/lib/cor-cta';
+
 interface Props {
   /** CSS selector for the hero section to observe */
   heroSelector?: string;
 }
 
 const { heroSelector = '#hero' } = Astro.props;
+const contactUrl = corCta.teamBeta('grift-lp-floating');
 ---
 
 <div
   id="floating-cta"
-  class="fixed inset-x-0 bottom-0 z-50 translate-y-full transition-transform duration-300 ease-out"
+  class="pointer-events-none invisible fixed inset-x-0 bottom-0 z-50 translate-y-full transition-[transform,visibility] duration-200 ease-out"
   data-hero-selector={heroSelector}
   aria-hidden="true"
 >
-  <div class="border-t border-border bg-background/80 px-4 py-3 backdrop-blur-lg sm:py-2">
+  <div
+    class="border-t border-border bg-background/95 px-4 py-3 shadow-lg sm:py-2"
+    style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
+  >
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
-      <p class="hidden text-sm text-text-muted sm:block">アルファテスト無料</p>
+      <p class="hidden text-sm text-text-muted sm:block">Grift Team Beta</p>
       <div class="flex flex-1 items-center gap-3 sm:flex-none">
         <a
-          href="https://cor-jp.com/contact/"
+          href={contactUrl}
           target="_blank"
           rel="noreferrer"
-          class="inline-flex flex-1 items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark sm:flex-none"
+          tabindex="-1"
+          class="cta-primary flex-1 px-5 py-2.5 text-sm sm:flex-none"
         >
-          まずは相談する
+          ベータについて相談する
         </a>
         <button
           type="button"
           id="floating-cta-close"
+          tabindex="-1"
           class="flex size-8 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface hover:text-text"
           aria-label="閉じる"
         >
@@ -73,46 +81,83 @@ const { heroSelector = '#hero' } = Astro.props;
   const initFloatingCta = (): void => {
     const floatingCta = document.getElementById('floating-cta') as HTMLElement | null;
     const closeButton = document.getElementById('floating-cta-close') as HTMLElement | null;
+    const focusables = floatingCta?.querySelectorAll<HTMLElement>('a, button') ?? [];
 
     if (!floatingCta || !closeButton) return;
 
     const heroSelector = floatingCta.dataset.heroSelector ?? '#hero';
     const heroSection = document.querySelector(heroSelector);
+    const suppressSections = document.querySelectorAll('#cta, #column-promo, footer');
 
     if (!heroSection) return;
 
     let dismissed = false;
+    let heroVisible = true;
+    let suppressVisible = false;
+    const visibleSuppressSections = new Set<Element>();
 
     const show = (): void => {
       if (dismissed) return;
       floatingCta.classList.remove('translate-y-full');
+      floatingCta.classList.remove('invisible');
+      floatingCta.classList.remove('pointer-events-none');
+      floatingCta.classList.add('pointer-events-auto');
       floatingCta.setAttribute('aria-hidden', 'false');
+      for (const el of focusables) el.removeAttribute('tabindex');
     };
 
     const hide = (): void => {
       floatingCta.classList.add('translate-y-full');
+      floatingCta.classList.add('invisible');
+      floatingCta.classList.add('pointer-events-none');
+      floatingCta.classList.remove('pointer-events-auto');
       floatingCta.setAttribute('aria-hidden', 'true');
+      for (const el of focusables) el.setAttribute('tabindex', '-1');
     };
 
-    const observer = new IntersectionObserver(
+    const updateVisibility = (): void => {
+      if (dismissed || heroVisible || suppressVisible) {
+        hide();
+      } else {
+        show();
+      }
+    };
+
+    const heroObserver = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            hide();
-          } else {
-            show();
-          }
+          heroVisible = entry.isIntersecting;
+          updateVisibility();
         }
       },
       { threshold: 0 }
     );
 
-    observer.observe(heroSection);
+    const suppressObserver = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visibleSuppressSections.add(entry.target);
+          } else {
+            visibleSuppressSections.delete(entry.target);
+          }
+        }
+        suppressVisible = visibleSuppressSections.size > 0;
+        updateVisibility();
+      },
+      { threshold: 0 }
+    );
+
+    heroObserver.observe(heroSection);
+    for (const section of suppressSections) {
+      suppressObserver.observe(section);
+    }
 
     closeButton.addEventListener('click', () => {
       dismissed = true;
       hide();
-      observer.disconnect();
+      heroObserver.disconnect();
+      suppressObserver.disconnect();
     });
   };
 

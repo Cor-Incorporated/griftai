@@ -2,5 +2,20 @@ dist/
 node_modules/
 .astro/
 .claude/
+.opencode/
+.worktrees/
 package-lock.json
 *.md
+
+# GMO 納品コンテンツ（自動生成 HTML を貼り付けたもの。Prettier の Astro パーサーが AST 不整合を出すため除外）
+src/pages/column.astro
+src/pages/ai-estimate-automation.astro
+src/pages/ai-tool-requirement-definition.astro
+src/pages/automation-ai-develop-estimate.astro
+src/pages/automation-tool-requirement.astro
+src/pages/basis-estimate-automation.astro
+src/pages/cost-ai-develop-estimate.astro
+src/pages/create-estimate-automation.astro
+src/pages/market-price-ai-develop.astro
+src/pages/requirement-definition-ai.astro
+src/pages/tool-upstream-process-ai.astro

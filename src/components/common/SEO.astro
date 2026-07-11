@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { getRobotsMetaContent } from '@/lib/site-env';
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   titleTag?: string;
+  ogTitle?: string;
   publishedDate?: Date;
   modifiedDate?: Date;
   author?: string;
@@ -19,6 +21,7 @@ const {
   image,
   type = 'website',
   titleTag,
+  ogTitle,
   publishedDate,
   modifiedDate,
   author,
@@ -28,6 +31,7 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, siteConfig.url);
 const fullTitle = `${title} | ${siteConfig.name}`;
 const documentTitle = titleTag || fullTitle;
+const socialTitle = ogTitle || documentTitle;
 const imageUrl = image || siteConfig.ogImage || undefined;
 const ogImage = imageUrl ? new URL(imageUrl, siteConfig.url).href : undefined;
 
@@ -43,8 +47,8 @@ const websiteSchema = {
 const organizationSchema: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: siteConfig.name,
-  url: siteConfig.url,
+  name: siteConfig.author,
+  url: 'https://cor-jp.com',
   description: siteConfig.description,
   sameAs: [siteConfig.social.twitter, siteConfig.social.github, siteConfig.social.discord].filter(
     Boolean
@@ -81,6 +85,25 @@ const articleSchema =
       }
     : null;
 
+// GMO 納品コラム配下では、ページ本体の microdata が独自の 3 階層 breadcrumb
+// (Top → コラム一覧 → 記事) を持つため、SEO.astro 側の 2 階層自動 schema を
+// 出すと Google が複数の breadcrumb を観測して rich result を取り合う。
+// 当面はページ側 microdata を権威ソースとし、ここでは出力しない。
+const skipAutoBreadcrumbPaths = new Set([
+  '/column/',
+  '/ai-estimate-automation/',
+  '/ai-tool-requirement-definition/',
+  '/automation-ai-develop-estimate/',
+  '/automation-tool-requirement/',
+  '/basis-estimate-automation/',
+  '/cost-ai-develop-estimate/',
+  '/create-estimate-automation/',
+  '/market-price-ai-develop/',
+  '/requirement-definition-ai/',
+  '/tool-upstream-process-ai/',
+]);
+const shouldEmitAutoBreadcrumb = !skipAutoBreadcrumbPaths.has(Astro.url.pathname);
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -109,19 +132,19 @@ const breadcrumbSchema = {
 <meta name="title" content={documentTitle} />
 <meta name="description" content={description} />
 <meta name="author" content={siteConfig.author} />
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+<meta name="robots" content={getRobotsMetaContent()} />
 <meta
   name="keywords"
   content={tags.length > 0
     ? tags.join(', ')
-    : 'AI見積,受託開発,見積自動化,開発見積ツール,フリーランス見積,DX見積,GitHub連携,市場相場'}
+    : 'AI見積支援,受託開発,見積根拠,参考見積,開発見積ツール,Team Beta,GitHub連携,市場相場'}
 />
 
 <link rel="canonical" href={canonicalURL} />
 
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
-<meta property="og:title" content={documentTitle} />
+<meta property="og:title" content={socialTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:locale" content="ja_JP" />
@@ -135,13 +158,17 @@ const breadcrumbSchema = {
 
 <meta property="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
 <meta property="twitter:url" content={canonicalURL} />
-<meta property="twitter:title" content={documentTitle} />
+<meta property="twitter:title" content={socialTitle} />
 <meta property="twitter:description" content={description} />
 {ogImage && <meta property="twitter:image" content={ogImage} />}
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+{
+  shouldEmitAutoBreadcrumb && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  )
+}
 {
   articleSchema && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />

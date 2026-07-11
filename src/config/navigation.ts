@@ -10,6 +10,7 @@
  */
 
 import type { Navigation } from '../lib/types';
+import { corCta, getCorUrl } from '../lib/cor-cta';
 
 export const navigation: Navigation = {
   /**
@@ -18,11 +19,18 @@ export const navigation: Navigation = {
    * - cta: Call-to-action buttons on the right
    */
   header: {
-    main: [],
+    main: [
+      { label: 'できること', href: '/#value' },
+      { label: '対象チーム', href: '/#scenarios' },
+      { label: '料金', href: '/pricing' },
+      { label: 'Team Beta', href: '/team-beta' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
+      { label: 'FAQ', href: '/faq' },
+    ],
     cta: [
       {
-        label: '自分たちの案件で使えるか相談する',
-        href: 'https://cor-jp.com/contact/',
+        label: 'Team Betaに相談',
+        href: corCta.teamBeta('grift-nav-header'),
         variant: 'primary',
       },
     ],
@@ -35,26 +43,29 @@ export const navigation: Navigation = {
   footer: {
     product: [
       { label: 'トップ', href: '/' },
+      { label: 'Team Beta', href: '/team-beta' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
       { label: '料金', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
-      { label: '問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'コラム', href: '/column/' },
+      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-product') },
     ],
     solutions: [
-      { label: '見積の理由づけ', href: '/#proof' },
-      { label: '提案の標準化', href: '/#value' },
-      { label: '使いどころ', href: '/#scenarios' },
+      { label: '見積根拠の整理', href: '/#proof' },
+      { label: 'チーム共有', href: '/#value' },
+      { label: 'Estimate Audit', href: '/estimate-audit' },
       { label: '導入の流れ', href: '/#flow' },
     ],
     resources: [
-      { label: 'アルファテスト', href: '/#hero' },
-      { label: '料金プラン', href: '/pricing' },
+      { label: 'Team Beta', href: '/team-beta' },
+      { label: '提供条件', href: '/pricing' },
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],
     company: [
-      { label: 'Cor.inc', href: 'https://cor-jp.com/' },
-      { label: 'Cor 会社情報', href: 'https://cor-jp.com/about/' },
-      { label: 'Cor お問い合わせ', href: 'https://cor-jp.com/contact/' },
+      { label: 'Cor.株式会社', href: getCorUrl('/') },
+      { label: '会社情報', href: getCorUrl('/about/') },
+      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-company') },
       { label: 'GitHub', href: 'https://github.com/Cor-Incorporated' },
     ],
     legal: [

@@ -1,0 +1,484 @@
+.c-head-mv {
+  background-color: #333;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: end;
+  aspect-ratio: 23 / 7.3;
+  font-weight: bold;
+  height: auto;
+  line-height: 1.4;
+  max-height: 400px;
+  margin: 0 auto 30px;
+  position: relative;
+  width: 100%;
+}
+.c-head-mv h2 {
+  background: rgba(000, 000, 000, 0.4);
+  border-bottom: none !important;
+  color: #fff;
+  font-size: 20px;
+  margin: 0 !important;
+  padding: 0.5em;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+@media screen and (max-width: 640px) {
+  .c-head-mv {
+    height: auto;
+    padding: 4.5em 0 0 !important;
+  }
+  .c-head-mv h2 {
+    font-size: 16px;
+  }
+}
+/*間隔 共通*/
+.u-m0 {
+  margin: 0 !important;
+}
+.u-mt10 {
+  margin-top: 10px !important;
+}
+.u-mt15 {
+  margin-top: 15px !important;
+}
+.u-mt20 {
+  margin-top: 20px !important;
+}
+.u-mt30 {
+  margin-top: 30px !important;
+}
+.u-mt40 {
+  margin-top: 40px !important;
+}
+.u-mt50 {
+  margin-top: 50px !important;
+}
+.u-mt60 {
+  margin-top: 60px !important;
+}
+.u-mt1em {
+  margin-top: 1em !important;
+}
+.u-mb10 {
+  margin-bottom: 10px !important;
+}
+.u-mb15 {
+  margin-bottom: 15px !important;
+}
+.u-mb20 {
+  margin-bottom: 20px !important;
+}
+.u-mb30 {
+  margin-bottom: 30px !important;
+}
+.u-mb40 {
+  margin-bottom: 40px !important;
+}
+.u-mb50 {
+  margin-bottom: 50px !important;
+}
+.u-mb60 {
+  margin-bottom: 60px !important;
+}
+.u-mb1em {
+  margin-bottom: 1em !important;
+}
+.u-p0 {
+  padding: 0 !important;
+}
+.u-p10 {
+  padding: 10px !important;
+}
+.u-p15 {
+  padding: 15px !important;
+}
+.u-p20 {
+  padding: 20px !important;
+}
+.u-pt10 {
+  padding-top: 10px !important;
+}
+.u-pt20 {
+  padding-top: 20px !important;
+}
+.u-pt30 {
+  padding-top: 30px !important;
+}
+.u-pt40 {
+  padding-top: 40px !important;
+}
+.u-pt50 {
+  padding-top: 50px !important;
+}
+.u-pt60 {
+  padding-top: 60px !important;
+}
+.u-pt1em {
+  padding-top: 1em !important;
+}
+.u-pb10 {
+  padding-bottom: 10px !important;
+}
+.u-pb20 {
+  padding-bottom: 20px !important;
+}
+.u-pb30 {
+  padding-bottom: 30px !important;
+}
+.u-pb40 {
+  padding-bottom: 40px !important;
+}
+.u-pb50 {
+  padding-bottom: 50px !important;
+}
+.u-pb60 {
+  padding-bottom: 60px !important;
+}
+.u-pb1em {
+  padding-bottom: 1em !important;
+}
+#breadcrumbs {
+  font-size: 90%;
+  margin: 0 0 20px;
+  text-align: left;
+}
+.l-section {
+}
+.l-container {
+  word-break: normal;
+}
+/*改行 共通*/
+.py-section h1,
+.c-head-mv h2,
+.l-container .l-heading-primary,
+.l-container .l-heading-secondary,
+.l-container .l-tertiary,
+.l-container .l-quaternary,
+.c-linkblock h2,
+.c-nap h3 {
+  line-height: 1.4;
+  word-break: auto-phrase;
+}
+/*タイトル 共通*/
+.py-section h1 {
+  font-size: clamp(1.75rem, 5vw, 2.55rem);
+}
+.l-container .l-heading-primary {
+}
+.l-container .l-heading-secondary {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 10px;
+}
+.l-container .l-tertiary {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+}
+.l-container .l-quaternary {
+  color: #006fa7;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+}
+/*コンテンツ内リンク 共通*/
+.l-container a {
+}
+.l-container a:hover {
+  text-decoration: none;
+}
+/*テキストブロック 共通*/
+.c-block {
+  overflow: hidden;
+}
+/*小見出しブロック 共通*/
+.c-s-block {
+}
+/*リスト 共通*/
+.c-block ul,
+.c-block ol {
+  margin: 0.8em 1em 1.1em 0;
+  padding: 0 0 0 30px;
+  vertical-align: top;
+}
+.c-block ul li,
+.c-block ol li {
+  margin-bottom: 10px;
+}
+.c-block ul li {
+  list-style: disc;
+}
+.c-block ol li {
+  list-style: decimal;
+}
+.c-block ul li:last-of-type,
+.c-block ol li:last-of-type {
+}
+.c-block ul li::marker,
+.c-block ol li::marker {
+}
+.l-container dl {
+}
+.l-container dl dt,
+.l-container dl dd {
+  background: #f4f9fb;
+}
+.l-container dl dt {
+  border-color: #d5e0e7;
+  border-style: solid;
+  border-width: 1px 1px 0 1px;
+  border-radius: 20px 20px 0 0;
+  color: #162330;
+  font-weight: 500;
+  padding: 0 20px;
+}
+.l-container dl dd {
+  border-color: #d5e0e7;
+  border-style: solid;
+  border-width: 0 1px 1px 1px;
+  border-radius: 0 0 20px 20px;
+  margin-top: 0;
+  padding: 0 20px;
+}
+/*テーブル 共通*/
+.c-s-table {
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  text-align: left;
+  line-height: 1.5;
+  margin: 20px 0 40px !important;
+  width: 100%;
+}
+.c-s-table tr {
+  border: 1px solid #ccc;
+  display: table-row;
+  position: initial;
+  width: 100%;
+}
+.c-s-table tr:after {
+  content: none;
+}
+.c-s-table tr:nth-child(1) {
+  font-weight: bold;
+}
+.c-s-table td:nth-child(1) {
+  font-weight: bold;
+}
+.c-s-table th {
+  background: #ddd;
+  border: 1px solid #ccc;
+  display: table-cell;
+  font-weight: bold;
+  padding: 10px !important;
+  text-align: left;
+  vertical-align: middle;
+  width: auto !important;
+}
+.c-s-table td {
+  border: 1px solid #ccc;
+  display: table-cell;
+  padding: 10px !important;
+  vertical-align: middle;
+}
+.c-s-table tr:nth-child(odd) {
+  background: #ddd;
+}
+.c-s-table ul li:last-child,
+.c-s-table ol li:last-child {
+  margin-bottom: 0;
+}
+.c-block .c-s-table ul,
+.c-block .c-s-table ol {
+  margin: 0.2em 1em 0.2em 0;
+  padding-left: 20px;
+  vertical-align: top;
+}
+/*アンカーテキスト 共通*/
+.c-block a {
+}
+/*末尾分 共通*/
+.c-endblock {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 18px 18px 2px;
+}
+/*画像 共通*/
+.img-left-s {
+  float: left;
+  margin: 0 4% 4% 0;
+  width: 35%;
+}
+.img-right-s {
+  float: right;
+  margin: 0 0 4% 4%;
+  width: 40%;
+}
+.img-right-s img {
+  margin: 0;
+}
+.img-left-l {
+  float: left;
+  margin: 0 4% 4% 0;
+  width: 30%;
+}
+.img-right-l {
+  float: right;
+  margin: 0 0 4% 4%;
+  width: 30%;
+}
+.img-left-s img,
+.img-right-s img,
+.img-left-l img,
+.img-right-l img {
+  vertical-align: middle;
+  height: auto;
+  width: 100%;
+}
+/*リンク一覧 共通*/
+.c-linkblock {
+  background: #edf6fb;
+  border: 1.5px solid #8ebfd9;
+  border-radius: 20px;
+  padding: 30px;
+}
+.c-linkblock h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 0;
+}
+.c-pagelink {
+  margin: 0;
+  padding-left: 10px !important;
+}
+.c-pagelink li {
+  list-style: decimal;
+  margin: 0 10px 20px 30px;
+}
+.c-pagelink li:last-child {
+  margin-bottom: 0;
+}
+.c-pagelink li a {
+}
+.c-pagelink li a:hover {
+}
+.u-c-a {
+}
+.u-c-a h3 {
+}
+.u-c-a li {
+}
+.u-c-a a {
+}
+.u-c-a a:hover {
+}
+/*NAP表 共通*/
+.c-nap h3 {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+}
+.c-table {
+  border-collapse: collapse;
+  text-align: left;
+  width: 100%;
+}
+.c-table tr {
+}
+.c-table tr:nth-child(2n) {
+  background: none;
+}
+.c-table th {
+  background: none;
+  border: none;
+  padding-left: 0 !important;
+  text-align: left;
+  vertical-align: middle;
+  width: 25%;
+}
+.c-table td {
+  padding-left: 0 !important;
+  vertical-align: middle;
+}
+.c-table a {
+}
+.c-table a:hover {
+}
+/*ボタン 共通*/
+.c-btn {
+  text-align: center;
+}
+.c-btn-anchor {
+  background: #006fa7;
+  border-radius: 10px;
+  color: #fff !important;
+  display: inline-block;
+  padding: 15px 20px;
+  position: relative;
+  text-decoration: none;
+  transition: 0.2s;
+  max-width: 500px;
+  width: 45%;
+  word-break: auto-phrase;
+}
+.c-btn-anchor:hover {
+  background: #005f90;
+  text-decoration: none;
+}
+p + .c-btn {
+  margin-top: 30px;
+}
+@media (max-width: 640px) {
+  /*タイトル スマホのみ*/
+  .l-container .l-heading-primary {
+  }
+  .l-container .l-heading-secondary {
+  }
+  .l-container .l-tertiary {
+  }
+  .l-container .l-quaternary {
+  }
+  /*リスト スマホのみ*/
+  .l-container dl {
+  }
+  .l-container dl dt,
+  .l-container dl dd {
+  }
+  .l-container dl dt {
+  }
+  .l-container dl dd {
+  }
+  /*リンク一覧 スマホのみ*/
+  .c-linkblock {
+    padding: 20px;
+  }
+  .c-linkblock h2 {
+  }
+  .c-pagelink {
+    padding-left: 0 !important;
+  }
+  .c-pagelink li {
+    margin: 0 10px 20px 25px;
+  }
+  /*NAP表 スマホのみ*/
+  .c-nap h3 {
+  }
+  .c-table th,
+  .c-table td {
+  }
+  .c-table th {
+  }
+  /*画像 スマホのみ*/
+  .img-left-s,
+  .img-right-s,
+  .img-left-l,
+  .img-right-l {
+    float: none;
+    width: 100%;
+    margin: 0 0 4%;
+  }
+  /*ボタン スマホのみ*/
+  .c-btn-anchor {
+    width: 95%;
+  }
+}
+@media (min-width: 640px) {
+}

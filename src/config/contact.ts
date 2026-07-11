@@ -7,6 +7,7 @@
  */
 
 import type { ContactInfo, ContactMethod, ContactFAQ } from '../lib/types';
+import { corCta, getCorUrl } from '../lib/cor-cta';
 
 /** Contact information used across contact page and legal pages */
 export const contact: ContactInfo = {
@@ -26,15 +27,15 @@ export const contact: ContactInfo = {
 export const contactMethods: ContactMethod[] = [
   {
     icon: 'lucide:building-2',
-    label: 'Cor.inc',
+    label: 'Cor.株式会社',
     value: 'コーポレートサイトを見る',
-    href: 'https://cor-jp.com/',
+    href: getCorUrl('/'),
   },
   {
     icon: 'lucide:mail',
     label: '問い合わせ',
     value: '相談・お問い合わせはこちら',
-    href: 'https://cor-jp.com/contact/',
+    href: corCta.teamBeta('grift-contact-methods'),
   },
 ];
 
@@ -42,15 +43,15 @@ export const contactMethods: ContactMethod[] = [
 export const contactFAQs: ContactFAQ[] = [
   {
     question: '問い合わせはどこに送られますか？',
-    answer: 'アルファテスト中は、すべて Cor.inc の既存問い合わせ窓口に集約します。',
+    answer: 'ベータ提供中は、すべて Cor.株式会社 の既存問い合わせ窓口に集約します。',
   },
   {
-    question: 'LP 内にフォームはありますか？',
+    question: '問い合わせ方法は何ですか？',
     answer:
-      '設置していません。後から差し替えやすいように実装しつつ、現在は既存の問い合わせ導線を使います。',
+      '現在は Cor.株式会社 の問い合わせフォームからご連絡いただけます。案件概要やチーム規模を添えていただくとスムーズです。',
   },
   {
-    question: 'Enterprise 相談も同じ窓口ですか？',
-    answer: 'はい。Enterprise に関する相談も Cor.inc の問い合わせフォームから受け付けます。',
+    question: '個別相談も同じ窓口ですか？',
+    answer: 'はい。導入条件や個別相談も Cor.株式会社 の問い合わせフォームから受け付けます。',
   },
 ];

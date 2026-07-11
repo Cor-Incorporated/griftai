@@ -15,17 +15,40 @@ const softwareApplicationSchema = {
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   description:
-    '受託開発・フリーランス向けAI見積自動化ツール。GitHub実績と市場相場データに基づいた根拠ある見積を、AIが自動生成します。',
+    '受託開発チームが参考見積と見積根拠を整理し、人間レビュー前提の見積プロセスを作るAI見積支援ツールです。',
   offers: {
-    '@type': 'AggregateOffer',
-    lowPrice: '9800',
-    highPrice: '49800',
-    priceCurrency: 'JPY',
-    offerCount: '3',
+    '@type': 'OfferCatalog',
+    name: 'Grift Team Beta Pricing',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        name: 'Grift Team Beta',
+        price: '50000',
+        priceCurrency: 'JPY',
+        description: '月額5万円を基本に個別案内',
+        availability: 'https://schema.org/LimitedAvailability',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Grift Paid Trial',
+        price: '150000',
+        priceCurrency: 'JPY',
+        description: '3ヶ月15万円を基本に個別案内',
+        availability: 'https://schema.org/LimitedAvailability',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Grift Estimate Audit',
+        price: '1000000',
+        priceCurrency: 'JPY',
+        description: '100万円を基本に個別見積',
+        availability: 'https://schema.org/LimitedAvailability',
+      },
+    ],
   },
   provider: {
     '@type': 'Organization',
-    name: 'Cor.inc',
+    name: 'Cor.株式会社',
     url: 'https://cor-jp.com',
   },
 };
@@ -49,7 +72,7 @@ const faqPageSchema =
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Cor.inc',
+  name: 'Cor.株式会社',
   url: 'https://cor-jp.com',
   logo: `${siteConfig.url}/logo.svg`,
   sameAs: [],

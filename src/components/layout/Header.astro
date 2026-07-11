@@ -17,7 +17,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 
 <header id="site-header" class="sticky top-0 z-50 border-b border-border bg-background/95">
   <nav
-    class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:px-8"
+    class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8"
     aria-label="Main navigation"
   >
     <a href="/" class="flex items-center gap-3 text-text">
@@ -43,7 +43,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
               href={item.href}
               target={item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
-              class="rounded-md px-2 py-1 text-sm font-medium text-text-muted transition-colors hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
+              class="rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
             >
               {item.label}
             </a>
@@ -59,7 +59,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             href={cta.href}
             target="_blank"
             rel="noreferrer"
-            class="rounded-md px-2 py-1 text-sm font-medium text-text-muted transition-colors hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
+            class="rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
           >
             {cta.label}
           </a>
@@ -71,7 +71,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             href={primaryCTA.href}
             target="_blank"
             rel="noreferrer"
-            class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            class="cta-primary px-5 py-2 text-sm"
           >
             {primaryCTA.label}
           </a>
@@ -86,9 +86,9 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             href={primaryCTA.href}
             target="_blank"
             rel="noreferrer"
-            class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-4 sm:text-sm"
+            class="cta-primary px-4 py-2 text-xs sm:text-sm"
           >
-            <span class="sm:hidden">相談する</span>
+            <span class="sm:hidden">Team Beta</span>
             <span class="hidden sm:inline">{primaryCTA.label}</span>
           </a>
         )
@@ -101,7 +101,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             aria-label="モバイルメニューを開く"
             aria-expanded="false"
             aria-controls="mobile-menu"
-            class="rounded-md p-2 transition-colors hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            class="rounded-full p-2 transition-colors hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Icon
               name="lucide:menu"
@@ -131,10 +131,10 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
       aria-modal="true"
       aria-label="モバイルナビゲーション"
     >
-      <div id="mobile-menu-backdrop" class="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+      <div id="mobile-menu-backdrop" class="absolute inset-0 bg-background/90" />
       <nav
         id="mobile-menu-panel"
-        class="absolute left-0 right-0 max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-b border-background bg-surface shadow-lg sm:max-h-[calc(100dvh-4rem)]"
+        class="absolute left-0 right-0 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-background bg-surface shadow-lg sm:max-h-[calc(100dvh-5rem)]"
         aria-label="モバイルナビゲーション"
       >
         <div class="space-y-1 px-4 py-4">
@@ -166,7 +166,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
               href={primaryCTA.href}
               target="_blank"
               rel="noreferrer"
-              class="block rounded-md bg-primary px-3 py-3 text-center text-base font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+              class="block rounded-full bg-primary px-3 py-3 text-center text-base font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
             >
               {primaryCTA.label}
             </a>

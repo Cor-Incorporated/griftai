@@ -1,0 +1,63 @@
+---
+import { columnArticles } from '@/config';
+import { corCta } from '@/lib/cor-cta';
+
+const displayArticles = columnArticles.map((article) => ({
+  ...article,
+  displayTitle: article.landingTitle ?? article.title,
+  displayCategory: article.landingCategory ?? article.category,
+  displaySummary: article.landingSummary ?? article.summary,
+}));
+const contactUrl = corCta.teamBeta('grift-lp-column-promo');
+---
+
+<section
+  id="column-promo"
+  class="section-animate landing-section border-y border-border bg-surface"
+>
+  <div class="landing-container">
+    <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div class="fade-in-section space-y-5">
+        <p class="section-kicker">コラムで深掘りする</p>
+        <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
+          見積ノウハウ・導入コラム
+        </h2>
+        <p class="type-copy text-lg text-text-muted">
+          見積の考え方を学ぶ、導入前の不安を整理する、Griftが必要か判断するための情報を発信しています。
+        </p>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a href="/column/" class="cta-secondary">コラムを読む</a>
+          <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary">
+            Team Betaについて相談する
+          </a>
+        </div>
+      </div>
+
+      <ol class="stagger-children grid gap-3 sm:grid-cols-2">
+        {
+          displayArticles.map((article, index) => (
+            <li>
+              <a
+                href={article.href}
+                class="group flex h-full flex-col gap-3 rounded-2xl border border-border bg-background p-5 no-underline transition duration-200 ease-out hover:-translate-y-1 hover:border-primary/45 hover:shadow-md"
+              >
+                <div class="flex items-center justify-between gap-3">
+                  <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    {article.displayCategory}
+                  </span>
+                  <span class="text-xs font-semibold tabular-nums text-text-muted">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 class="type-heading text-base font-semibold text-text group-hover:text-primary">
+                  {article.displayTitle}
+                </h3>
+                <p class="type-copy text-sm text-text-muted">{article.displaySummary}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

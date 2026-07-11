@@ -3,68 +3,112 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
 
-const contactUrl = 'https://cor-jp.com/contact/';
+const contactUrl = corCta.teamBeta('grift-pricing');
 
-const alphaTestCard = {
-  name: 'プライベートアルファテスト',
-  price: '無料',
-  caption: 'フィードバックと引換に早期アクセス',
-  description:
-    '現在アルファ開発中です。実際の案件でGriftを無料で試し、フィードバックを提供いただいた方に早期アクセス権を付与します。',
-  features: [
-    'AIヒアリング（仕様の構造化）',
-    '基本見積レポート',
-    'GitHub連携（Velocity分析）',
-    '個別サポート（開発チーム直接）',
-  ],
-};
+const betaPlans = [
+  {
+    name: 'Grift Team Beta',
+    price: '月額5万円を基本に個別案内',
+    target: '2〜10人の受託チーム',
+    description:
+      'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
+    cta: 'Team Betaについて相談する',
+    href: corCta.teamBeta('grift-pricing-team-beta'),
+    detailHref: '/team-beta/',
+    detailLabel: 'Team Beta の詳細',
+    features: [
+      'チームワークスペース',
+      '案件前提の整理',
+      '参考見積レポート',
+      'GitHub実績の参照',
+      'レビュー履歴管理',
+    ],
+  },
+  {
+    name: 'Grift Paid Trial',
+    price: '3ヶ月15万円を基本に個別案内',
+    target: '小規模受託チーム',
+    description:
+      'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
+    cta: '有料トライアルを相談する',
+    href: corCta.paidTrial('grift-pricing-paid-trial'),
+    detailHref: '/pricing/',
+    detailLabel: 'このページの案内',
+    features: [
+      '実案件での利用検証',
+      '月1回ヒアリング',
+      '改善フィードバック',
+      '見積根拠メモ',
+      'ナレッジ蓄積支援',
+    ],
+  },
+  {
+    name: 'Grift Estimate Audit',
+    price: '100万円を基本に個別見積',
+    target: '発注企業',
+    description:
+      '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
+    cta: 'Estimate Auditについて相談する',
+    href: corCta.estimateAudit('grift-pricing-estimate-audit'),
+    detailHref: '/estimate-audit/',
+    detailLabel: 'Estimate Audit の詳細',
+    features: [
+      '見積前提の整理',
+      '技術リスク確認',
+      '工数妥当性の検討',
+      '相見積もり前の質問整理',
+      '稟議前の判断材料化',
+    ],
+  },
+];
 
 const plannedFeatures = [
-  'マルチプロバイダ市場調査（複数AIソースによる相場クロスバリデーション）',
-  'Go/No-Goスコアリング（受注判断の定量化）',
-  'Linear / GitHub自動同期（承認済み見積からタスクを自動生成）',
+  'マルチプロバイダ市場調査（複数AIソースによる相場の参考比較）',
+  'Go/No-Goスコアリング（提案前の判断材料整理）',
+  'Linear / GitHub連携（承認済み見積からタスク候補を整理）',
   'チーム共有と権限管理',
 ];
 
 const selectionGuides = [
   {
-    condition: 'アルファテストに参加したい',
-    recommendation: 'プライベートアルファテスト',
-    body: '実際の案件でGriftを無料で試せます。フィードバックを通じて製品の改善にご協力いただける方を募集しています。月5案件まで対応可能です。',
+    condition: '継続的に見積を作る受託チーム',
+    recommendation: 'Grift Team Beta',
+    body: '月額5万円を基本に、チームワークスペース、案件見積、レポート出力、GitHub実績の参照、履歴管理を検証します。',
   },
   {
-    condition: 'チームでの導入を検討している',
-    recommendation: 'お問い合わせください',
-    body: '2〜10人のチームでの利用を想定しています。チーム体制や案件規模をお聞かせいただければ、アルファテストから段階的に対応をご案内します。',
+    condition: 'まず3ヶ月だけ試したい小規模チーム',
+    recommendation: 'Grift Paid Trial',
+    body: '3ヶ月15万円を基本に、Team Betaの利用検証、月1回ヒアリング、改善フィードバック込みでご案内します。',
   },
   {
-    condition: '既存ツール（Linear, GitHub）と自動連携したい',
-    recommendation: '開発予定 — ご要望をお聞かせください',
-    body: 'Linear/GitHub連携は開発ロードマップに含まれています。連携したいツールやワークフローをお聞かせいただければ、優先度の検討に活用させていただきます。',
+    condition: '発注側として見積の前提を見たい',
+    recommendation: 'Grift Estimate Audit',
+    body: '100万円を基本に、提出された見積の前提、技術リスク、工数妥当性を検討する材料を整理します。',
   },
 ];
 
 const pricingFaqs = [
   {
-    question: 'アルファテストは無料ですか？',
+    question: '料金はいくらですか？',
     answer:
-      'はい。アルファテスト期間中は無料でご利用いただけます。実際の案件でGriftをお試しいただき、フィードバックを提供していただくことが参加条件です。',
+      'Grift Team Betaは月額5万円を基本に個別案内しています。Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に、利用範囲・チーム規模・サポート内容に応じてご案内します。',
   },
   {
-    question: '正式リリース後の料金はどうなりますか？',
+    question: 'AIが見積金額を決めるのですか？',
     answer:
-      '正式リリース時に料金体系を設定する予定です。アルファテスト参加者には移行時の優遇を検討しています。',
+      'いいえ。Griftは参考見積と見積根拠を整理するAI見積支援ツールです。最終的な見積金額の決定は人間が行います。',
   },
   {
-    question: '途中でやめることはできますか？',
+    question: '正式版の料金はどうなりますか？',
     answer:
-      'はい。いつでもアルファテストを終了できます。データはお客様のアカウント内でのみ利用されます。',
+      '正式版の料金体系は、ベータ版での利用状況、支払い意思、フィードバックを踏まえて見直す可能性があります。',
   },
   {
-    question: 'どのような案件に使えますか？',
+    question: '契約前に相談できますか？',
     answer:
-      '新規開発、追加開発、改修、バグ修正など、受託開発全般の見積に対応予定です。アルファ版では一部機能が限定されています。',
+      'もちろんです。現在ベータ版として提供範囲を検証中のため、まずはチームの課題や状況をヒアリングし、自分たちの案件で使えるかどうかのご相談から承っております。',
   },
 ];
 
@@ -74,65 +118,73 @@ const onboardingSteps = [
     body: '現在の見積プロセスや課題をお聞かせください',
   },
   {
-    title: 'アルファテストご案内',
-    body: '利用イメージに合うか確認し、アクセスを提供します',
+    title: 'ベータ提供条件のご案内',
+    body: '利用イメージに合うか確認し、提供範囲と条件をご案内します',
   },
   {
     title: '利用開始',
-    body: '実際の案件でGriftをお試しください',
+    body: '実際の案件で見積根拠の整理をお試しください',
   },
 ];
 ---
 
 <MarketingLayout
-  title={`料金プラン — 受託開発・フリーランスのAI見積自動化 | ${siteConfig.name}`}
-  titleTag="料金プラン — 要件定義から見積もり作成をAIツールで自動化するならGrift｜Cor株式会社"
-  description="Griftは受託開発の見積もりをAIで自動化するツールです。GitHub実績と市場相場データを照合し、説明できる根拠を自動生成。属人的だった見積もり作成を標準化し、提案品質を向上させます。現在プライベートアルファテスト実施中。実際の案件で無料でお試しいただけます。"
+  title={`料金プラン — 受託開発チームのAI見積支援 | ${siteConfig.name}`}
+  titleTag="料金プラン｜Grift Team Beta"
+  ogTitle="Grift Team Betaの料金｜Grift"
+  description="Griftは受託開発チームの見積根拠を整理するAI見積支援ツールです。Team Betaは月額5万円、Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に個別案内しています。"
   faqItems={pricingFaqs}
 >
   <PageHeader
-    title="プライベートアルファテスト"
-    subtitle="現在アルファ開発中です。実際の案件でGriftを無料で試せるプライベートアルファテストにご招待します。"
+    title="Team Beta / Pricing"
+    subtitle="見積根拠を、チームの資産にするための有料β。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。"
   />
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-md">
-        <article
-          class="flex h-full flex-col rounded-3xl border border-primary/40 p-7 shadow-sm bg-primary/5"
-        >
-          <p class="text-lg font-semibold text-text">{alphaTestCard.name}</p>
-          <p class="mt-3 min-h-12 text-pretty text-sm leading-7 text-text-muted">
-            {alphaTestCard.description}
-          </p>
-          <div class="mt-6">
-            <p class="text-4xl font-bold tabular-nums text-text">{alphaTestCard.price}</p>
-            {
-              alphaTestCard.caption && (
-                <p class="mt-1 text-sm text-text-muted">{alphaTestCard.caption}</p>
-              )
-            }
-          </div>
-          <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
-            {
-              alphaTestCard.features.map((feature) => (
-                <li class="flex gap-3">
-                  <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
-                  <span>{feature}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <a
-            href={contactUrl}
-            target="_blank"
-            rel="noreferrer"
-            class="mt-8 inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-3 text-sm font-medium transition-colors text-white hover:bg-primary-dark"
-          >
-            アルファテストに申し込む
-          </a>
-        </article>
+      <div class="grid gap-5 lg:grid-cols-3">
+        {
+          betaPlans.map((plan) => (
+            <article class="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
+              <p class="text-lg font-semibold text-text">{plan.name}</p>
+              <p class="mt-2 text-sm font-semibold text-primary">{plan.target}</p>
+              <p class="mt-5 min-h-28 text-pretty text-sm leading-7 text-text-muted">
+                {plan.description}
+              </p>
+              <div class="mt-6">
+                <p class="text-3xl font-bold tabular-nums text-text">{plan.price}</p>
+              </div>
+              <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
+                {plan.features.map((feature) => (
+                  <li class="flex gap-3">
+                    <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-8 flex flex-col gap-2">
+                <a
+                  href={plan.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="cta-primary w-full text-sm"
+                >
+                  {plan.cta}
+                </a>
+                <a
+                  href={plan.detailHref}
+                  class="text-center text-sm font-medium text-primary hover:underline"
+                >
+                  {plan.detailLabel}
+                </a>
+              </div>
+            </article>
+          ))
+        }
       </div>
+      <p class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty">
+        いずれもベータ版として検証中の提供条件です。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+      </p>
     </div>
   </section>
 
@@ -144,7 +196,7 @@ const onboardingSteps = [
           正式リリースに向けた機能開発予定
         </h2>
         <p class="mt-4 text-lg leading-8 text-text-muted text-pretty">
-          以下の機能は開発ロードマップに含まれています。アルファテスト参加者のフィードバックを元に、優先度を決定しています。
+          以下の機能は開発ロードマップに含まれています。ベータ利用者のフィードバックをもとに、優先度を決定しています。
         </p>
       </div>
       <div class="mt-8 grid gap-4 sm:grid-cols-2">
@@ -235,19 +287,14 @@ const onboardingSteps = [
         <div class="max-w-2xl">
           <p class="text-sm font-semibold text-primary">次の一歩</p>
           <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-            まずはいま抱えている案件で、Griftを試してみませんか。
+            自分たちの案件で使えるか、まずはご相談ください。
           </h2>
           <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            料金は発生しません。実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。お問い合わせ内容を確認後、3営業日以内に担当者よりご連絡します。
+            実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。
           </p>
         </div>
-        <a
-          href={contactUrl}
-          target="_blank"
-          rel="noreferrer"
-          class="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-dark lg:mt-0"
-        >
-          アルファテストに申し込む
+        <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary mt-8 lg:mt-0">
+          Team Betaについて相談する
         </a>
       </div>
     </div>

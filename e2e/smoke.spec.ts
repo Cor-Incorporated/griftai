@@ -77,6 +77,17 @@ test.describe('Landing page smoke tests', () => {
     await expect(ctaLinks.first()).toBeVisible();
   });
 
+  test('primary CTAs include Cor intent query params', async ({ page }) => {
+    // Header nav CTA is hidden on mobile viewports, so match visible CTAs only
+    const intentCtas = page.locator('a[href*="intent="]:visible');
+    await expect(intentCtas.first()).toBeVisible();
+
+    const href = await intentCtas.first().getAttribute('href');
+    expect(href).toMatch(/intent=grift-team-beta|intent=grift-paid-trial|intent=estimate-audit/);
+    expect(href).toContain('source=');
+    expect(href).toContain('utm_source=grift');
+  });
+
   test('navigation header is visible', async ({ page }) => {
     const header = page.locator('header');
     await expect(header).toBeVisible();
@@ -87,12 +98,37 @@ test.describe('Landing page smoke tests', () => {
     await footer.scrollIntoViewIfNeeded();
     await expect(footer).toBeVisible();
   });
+
+  test('page does not create horizontal overflow', async ({ page }) => {
+    const hasOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth
+    );
+    expect(hasOverflow).toBe(false);
+  });
+
+  test('reduced motion still reveals animated content', async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.goto('/');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+    const hiddenAnimated = await page
+      .locator('.section-animate, .fade-in-section')
+      .evaluateAll(
+        (elements) => elements.filter((element) => getComputedStyle(element).opacity === '0').length
+      );
+
+    expect(hiddenAnimated).toBe(0);
+    await context.close();
+  });
 });
 
 test.describe('Key pages load correctly', () => {
   const pages = [
     { path: '/', titlePattern: /Grift/ },
     { path: '/pricing/', titlePattern: /料金|Grift/ },
+    { path: '/team-beta/', titlePattern: /Team Beta|Grift/ },
+    { path: '/estimate-audit/', titlePattern: /Estimate Audit|Grift/ },
     { path: '/faq/', titlePattern: /質問|FAQ|Grift/ },
     { path: '/contact/', titlePattern: /相談|お問い合わせ|Grift/ },
   ];
@@ -104,4 +140,31 @@ test.describe('Key pages load correctly', () => {
       await expect(page).toHaveTitle(titlePattern);
     });
   }
+});
+
+test.describe('Phase 2 product pages', () => {
+  test('team-beta page CTA uses grift-team-beta intent', async ({ page }) => {
+    await page.goto('/team-beta/');
+    const cta = page
+      .locator('main a[href*="intent=grift-team-beta"], a[href*="intent=grift-team-beta"]:visible')
+      .first();
+    await expect(cta).toBeVisible();
+    // Nav link is desktop-only; assert presence in DOM
+    await expect(page.locator('#site-header a[href="/team-beta"]')).toHaveCount(1);
+  });
+
+  test('estimate-audit page CTA uses estimate-audit intent', async ({ page }) => {
+    await page.goto('/estimate-audit/');
+    const cta = page
+      .locator('main a[href*="intent=estimate-audit"], a[href*="intent=estimate-audit"]:visible')
+      .first();
+    await expect(cta).toBeVisible();
+  });
+
+  test('home shows product demo placeholder without contract-dev CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#product-demo-placeholder')).toBeVisible();
+    const contractDev = page.locator('a[href*="intent=contract-dev"]');
+    await expect(contractDev).toHaveCount(0);
+  });
 });

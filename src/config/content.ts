@@ -7,6 +7,7 @@
  */
 
 import type { AnnouncementConfig, ContentStrings } from '../lib/types';
+import { corCta } from '../lib/cor-cta';
 
 /** Announcement bar configuration */
 export const announcement: AnnouncementConfig = {
@@ -20,7 +21,7 @@ export const announcement: AnnouncementConfig = {
   text: 'Grift Team Beta — 見積根拠をチーム資産にするAI見積支援',
 
   /** Optional link URL */
-  href: 'https://cor-jp.com/contact/',
+  href: corCta.teamBeta('grift-announcement'),
 
   /** Optional link text */
   linkText: 'Team Betaについて相談する',

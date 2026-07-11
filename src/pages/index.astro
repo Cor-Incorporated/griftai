@@ -7,6 +7,12 @@ import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
 import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
 import { featuredColumnArticles } from '@/config';
+import { corCta } from '@/lib/cor-cta';
+
+const heroPrimaryUrl = corCta.teamBeta('grift-lp-hero');
+const heroSecondaryUrl = corCta.teamBeta('grift-lp-hero-secondary');
+const midCtaUrl = corCta.teamBeta('grift-lp-mid');
+const finalCtaUrl = corCta.teamBeta('grift-lp-final');
 
 const pains = [
   {
@@ -121,6 +127,7 @@ const betaAccessInfo = [
     description:
       'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
     cta: 'Team Betaについて相談する',
+    href: corCta.teamBeta('grift-lp-pricing-team-beta'),
   },
   {
     name: 'Grift Paid Trial',
@@ -129,6 +136,7 @@ const betaAccessInfo = [
     description:
       'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
     cta: '有料トライアルを相談する',
+    href: corCta.paidTrial('grift-lp-pricing-paid-trial'),
   },
   {
     name: 'Grift Estimate Audit',
@@ -137,6 +145,7 @@ const betaAccessInfo = [
     description:
       '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
     cta: 'Estimate Auditについて相談する',
+    href: corCta.estimateAudit('grift-lp-pricing-estimate-audit'),
   },
 ];
 
@@ -189,7 +198,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
         </div>
         <div class="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
           <a
-            href="https://cor-jp.com/contact/"
+            href={heroPrimaryUrl}
             target="_blank"
             rel="noreferrer"
             class="cta-primary w-full sm:w-auto"
@@ -197,7 +206,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
             Team Betaについて相談する
           </a>
           <a
-            href="https://cor-jp.com/contact/"
+            href={heroSecondaryUrl}
             target="_blank"
             rel="noreferrer"
             class="cta-secondary w-full sm:w-auto"
@@ -321,7 +330,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
 
   <div class="bg-text py-8 text-center">
     <a
-      href="https://cor-jp.com/contact/"
+      href={midCtaUrl}
       target="_blank"
       rel="noreferrer"
       class="font-medium text-secondary hover:underline"
@@ -389,7 +398,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
 
   <div class="py-8 text-center">
     <a
-      href="https://cor-jp.com/contact/"
+      href={midCtaUrl}
       target="_blank"
       rel="noreferrer"
       class="font-medium text-primary hover:underline"
@@ -492,12 +501,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
               <p class="mt-5 flex-1 text-sm leading-7 text-text-muted text-pretty">
                 {item.description}
               </p>
-              <a
-                href="https://cor-jp.com/contact/"
-                target="_blank"
-                rel="noreferrer"
-                class="cta-primary mt-7 text-sm"
-              >
+              <a href={item.href} target="_blank" rel="noreferrer" class="cta-primary mt-7 text-sm">
                 {item.cta}
               </a>
             </article>
@@ -558,12 +562,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
           </p>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a
-            href="https://cor-jp.com/contact/"
-            target="_blank"
-            rel="noreferrer"
-            class="cta-primary"
-          >
+          <a href={finalCtaUrl} target="_blank" rel="noreferrer" class="cta-primary">
             Team Betaについて相談する
           </a>
         </div>

@@ -3,8 +3,9 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
 
-const contactUrl = 'https://cor-jp.com/contact/';
+const contactUrl = corCta.teamBeta('grift-pricing');
 
 const betaPlans = [
   {
@@ -14,6 +15,7 @@ const betaPlans = [
     description:
       'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
     cta: 'Team Betaについて相談する',
+    href: corCta.teamBeta('grift-pricing-team-beta'),
     features: [
       'チームワークスペース',
       '案件前提の整理',
@@ -29,6 +31,7 @@ const betaPlans = [
     description:
       'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
     cta: '有料トライアルを相談する',
+    href: corCta.paidTrial('grift-pricing-paid-trial'),
     features: [
       '実案件での利用検証',
       '月1回ヒアリング',
@@ -44,6 +47,7 @@ const betaPlans = [
     description:
       '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
     cta: 'Estimate Auditについて相談する',
+    href: corCta.estimateAudit('grift-pricing-estimate-audit'),
     features: [
       '見積前提の整理',
       '技術リスク確認',
@@ -153,7 +157,7 @@ const onboardingSteps = [
                 ))}
               </ul>
               <a
-                href={contactUrl}
+                href={plan.href}
                 target="_blank"
                 rel="noreferrer"
                 class="cta-primary mt-8 w-full text-sm"

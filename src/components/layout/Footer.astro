@@ -1,10 +1,13 @@
 ---
 import { siteConfig } from '@/config';
 import type { FeatureFlags, NavigationItem } from '@/lib/types';
+import { corCta } from '@/lib/cor-cta';
 
 const { features, contact, navigation } = siteConfig;
 const { footer } = navigation;
 const currentYear = new Date().getFullYear();
+const teamBetaUrl = corCta.teamBeta('grift-nav-footer');
+const estimateAuditUrl = corCta.estimateAudit('grift-nav-footer-estimate-audit');
 
 const filterByFeature = (items: NavigationItem[]) =>
   items.filter((item) => !item.feature || features[item.feature as keyof FeatureFlags]);
@@ -39,7 +42,7 @@ const legalLinks = filterByFeature(footer.legal);
           </p>
           <p class="pt-2">
             <a
-              href="https://cor-jp.com/contact/"
+              href={teamBetaUrl}
               target="_blank"
               rel="noreferrer"
               class="transition-colors hover:text-text"
@@ -49,7 +52,7 @@ const legalLinks = filterByFeature(footer.legal);
           </p>
           <p>
             <a
-              href="https://cor-jp.com/contact/"
+              href={estimateAuditUrl}
               target="_blank"
               rel="noreferrer"
               class="transition-colors hover:text-text"

@@ -77,6 +77,17 @@ test.describe('Landing page smoke tests', () => {
     await expect(ctaLinks.first()).toBeVisible();
   });
 
+  test('primary CTAs include Cor intent query params', async ({ page }) => {
+    // Header nav CTA is hidden on mobile viewports, so match visible CTAs only
+    const intentCtas = page.locator('a[href*="intent="]:visible');
+    await expect(intentCtas.first()).toBeVisible();
+
+    const href = await intentCtas.first().getAttribute('href');
+    expect(href).toMatch(/intent=grift-team-beta|intent=grift-paid-trial|intent=estimate-audit/);
+    expect(href).toContain('source=');
+    expect(href).toContain('utm_source=grift');
+  });
+
   test('navigation header is visible', async ({ page }) => {
     const header = page.locator('header');
     await expect(header).toBeVisible();

@@ -1,7 +1,23 @@
 import type { APIRoute } from 'astro';
 import { siteConfig } from '@/config';
+import { isPreviewSite } from '@/lib/site-env';
 
 export const GET: APIRoute = () => {
+  if (isPreviewSite()) {
+    const previewRobots = `# robots.txt for ${siteConfig.name} (preview — noindex)
+# https://www.robotstxt.org/
+
+User-agent: *
+Disallow: /
+`;
+    return new Response(previewRobots, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
+    });
+  }
+
   const robotsTxt = `# robots.txt for ${siteConfig.name}
 # https://www.robotstxt.org/
 

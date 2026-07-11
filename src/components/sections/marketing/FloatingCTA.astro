@@ -18,12 +18,15 @@
  * ```
  */
 
+import { corCta } from '@/lib/cor-cta';
+
 interface Props {
   /** CSS selector for the hero section to observe */
   heroSelector?: string;
 }
 
 const { heroSelector = '#hero' } = Astro.props;
+const contactUrl = corCta.teamBeta('grift-lp-floating');
 ---
 
 <div
@@ -40,7 +43,7 @@ const { heroSelector = '#hero' } = Astro.props;
       <p class="hidden text-sm text-text-muted sm:block">Grift Team Beta</p>
       <div class="flex flex-1 items-center gap-3 sm:flex-none">
         <a
-          href="https://cor-jp.com/contact/"
+          href={contactUrl}
           target="_blank"
           rel="noreferrer"
           tabindex="-1"

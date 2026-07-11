@@ -7,6 +7,7 @@
  */
 
 import type { ContactInfo, ContactMethod, ContactFAQ } from '../lib/types';
+import { corCta, getCorUrl } from '../lib/cor-cta';
 
 /** Contact information used across contact page and legal pages */
 export const contact: ContactInfo = {
@@ -28,13 +29,13 @@ export const contactMethods: ContactMethod[] = [
     icon: 'lucide:building-2',
     label: 'Cor.株式会社',
     value: 'コーポレートサイトを見る',
-    href: 'https://cor-jp.com/',
+    href: getCorUrl('/'),
   },
   {
     icon: 'lucide:mail',
     label: '問い合わせ',
     value: '相談・お問い合わせはこちら',
-    href: 'https://cor-jp.com/contact/',
+    href: corCta.teamBeta('grift-contact-methods'),
   },
 ];
 

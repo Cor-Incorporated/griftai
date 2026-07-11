@@ -78,7 +78,8 @@ test.describe('Landing page smoke tests', () => {
   });
 
   test('primary CTAs include Cor intent query params', async ({ page }) => {
-    const intentCtas = page.locator('a[href*="intent="]');
+    // Header nav CTA is hidden on mobile viewports, so match visible CTAs only
+    const intentCtas = page.locator('a[href*="intent="]:visible');
     await expect(intentCtas.first()).toBeVisible();
 
     const href = await intentCtas.first().getAttribute('href');

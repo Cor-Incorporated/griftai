@@ -13,12 +13,14 @@
   - corsweb ADR-0013: 問い合わせ一極集中（Cloudia + workers/contact-chat） — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0013-contact-consolidation-cloudia.md
   - corsweb ADR-0014: intent 7キー化（contract-dev 新設）とルーティング — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0014-intent-7keys-and-routing.md
   - corsweb ADR-0015: 正本配置と参照方式 — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0015-cross-repo-adr-canon.md
+  - corsweb ADR-0016: CloudiaからGrift公開相談セッションへの引継ぎ — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0016-cloudia-grift-customer-session-handoff.md
 - 実装ガードとの対応: `src/lib/cor-cta.ts`（intent 生成）、`scripts/check-cta-hardcode.mjs`（ハードコード検査）、`scripts/check-forbidden-metrics.mjs`、`e2e/smoke.spec.ts`（全主要 CTA の契約検査）は正本 ADR の契約を機械的に担保する。
 
 ## 注意
 - Grift LP の CTA が使う intent は `grift-team-beta` / `grift-paid-trial` / `estimate-audit` のみ。
-- `contract-dev` は Cor. サイトの受託開発相談専用であり、Cloudia から Grift へ引き継ぐ構想は corsweb ADR-0014 が Phase 3 方針として定義する。これは実装完了を意味しない。
-- Grift LP は `contract-dev` を生成せず、Cloudia、contact-chat Worker、Grift 内部 API を直接呼び出さない。製品 CTA は fallback を持つ Cor. の `/contact/` を入口として維持する。
+- `contract-dev` は Cor. サイトの受託開発相談専用である。CloudiaからGriftへの公開相談セッション引継ぎはcorsweb ADR-0016を正本とし、Issue・PR・Preview・UATの状態は決定そのものと分離する。
+- Grift LP は `contract-dev` を生成せず、contact-chat WorkerやGrift内部APIを直接呼び出さない。製品CTAはproductionで `https://cor-jp.com/contact/chat/`、Previewで正本が固定したCloudia Pages Previewを入口とし、既存3 intent・source・localeを渡す。
+- Cloudia障害時の既存フォームfallbackはcorsweb側で維持する。LPがfallback URLや内部handoffを独自実装しない。
 - 公開相談セッション引継ぎの実装状況は corsweb issue #259（https://github.com/Cor-Incorporated/corsweb2024/issues/259）で追跡する。Issue は正本 ADR ではない。
 
 ## 影響

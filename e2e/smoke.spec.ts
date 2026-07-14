@@ -18,8 +18,15 @@ const allowedCorIntents = new Set<ProductIntent>([
   'grift-paid-trial',
   'estimate-audit',
 ]);
-const expectedCorOrigin = new URL(process.env.PUBLIC_COR_BASE_URL ?? 'https://cor-jp.com').origin;
-const contractQueryKeys = ['intent', 'source', 'utm_source', 'utm_medium'] as const;
+const expectedContactUrl = new URL(
+  process.env.PUBLIC_CONTACT_CHAT_URL ?? 'https://cor-jp.com/contact/chat/'
+);
+const expectedLocale = process.env.PUBLIC_SITE_LOCALE ?? 'ja';
+const expectedPreviewBuild =
+  process.env.PUBLIC_SITE_ENV === 'preview' ||
+  (!process.env.PUBLIC_SITE_ENV &&
+    Boolean(process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !== 'main'));
+const contractQueryKeys = ['intent', 'source', 'locale', 'utm_source', 'utm_medium'] as const;
 const sourcePattern = /^grift-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const sharedCorCtas: ExpectedCorCta[] = [
@@ -89,8 +96,10 @@ function expectValidCorCta(href: string): URL {
   const intent = url.searchParams.get('intent');
   const source = url.searchParams.get('source');
 
-  expect(url.origin, `${href} must use the configured Cor origin`).toBe(expectedCorOrigin);
-  expect(url.pathname).toBe('/contact/');
+  expect(url.origin, `${href} must use the configured Cloudia origin`).toBe(
+    expectedContactUrl.origin
+  );
+  expect(url.pathname).toBe(expectedContactUrl.pathname);
   expect(url.username).toBe('');
   expect(url.password).toBe('');
   expect(url.hash).toBe('');
@@ -104,6 +113,7 @@ function expectValidCorCta(href: string): URL {
   expect(source, `${href} must include a stable Grift source`).toMatch(sourcePattern);
   expect(url.searchParams.get('utm_source')).toBe('grift');
   expect(url.searchParams.get('utm_medium')).toBe('cta');
+  expect(url.searchParams.get('locale')).toBe(expectedLocale);
   expect(intent).not.toBe('contract-dev');
 
   return url;
@@ -211,16 +221,21 @@ test.describe('Cor contact CTA contract', () => {
       await page.goto(path);
 
       const hrefs = await page.locator('a[href]').evaluateAll(
-        (anchors, queryKeys) =>
+        (anchors, contract) =>
           anchors
             .map((anchor) => new URL((anchor as HTMLAnchorElement).href))
             .filter(
               (url) =>
-                queryKeys.some((key) => url.searchParams.has(key)) ||
-                (url.pathname === '/contact/' && url.origin !== window.location.origin)
+                contract.queryKeys.some((key) => url.searchParams.has(key)) ||
+                (url.pathname === contract.expectedPathname &&
+                  url.origin === contract.expectedOrigin)
             )
             .map((url) => url.href),
-        contractQueryKeys
+        {
+          queryKeys: [...contractQueryKeys],
+          expectedOrigin: expectedContactUrl.origin,
+          expectedPathname: expectedContactUrl.pathname,
+        }
       );
 
       expect(hrefs.length, `${path} must expose at least one Cor contact CTA`).toBeGreaterThan(0);
@@ -249,6 +264,36 @@ test.describe('Cor contact CTA contract', () => {
       expect(forbiddenIntentHrefs).toEqual([]);
     });
   }
+});
+
+test.describe('Preview release provenance', () => {
+  test('emits exact same-origin metadata only for Preview builds', async ({ request }) => {
+    const response = await request.get('/release.json');
+
+    if (!expectedPreviewBuild) {
+      expect(response.status()).toBe(404);
+      return;
+    }
+
+    expect(response.status()).toBe(200);
+    const metadata = await response.json();
+    expect(Object.keys(metadata)).toEqual([
+      'status',
+      'service',
+      'repository',
+      'candidate_sha',
+      'deployment_id',
+      'release_id',
+    ]);
+    expect(metadata).toEqual({
+      status: 'ok',
+      service: 'grift-lp',
+      repository: 'Cor-Incorporated/griftai',
+      candidate_sha: process.env.PUBLIC_RELEASE_CANDIDATE_SHA ?? process.env.CF_PAGES_COMMIT_SHA,
+      deployment_id: process.env.PUBLIC_RELEASE_DEPLOYMENT_ID,
+      release_id: process.env.PUBLIC_RELEASE_ID,
+    });
+  });
 });
 
 test.describe('External link safety', () => {

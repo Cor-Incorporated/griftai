@@ -18,7 +18,7 @@
   "homepage": "https://griftai.org",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check-release-artifact.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",

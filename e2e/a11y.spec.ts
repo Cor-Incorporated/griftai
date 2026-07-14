@@ -1,45 +1,60 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test.describe('Accessibility — WCAG 2 AA', () => {
-  test('homepage has no critical a11y violations', async ({ page }) => {
-    await page.goto('/');
-    // Scroll full page to trigger all lazy content
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(1500);
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForTimeout(500);
+const accessibilityPages = [
+  '/',
+  '/pricing/',
+  '/team-beta/',
+  '/estimate-audit/',
+  '/faq/',
+  '/contact/',
+];
 
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+async function prepareForAccessibilityScan(page: Page, path: string) {
+  await page.goto(path);
 
-    const critical = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
-    );
-
-    expect(critical).toEqual([]);
+  // Scroll behavior is covered by smoke tests. Axe scans the full DOM, so run
+  // every page against a stable final frame instead of a transition midpoint.
+  await page.addStyleTag({
+    content: `
+      *, *::before, *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+      .section-animate,
+      .fade-in-section,
+      .stagger-children > * {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    `,
   });
 
-  test('pricing page has no critical a11y violations', async ({ page }) => {
-    await page.goto('/pricing/');
-
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-
-    const critical = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
+  await page.mouse.move(0, 0);
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
     );
-
-    expect(critical).toEqual([]);
   });
+}
 
-  test('faq page has no critical a11y violations', async ({ page }) => {
-    await page.goto('/faq/');
+async function expectNoAccessibilityViolations(page: Page) {
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
 
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  expect(results.violations).toEqual([]);
+}
 
-    const critical = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
-    );
+test.describe('Accessibility — WCAG 2.2 AA', () => {
+  test.use({ reducedMotion: 'reduce' });
 
-    expect(critical).toEqual([]);
-  });
+  for (const path of accessibilityPages) {
+    test(`${path} has no automated WCAG A/AA violations`, async ({ page }) => {
+      await prepareForAccessibilityScan(page, path);
+      await expectNoAccessibilityViolations(page);
+    });
+  }
 });

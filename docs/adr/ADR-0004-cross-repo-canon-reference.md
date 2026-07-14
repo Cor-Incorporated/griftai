@@ -1,6 +1,6 @@
 # ADR-0004 クロスリポジトリ契約の正本参照
 
-## ステータス: Accepted (2026-07-11)
+## ステータス: Accepted (2026-07-11、2026-07-14 更新)
 
 ## 背景
 - Grift LP の CTA は corsweb（cor-jp.com）の問い合わせ導線へ intent 付き URL で接続する（ADR-0002）。
@@ -13,10 +13,13 @@
   - corsweb ADR-0013: 問い合わせ一極集中（Cloudia + workers/contact-chat） — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0013-contact-consolidation-cloudia.md
   - corsweb ADR-0014: intent 7キー化（contract-dev 新設）とルーティング — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0014-intent-7keys-and-routing.md
   - corsweb ADR-0015: 正本配置と参照方式 — https://github.com/Cor-Incorporated/corsweb2024/blob/develop/docs/adr/ADR-0015-cross-repo-adr-canon.md
-- 実装ガードとの対応: `src/lib/cor-cta.ts`（intent 生成）、`scripts/check-cta-hardcode.mjs`（ハードコード検査）、`scripts/check-forbidden-metrics.mjs` は正本 ADR の契約を機械的に担保する。
+- 実装ガードとの対応: `src/lib/cor-cta.ts`（intent 生成）、`scripts/check-cta-hardcode.mjs`（ハードコード検査）、`scripts/check-forbidden-metrics.mjs`、`e2e/smoke.spec.ts`（全主要 CTA の契約検査）は正本 ADR の契約を機械的に担保する。
 
 ## 注意
-- Grift LP の CTA が使う intent は `grift-team-beta` / `grift-paid-trial` / `estimate-audit` のみ。新キー `contract-dev` は Grift LP からは使用しない（corsweb ADR-0014）。
+- Grift LP の CTA が使う intent は `grift-team-beta` / `grift-paid-trial` / `estimate-audit` のみ。
+- `contract-dev` は Cor. サイトの受託開発相談専用であり、Cloudia から Grift へ引き継ぐ構想は corsweb ADR-0014 が Phase 3 方針として定義する。これは実装完了を意味しない。
+- Grift LP は `contract-dev` を生成せず、Cloudia、contact-chat Worker、Grift 内部 API を直接呼び出さない。製品 CTA は fallback を持つ Cor. の `/contact/` を入口として維持する。
+- 公開相談セッション引継ぎの実装状況は corsweb issue #259（https://github.com/Cor-Incorporated/corsweb2024/issues/259）で追跡する。Issue は正本 ADR ではない。
 
 ## 影響
 - クロスリポジトリ契約の変更は corsweb 側 ADR の更新として行い、本リポジトリは参照リンクのみ追従する。

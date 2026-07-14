@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getRobotsMetaContent, isPreviewSite } from '../../src/lib/site-env';
+import { getRobotsMetaContent, getSiteEnvironment, isPreviewSite } from '../../src/lib/site-env';
 
 describe('isPreviewSite', () => {
   afterEach(() => {
@@ -31,5 +31,10 @@ describe('isPreviewSite', () => {
   it('treats main CF_PAGES_BRANCH as production when SITE_ENV unset', () => {
     vi.stubEnv('CF_PAGES_BRANCH', 'main');
     expect(isPreviewSite()).toBe(false);
+  });
+
+  it('rejects an unknown explicit environment instead of falling through', () => {
+    vi.stubEnv('PUBLIC_SITE_ENV', 'prod');
+    expect(() => getSiteEnvironment()).toThrow(/Invalid PUBLIC_SITE_ENV/);
   });
 });

@@ -4,12 +4,14 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
 import { siteConfig } from './src/config';
+import { releaseMetadataIntegration } from './src/integrations/release-metadata';
 
 const siteUrl = process.env.SITE_URL || siteConfig.url;
 
 export default defineConfig({
   site: siteUrl,
   integrations: [
+    releaseMetadataIntegration(),
     mdx(),
     icon(),
     sitemap({

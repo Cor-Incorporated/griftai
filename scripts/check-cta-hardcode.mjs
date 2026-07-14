@@ -39,14 +39,16 @@ const violations = [];
 for (const file of walk(SRC)) {
   const rel = relative(ROOT, file).replaceAll('\\', '/');
   if (ALLOWED_FILES.has(rel)) {
-    // Builder may mention contact path only via path default, not full prod URL with /contact
+    // The builder owns one exact, validated production fallback URL.
     const text = readFileSync(file, 'utf8');
     const matches = [...text.matchAll(HARDCODE_RE)];
-    if (matches.length > 0) {
+    const canonicalFallback =
+      "export const PRODUCTION_CONTACT_CHAT_URL = 'https://cor-jp.com/contact/chat/';";
+    if (matches.length !== 1 || !text.includes(canonicalFallback)) {
       violations.push({
         file: rel,
         count: matches.length,
-        note: 'cor-cta.ts must not hardcode full contact URL',
+        note: 'cor-cta.ts must contain exactly one canonical production fallback',
       });
     }
     continue;

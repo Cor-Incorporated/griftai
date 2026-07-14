@@ -12,7 +12,7 @@
 | 変数 | 本番 | Preview |
 |---|---|---|
 | `PUBLIC_COR_BASE_URL` | `https://cor-jp.com` | 会社情報リンク用（問い合わせCTAには使わない） |
-| `PUBLIC_CONTACT_CHAT_URL` | `https://cor-jp.com/contact/chat/` | `https://codex-cloudia-grift-uat.cloudia-contact.pages.dev/` |
+| `PUBLIC_CONTACT_CHAT_URL` | `https://cor-jp.com/contact/chat/` | immutable Cloudia UAT Pages origin (`https://6ad95a0c.cloudia-contact.pages.dev/` for release r2) |
 | `PUBLIC_SITE_LOCALE` | `ja`（英語版buildは`en`） | `ja`（英語版buildは`en`） |
 | `PUBLIC_RELEASE_CANDIDATE_SHA` | 不要 | LP repoの40文字lowercase commit SHA（`CF_PAGES_COMMIT_SHA`でも可） |
 | `PUBLIC_RELEASE_DEPLOYMENT_ID` | 不要 | safeなPages deployment ID |

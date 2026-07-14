@@ -23,8 +23,7 @@ export interface BuildCorContactUrlOptions {
 
 const DEFAULT_COR_BASE_URL = 'https://cor-jp.com';
 export const PRODUCTION_CONTACT_CHAT_URL = 'https://cor-jp.com/contact/chat/';
-export const PREVIEW_CONTACT_CHAT_URL =
-  'https://codex-cloudia-grift-uat.cloudia-contact.pages.dev/';
+export const PREVIEW_CONTACT_CHAT_URL = 'https://6ad95a0c.cloudia-contact.pages.dev/';
 
 function readPublicEnv(name: string): string | undefined {
   const fromMeta = (import.meta.env as Record<string, string | undefined>)[name];

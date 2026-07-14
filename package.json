@@ -16,6 +16,9 @@
     "url": "https://github.com/Cor-Incorporated/griftai.git"
   },
   "homepage": "https://griftai.org",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/check-release-artifact.mjs",
@@ -28,6 +31,9 @@
     "check:cta": "node scripts/check-cta-hardcode.mjs",
     "check:metrics": "node scripts/check-forbidden-metrics.mjs",
     "check": "npm run lint && npm run format:check && astro check && npm run check:cta && npm run check:metrics",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "audit:all": "npm audit --audit-level=high",
+    "test:audit-policy": "node --test scripts/check-dependency-audit-gate.test.mjs",
     "test:unit": "vitest run",
     "test:e2e": "playwright test e2e/smoke.spec.ts",
     "test:e2e:a11y": "playwright test e2e/a11y.spec.ts",
@@ -36,18 +42,18 @@
     "test": "npm run test:unit && npm run build && npm run test:e2e"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.0",
-    "@astrojs/rss": "^4.0.0",
-    "@astrojs/sitemap": "^3.2.0",
+    "@astrojs/mdx": "^5.0.6",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@iconify-json/lucide": "^1.2.82",
     "@iconify-json/simple-icons": "^1.2.63",
     "@tailwindcss/typography": "^0.5.19",
-    "astro": "^5.16.6",
+    "astro": "^6.4.6",
     "astro-icon": "^1.1.5",
     "chart.js": "^4.4.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.9",
     "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.0.0",
@@ -61,6 +67,6 @@
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.10"
   }
 }

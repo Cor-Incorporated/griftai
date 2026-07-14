@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22.12.0'
   CLOUDFLARE_PROJECT_NAME: griftai
 
 concurrency:
@@ -37,6 +37,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify dependency audit policy
+        run: npm run test:audit-policy
+
+      - name: Audit production dependencies (Critical/High)
+        run: npm run audit:prod
+
+      - name: Audit all dependencies (Critical/High)
+        run: npm run audit:all
 
       - name: Run checks
         run: npm run check

@@ -3,7 +3,7 @@
 ## ステータス: Accepted (2026-07-10)
 
 ## 背景
-- 現状ほぼすべての CTA が `https://cor-jp.com/contact/` 固定で、Team Beta / Paid Trial / Estimate Audit の文脈が失われる（監査 P0）。
+- 変更前はほぼすべての CTA が `https://cor-jp.com/contact/` 固定で、Team Beta / Paid Trial / Estimate Audit の文脈が失われていた（監査 P0）。
 - Preview Grift → Preview Cor を通し検証できない。
 
 ## 決定
@@ -17,7 +17,7 @@
 - コンポーネントに Cor URL を直書きしない。
 
 ### intent 付き URL
-例: `${PUBLIC_COR_BASE_URL}/contact/?intent=grift-team-beta&source=grift-lp-hero&utm_source=grift&utm_medium=cta`
+例: `${PUBLIC_COR_BASE_URL}/contact/chat?intent=grift-team-beta&source=grift-lp-hero&utm_source=grift&utm_medium=cta`
 
 | CTA 種別 | intent |
 |---|---|

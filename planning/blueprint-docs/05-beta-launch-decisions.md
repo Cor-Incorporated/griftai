@@ -8,7 +8,7 @@
 - 正規 URL: `https://griftai.org`
 - 表記: `Beta`
 - 主要 CTA: Cor.inc 既存問い合わせ導線へ接続
-- 問い合わせ先: `https://cor-jp.com/contact/`
+- 問い合わせ先: `https://cor-jp.com/contact/chat`
 - 会社導線: `https://cor-jp.com/`
 - LP 内フォーム: 初期リリースでは設置しない
 - フォーム拡張性: 後から自前フォームを差し込める構成で設計する
@@ -240,17 +240,17 @@ tenant 分離と opt-in を前提に設計しており、cross-tenant benchmark 
 ### Q9. Enterprise では何ができますか？
 
 権限、導入支援、セキュリティ、運用要件、契約条件を含めた個別対応を想定しています。  
-詳細は Cor.inc の問い合わせフォームから相談を受け付けます。
+詳細は Cor.inc のAI受付から相談を受け付けます。
 
 ### Q10. 問い合わせ先はどこですか？
 
-現時点では Cor.inc の問い合わせ窓口へ集約します。  
-`https://cor-jp.com/contact/`
+現時点では Cor.inc のAI受付へ集約します。
+`https://cor-jp.com/contact/chat`
 
 ### Q11. LP から直接申し込みできますか？
 
 初期リリースでは、LP 内フォームは設置しません。  
-すべて Cor.inc の問い合わせフォームへご案内します。将来的に、ベータ登録フォームやデモ申込フォームを追加できるよう設計します。
+すべて Cor.inc のAI受付へご案内します。将来的に、ベータ登録フォームやデモ申込フォームを追加できるよう設計します。
 
 ## 5. Privacy / Terms のベース
 
@@ -268,7 +268,7 @@ Cor.inc の公開サイトから、以下は確認できる。
 
 - [Cor.inc Home](https://cor-jp.com/)
 - [Cor.inc About](https://cor-jp.com/about/)
-- [Cor.inc Contact](https://cor-jp.com/contact/)
+- [Cor.inc AI受付](https://cor-jp.com/contact/chat)
 - [Cor.inc Legal Notice](https://cor-jp.com/en/legal/tokushoho/)
 - [Cor.inc Privacy (es)](https://cor-jp.com/es/privacy/)
 
@@ -341,7 +341,7 @@ Cor.inc の公開サイトから、以下は確認できる。
 - LP 上は `Beta` 明記
 - pricing は公開してよいが、「正式版価格」ではなく「beta pricing」にする
 - `Solo / Studio / Growth / Enterprise` の 4 段で出す
-- CTA は当面 `cor-jp.com/contact/` に集約
+- CTA は当面 `cor-jp.com/contact/chat` に集約
 - `/privacy` と `/terms` は Cor.inc 公開情報をベースに Grift 向けへ起こす
 - LP 本文では成果実績を盛らず、「仕組みの根拠」と「目指す価値」を中心に見せる
 

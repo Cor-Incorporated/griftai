@@ -62,6 +62,7 @@ export interface ContactInfo {
   email: string;
   supportEmail?: string;
   salesEmail?: string;
+  phone: string;
   address: Address;
 }
 

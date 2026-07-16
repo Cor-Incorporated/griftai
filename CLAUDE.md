@@ -52,7 +52,7 @@ GitHub Actions (`.github/workflows/ci.yml`):
 
 ## Key Conventions
 
-- All public-facing copy is Japanese. CTA links point to `https://cor-jp.com/contact/`.
+- All public-facing copy is Japanese. CTA links point to `https://cor-jp.com/contact/chat`.
 - Pricing is labeled as Beta pricing, not final.
 - Sitemap is filtered to only the 6 published pages (configured in `astro.config.mjs`).
 - Icons use `astro-icon` with `@iconify-json/lucide` and `@iconify-json/simple-icons`.

@@ -1,7 +1,7 @@
 /**
  * Cor contact CTA builder (ADR-0002 / corsweb ADR-0010)
  *
- * All primary CTAs that leave griftai.org for Cor contact must go through
+ * All primary CTAs that leave griftai.org for Cor AI reception must go through
  * these helpers so intent / source / UTM and PUBLIC_COR_BASE_URL stay consistent.
  */
 
@@ -14,7 +14,7 @@ export interface BuildCorContactUrlOptions {
   source: string;
   utmSource?: string;
   utmMedium?: string;
-  /** Path under Cor site. Default `/contact/` */
+  /** Path under Cor site. Default `/contact/chat` */
   path?: string;
 }
 
@@ -46,11 +46,11 @@ export function getCorUrl(path = '/'): string {
  * Build Cor contact URL with intent / source / UTM query params.
  *
  * Example:
- * `${PUBLIC_COR_BASE_URL}/contact/?intent=grift-team-beta&source=grift-lp-hero&utm_source=grift&utm_medium=cta`
+ * `${PUBLIC_COR_BASE_URL}/contact/chat?intent=grift-team-beta&source=grift-lp-hero&utm_source=grift&utm_medium=cta`
  */
 export function buildCorContactUrl(options: BuildCorContactUrlOptions): string {
   const base = getCorBaseUrl();
-  const path = options.path ?? '/contact/';
+  const path = options.path ?? '/contact/chat';
   const url = new URL(path.startsWith('/') ? path : `/${path}`, `${base}/`);
 
   url.searchParams.set('intent', options.intent);

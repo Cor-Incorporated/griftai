@@ -16,31 +16,39 @@ const finalCtaUrl = corCta.teamBeta('grift-lp-final');
 
 const pains = [
   {
-    title: '担当者によるブレ',
-    body: '経験や勘に依存するため、人によって見積金額が変わってしまう。判断基準が個人の頭の中にあると、チームで提案品質を揃えることが難しくなります。',
+    title: '曖昧な相談のまま見積を求められる',
+    body: '前提条件や対象範囲が揃わないまま、金額だけを先に求められる。何を含め、何を含めないかが整理されないと、後から認識のずれが生まれます。',
   },
   {
-    title: '説明材料の不足',
-    body: '発注者に「なぜこの金額なのか」を聞かれたとき、論理的に説明できる材料が足りない。相見積もりや価格交渉で、経験だけでは伝えきれない場面が出てきます。',
+    title: '追加要件で金額と工数が膨らむ',
+    body: '要件追加や仕様変更の境界が曖昧なまま進むと、当初の見積と実際の作業に差が生まれます。変更条件を事前に共有できないことが、赤字や不信につながります。',
   },
   {
-    title: 'ナレッジの属人化',
-    body: '見積ノウハウが若手や新メンバーに引き継がれず、組織の資産にならない。代表や一部の上流メンバーに見積業務が集中し続けます。',
+    title: '無料の調査・提案が積み上がる',
+    body: 'ヒアリング、調査、複数案の検討に時間をかけても、受注につながらなければ負担だけが残ります。相談段階でどこまで扱うかを判断する材料が必要です。',
+  },
+  {
+    title: 'なぜこの金額か説明できない',
+    body: '自社の実績や市場相場を並べて説明できないと、安く出すか高く見えるかの二択になりがちです。価格の根拠をチームで確認できる状態が求められます。',
   },
 ];
 
 const outcomes = [
   {
-    title: '説得力のある提案材料を増やす',
-    body: '案件前提、GitHub実績、市場相場、技術リスクを整理し、発注者に説明しやすい判断材料を増やします。',
+    title: '前提とやらないことを整理する',
+    body: '相談内容、対象範囲、不確実な要素、やらないことを整理し、見積の出発点をチームで確認しやすくします。',
   },
   {
-    title: '見積基準をチームで揃えやすくする',
-    body: '代表や一部のベテランだけに依存せず、PM・営業・上流エンジニアが同じ前提を見ながら見積を確認できます。',
+    title: '変更条件とリスクを可視化する',
+    body: '技術的な不確実性や追加要件の可能性を整理し、どの条件で再見積もりが必要になるかを説明しやすくします。',
   },
   {
-    title: '過去の知見を資産として蓄積する',
-    body: '過去案件の判断、レビュー内容、見積根拠を残し、次の案件で再利用しやすいナレッジへ変えていきます。',
+    title: '相談段階の判断材料を整える',
+    body: '案件にかける調査・提案の深さを検討し、受けるべき案件か、次の確認が必要な案件かをチームで判断しやすくします。',
+  },
+  {
+    title: '実績と相場を根拠として残す',
+    body: 'GitHub実績、市場相場、類似案件、レビュー内容を見積根拠として残し、次の案件で再利用しやすい会社資産へ変えていきます。',
   },
 ];
 
@@ -62,13 +70,13 @@ const proofPillars = [
 const flowSteps = [
   {
     step: '01',
-    title: '案件の要件・前提条件を入力',
-    body: '相談内容、対象機能、納期、技術前提、不確実な要素を入力し、見積の前提を整理します。',
+    title: '相談内容とやらないことを入力',
+    body: '相談内容、対象機能、納期、技術前提、現時点で扱わない範囲を入力し、見積の前提を整理します。',
   },
   {
     step: '02',
-    title: '過去データや市場相場を参照',
-    body: 'GitHub実績や過去の開発傾向、市場相場などを、参考材料として整理します。',
+    title: '前提・スコープ・不確実性を整理',
+    body: '要件の不足、追加確認が必要な点、仕様変更の可能性を整理し、比較できる状態を作ります。',
   },
   {
     step: '03',
@@ -223,73 +231,43 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
         <ul class="grid w-full gap-3 text-left text-sm text-text-muted sm:grid-cols-3">
           <li class="surface-card p-3 sm:p-4">人間レビュー前提のAI見積支援</li>
           <li class="surface-card p-3 sm:p-4">GitHub実績・市場相場を参考材料に</li>
-          <li class="surface-card p-3 sm:p-4">受託チーム向けTeam Beta検証中</li>
+          <li class="surface-card p-3 sm:p-4">Team Betaの利用チーム募集中</li>
         </ul>
       </div>
 
       <div class="mt-8 grid gap-6 sm:mt-10 lg:mt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
-        <aside
-          id="product-demo-placeholder"
+        <figure
+          id="product-demo"
           class="surface-panel overflow-hidden p-0"
-          aria-label="プロダクト画面プレースホルダ"
+          aria-label="Grift インテークワークスペースの画面例"
         >
-          <div class="flex items-center gap-2 border-b border-border bg-surface px-4 py-3">
-            <span class="size-2.5 rounded-full bg-border" aria-hidden="true"></span>
-            <span class="size-2.5 rounded-full bg-border" aria-hidden="true"></span>
-            <span class="size-2.5 rounded-full bg-border" aria-hidden="true"></span>
-            <p class="ml-2 text-xs font-medium text-text-muted">
-              プロダクト画面プレースホルダ（実画面素材準備中）
-            </p>
+          <div class="bg-surface p-3 sm:p-4">
+            <img
+              src="/images/grift-intake-workspace.png"
+              alt="Griftのインテークワークスペース。会社情報の入力と案件管理を一か所で行う画面例"
+              width="1426"
+              height="1103"
+              class="mx-auto max-h-[34rem] w-full object-contain"
+              loading="eager"
+              decoding="async"
+            />
           </div>
-          <div class="p-5 sm:p-6 lg:p-8">
-            <div class="flex items-center justify-between gap-4">
-              <div>
-                <p class="text-xs font-semibold text-text-muted">参考見積レポート</p>
-                <p class="mt-1 text-lg font-semibold text-text">3つの根拠比較</p>
-              </div>
-              <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                人間レビュー前提
-              </span>
-            </div>
-            <dl class="mt-6 grid gap-3 sm:grid-cols-3">
-              <div class="rounded-2xl bg-surface p-4">
-                <dt class="text-xs text-text-muted">案件前提</dt>
-                <dd class="mt-2 text-xl font-semibold text-text">EC刷新</dd>
-                <dd class="mt-1 text-xs text-text-muted">対象機能と不確実性</dd>
-              </div>
-              <div class="rounded-2xl bg-surface p-4">
-                <dt class="text-xs text-text-muted">自社実績</dt>
-                <dd class="mt-2 text-xl font-semibold text-text">参考データ</dd>
-                <dd class="mt-1 text-xs text-text-muted">類似案件の参考値</dd>
-              </div>
-              <div class="rounded-2xl bg-primary/10 p-4">
-                <dt class="text-xs text-primary">市場相場</dt>
-                <dd class="mt-2 text-xl font-semibold text-primary">価格帯の参考</dd>
-                <dd class="mt-1 text-xs text-text-muted">価格帯の検討材料</dd>
-              </div>
-            </dl>
-            <div class="mt-6 space-y-3">
-              <div class="h-3 overflow-hidden rounded-full bg-info/15">
-                <div class="bar-pulse h-full rounded-full bg-info" style="width: 100%"></div>
-              </div>
-              <div class="h-3 overflow-hidden rounded-full bg-success/15">
-                <div class="bar-pulse h-full rounded-full bg-success" style="width: 87.5%"></div>
-              </div>
-            </div>
-            <p class="mt-5 type-copy text-sm text-text-muted">
-              金額だけを出すのではなく、案件前提・自社実績・市場相場を並べ、人間が確認できる参考見積レポートとして整理します。
-            </p>
-            <p class="mt-3 type-copy text-xs text-text-muted">
-              ※実画面の録画・静止画は準備中です。上記は偽メトリクスを含まない説明用プレースホルダです。表示内容は案件・連携データ・提供範囲により変わります。
-            </p>
-          </div>
-        </aside>
+          <figcaption
+            class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
+          >
+            Grift
+            インテークワークスペース（ベータ版の画面例）。提供範囲や表示内容は検証状況により変わります。
+          </figcaption>
+        </figure>
 
         <aside class="surface-card p-5 sm:p-6 lg:p-8">
           <p class="section-kicker">見積の考え方を先に読む</p>
           <h2 class="mt-3 type-heading text-2xl font-semibold text-text">
-            Griftを導入する前に、見積根拠・相場感・AI見積支援の考え方を整理できます。
+            相談の前提を整え、見積の根拠につなげる。
           </h2>
+          <p class="mt-4 type-copy text-sm text-text-muted">
+            Griftは、インテークで案件の前提・スコープ・不確実性を整理し、提案前に確認すべき材料をチームで共有しやすくします。
+          </p>
           <div class="mt-6 grid gap-3">
             {
               heroColumnArticles.map((article) => (
@@ -326,13 +304,13 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
     <div class="fade-in-section max-w-3xl space-y-4">
       <p class="text-sm font-semibold text-primary">課題</p>
       <h2 class="max-w-2xl text-3xl font-semibold leading-[1.18] text-text sm:text-4xl">
-        見積作成が、代表や一部のベテランに集中していませんか？
+        曖昧な相談を、そのまま見積にしていませんか？
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        小規模な受託開発チームが直面する、見積業務のブラックボックス化。
+        無料の調査や追加要件で見積が後から膨らみ、なぜその金額なのか説明しにくくなる構造を整理します。
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
       {
         pains.map((item) => (
           <article class="card-lift rounded-2xl border border-border bg-surface p-6">
@@ -366,13 +344,13 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
       <div class="fade-in-section max-w-3xl space-y-4">
         <p class="text-sm font-semibold text-primary">価値</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          担当者の経験や勘を、共有できる「会社資産」へ。
+          曖昧な相談と根拠のない金額を、チームで確認できる前提へ。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          Griftは、人間が責任を持って説明できる「見積根拠」を増やし、チームで再現しやすい見積プロセスづくりを支援します。
+          Griftは、案件の前提・スコープ・変更条件を整理し、人間が責任を持って説明できる見積根拠を増やします。
         </p>
       </div>
-      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
         {
           outcomes.map((item) => (
             <article class="card-lift rounded-2xl border border-border bg-background p-6">

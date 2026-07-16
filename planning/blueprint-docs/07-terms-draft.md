@@ -126,7 +126,7 @@ Enterprise プランその他個別対応が必要な場合は、別途契約ま
 
 本規約に関するお問い合わせは、以下の窓口からご連絡ください。
 
-- Contact: https://cor-jp.com/contact/
+- Contact: https://cor-jp.com/contact/chat
 
 ## 備考
 

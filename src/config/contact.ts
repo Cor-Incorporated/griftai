@@ -14,6 +14,7 @@ export const contact: ContactInfo = {
   email: '',
   supportEmail: '',
   salesEmail: '',
+  phone: '050-1792-9351',
   address: {
     street: '天神2丁目3-10 天神パインクレスト719号',
     city: '福岡市中央区',
@@ -32,10 +33,16 @@ export const contactMethods: ContactMethod[] = [
     href: getCorUrl('/'),
   },
   {
-    icon: 'lucide:mail',
-    label: '問い合わせ',
-    value: '相談・お問い合わせはこちら',
+    icon: 'lucide:message-circle',
+    label: 'AI受付',
+    value: 'AI受付で相談する',
     href: corCta.teamBeta('grift-contact-methods'),
+  },
+  {
+    icon: 'lucide:phone',
+    label: '電話',
+    value: `AI受付の電話窓口（${contact.phone}）へ発信する`,
+    href: `tel:${contact.phone.replaceAll('-', '')}`,
   },
 ];
 
@@ -43,15 +50,15 @@ export const contactMethods: ContactMethod[] = [
 export const contactFAQs: ContactFAQ[] = [
   {
     question: '問い合わせはどこに送られますか？',
-    answer: 'ベータ提供中は、すべて Cor.株式会社 の既存問い合わせ窓口に集約します。',
+    answer: 'Griftからのお問い合わせは、Cor.株式会社のAI受付に集約します。',
   },
   {
     question: '問い合わせ方法は何ですか？',
     answer:
-      '現在は Cor.株式会社 の問い合わせフォームからご連絡いただけます。案件概要やチーム規模を添えていただくとスムーズです。',
+      'AI受付に相談内容を入力してご連絡いただけます。案件概要やチーム規模を添えていただくとスムーズです。',
   },
   {
-    question: '個別相談も同じ窓口ですか？',
-    answer: 'はい。導入条件や個別相談も Cor.株式会社 の問い合わせフォームから受け付けます。',
+    question: '電話でも相談できますか？',
+    answer: `はい。Cor.株式会社コールセンター（${contact.phone}）へお電話ください。`,
   },
 ];

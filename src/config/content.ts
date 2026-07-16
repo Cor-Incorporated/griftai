@@ -43,6 +43,6 @@ export const content: ContentStrings = {
     buttonText: '登録する',
     successMessage: '登録ありがとうございます。次回の配信をお待ちください。',
     errorMessage: '送信に失敗しました。時間を置いて再度お試しください。',
-    privacyNote: '現在はお問い合わせフォーム経由でのご連絡を受け付けています。',
+    privacyNote: '現在はAI受付経由でのご連絡を受け付けています。',
   },
 };

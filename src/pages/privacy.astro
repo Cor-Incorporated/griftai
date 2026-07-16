@@ -7,7 +7,7 @@ const lastUpdated = '2026-03-12';
 const companyName = 'Cor株式会社（Cor.inc）';
 const representative = '代表取締役 寺田 康佑';
 const address = '〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神パインクレスト719号';
-const phone = '070-8561-1659';
+const phone = siteConfig.contact.phone;
 const contactUrl = corCta.teamBeta('grift-legal-privacy');
 const legalNoticeUrl = getCorUrl('/legal/tokushoho/');
 ---
@@ -36,7 +36,11 @@ const legalNoticeUrl = getCorUrl('/legal/tokushoho/');
           <li>事業者名: {companyName}</li>
           <li>運営責任者: {representative}</li>
           <li>所在地: {address}</li>
-          <li>電話番号: {phone}</li>
+          <li>
+            電話番号:
+            {' '}
+            <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+          </li>
           <li>
             お問い合わせ先:
             {' '}

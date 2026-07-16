@@ -88,6 +88,18 @@ test.describe('Landing page smoke tests', () => {
     expect(href).toContain('utm_source=grift');
   });
 
+  test('homepage contact CTAs use Cor AI reception', async ({ page }) => {
+    const contactLinks = page.locator('a[href*="cor-jp.com/contact/"]');
+    const hrefs = await contactLinks.evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href') ?? '')
+    );
+
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      expect(href).toContain('https://cor-jp.com/contact/chat?');
+    }
+  });
+
   test('navigation header is visible', async ({ page }) => {
     const header = page.locator('header');
     await expect(header).toBeVisible();
@@ -140,6 +152,19 @@ test.describe('Key pages load correctly', () => {
       await expect(page).toHaveTitle(titlePattern);
     });
   }
+
+  test('contact page provides AI reception and phone CTAs', async ({ page }) => {
+    await page.goto('/contact/');
+
+    const aiReception = page.getByRole('link', { name: 'Cor.株式会社のAI受付へ' });
+    await expect(aiReception).toHaveAttribute(
+      'href',
+      /https:\/\/cor-jp\.com\/contact\/chat\?intent=grift-team-beta/
+    );
+
+    const phone = page.getByRole('link', { name: '電話（050-1792-9351）で相談する' });
+    await expect(phone).toHaveAttribute('href', 'tel:05017929351');
+  });
 });
 
 test.describe('Phase 2 product pages', () => {

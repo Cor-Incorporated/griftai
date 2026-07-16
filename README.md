@@ -23,7 +23,7 @@
 
 - 日本語ファースト
 - canonical は `https://griftai.org`
-- 主要 CTA は `https://cor-jp.com/contact/`
+- 主要 CTA は `https://cor-jp.com/contact/chat`
 - 料金表示は正式版ではなく `Beta pricing`
 - LP 内の独自フォームは未実装
   後から追加しやすい構成でページを分離しています。

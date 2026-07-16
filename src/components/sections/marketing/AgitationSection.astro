@@ -30,7 +30,11 @@ const points: AgitationPoint[] = [
   },
   {
     step: 3,
-    text: '属人化による組織のスケール限界',
+    text: '無料の調査・提案が積み上がる',
+  },
+  {
+    step: 4,
+    text: 'スコープ変更による赤字化',
   },
 ];
 ---
@@ -47,7 +51,7 @@ const points: AgitationPoint[] = [
       </p>
     </div>
 
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
       {
         points.map((point) => (
           <article class="relative rounded-2xl border border-background/10 bg-background/5 p-6">

@@ -161,9 +161,17 @@ test.describe('Phase 2 product pages', () => {
     await expect(cta).toBeVisible();
   });
 
-  test('home shows product demo placeholder without contract-dev CTA', async ({ page }) => {
+  test('home shows product screenshot without private-alpha copy or contract-dev CTA', async ({
+    page,
+  }) => {
     await page.goto('/');
-    await expect(page.locator('#product-demo-placeholder')).toBeVisible();
+    await expect(page.locator('#product-demo')).toBeVisible();
+    await expect(page.locator('#product-demo img')).toHaveAttribute(
+      'alt',
+      /インテークワークスペース/
+    );
+    await expect(page.getByText('プロダクト画面プレースホルダ')).toHaveCount(0);
+    await expect(page.getByText('プライベートベータ')).toHaveCount(0);
     const contractDev = page.locator('a[href*="intent=contract-dev"]');
     await expect(contractDev).toHaveCount(0);
   });

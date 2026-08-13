@@ -83,3 +83,6 @@ workflow 上の Pages project 名は `griftai` を前提にしています。別
 
 - デザインシステムと Astro 構成は `Virex` をベースにしています。
 - ただし公開サイトとしては Grift 用に大幅に簡略化し、テンプレート由来の公開ルートは削除しています。
+
+<!-- gitleaks 動作確認用（2026-08-13・確認後に削除） -->
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY

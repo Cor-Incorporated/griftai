@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { getPublicClaim } from '@/lib/public-claims';
 
 interface Props {
   type: 'software' | 'faq' | 'organization';
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const { type, faqItems = [] } = Astro.props;
+const homeBetaClaim = getPublicClaim('PUB-HOME-BETA-SCOPE');
 
 const softwareApplicationSchema = {
   '@context': 'https://schema.org',
@@ -14,8 +16,7 @@ const softwareApplicationSchema = {
   name: 'Grift',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
-  description:
-    '受託開発チームが参考見積と見積根拠を整理し、人間レビュー前提の見積プロセスを作るAI見積支援ツールです。',
+  description: homeBetaClaim.text,
   offers: {
     '@type': 'OfferCatalog',
     name: 'Grift Team Beta Pricing',
@@ -25,7 +26,6 @@ const softwareApplicationSchema = {
         name: 'Grift Team Beta',
         price: '50000',
         priceCurrency: 'JPY',
-        description: '月額5万円を基本に個別案内',
         availability: 'https://schema.org/LimitedAvailability',
       },
       {
@@ -33,7 +33,6 @@ const softwareApplicationSchema = {
         name: 'Grift Paid Trial',
         price: '150000',
         priceCurrency: 'JPY',
-        description: '3ヶ月15万円を基本に個別案内',
         availability: 'https://schema.org/LimitedAvailability',
       },
       {
@@ -41,7 +40,6 @@ const softwareApplicationSchema = {
         name: 'Grift Estimate Audit',
         price: '1000000',
         priceCurrency: 'JPY',
-        description: '100万円を基本に個別見積',
         availability: 'https://schema.org/LimitedAvailability',
       },
     ],

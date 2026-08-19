@@ -3,12 +3,16 @@ import { corCta } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
+import PublicClaimBoundary from '@/components/common/PublicClaimBoundary.astro';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-column-market-price-ai-develop');
 
 const title = 'AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い';
-const description =
-  'AI開発の社内稟議を通すための比較材料を探している新規事業担当者へ向けて、市場価格帯の目安や、開発手法の種類による相場の違い、技術スタックの難易度が費用に与える影響を解説します。適正な相場を把握するためにお役立てください。';
+const description = getPublicClaim('PUB-COLUMN-MARKET-PRICE-SEO').text;
+const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
+const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
+const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
 ---
 
 <MarketingLayout title={title} description={description}>
@@ -19,6 +23,8 @@ const description =
           AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い
         </h1>
       </header>
+
+      <PublicClaimBoundary general={generalClaim} beta={betaClaim} human={humanClaim} />
 
       <div class="prose prose-lg max-w-none dark:prose-invert">
         <!-- コンテンツここから -->
@@ -66,11 +72,11 @@ const description =
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">AI開発の見積もり作成はCor株式会社へ</h2>
               <p class="u-m0 u-pb1em">
-                AIを活用した新規事業の立ち上げにおいて、社内稟議を通すための説得力ある見積もり根拠の作成に苦労されている担当者の方も多いのではないでしょうか。Cor株式会社は、これまで曖昧になりがちだった上流工程の課題を解決し、適正な相場にもとづいたプロジェクトの進行をサポートするツールを提供しています。
+                {betaClaim.text}
               </p>
 
               <p class="u-m0 u-pb1em">
-                Cor株式会社が提供するAI見積自動化ツール「Grift」は、GitHubの実績データと市場相場を自動で照合し、客観的な根拠のある見積もりレポートを生成します。一般的な開発ツールがコーディングの支援にとどまるのに対し、「Grift」は発注前の「何を作るか」「いくらかかるか」という上流工程からAIで管理できる点が大きな強みです。
+                {humanClaim.text}
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -133,7 +139,7 @@ const description =
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">APIやクラウドサービスを活用した開発</h3>
                 <p class="u-m0 u-pb1em">
-                  すでに提供されている画像認識や自然言語処理などのAI機能を、APIやクラウドサービス経由で利用する開発手法です。既存の技術を組み合わせるため、スクラッチ開発と比較して開発期間を大幅に短縮でき、相場も数百万円程度に抑えられるケースが多くなります。一般的な要件であれば、この手法を選択することで初期投資を抑えつつ、スピーディーにAIを導入できます。
+                  すでに提供されている画像認識や自然言語処理などのAI機能を、APIやクラウドサービス経由で利用する開発手法です。スクラッチ開発との差は、要件、連携、データ移行、セキュリティ、利用料によって変わります。期間と費用は個別の前提を確認して比較します。
                 </p>
               </div>
             </section>
@@ -159,7 +165,7 @@ const description =
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">見積もりでお悩みならCor株式会社へ</h3>
                 <p class="u-m0 u-pb1em">
-                  AI開発の見積もりが適正かどうか判断に迷う場合は、Cor株式会社へご相談ください。Cor株式会社では、AIを活用した見積自動化ツール「Grift」を提供しており、市場データにもとづいた客観的な相場を提示します。
+                  AI開発の見積前提や市場情報の読み方に迷う場合は、Cor株式会社へご相談ください。Grift Team Betaで検証する参考材料の範囲を個別にご案内します。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -321,7 +327,7 @@ const description =
               "@id": "${siteConfig.url}/market-price-ai-develop/"
             },
             "headline": "AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い",
-            "description": "AI開発の社内稟議を通すための比較材料を探している新規事業担当者へ向けて、市場価格帯の目安や、開発手法の種類による相場の違い、技術スタックの難易度が費用に与える影響を解説します。適正な相場を把握するためにお役立てください。",
+            "description": "${description}",
             "image": "${siteConfig.url}/images/columns/head-mv-04.jpg",
             "author": {
               "@type": "Organization",

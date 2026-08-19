@@ -4,10 +4,13 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-team-beta-page');
 const pricingUrl = '/pricing/';
 const estimateAuditUrl = '/estimate-audit/';
+const teamBetaClaim = getPublicClaim('PUB-TEAM-BETA-SCOPE');
+const teamBetaHumanFinalClaim = getPublicClaim('PUB-TEAM-BETA-HUMAN-FINAL');
 
 const scopeItems = [
   'チームワークスペースでの案件共有',
@@ -64,8 +67,7 @@ const faqs = [
   },
   {
     question: 'AI が見積金額を決めますか？',
-    answer:
-      'いいえ。最終的な見積金額の決定は人間が行います。Grift は参考見積と根拠の整理を支援します。',
+    answer: teamBetaHumanFinalClaim.text,
   },
 ];
 ---
@@ -74,7 +76,7 @@ const faqs = [
   title={`Team Beta — 受託チーム向けAI見積支援 | ${siteConfig.name}`}
   titleTag="Grift Team Beta｜月額5万円を基本に個別案内"
   ogTitle="Grift Team Beta｜見積根拠をチームの資産に"
-  description="Grift Team Beta は2〜10人の受託開発チーム向けの有料βです。月額5万円を基本に、案件前提・参考見積・GitHub実績の整理をチームで検証します。"
+  description={teamBetaClaim.text}
   faqItems={faqs}
 >
   <PageHeader
@@ -90,10 +92,9 @@ const faqs = [
           <h2 class="text-balance text-3xl font-bold text-text sm:text-4xl">
             見積根拠を、個人の頭の中からチームの資産へ。
           </h2>
+          <p class="text-pretty text-lg leading-8 text-text-muted">{teamBetaClaim.text}</p>
           <p class="text-pretty text-lg leading-8 text-text-muted">
-            Team Beta
-            は、実案件で参考見積と根拠メモの運用を検証するためのプランです。金額の最終決定は人間が行い、AI
-            は判断材料の整理に使います。
+            {teamBetaHumanFinalClaim.text}
           </p>
           <p class="text-3xl font-bold tabular-nums text-text">月額5万円を基本に個別案内</p>
           <p class="text-sm text-text-muted">

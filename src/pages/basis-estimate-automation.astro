@@ -3,12 +3,16 @@ import { corCta } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
+import PublicClaimBoundary from '@/components/common/PublicClaimBoundary.astro';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-column-basis-estimate-automation');
 
 const title = '自動化ツールで出した見積もりの根拠は？妥当性の見極め方';
-const description =
-  'ベンダーから提示された見積もりの妥当性を評価するポイントを解説します。客観的なデータにもとづく透明性の高い根拠資料やAIレポートを活用し、社内稟議での説明責任を果たす方法を紹介。納得感のあるベンダー選定のヒントとしてご活用ください。';
+const description = getPublicClaim('PUB-COLUMN-BASIS-REVIEW-SEO').text;
+const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
+const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
+const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
 ---
 
 <MarketingLayout title={title} description={description}>
@@ -19,6 +23,8 @@ const description =
           自動化ツールで出した見積もりの根拠は？妥当性の見極め方
         </h1>
       </header>
+
+      <PublicClaimBoundary general={generalClaim} beta={betaClaim} human={humanClaim} />
 
       <div class="prose prose-lg max-w-none dark:prose-invert">
         <!-- コンテンツここから -->
@@ -67,11 +73,11 @@ const description =
                 見積もりの自動化ツールに関するご相談はCor株式会社へ
               </h2>
               <p class="u-m0 u-pb1em">
-                システム開発の外注において、ベンダーから提示された金額が適正かどうか判断に迷うことはありませんか。Cor株式会社では、AI見積自動化ツール「Grift」を提供しています。
+                {betaClaim.text}
               </p>
 
               <p class="u-m0 u-pb1em">
-                一般的な開発ツールがコーディング支援にとどまるのに対し、Cor株式会社のサービスは発注前の段階からAIを活用している点が大きな特徴です。複数のAIプロバイダによる市場相場の調査結果と、GitHub上の開発実績データを自動で照合することで、なぜその価格になるのかという明確な理由を提示します。
+                {humanClaim.text}
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -152,29 +158,29 @@ const description =
                 社内への説明責任を果たす根拠資料としてのAIレポート活用
               </h2>
               <p class="u-m0 u-pb1em">
-                発注の担当者にとって、ベンダー選定の最終的なハードルとなるのが社内での稟議です。上長や決裁者に対して「なぜこのベンダーを選んだのか」「なぜこの金額なのか」という説明責任を果たすためには、客観的で説得力のある資料が不可欠です。ここで役立つのが、AIを活用して出力された詳細なレポートです。
+                発注担当者は、社内稟議で「なぜこのベンダーか」「なぜこの金額か」を説明する必要があります。AIレポートを使う場合も、出力をそのまま根拠とせず、出典・前提・制約を確認した資料として添付します。
               </p>
 
               <div class="c-s-block">
                 <h3 class="u-mb10 u-mt30 l-tertiary">客観的な比較資料としての価値</h3>
                 <p class="u-m0 u-pb1em">
-                  AIレポートは、ベンダーの主観を排した客観的なデータとして機能します。市場相場との比較や、工数算出の根拠がグラフや数値でわかりやすく整理されているため、ITの専門知識がない決裁者にも状況を正確に伝えることができます。これにより、担当者の負担は大幅に軽減されます。
+                  AIレポートにも、入力データ、モデル、算出条件による偏りや誤りがあり得ます。市場情報との比較や工数候補を示す場合は、出典と制約を併記し、専門知識を持つ担当者が決裁者の質問に答えられる状態にします。
                 </p>
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">稟議プロセスをスムーズに</h3>
                 <p class="u-m0 u-pb1em">
-                  レポートを添付することで、稟議書を一から作成する手間が省け、決裁者からの不要な差し戻しや追加質問を減らすことが可能です。結果として、プロジェクトの立ち上げをスピーディーに進めることができます。
+                  確認済みのレポートを稟議資料の一部として使うと、前提や質問事項を共有しやすくなります。ただし、差し戻しの有無や意思決定の速度を保証するものではありません。
                 </p>
 
                 <p class="u-m0 u-pb1em">
-                  ベンダーから提示される見積もりが自動化されている場合は、その出力結果であるレポートが社内説明に耐えうる品質かどうかを事前に確認しましょう。精度の高いレポートを提供してくれるベンダーは、発注側の業務負担を大きく軽減する心強い味方となります。社内の合意形成を円滑に進めるためにも、資料の質にこだわりましょう。
+                  ベンダーから提示される見積もりが自動化されている場合は、レポートの出典・前提・制約・更新日時を確認しましょう。AIレポートを客観的事実や正解として扱わず、社内説明に使う数値を担当者が検証することが重要です。
                 </p>
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">
                   見積もり自動化の根拠にお悩みならCor株式会社へ
                 </h3>
                 <p class="u-m0 u-pb1em">
-                  Cor株式会社では、AI見積自動化ツール「Grift」を提供しています。見積もり金額を提示するだけでなく、市場相場と開発実績を照合した客観的なレポートの提供も可能です。社内稟議をスムーズに進めたい方は、ぜひ一度ご相談ください。
+                  見積の前提・出典・制約を整理するベータ運用についてご案内します。社内説明で確認したい論点がある方はご相談ください。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -269,7 +275,7 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">見積もりの根拠も提示する自動化ツールならCor株式会社</h3>
+              <h3 class="u-mb20">見積根拠の整理に関するご相談はCor株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
@@ -344,7 +350,7 @@ const description =
               "@id": "${siteConfig.url}/basis-estimate-automation/"
             },
             "headline": "自動化ツールで出した見積もりの根拠は？妥当性の見極め方",
-            "description": "ベンダーから提示された見積もりの妥当性を評価するポイントを解説します。客観的なデータにもとづく透明性の高い根拠資料やAIレポートを活用し、社内稟議での説明責任を果たす方法を紹介。納得感のあるベンダー選定のヒントとしてご活用ください。",
+            "description": "${description}",
             "image": "${siteConfig.url}/images/columns/head-mv-08.jpg",
             "author": {
               "@type": "Organization",

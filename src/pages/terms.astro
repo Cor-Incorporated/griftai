@@ -2,21 +2,22 @@
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const lastUpdated = '2026-03-12';
 const companyName = 'Cor株式会社（Cor.inc）';
 const contactUrl = corCta.teamBeta('grift-legal-terms');
+const termsScopeClaim = getPublicClaim('PUB-TERMS-SCOPE');
+const termsHumanFinalClaim = getPublicClaim('PUB-TERMS-HUMAN-FINAL');
 ---
 
-<MarketingLayout
-  title={`利用規約 - ${siteConfig.name}`}
-  description={`${siteConfig.name} の利用条件、ベータ提供であること、料金、免責、禁止事項、準拠法および問い合わせ窓口を掲載しています。`}
->
+<MarketingLayout title={`利用規約 - ${siteConfig.name}`} description={termsScopeClaim.text}>
   <section class="py-section">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <header class="mb-12">
         <h1 class="text-4xl font-bold text-text text-balance">利用規約</h1>
         <p class="mt-4 text-text-muted text-pretty">最終更新日: {lastUpdated}</p>
+        <p class="mt-4 text-text-muted text-pretty">{termsScopeClaim.text}</p>
       </header>
 
       <div class="prose prose-lg max-w-none dark:prose-invert">
@@ -98,10 +99,7 @@ const contactUrl = corCta.teamBeta('grift-legal-terms');
         </p>
 
         <h2>9. 生成結果および分析結果</h2>
-        <p class="text-pretty">
-          本サービスが生成、提示、分析する見積、提案、要約、比較結果、価格レンジ、推奨事項等は、意思決定支援を目的とした参考情報です。
-          ユーザーは、最終的な見積、提案、契約判断、業務判断を自己の責任で行うものとします。
-        </p>
+        <p class="text-pretty">{termsHumanFinalClaim.text}</p>
         <p class="text-pretty">
           当社は、生成結果または分析結果の完全性、正確性、有用性、特定目的適合性を保証しません。
         </p>

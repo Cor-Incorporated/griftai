@@ -4,21 +4,17 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { contactMethods, siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-contact');
 const corHomeUrl = getCorUrl('/');
 const phone = siteConfig.contact.phone;
 const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
+const contactBetaClaim = getPublicClaim('PUB-CONTACT-BETA-SCOPE');
 ---
 
-<MarketingLayout
-  title={`お問い合わせ - ${siteConfig.name}`}
-  description="Grift Team Beta の導入相談・お問い合わせ窓口。Cor.株式会社のAI受付と電話窓口へご案内します。"
->
-  <PageHeader
-    title="お問い合わせ"
-    subtitle="Grift Beta の導入相談、デモ相談、提供条件の確認はこちらからご連絡ください。"
-  />
+<MarketingLayout title={`お問い合わせ - ${siteConfig.name}`} description={contactBetaClaim.text}>
+  <PageHeader title="お問い合わせ" subtitle={contactBetaClaim.text} />
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

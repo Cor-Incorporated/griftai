@@ -2,10 +2,11 @@
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const title = 'AIを活用した要件定義・自動化ツール、AI開発に関するコラム一覧';
-const description =
-  'AIを活用した要件定義・自動化ツールやAI開発ならCor株式会社へ。GitHub実績と市場相場データを照合し、開発見積もりに説明できる根拠を自動で作成。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。';
+const columnIndexClaim = getPublicClaim('PUB-COLUMN-INDEX-SCOPE');
+const description = columnIndexClaim.text;
 ---
 
 <MarketingLayout title={title} description={description}>
@@ -38,6 +39,8 @@ const description =
               <h2>AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧</h2>
               <!-- メインバナーキャッチコピーここまで -->
             </div>
+
+            <p class="u-mb30">{columnIndexClaim.text}</p>
 
             <!-- コンテンツ一覧ここから -->
             <section class="u-mt50 c-linkblock">
@@ -130,7 +133,7 @@ const description =
           "@type": "CollectionPage",
           "@id": "${siteConfig.url}/column/",
           "name": "AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧",
-          "description": "AIを活用した要件定義・自動化ツールやAI開発ならCor株式会社へ。GitHub実績と市場相場データを照合し、開発見積もりに説明できる根拠を自動で作成。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。",
+          "description": "${description}",
           "image": "${siteConfig.url}/images/columns/head-mv-00.jpg",
           "publisher": {
             "@type": "Organization",

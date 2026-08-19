@@ -4,8 +4,11 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-faq');
+const faqBetaClaim = getPublicClaim('PUB-FAQ-BETA-SCOPE');
+const faqHumanFinalClaim = getPublicClaim('PUB-FAQ-HUMAN-FINAL');
 
 const faqSections = [
   {
@@ -23,8 +26,7 @@ const faqSections = [
       },
       {
         question: '最終判断は誰が行いますか？',
-        answer:
-          '最終的な見積金額の決定は人間が行います。AIが整理した材料をもとに、担当者が責任を持ってレビューし、微調整を行います。',
+        answer: faqHumanFinalClaim.text,
       },
     ],
   },
@@ -97,13 +99,10 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
   title={`よくある質問 — AI見積支援ツール ${siteConfig.name}`}
   titleTag="Griftのよくある質問｜AI見積支援と人間レビュー前提"
   ogTitle="Griftのよくある質問｜AI見積支援ツール"
-  description="Griftに関するよくある質問ページです。参考見積、見積根拠、人間レビュー前提、GitHub連携、料金、機密情報の扱いなど、導入検討に必要な情報をQ&A形式でまとめています。"
+  description={faqBetaClaim.text}
   faqItems={allFaqItems}
 >
-  <PageHeader
-    title="よくある質問"
-    subtitle="AI見積支援ツール Grift について、導入前に確認されやすい内容をまとめました。"
-  />
+  <PageHeader title="よくある質問" subtitle={faqBetaClaim.text} />
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">

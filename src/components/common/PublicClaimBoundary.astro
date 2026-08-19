@@ -1,0 +1,26 @@
+---
+import type { PublicClaim } from '@/lib/public-claims';
+
+interface Props {
+  general: PublicClaim;
+  beta: PublicClaim;
+  human: PublicClaim;
+}
+
+const { general, beta, human } = Astro.props;
+---
+
+<aside
+  class="mb-10 rounded-2xl border border-border bg-surface p-5 sm:p-6"
+  aria-label="記事の適用範囲"
+>
+  <p class="text-pretty text-sm leading-7 text-text-muted" data-public-claim-id={general.id}>
+    {general.text}
+  </p>
+  <p class="mt-3 text-pretty text-sm leading-7 text-text-muted" data-public-claim-id={beta.id}>
+    {beta.text}
+  </p>
+  <p class="mt-3 text-pretty text-sm leading-7 text-text" data-public-claim-id={human.id}>
+    {human.text}
+  </p>
+</aside>

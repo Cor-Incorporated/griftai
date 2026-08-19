@@ -4,8 +4,11 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.teamBeta('grift-pricing');
+const pricingBetaClaim = getPublicClaim('PUB-PRICING-BETA-SCOPE');
+const pricingHumanFinalClaim = getPublicClaim('PUB-PRICING-HUMAN-FINAL');
 
 const betaPlans = [
   {
@@ -97,8 +100,7 @@ const pricingFaqs = [
   },
   {
     question: 'AIが見積金額を決めるのですか？',
-    answer:
-      'いいえ。Griftは参考見積と見積根拠を整理するAI見積支援ツールです。最終的な見積金額の決定は人間が行います。',
+    answer: pricingHumanFinalClaim.text,
   },
   {
     question: '正式版の料金はどうなりますか？',
@@ -132,7 +134,7 @@ const onboardingSteps = [
   title={`料金プラン — 受託開発チームのAI見積支援 | ${siteConfig.name}`}
   titleTag="料金プラン｜Grift Team Beta"
   ogTitle="Grift Team Betaの料金｜Grift"
-  description="Griftは受託開発チームの見積根拠を整理するAI見積支援ツールです。Team Betaは月額5万円、Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に個別案内しています。"
+  description={pricingBetaClaim.text}
   faqItems={pricingFaqs}
 >
   <PageHeader
@@ -183,7 +185,7 @@ const onboardingSteps = [
         }
       </div>
       <p class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty">
-        いずれもベータ版として検証中の提供条件です。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+        {pricingBetaClaim.text}
       </p>
     </div>
   </section>

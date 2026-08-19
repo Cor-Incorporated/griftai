@@ -4,10 +4,13 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const contactUrl = corCta.estimateAudit('grift-estimate-audit-page');
 const teamBetaUrl = '/team-beta/';
 const pricingUrl = '/pricing/';
+const auditBetaClaim = getPublicClaim('PUB-AUDIT-BETA-SCOPE');
+const auditHumanFinalClaim = getPublicClaim('PUB-AUDIT-HUMAN-FINAL');
 
 const valuePoints = [
   {
@@ -46,8 +49,7 @@ const faqs = [
   },
   {
     question: 'AI が金額の可否を決めますか？',
-    answer:
-      'いいえ。最終判断は発注側の責任で行います。Grift は前提・リスク・工数の検討材料を整理する支援です。',
+    answer: auditHumanFinalClaim.text,
   },
   {
     question: '受託チーム向けの Team Beta との違いは？',
@@ -61,7 +63,7 @@ const faqs = [
   title={`Estimate Audit — 発注企業向け見積検討支援 | ${siteConfig.name}`}
   titleTag="Estimate Audit｜提出見積の前提・リスクを整理"
   ogTitle="Estimate Audit｜発注企業向け見積検討支援"
-  description="Grift Estimate Audit は発注企業向けの見積検討支援です。提出された見積の前提・技術リスク・工数妥当性を整理し、相見積もりや稟議前の判断材料を整えます。100万円を基本に個別見積。"
+  description={auditBetaClaim.text}
   faqItems={faqs}
 >
   <PageHeader
@@ -77,6 +79,7 @@ const faqs = [
           <h2 class="text-balance text-3xl font-bold text-text sm:text-4xl">
             「この金額で進めてよいか」を、前提から整理する。
           </h2>
+          <p class="text-pretty text-lg leading-8 text-text-muted">{auditBetaClaim.text}</p>
           <p class="text-pretty text-lg leading-8 text-text-muted">
             Estimate Audit
             は、見積金額を自動で是非判定するサービスではありません。提出見積を読み解き、社内で確認すべき論点を判断材料として整えます。

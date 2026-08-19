@@ -44,6 +44,15 @@ const websiteSchema = {
   inLanguage: 'ja-JP',
 };
 
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonicalURL.href,
+  inLanguage: 'ja-JP',
+};
+
 const organizationSchema: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -163,6 +172,7 @@ const breadcrumbSchema = {
 {ogImage && <meta property="twitter:image" content={ogImage} />}
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(webPageSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
 {
   shouldEmitAutoBreadcrumb && (

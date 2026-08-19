@@ -8,11 +8,14 @@ import ServiceMessageSection from '@/components/sections/marketing/ServiceMessag
 import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
 import { featuredColumnArticles } from '@/config';
 import { corCta } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const heroPrimaryUrl = corCta.teamBeta('grift-lp-hero');
 const heroSecondaryUrl = corCta.teamBeta('grift-lp-hero-secondary');
 const midCtaUrl = corCta.teamBeta('grift-lp-mid');
 const finalCtaUrl = corCta.teamBeta('grift-lp-final');
+const homeBetaClaim = getPublicClaim('PUB-HOME-BETA-SCOPE');
+const homeHumanFinalClaim = getPublicClaim('PUB-HOME-HUMAN-FINAL');
 
 const pains = [
   {
@@ -86,7 +89,7 @@ const flowSteps = [
   {
     step: '04',
     title: '人間がレビューし、最終判断',
-    body: 'Griftの出力は参考情報です。担当者が内容を確認し、微調整したうえで、責任を持って見積を判断します。',
+    body: homeHumanFinalClaim.text,
   },
   {
     step: '05',
@@ -189,7 +192,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
   title="Grift｜受託開発チームのAI見積支援ツール"
   titleTag="Grift｜見積を、勘から根拠へ。"
   ogTitle="見積を、勘から根拠へ。｜Grift"
-  description="Griftは、受託開発チームが「なぜこの金額なのか」を説明できるよう、参考見積と見積根拠を整理するAI見積支援ツールです。AIに丸投げせず、人間が確認・判断できる提案材料を増やします。"
+  description={homeBetaClaim.text}
   faqItems={faqPreview.map((item) => ({ question: item.q, answer: item.a }))}
 >
   <section id="hero" class="section-animate bg-background">
@@ -203,9 +206,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
           <span class="block">受託開発のためのAI見積支援ツール</span>
         </h1>
         <div class="type-copy max-w-3xl space-y-3 text-lg text-text-muted sm:text-xl">
-          <p>
-            Griftは、GitHub実績・市場相場・案件前提をもとに、参考見積と見積根拠を整理するAI見積支援ツールです。
-          </p>
+          <p>{homeBetaClaim.text}</p>
           <p>
             AIに見積を丸投げするのではなく、人間が責任を持って確認し、説明できる提案材料を増やします。
           </p>

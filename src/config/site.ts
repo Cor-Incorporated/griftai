@@ -8,14 +8,15 @@
 
 import type { LegalConfig, SocialLinks } from '../lib/types';
 import { corCta } from '../lib/cor-cta';
+import { getPublicClaim } from '../lib/public-claims';
+
+const homeBetaClaim = getPublicClaim('PUB-HOME-BETA-SCOPE');
 
 /** Site name displayed in header, footer, and meta tags */
 export const name = import.meta.env.SITE_NAME || 'Grift';
 
 /** Site description for SEO and meta tags */
-export const description =
-  import.meta.env.SITE_DESCRIPTION ||
-  'Griftは、受託開発チームが「なぜこの金額なのか」を説明できるよう、参考見積と見積根拠を整理するAI見積支援ツールです。';
+export const description = import.meta.env.SITE_DESCRIPTION || homeBetaClaim.text;
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';

@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "baselineSourceRevision": "1587d9bc326addf6023bf657dcf54bdf6f00a62a",
+  "classes": ["general-method", "Grift-current", "planned-beta", "human-final"],
+  "claims": [
+    {
+      "id": "PUB-HOME-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Team Betaは、受託開発チーム向けに、案件前提・参考見積・見積根拠を整理する運用を検証中のAI見積支援ツールです。",
+      "sourcePaths": [
+        "src/pages/index.astro",
+        "src/config/site.ts",
+        "src/components/common/StructuredData.astro"
+      ],
+      "sourceUrls": ["/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-HOME-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "Griftの出力は参考情報です。担当者が内容を確認し、微調整したうえで、責任を持って見積を判断します。",
+      "sourcePaths": ["src/pages/index.astro"],
+      "sourceUrls": ["/"],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-PRICING-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Griftの各プランはベータ版として提供範囲を検証中です。Team Betaは月額5万円、Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に、個別条件を確認してご案内します。",
+      "sourcePaths": ["src/pages/pricing.astro"],
+      "sourceUrls": ["/pricing/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-PRICING-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "Griftは参考見積と見積根拠を整理する支援ツールです。最終的な見積金額の決定は人間が行います。",
+      "sourcePaths": ["src/pages/pricing.astro"],
+      "sourceUrls": ["/pricing/"],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-TEAM-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Team Betaは2〜10人の受託開発チーム向けの有料ベータです。月額5万円を基本に、案件前提・参考見積・GitHub実績の整理方法を実案件で検証します。",
+      "sourcePaths": ["src/pages/team-beta.astro"],
+      "sourceUrls": ["/team-beta/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-TEAM-BETA-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "最終的な見積金額の決定は人間が行います。Griftは参考見積と根拠の整理を支援します。",
+      "sourcePaths": ["src/pages/team-beta.astro"],
+      "sourceUrls": ["/team-beta/"],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-AUDIT-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Estimate Auditは発注企業向けのベータ提供です。提出された見積の前提・技術リスク・工数を検討するための参考材料を整理し、100万円を基本に個別見積します。",
+      "sourcePaths": ["src/pages/estimate-audit.astro"],
+      "sourceUrls": ["/estimate-audit/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-AUDIT-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "最終判断は発注側の責任で行います。Griftは前提・リスク・工数の検討材料を整理する支援です。",
+      "sourcePaths": ["src/pages/estimate-audit.astro"],
+      "sourceUrls": ["/estimate-audit/"],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-FAQ-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Team Betaの参考見積、見積根拠、GitHub連携、料金、機密情報の扱いなど、検証中の提供範囲をQ&A形式で案内します。",
+      "sourcePaths": ["src/pages/faq.astro"],
+      "sourceUrls": ["/faq/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-FAQ-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "最終的な見積金額の決定は人間が行います。AIが整理した材料をもとに、担当者が責任を持ってレビューし、微調整を行います。",
+      "sourcePaths": ["src/pages/faq.astro"],
+      "sourceUrls": ["/faq/"],
+      "surfaces": ["body", "json-ld"]
+    },
+    {
+      "id": "PUB-CONTACT-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Team Betaの導入相談、デモ相談、検証中の提供条件を確認するための窓口です。Cor.株式会社のAI受付と電話窓口をご案内します。",
+      "sourcePaths": ["src/pages/contact.astro"],
+      "sourceUrls": ["/contact/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-PRIVACY-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Griftのベータ提供における個人情報および業務情報の取扱い方針です。取得情報、利用目的、GitHub連携、匿名化、問い合わせ窓口を掲載しています。",
+      "sourcePaths": ["src/pages/privacy.astro"],
+      "sourceUrls": ["/privacy/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-TERMS-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Griftの利用条件、ベータ提供であること、料金、免責、禁止事項、準拠法および問い合わせ窓口を掲載しています。",
+      "sourcePaths": ["src/pages/terms.astro"],
+      "sourceUrls": ["/terms/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-TERMS-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "本サービスの出力は意思決定支援を目的とした参考情報です。最終的な見積、提案、契約判断、業務判断はユーザーが行います。",
+      "sourcePaths": ["src/pages/terms.astro"],
+      "sourceUrls": ["/terms/"],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-COLUMN-INDEX-SCOPE",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "要件定義・見積支援にAIを活用する一般的な考え方と、人間が確認・決定すべき範囲をまとめたコラム一覧です。Grift Team Betaの提供範囲は検証中で、各記事の一般論と区別して案内します。",
+      "sourcePaths": ["src/pages/column.astro"],
+      "sourceUrls": ["/column/"],
+      "surfaces": ["meta", "json-ld", "body"]
+    },
+    {
+      "id": "PUB-COLUMN-GENERAL-BOUNDARY",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "本記事は、AIを活用した要件定義・見積支援の一般的な考え方を解説するものです。特定製品の精度、処理時間、費用の妥当性、外部サービス連携を保証するものではありません。",
+      "sourcePaths": [
+        "src/pages/ai-tool-requirement-definition.astro",
+        "src/pages/automation-tool-requirement.astro",
+        "src/pages/cost-ai-develop-estimate.astro",
+        "src/pages/market-price-ai-develop.astro",
+        "src/pages/automation-ai-develop-estimate.astro",
+        "src/pages/ai-estimate-automation.astro",
+        "src/pages/create-estimate-automation.astro",
+        "src/pages/basis-estimate-automation.astro",
+        "src/pages/requirement-definition-ai.astro",
+        "src/pages/tool-upstream-process-ai.astro"
+      ],
+      "sourceUrls": [
+        "/ai-tool-requirement-definition/",
+        "/automation-tool-requirement/",
+        "/cost-ai-develop-estimate/",
+        "/market-price-ai-develop/",
+        "/automation-ai-develop-estimate/",
+        "/ai-estimate-automation/",
+        "/create-estimate-automation/",
+        "/basis-estimate-automation/",
+        "/requirement-definition-ai/",
+        "/tool-upstream-process-ai/"
+      ],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-COLUMN-BETA-SCOPE",
+      "class": "planned-beta",
+      "state": "beta-validation",
+      "text": "Grift Team Betaでは、案件前提・スコープ・不確実性と、GitHub実績や市場相場などの参考材料をどのように整理できるかを検証しています。提供範囲や表示内容は検証状況により変わります。",
+      "sourcePaths": [
+        "src/pages/ai-tool-requirement-definition.astro",
+        "src/pages/automation-tool-requirement.astro",
+        "src/pages/cost-ai-develop-estimate.astro",
+        "src/pages/market-price-ai-develop.astro",
+        "src/pages/automation-ai-develop-estimate.astro",
+        "src/pages/ai-estimate-automation.astro",
+        "src/pages/create-estimate-automation.astro",
+        "src/pages/basis-estimate-automation.astro",
+        "src/pages/requirement-definition-ai.astro",
+        "src/pages/tool-upstream-process-ai.astro"
+      ],
+      "sourceUrls": [
+        "/ai-tool-requirement-definition/",
+        "/automation-tool-requirement/",
+        "/cost-ai-develop-estimate/",
+        "/market-price-ai-develop/",
+        "/automation-ai-develop-estimate/",
+        "/ai-estimate-automation/",
+        "/create-estimate-automation/",
+        "/basis-estimate-automation/",
+        "/requirement-definition-ai/",
+        "/tool-upstream-process-ai/"
+      ],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-COLUMN-HUMAN-FINAL",
+      "class": "human-final",
+      "state": "human-decision-required",
+      "text": "Griftの出力は参考情報です。最終的な要件、見積金額、権利・帰属、開示、外部サービスへの登録や送信は、人間が確認して決定します。",
+      "sourcePaths": [
+        "src/pages/ai-tool-requirement-definition.astro",
+        "src/pages/automation-tool-requirement.astro",
+        "src/pages/cost-ai-develop-estimate.astro",
+        "src/pages/market-price-ai-develop.astro",
+        "src/pages/automation-ai-develop-estimate.astro",
+        "src/pages/ai-estimate-automation.astro",
+        "src/pages/create-estimate-automation.astro",
+        "src/pages/basis-estimate-automation.astro",
+        "src/pages/requirement-definition-ai.astro",
+        "src/pages/tool-upstream-process-ai.astro"
+      ],
+      "sourceUrls": [
+        "/ai-tool-requirement-definition/",
+        "/automation-tool-requirement/",
+        "/cost-ai-develop-estimate/",
+        "/market-price-ai-develop/",
+        "/automation-ai-develop-estimate/",
+        "/ai-estimate-automation/",
+        "/create-estimate-automation/",
+        "/basis-estimate-automation/",
+        "/requirement-definition-ai/",
+        "/tool-upstream-process-ai/"
+      ],
+      "surfaces": ["body"]
+    },
+    {
+      "id": "PUB-COLUMN-REQ-TOOLS-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "要件定義にAIツールを使う際の一般的な進め方、必要なスキル、人間による確認ポイントを解説します。ツールの出力は参考材料として扱い、最終的な要件は関係者が合意して決定します。",
+      "sourcePaths": ["src/pages/ai-tool-requirement-definition.astro"],
+      "sourceUrls": ["/ai-tool-requirement-definition/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-REQ-AUTOMATION-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "要件定義支援ツールの一般的な仕組みと、ヒアリングから要件候補を整理する手順を解説します。自動化できる作業と、人間が確認・決定する範囲を分けて紹介します。",
+      "sourcePaths": ["src/pages/automation-tool-requirement.astro"],
+      "sourceUrls": ["/automation-tool-requirement/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-AI-COST-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "AI開発にかかる費用の内訳と変動要因を一般的な参考情報として解説します。実際の見積金額は、案件の前提・範囲・リスクを人間が確認して決定する必要があります。",
+      "sourcePaths": ["src/pages/cost-ai-develop-estimate.astro"],
+      "sourceUrls": ["/cost-ai-develop-estimate/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-MARKET-PRICE-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "AI開発の市場価格帯に関する一般的な参考情報と、開発手法・技術スタックが費用に与える影響を解説します。個別案件の見積は前提とリスクを確認して判断します。",
+      "sourcePaths": ["src/pages/market-price-ai-develop.astro"],
+      "sourceUrls": ["/market-price-ai-develop/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-ESTIMATE-MECHANISM-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "AIを使った見積支援の一般的な仕組みと、人間が確認すべき前提・範囲・リスクを解説します。AIの出力だけで費用や要件を確定しない運用を紹介します。",
+      "sourcePaths": ["src/pages/automation-ai-develop-estimate.astro"],
+      "sourceUrls": ["/automation-ai-develop-estimate/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-HUMAN-REVIEW-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "AIで見積材料を整理する一般的な方法と、人間が確認・調整・決定する範囲を解説します。精度や処理時間を保証せず、案件ごとの検証を前提とします。",
+      "sourcePaths": ["src/pages/ai-estimate-automation.astro"],
+      "sourceUrls": ["/ai-estimate-automation/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-DOCUMENT-FLOW-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "見積根拠メモの一般的な構成と作成フローを解説します。AIが整理した候補を人間が確認し、案件の前提・範囲・金額を決定する運用を紹介します。",
+      "sourcePaths": ["src/pages/create-estimate-automation.astro"],
+      "sourceUrls": ["/create-estimate-automation/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-BASIS-REVIEW-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "自動化ツールが出した見積を評価する一般的な観点を解説します。AIレポートを客観的事実とみなさず、出典・前提・制約を確認して人間が判断する方法を紹介します。",
+      "sourcePaths": ["src/pages/basis-estimate-automation.astro"],
+      "sourceUrls": ["/basis-estimate-automation/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-REQ-GOVERNANCE-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "要件定義にAIを取り入れる際の一般的な体制づくりと品質管理を解説します。AIは候補整理を支援し、最終的な要件と合意は関係者が確認して決定します。",
+      "sourcePaths": ["src/pages/requirement-definition-ai.astro"],
+      "sourceUrls": ["/requirement-definition-ai/"],
+      "surfaces": ["meta", "json-ld"]
+    },
+    {
+      "id": "PUB-COLUMN-UPSTREAM-TOOLS-SEO",
+      "class": "general-method",
+      "state": "general-guidance",
+      "text": "上流工程を支援するAIツールの一般的な機能と選定基準を解説します。効果を保証せず、データの出典、制約、人間の確認工程を評価する観点を紹介します。",
+      "sourcePaths": ["src/pages/tool-upstream-process-ai.astro"],
+      "sourceUrls": ["/tool-upstream-process-ai/"],
+      "surfaces": ["meta", "json-ld"]
+    }
+  ],
+  "routes": [
+    {
+      "url": "/",
+      "sourcePath": "src/pages/index.astro",
+      "seoClaimId": "PUB-HOME-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-HOME-BETA-SCOPE", "PUB-HOME-HUMAN-FINAL"]
+    },
+    {
+      "url": "/pricing/",
+      "sourcePath": "src/pages/pricing.astro",
+      "seoClaimId": "PUB-PRICING-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-PRICING-BETA-SCOPE", "PUB-PRICING-HUMAN-FINAL"]
+    },
+    {
+      "url": "/team-beta/",
+      "sourcePath": "src/pages/team-beta.astro",
+      "seoClaimId": "PUB-TEAM-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-TEAM-BETA-SCOPE", "PUB-TEAM-BETA-HUMAN-FINAL"]
+    },
+    {
+      "url": "/estimate-audit/",
+      "sourcePath": "src/pages/estimate-audit.astro",
+      "seoClaimId": "PUB-AUDIT-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-AUDIT-BETA-SCOPE", "PUB-AUDIT-HUMAN-FINAL"]
+    },
+    {
+      "url": "/faq/",
+      "sourcePath": "src/pages/faq.astro",
+      "seoClaimId": "PUB-FAQ-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-FAQ-BETA-SCOPE", "PUB-FAQ-HUMAN-FINAL"]
+    },
+    {
+      "url": "/contact/",
+      "sourcePath": "src/pages/contact.astro",
+      "seoClaimId": "PUB-CONTACT-BETA-SCOPE",
+      "bodyClaimIds": ["PUB-CONTACT-BETA-SCOPE"]
+    },
+    {
+      "url": "/privacy/",
+      "sourcePath": "src/pages/privacy.astro",
+      "seoClaimId": "PUB-PRIVACY-SCOPE",
+      "bodyClaimIds": ["PUB-PRIVACY-SCOPE"]
+    },
+    {
+      "url": "/terms/",
+      "sourcePath": "src/pages/terms.astro",
+      "seoClaimId": "PUB-TERMS-SCOPE",
+      "bodyClaimIds": ["PUB-TERMS-SCOPE", "PUB-TERMS-HUMAN-FINAL"]
+    },
+    {
+      "url": "/column/",
+      "sourcePath": "src/pages/column.astro",
+      "seoClaimId": "PUB-COLUMN-INDEX-SCOPE",
+      "bodyClaimIds": ["PUB-COLUMN-INDEX-SCOPE"]
+    },
+    {
+      "url": "/ai-tool-requirement-definition/",
+      "sourcePath": "src/pages/ai-tool-requirement-definition.astro",
+      "seoClaimId": "PUB-COLUMN-REQ-TOOLS-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/automation-tool-requirement/",
+      "sourcePath": "src/pages/automation-tool-requirement.astro",
+      "seoClaimId": "PUB-COLUMN-REQ-AUTOMATION-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/cost-ai-develop-estimate/",
+      "sourcePath": "src/pages/cost-ai-develop-estimate.astro",
+      "seoClaimId": "PUB-COLUMN-AI-COST-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/market-price-ai-develop/",
+      "sourcePath": "src/pages/market-price-ai-develop.astro",
+      "seoClaimId": "PUB-COLUMN-MARKET-PRICE-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/automation-ai-develop-estimate/",
+      "sourcePath": "src/pages/automation-ai-develop-estimate.astro",
+      "seoClaimId": "PUB-COLUMN-ESTIMATE-MECHANISM-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/ai-estimate-automation/",
+      "sourcePath": "src/pages/ai-estimate-automation.astro",
+      "seoClaimId": "PUB-COLUMN-HUMAN-REVIEW-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/create-estimate-automation/",
+      "sourcePath": "src/pages/create-estimate-automation.astro",
+      "seoClaimId": "PUB-COLUMN-DOCUMENT-FLOW-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/basis-estimate-automation/",
+      "sourcePath": "src/pages/basis-estimate-automation.astro",
+      "seoClaimId": "PUB-COLUMN-BASIS-REVIEW-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/requirement-definition-ai/",
+      "sourcePath": "src/pages/requirement-definition-ai.astro",
+      "seoClaimId": "PUB-COLUMN-REQ-GOVERNANCE-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    },
+    {
+      "url": "/tool-upstream-process-ai/",
+      "sourcePath": "src/pages/tool-upstream-process-ai.astro",
+      "seoClaimId": "PUB-COLUMN-UPSTREAM-TOOLS-SEO",
+      "bodyClaimIds": [
+        "PUB-COLUMN-GENERAL-BOUNDARY",
+        "PUB-COLUMN-BETA-SCOPE",
+        "PUB-COLUMN-HUMAN-FINAL"
+      ]
+    }
+  ]
+}

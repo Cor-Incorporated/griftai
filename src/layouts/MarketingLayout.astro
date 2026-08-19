@@ -5,6 +5,7 @@ import Footer from '@layout/Footer.astro';
 import AnnouncementBar from '@layout/AnnouncementBar.astro';
 import StructuredData from '@components/common/StructuredData.astro';
 import { siteConfig } from '@/config';
+import { getPublicClaimRegistry } from '@/lib/public-claims';
 
 interface Props {
   title: string;
@@ -37,6 +38,7 @@ const {
 
 const { announcement } = siteConfig;
 const isHome = Astro.url.pathname === '/';
+const publicClaimRegistry = getPublicClaimRegistry(Astro.url.pathname);
 ---
 
 <BaseLayout
@@ -54,6 +56,16 @@ const isHome = Astro.url.pathname === '/';
   <StructuredData type="organization" />
   {isHome && <StructuredData type="software" />}
   {faqItems && faqItems.length > 0 && <StructuredData type="faq" faqItems={faqItems} />}
+  {
+    publicClaimRegistry && (
+      <script
+        is:inline
+        type="application/json"
+        data-public-claim-registry
+        set:html={JSON.stringify(publicClaimRegistry)}
+      />
+    )
+  }
   <div class="flex flex-col min-h-screen">
     {
       announcement.enabled && (

@@ -2,6 +2,7 @@
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
+import { getPublicClaim } from '@/lib/public-claims';
 
 const lastUpdated = '2026-03-12';
 const companyName = 'Cor株式会社（Cor.inc）';
@@ -10,17 +11,19 @@ const address = '〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神
 const phone = siteConfig.contact.phone;
 const contactUrl = corCta.teamBeta('grift-legal-privacy');
 const legalNoticeUrl = getCorUrl('/legal/tokushoho/');
+const privacyScopeClaim = getPublicClaim('PUB-PRIVACY-SCOPE');
 ---
 
 <MarketingLayout
   title={`プライバシーポリシー - ${siteConfig.name}`}
-  description={`${siteConfig.name} における個人情報および業務情報の取扱い方針。取得情報、利用目的、GitHub 連携、匿名化、問い合わせ窓口を掲載しています。`}
+  description={privacyScopeClaim.text}
 >
   <section class="py-section">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <header class="mb-12">
         <h1 class="text-4xl font-bold text-text text-balance">プライバシーポリシー</h1>
         <p class="mt-4 text-text-muted text-pretty">最終更新日: {lastUpdated}</p>
+        <p class="mt-4 text-text-muted text-pretty">{privacyScopeClaim.text}</p>
       </header>
 
       <div class="prose prose-lg max-w-none dark:prose-invert">

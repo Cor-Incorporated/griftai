@@ -13,6 +13,7 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
+  seoClaimId?: string;
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   modifiedDate,
   author,
   tags = [],
+  seoClaimId,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, siteConfig.url);
@@ -39,7 +41,8 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteConfig.name,
-  description: siteConfig.description,
+  description,
+  identifier: seoClaimId,
   url: siteConfig.url,
   inLanguage: 'ja-JP',
 };
@@ -49,6 +52,7 @@ const webPageSchema = {
   '@type': 'WebPage',
   name: title,
   description,
+  identifier: seoClaimId,
   url: canonicalURL.href,
   inLanguage: 'ja-JP',
 };
@@ -58,7 +62,6 @@ const organizationSchema: Record<string, unknown> = {
   '@type': 'Organization',
   name: siteConfig.author,
   url: 'https://cor-jp.com',
-  description: siteConfig.description,
   sameAs: [siteConfig.social.twitter, siteConfig.social.github, siteConfig.social.discord].filter(
     Boolean
   ),
@@ -75,6 +78,7 @@ const articleSchema =
         '@type': 'Article',
         headline: title,
         description,
+        identifier: seoClaimId,
         image: ogImage,
         datePublished: publishedDate.toISOString(),
         dateModified: (modifiedDate || publishedDate).toISOString(),

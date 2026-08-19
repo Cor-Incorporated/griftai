@@ -90,6 +90,7 @@ const flowSteps = [
     step: '04',
     title: '人間がレビューし、最終判断',
     body: homeHumanFinalClaim.text,
+    claimId: homeHumanFinalClaim.id,
   },
   {
     step: '05',
@@ -206,7 +207,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
           <span class="block">受託開発のためのAI見積支援ツール</span>
         </h1>
         <div class="type-copy max-w-3xl space-y-3 text-lg text-text-muted sm:text-xl">
-          <p>{homeBetaClaim.text}</p>
+          <p data-public-claim-id={homeBetaClaim.id}>{homeBetaClaim.text}</p>
           <p>
             AIに見積を丸投げするのではなく、人間が責任を持って確認し、説明できる提案材料を増やします。
           </p>
@@ -425,7 +426,12 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
             <article class="rounded-2xl border border-border bg-background p-5">
               <p class="text-sm font-semibold text-primary tabular-nums">{item.step}</p>
               <h3 class="mt-3 text-lg font-semibold text-balance text-text">{item.title}</h3>
-              <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
+              <p
+                class="mt-3 text-sm leading-7 text-text-muted text-pretty"
+                data-public-claim-id={'claimId' in item ? item.claimId : undefined}
+              >
+                {item.body}
+              </p>
             </article>
           ))
         }

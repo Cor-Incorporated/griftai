@@ -1,19 +1,41 @@
 #!/usr/bin/env node
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = process.cwd();
 const MANIFEST_PATH = join(ROOT, 'src/data/public-claims.json');
 const ASTRO_CONFIG_PATH = join(ROOT, 'astro.config.mjs');
+const GITLEAKS_IGNORE_PATH = join(ROOT, '.gitleaksignore');
 const SHA_RE = /^[0-9a-f]{40}$/;
 const ID_RE = /^PUB-[A-Z0-9-]+$/;
 
+const expectedInheritedGitleaksFingerprints = [
+  '18d3e7b94bd29c21e988effe323a437882d4a966:src/content/blog/environment-variables-guide.md:generic-api-key:27',
+  '18d3e7b94bd29c21e988effe323a437882d4a966:src/content/blog/environment-variables-guide.md:generic-api-key:39',
+  '18d3e7b94bd29c21e988effe323a437882d4a966:src/content/blog/environment-variables-guide.md:generic-api-key:135',
+  '18d3e7b94bd29c21e988effe323a437882d4a966:src/content/blog/environment-variables-guide.md:stripe-access-token:75',
+];
+
+const expectedClasses = ['general-method', 'Grift-current', 'planned-beta', 'human-final'];
 const expectedState = new Map([
   ['general-method', 'general-guidance'],
   ['Grift-current', 'live-verified'],
   ['planned-beta', 'beta-validation'],
   ['human-final', 'human-decision-required'],
+]);
+const expectedSurfaces = new Set(['meta', 'json-ld', 'body']);
+const publishableSourceRoots = ['src'];
+const publishableExtensions = new Set([
+  '.astro',
+  '.js',
+  '.jsx',
+  '.json',
+  '.md',
+  '.mdx',
+  '.mjs',
+  '.ts',
+  '.tsx',
 ]);
 
 const riskyProductRules = [
@@ -50,20 +72,64 @@ function normalizePathname(pathname) {
   return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 
+function sameStringSet(actual, expected) {
+  return (
+    actual.length === expected.length &&
+    new Set(actual).size === actual.length &&
+    actual.every((value) => expected.includes(value))
+  );
+}
+
+function extension(path) {
+  const index = path.lastIndexOf('.');
+  return index === -1 ? '' : path.slice(index);
+}
+
+function collectPublishableSources(relativeDirectory, output = []) {
+  const absoluteDirectory = join(ROOT, relativeDirectory);
+  if (!existsSync(absoluteDirectory)) return output;
+
+  for (const entry of readdirSync(absoluteDirectory, { withFileTypes: true })) {
+    const relativePath = join(relativeDirectory, entry.name);
+    if (entry.isDirectory()) {
+      collectPublishableSources(relativePath, output);
+    } else if (entry.isFile() && publishableExtensions.has(extension(entry.name))) {
+      output.push(relativePath);
+    }
+  }
+  return output;
+}
+
 if (!existsSync(MANIFEST_PATH)) fail(['src/data/public-claims.json is missing']);
 
 const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
 const errors = [];
+
+if (!existsSync(GITLEAKS_IGNORE_PATH)) {
+  errors.push('.gitleaksignore is missing');
+} else {
+  const fingerprints = readFileSync(GITLEAKS_IGNORE_PATH, 'utf8')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (!sameStringSet(fingerprints, expectedInheritedGitleaksFingerprints)) {
+    errors.push('.gitleaksignore must contain only the four exact immutable-ancestor fingerprints');
+  }
+}
 
 if (manifest.schemaVersion !== 1) errors.push('schemaVersion must be 1');
 if (!SHA_RE.test(manifest.baselineSourceRevision ?? '')) {
   errors.push('baselineSourceRevision must be an exact 40-character SHA');
 }
 
-const allowedClasses = new Set(manifest.classes ?? []);
-if (allowedClasses.size !== 4) errors.push('exactly four claim classes are required');
+const declaredClasses = Array.isArray(manifest.classes) ? manifest.classes : [];
+if (!Array.isArray(manifest.classes) || !sameStringSet(declaredClasses, expectedClasses)) {
+  errors.push(`claim classes must be exactly: ${expectedClasses.join(', ')}`);
+}
+const allowedClasses = new Set(expectedClasses);
 
 const claimsById = new Map();
+const claimTexts = new Map();
 for (const claim of manifest.claims ?? []) {
   if (!ID_RE.test(claim.id ?? '')) errors.push(`invalid claim id: ${claim.id ?? '<missing>'}`);
   if (claimsById.has(claim.id)) errors.push(`duplicate claim id: ${claim.id}`);
@@ -76,12 +142,39 @@ for (const claim of manifest.claims ?? []) {
   }
   if (typeof claim.text !== 'string' || claim.text.trim().length < 10) {
     errors.push(`${claim.id}: claim text is missing or too short`);
+  } else {
+    const normalizedText = claim.text.replace(/\s+/g, ' ').trim();
+    if (claimTexts.has(normalizedText)) {
+      errors.push(`${claim.id}: duplicate claim text with ${claimTexts.get(normalizedText)}`);
+    }
+    claimTexts.set(normalizedText, claim.id);
   }
   if (!Array.isArray(claim.sourcePaths) || claim.sourcePaths.length === 0) {
     errors.push(`${claim.id}: sourcePaths must not be empty`);
   }
   if (!Array.isArray(claim.sourceUrls) || claim.sourceUrls.length === 0) {
     errors.push(`${claim.id}: sourceUrls must not be empty`);
+  }
+  if (!Array.isArray(claim.surfaces) || claim.surfaces.length === 0) {
+    errors.push(`${claim.id}: surfaces must not be empty`);
+  } else {
+    if (new Set(claim.surfaces).size !== claim.surfaces.length) {
+      errors.push(`${claim.id}: surfaces must not contain duplicates`);
+    }
+    for (const surface of claim.surfaces) {
+      if (!expectedSurfaces.has(surface)) {
+        errors.push(`${claim.id}: unsupported surface ${surface}`);
+      }
+    }
+  }
+  if (
+    claim.jsonLdQuestion !== undefined &&
+    (typeof claim.jsonLdQuestion !== 'string' || claim.jsonLdQuestion.trim().length < 5)
+  ) {
+    errors.push(`${claim.id}: jsonLdQuestion must be a non-empty question`);
+  }
+  if (claim.jsonLdQuestion !== undefined && !(claim.surfaces ?? []).includes('json-ld')) {
+    errors.push(`${claim.id}: jsonLdQuestion requires a json-ld surface`);
   }
   for (const sourcePath of claim.sourcePaths ?? []) {
     const absolute = join(ROOT, sourcePath);
@@ -112,26 +205,71 @@ for (const claim of manifest.claims ?? []) {
 }
 
 const routeUrls = new Set();
+const referencedUrlsByClaim = new Map([...claimsById.keys()].map((id) => [id, new Set()]));
 for (const route of manifest.routes ?? []) {
-  route.url = normalizePathname(route.url);
-  if (routeUrls.has(route.url)) errors.push(`duplicate route: ${route.url}`);
-  routeUrls.add(route.url);
-  if (!existsSync(join(ROOT, route.sourcePath ?? ''))) {
-    errors.push(`${route.url}: missing sourcePath ${route.sourcePath ?? '<missing>'}`);
+  const routeUrl = normalizePathname(route.url);
+  const routeSourcePath = join(ROOT, route.sourcePath ?? '');
+  if (routeUrls.has(routeUrl)) errors.push(`duplicate route: ${routeUrl}`);
+  routeUrls.add(routeUrl);
+  if (!existsSync(routeSourcePath)) {
+    errors.push(`${routeUrl}: missing sourcePath ${route.sourcePath ?? '<missing>'}`);
   }
   const requiredIds = [route.seoClaimId, ...(route.bodyClaimIds ?? [])];
+  if (new Set(route.bodyClaimIds ?? []).size !== (route.bodyClaimIds ?? []).length) {
+    errors.push(`${routeUrl}: bodyClaimIds must not contain duplicates`);
+  }
   for (const id of requiredIds) {
     const claim = claimsById.get(id);
     if (!claim) {
-      errors.push(`${route.url}: unknown claim id ${id}`);
+      errors.push(`${routeUrl}: unknown claim id ${id}`);
       continue;
     }
-    if (!claim.sourceUrls.map(normalizePathname).includes(route.url)) {
-      errors.push(`${route.url}: ${id} does not list this source URL`);
+    referencedUrlsByClaim.get(id).add(routeUrl);
+    if (!(claim.sourceUrls ?? []).map(normalizePathname).includes(routeUrl)) {
+      errors.push(`${routeUrl}: ${id} does not list this source URL`);
     }
-    if (!claim.sourcePaths.includes(route.sourcePath)) {
-      errors.push(`${route.url}: ${id} does not list ${route.sourcePath}`);
+    if (!(claim.sourcePaths ?? []).includes(route.sourcePath)) {
+      errors.push(`${routeUrl}: ${id} does not list ${route.sourcePath}`);
     }
+  }
+
+  const seoClaim = claimsById.get(route.seoClaimId);
+  if (seoClaim) {
+    if (seoClaim.jsonLdQuestion !== undefined) {
+      errors.push(`${routeUrl}: SEO claim ${seoClaim.id} must not declare jsonLdQuestion`);
+    }
+    for (const surface of ['meta', 'json-ld']) {
+      if (!(seoClaim.surfaces ?? []).includes(surface)) {
+        errors.push(`${routeUrl}: SEO claim ${seoClaim.id} must declare ${surface}`);
+      }
+    }
+  }
+  for (const id of route.bodyClaimIds ?? []) {
+    const claim = claimsById.get(id);
+    if (claim && !(claim.surfaces ?? []).includes('body')) {
+      errors.push(`${routeUrl}: body claim ${id} must declare body`);
+    }
+    if (claim && id !== route.seoClaimId && (claim.surfaces ?? []).includes('json-ld')) {
+      if (typeof claim.jsonLdQuestion !== 'string') {
+        errors.push(`${routeUrl}: JSON-LD body claim ${id} requires jsonLdQuestion`);
+      } else if (existsSync(routeSourcePath)) {
+        const routeSource = readFileSync(routeSourcePath, 'utf8');
+        if (!routeSource.includes(claim.jsonLdQuestion)) {
+          errors.push(`${routeUrl}: ${id} jsonLdQuestion is missing from ${route.sourcePath}`);
+        }
+      }
+    }
+  }
+}
+
+for (const claim of claimsById.values()) {
+  const declaredUrls = (claim.sourceUrls ?? []).map(normalizePathname);
+  const referencedUrls = [...(referencedUrlsByClaim.get(claim.id) ?? [])];
+  if (!sameStringSet(declaredUrls, referencedUrls)) {
+    errors.push(
+      `${claim.id}: sourceUrls must exactly match classified routes ` +
+        `(declared=${declaredUrls.join(',') || '<none>'}; referenced=${referencedUrls.join(',') || '<none>'})`
+    );
   }
 }
 
@@ -151,11 +289,14 @@ if (!allowedBlock) {
   }
 }
 
-for (const route of manifest.routes ?? []) {
-  const source = readFileSync(join(ROOT, route.sourcePath), 'utf8');
+const publishableSources = [
+  ...new Set(publishableSourceRoots.flatMap((root) => collectPublishableSources(root))),
+];
+for (const sourcePath of publishableSources) {
+  const source = readFileSync(join(ROOT, sourcePath), 'utf8');
   for (const rule of riskyProductRules) {
     rule.re.lastIndex = 0;
-    if (rule.re.test(source)) errors.push(`${route.sourcePath}: ${rule.name}`);
+    if (rule.re.test(source)) errors.push(`${sourcePath}: ${rule.name}`);
   }
 }
 

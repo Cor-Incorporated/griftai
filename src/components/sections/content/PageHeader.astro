@@ -30,6 +30,8 @@ interface Props {
   title: string;
   /** Optional subtitle/description */
   subtitle?: string;
+  /** Stable public-claim ID for a classified subtitle */
+  subtitleClaimId?: string;
   /** Text alignment */
   align?: 'center' | 'left';
   /** Title size */
@@ -43,6 +45,7 @@ interface Props {
 const {
   title,
   subtitle,
+  subtitleClaimId,
   align = 'center',
   size = 'default',
   maxWidth = 'lg',
@@ -76,7 +79,16 @@ const containerClass = align === 'center' ? `${maxWidthClass} mx-auto` : maxWidt
       <h1 class:list={['font-bold text-balance text-text leading-[1.15]', titleSizeClass]}>
         {title}
       </h1>
-      {subtitle && <p class="mt-6 text-pretty text-lg leading-8 text-text-muted">{subtitle}</p>}
+      {
+        subtitle && (
+          <p
+            class="mt-6 text-pretty text-lg leading-8 text-text-muted"
+            data-public-claim-id={subtitleClaimId}
+          >
+            {subtitle}
+          </p>
+        )
+      }
       <slot />
     </div>
   </div>

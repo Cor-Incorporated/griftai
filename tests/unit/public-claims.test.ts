@@ -6,6 +6,32 @@ import {
 } from '../../src/lib/public-claims';
 
 describe('public claim catalog', () => {
+  it('keeps stable IDs, classes, and route ownership closed', () => {
+    const expectedClasses = ['general-method', 'Grift-current', 'planned-beta', 'human-final'];
+    const claimIds = publicClaimCatalog.claims.map((claim) => claim.id);
+    const referencedIds = new Set(
+      publicClaimCatalog.routes.flatMap((route) => [route.seoClaimId, ...route.bodyClaimIds])
+    );
+
+    expect(new Set(claimIds).size).toBe(claimIds.length);
+    expect([...publicClaimCatalog.classes].sort()).toEqual([...expectedClasses].sort());
+    expect(publicClaimCatalog.claims.filter((claim) => !referencedIds.has(claim.id))).toEqual([]);
+    expect(
+      publicClaimCatalog.claims.every(
+        (claim) =>
+          claim.surfaces.length > 0 && new Set(claim.surfaces).size === claim.surfaces.length
+      )
+    ).toBe(true);
+    for (const route of publicClaimCatalog.routes) {
+      for (const claimId of route.bodyClaimIds) {
+        const claim = publicClaimCatalog.claims.find((candidate) => candidate.id === claimId);
+        if (claimId !== route.seoClaimId && claim?.surfaces.includes('json-ld')) {
+          expect(claim.jsonLdQuestion).toMatch(/？$/);
+        }
+      }
+    }
+  });
+
   it('classifies every public sitemap route', () => {
     expect(publicClaimCatalog.routes).toHaveLength(19);
 

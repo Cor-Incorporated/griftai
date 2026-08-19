@@ -6,7 +6,8 @@ import PublicClaimBoundary from '@/components/common/PublicClaimBoundary.astro';
 import { getPublicClaim } from '@/lib/public-claims';
 
 const title = '要件定義プロセスの自動化！ツールの仕組みや自動化ステップを解説';
-const description = getPublicClaim('PUB-COLUMN-REQ-AUTOMATION-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-REQ-AUTOMATION-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -75,11 +76,11 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
               </p>
 
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
-                {humanClaim.text}
+                AIが整理した内容は担当者が確認し、案件ごとの合意と最終判断に反映します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -330,6 +331,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/automation-tool-requirement/"

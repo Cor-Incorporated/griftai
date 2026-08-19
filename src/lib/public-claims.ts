@@ -14,6 +14,7 @@ export interface PublicClaim {
   class: PublicClaimClass;
   state: string;
   text: string;
+  jsonLdQuestion?: string;
   sourcePaths: string[];
   sourceUrls: string[];
   surfaces: Array<'meta' | 'json-ld' | 'body'>;

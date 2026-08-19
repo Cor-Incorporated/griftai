@@ -68,6 +68,7 @@ const faqs = [
   {
     question: 'AI が見積金額を決めますか？',
     answer: teamBetaHumanFinalClaim.text,
+    claimId: teamBetaHumanFinalClaim.id,
   },
 ];
 ---
@@ -92,9 +93,14 @@ const faqs = [
           <h2 class="text-balance text-3xl font-bold text-text sm:text-4xl">
             見積根拠を、個人の頭の中からチームの資産へ。
           </h2>
-          <p class="text-pretty text-lg leading-8 text-text-muted">{teamBetaClaim.text}</p>
+          <p
+            class="text-pretty text-lg leading-8 text-text-muted"
+            data-public-claim-id={teamBetaClaim.id}
+          >
+            {teamBetaClaim.text}
+          </p>
           <p class="text-pretty text-lg leading-8 text-text-muted">
-            {teamBetaHumanFinalClaim.text}
+            AIが金額を自動決定するものではなく、担当者が根拠を確認して最終判断します。
           </p>
           <p class="text-3xl font-bold tabular-nums text-text">月額5万円を基本に個別案内</p>
           <p class="text-sm text-text-muted">
@@ -213,7 +219,12 @@ const faqs = [
                   class="size-5 shrink-0 text-text-muted transition-transform group-open:rotate-180"
                 />
               </summary>
-              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+              <div
+                class="px-5 pb-5 text-pretty leading-7 text-text-muted"
+                data-public-claim-id={'claimId' in faq ? faq.claimId : undefined}
+              >
+                {faq.answer}
+              </div>
             </details>
           ))
         }

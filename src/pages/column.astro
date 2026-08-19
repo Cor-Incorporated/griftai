@@ -40,7 +40,9 @@ const description = columnIndexClaim.text;
               <!-- メインバナーキャッチコピーここまで -->
             </div>
 
-            <p class="u-mb30">{columnIndexClaim.text}</p>
+            <p class="u-mb30" data-public-claim-id={columnIndexClaim.id}>
+              {columnIndexClaim.text}
+            </p>
 
             <!-- コンテンツ一覧ここから -->
             <section class="u-mt50 c-linkblock">
@@ -131,6 +133,7 @@ const description = columnIndexClaim.text;
         <script is:inline type="application/ld+json" set:html={`{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
+          "identifier": "${columnIndexClaim.id}",
           "@id": "${siteConfig.url}/column/",
           "name": "AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧",
           "description": "${description}",

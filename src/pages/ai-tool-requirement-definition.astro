@@ -10,7 +10,8 @@ const contactUrl = corCta.teamBeta('grift-column-ai-tool-requirement-definition'
 
 const title =
   'AIを活用した要件定義ツールで属人化を防ぐ！要件定義の進め方や必須スキル';
-const description = getPublicClaim('PUB-COLUMN-REQ-TOOLS-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-REQ-TOOLS-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -79,7 +80,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
               </p>
 
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -341,6 +342,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/ai-tool-requirement-definition/"

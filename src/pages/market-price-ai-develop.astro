@@ -9,7 +9,8 @@ import { getPublicClaim } from '@/lib/public-claims';
 const contactUrl = corCta.teamBeta('grift-column-market-price-ai-develop');
 
 const title = 'AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い';
-const description = getPublicClaim('PUB-COLUMN-MARKET-PRICE-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-MARKET-PRICE-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -72,11 +73,11 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">AI開発の見積もり作成はCor株式会社へ</h2>
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
-                {humanClaim.text}
+                AIが整理した内容は担当者が確認し、案件ごとの合意と最終判断に反映します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -322,6 +323,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/market-price-ai-develop/"

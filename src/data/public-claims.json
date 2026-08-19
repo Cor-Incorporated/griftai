@@ -39,9 +39,10 @@
       "class": "human-final",
       "state": "human-decision-required",
       "text": "Griftは参考見積と見積根拠を整理する支援ツールです。最終的な見積金額の決定は人間が行います。",
+      "jsonLdQuestion": "AIが見積金額を決めるのですか？",
       "sourcePaths": ["src/pages/pricing.astro"],
       "sourceUrls": ["/pricing/"],
-      "surfaces": ["body"]
+      "surfaces": ["body", "json-ld"]
     },
     {
       "id": "PUB-TEAM-BETA-SCOPE",
@@ -57,9 +58,10 @@
       "class": "human-final",
       "state": "human-decision-required",
       "text": "最終的な見積金額の決定は人間が行います。Griftは参考見積と根拠の整理を支援します。",
+      "jsonLdQuestion": "AI が見積金額を決めますか？",
       "sourcePaths": ["src/pages/team-beta.astro"],
       "sourceUrls": ["/team-beta/"],
-      "surfaces": ["body"]
+      "surfaces": ["body", "json-ld"]
     },
     {
       "id": "PUB-AUDIT-BETA-SCOPE",
@@ -75,9 +77,10 @@
       "class": "human-final",
       "state": "human-decision-required",
       "text": "最終判断は発注側の責任で行います。Griftは前提・リスク・工数の検討材料を整理する支援です。",
+      "jsonLdQuestion": "AI が金額の可否を決めますか？",
       "sourcePaths": ["src/pages/estimate-audit.astro"],
       "sourceUrls": ["/estimate-audit/"],
-      "surfaces": ["body"]
+      "surfaces": ["body", "json-ld"]
     },
     {
       "id": "PUB-FAQ-BETA-SCOPE",
@@ -93,6 +96,7 @@
       "class": "human-final",
       "state": "human-decision-required",
       "text": "最終的な見積金額の決定は人間が行います。AIが整理した材料をもとに、担当者が責任を持ってレビューし、微調整を行います。",
+      "jsonLdQuestion": "最終判断は誰が行いますか？",
       "sourcePaths": ["src/pages/faq.astro"],
       "sourceUrls": ["/faq/"],
       "surfaces": ["body", "json-ld"]

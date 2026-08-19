@@ -24,7 +24,7 @@ A simple example:
 
 ```bash
 DATABASE_URL=postgres://localhost:5432/myapp
-API_KEY=sk_live_abc123
+API_KEY=replace-with-a-provider-key
 DEBUG=true
 ```
 
@@ -35,8 +35,8 @@ DEBUG=true
 Hardcoding secrets in your code is dangerous:
 
 ```javascript
-// ❌ Never do this
-const apiKey = "sk_live_abc123";
+// ❌ Never hardcode the provider's secret value
+const apiKey = getHardcodedSecret();
 
 // ✅ Do this instead
 const apiKey = process.env.API_KEY;
@@ -72,7 +72,7 @@ Create a `.env` file in your project root:
 ```bash
 # .env
 DATABASE_URL=postgres://localhost:5432/myapp_dev
-API_KEY=sk_test_development
+API_KEY=replace-with-a-development-key
 DEBUG=true
 ```
 
@@ -132,7 +132,7 @@ KEY=abc123
 
 # ✅ Clear
 PAYMENT_API_URL=https://api.stripe.com
-STRIPE_SECRET_KEY=sk_live_abc123
+STRIPE_SECRET_KEY=replace-with-a-stripe-test-key
 ```
 
 ### 5. Prefix Framework-Specific Variables

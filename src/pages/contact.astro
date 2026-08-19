@@ -14,7 +14,11 @@ const contactBetaClaim = getPublicClaim('PUB-CONTACT-BETA-SCOPE');
 ---
 
 <MarketingLayout title={`お問い合わせ - ${siteConfig.name}`} description={contactBetaClaim.text}>
-  <PageHeader title="お問い合わせ" subtitle={contactBetaClaim.text} />
+  <PageHeader
+    title="お問い合わせ"
+    subtitle={contactBetaClaim.text}
+    subtitleClaimId={contactBetaClaim.id}
+  />
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

@@ -1,9 +1,19 @@
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
 
 const viewportWidths = [375, 768, 1280, 1440] as const;
 const evidenceDirectory = process.env.NAGI_SCREENSHOT_DIR;
+const publicClaimCatalog = JSON.parse(
+  readFileSync(new URL('../src/data/public-claims.json', import.meta.url), 'utf8')
+) as {
+  claims: Array<{ id: string; text: string; jsonLdQuestion?: string }>;
+  routes: Array<{ url: string; seoClaimId: string; bodyClaimIds: string[] }>;
+};
+
+function normalizeClaimText(value: string) {
+  return value.replace(/\s+/g, ' ').trim();
+}
 
 test.describe('public claim parity', () => {
   for (const width of viewportWidths) {
@@ -39,22 +49,50 @@ test.describe('public claim parity', () => {
     });
   }
 
-  test('top, FAQ, and Team Beta keep reference and human-final boundaries', async ({ page }) => {
-    const pages = [
-      { path: '/', text: 'PUB-HOME-HUMAN-FINAL' },
-      { path: '/faq/', text: 'PUB-FAQ-HUMAN-FINAL' },
-      { path: '/team-beta/', text: 'PUB-TEAM-BETA-HUMAN-FINAL' },
-    ];
+  test('all public routes bind classified body claims to visible exact text', async ({ page }) => {
+    const claimsById = new Map(publicClaimCatalog.claims.map((claim) => [claim.id, claim]));
 
-    for (const target of pages) {
-      await page.goto(target.path);
-      const registry = await page.locator('[data-public-claim-registry]').textContent();
-      expect(registry).not.toBeNull();
-      expect(
-        JSON.parse(registry ?? '{}').claims.map((claim: { id: string }) => claim.id)
-      ).toContain(target.text);
-      await expect(page.locator('body')).toContainText('最終');
-      await expect(page.locator('body')).toContainText(/人間|担当者/);
+    for (const route of publicClaimCatalog.routes) {
+      const response = await page.goto(route.url);
+      expect(response?.status(), route.url).toBe(200);
+
+      const registries = page.locator('[data-public-claim-registry]');
+      await expect(registries, `${route.url}: registry count`).toHaveCount(1);
+      const registry = JSON.parse((await registries.textContent()) ?? '{}');
+      const expectedRegistryIds = [...new Set([route.seoClaimId, ...route.bodyClaimIds])].sort();
+      const renderedRegistryIds = registry.claims.map((claim: { id: string }) => claim.id).sort();
+      expect(renderedRegistryIds, `${route.url}: registry IDs`).toEqual(expectedRegistryIds);
+
+      await page.locator('details').evaluateAll((elements) => {
+        for (const element of elements) element.setAttribute('open', '');
+      });
+
+      const bodyMarkers = page.locator('[data-public-claim-id]');
+      const bodyMarkerIds = await bodyMarkers.evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute('data-public-claim-id'))
+      );
+      expect([...new Set(bodyMarkerIds)].sort(), `${route.url}: body marker IDs`).toEqual(
+        [...route.bodyClaimIds].sort()
+      );
+
+      for (const claimId of route.bodyClaimIds) {
+        const claim = claimsById.get(claimId);
+        expect(claim, `${route.url}: known claim ${claimId}`).toBeDefined();
+        const markers = page.locator(`[data-public-claim-id="${claimId}"]`);
+        await expect(markers, `${route.url}: marker ${claimId}`).toHaveCount(1);
+        for (const marker of await markers.all()) {
+          await expect(marker, `${route.url}: visible marker ${claimId}`).toBeVisible();
+          expect(
+            normalizeClaimText(await marker.innerText()),
+            `${route.url}: text ${claimId}`
+          ).toBe(normalizeClaimText(claim?.text ?? ''));
+          if (claim?.jsonLdQuestion) {
+            const details = marker.locator('xpath=ancestor::details[1]');
+            await expect(details, `${route.url}: question context ${claimId}`).toHaveCount(1);
+            await expect(details.locator('summary').first()).toContainText(claim.jsonLdQuestion);
+          }
+        }
+      }
     }
   });
 });

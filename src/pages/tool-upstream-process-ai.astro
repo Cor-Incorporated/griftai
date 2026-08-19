@@ -9,7 +9,8 @@ import { getPublicClaim } from '@/lib/public-claims';
 const contactUrl = corCta.teamBeta('grift-column-tool-upstream-process-ai');
 
 const title = '上流工程を効率化するAIツール！機能と選定基準を解説';
-const description = getPublicClaim('PUB-COLUMN-UPSTREAM-TOOLS-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-UPSTREAM-TOOLS-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -79,7 +80,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
               </p>
 
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -344,6 +345,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/tool-upstream-process-ai/"

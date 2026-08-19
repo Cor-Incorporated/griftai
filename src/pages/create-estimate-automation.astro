@@ -9,7 +9,8 @@ import { getPublicClaim } from '@/lib/public-claims';
 const contactUrl = corCta.teamBeta('grift-column-create-estimate-automation');
 
 const title = '見積もり作成を自動化！ドキュメント構成や全体のフローを解説';
-const description = getPublicClaim('PUB-COLUMN-DOCUMENT-FLOW-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-DOCUMENT-FLOW-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -74,7 +75,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
                 見積もり作成の標準化に関するご相談はCor株式会社へ
               </h2>
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -82,7 +83,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
               </p>
 
               <p class="u-m0 u-pb1em">
-                {humanClaim.text}
+                AIが整理した内容は担当者が確認し、案件ごとの合意と最終判断に反映します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -341,6 +342,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/create-estimate-automation/"

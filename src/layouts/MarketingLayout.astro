@@ -19,7 +19,7 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
-  faqItems?: Array<{ question: string; answer: string }>;
+  faqItems?: Array<{ question: string; answer: string; claimId?: string }>;
 }
 
 const {
@@ -52,6 +52,7 @@ const publicClaimRegistry = getPublicClaimRegistry(Astro.url.pathname);
   modifiedDate={modifiedDate}
   author={author}
   tags={tags}
+  seoClaimId={publicClaimRegistry?.route.seoClaimId}
 >
   <StructuredData type="organization" />
   {isHome && <StructuredData type="software" />}

@@ -101,6 +101,7 @@ const pricingFaqs = [
   {
     question: 'AIが見積金額を決めるのですか？',
     answer: pricingHumanFinalClaim.text,
+    claimId: pricingHumanFinalClaim.id,
   },
   {
     question: '正式版の料金はどうなりますか？',
@@ -184,7 +185,10 @@ const onboardingSteps = [
           ))
         }
       </div>
-      <p class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty">
+      <p
+        class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty"
+        data-public-claim-id={pricingBetaClaim.id}
+      >
         {pricingBetaClaim.text}
       </p>
     </div>
@@ -251,7 +255,12 @@ const onboardingSteps = [
                   <Icon name="lucide:chevron-down" class="size-5" />
                 </span>
               </summary>
-              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+              <div
+                class="px-5 pb-5 text-pretty leading-7 text-text-muted"
+                data-public-claim-id={'claimId' in faq ? faq.claimId : undefined}
+              >
+                {faq.answer}
+              </div>
             </details>
           ))
         }

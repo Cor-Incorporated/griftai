@@ -50,6 +50,7 @@ const faqs = [
   {
     question: 'AI が金額の可否を決めますか？',
     answer: auditHumanFinalClaim.text,
+    claimId: auditHumanFinalClaim.id,
   },
   {
     question: '受託チーム向けの Team Beta との違いは？',
@@ -79,7 +80,12 @@ const faqs = [
           <h2 class="text-balance text-3xl font-bold text-text sm:text-4xl">
             「この金額で進めてよいか」を、前提から整理する。
           </h2>
-          <p class="text-pretty text-lg leading-8 text-text-muted">{auditBetaClaim.text}</p>
+          <p
+            class="text-pretty text-lg leading-8 text-text-muted"
+            data-public-claim-id={auditBetaClaim.id}
+          >
+            {auditBetaClaim.text}
+          </p>
           <p class="text-pretty text-lg leading-8 text-text-muted">
             Estimate Audit
             は、見積金額を自動で是非判定するサービスではありません。提出見積を読み解き、社内で確認すべき論点を判断材料として整えます。
@@ -171,7 +177,12 @@ const faqs = [
                   class="size-5 shrink-0 text-text-muted transition-transform group-open:rotate-180"
                 />
               </summary>
-              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+              <div
+                class="px-5 pb-5 text-pretty leading-7 text-text-muted"
+                data-public-claim-id={'claimId' in faq ? faq.claimId : undefined}
+              >
+                {faq.answer}
+              </div>
             </details>
           ))
         }

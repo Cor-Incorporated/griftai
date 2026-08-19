@@ -14,6 +14,7 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
+  seoClaimId?: string;
 }
 
 const {
@@ -27,6 +28,7 @@ const {
   modifiedDate,
   author,
   tags,
+  seoClaimId,
 } = Astro.props;
 ---
 
@@ -49,6 +51,7 @@ const {
       modifiedDate={modifiedDate}
       author={author}
       tags={tags}
+      seoClaimId={seoClaimId}
     />
     <meta name="google-site-verification" content="OttHDtQkiKDUNOCtDrvci_9l4_DpgbUc65j8UDtS5mA" />
     <script is:inline>

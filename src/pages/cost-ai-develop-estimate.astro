@@ -9,7 +9,8 @@ import { getPublicClaim } from '@/lib/public-claims';
 const contactUrl = corCta.teamBeta('grift-column-cost-ai-develop-estimate');
 
 const title = 'AI開発の見積もり費用はどう決まる？内訳や変動要因を解説';
-const description = getPublicClaim('PUB-COLUMN-AI-COST-SEO').text;
+const seoClaim = getPublicClaim('PUB-COLUMN-AI-COST-SEO');
+const description = seoClaim.text;
 const generalClaim = getPublicClaim('PUB-COLUMN-GENERAL-BOUNDARY');
 const betaClaim = getPublicClaim('PUB-COLUMN-BETA-SCOPE');
 const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
@@ -73,11 +74,11 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
                 AI開発の予算確保段階でお悩みならCor株式会社へご相談ください
               </h2>
               <p class="u-m0 u-pb1em">
-                {betaClaim.text}
+                検証中の機能、利用条件、表示できる根拠の範囲は、ご相談時に個別にご案内します。
               </p>
 
               <p class="u-m0 u-pb1em">
-                {humanClaim.text}
+                AIが整理した内容は担当者が確認し、案件ごとの合意と最終判断に反映します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -355,6 +356,7 @@ const humanClaim = getPublicClaim('PUB-COLUMN-HUMAN-FINAL');
           {
             "@context": "https://schema.org",
             "@type": "Article",
+            "identifier": "${seoClaim.id}",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "${siteConfig.url}/cost-ai-develop-estimate/"

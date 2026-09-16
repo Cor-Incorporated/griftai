@@ -1,6 +1,8 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import NextStep from '@/components/common/NextStep.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -64,6 +66,7 @@ const faqs = [
   description="Grift Estimate Audit は発注企業向けの見積検討支援です。提出された見積の前提・技術リスク・工数妥当性を整理し、相見積もりや稟議前の判断材料を整えます。100万円を基本に個別見積。"
   faqItems={faqs}
 >
+  <BreadcrumbNav items={[{ label: 'Estimate Audit' }]} />
   <PageHeader
     title="Estimate Audit"
     subtitle="発注企業向け。提出された見積もりの前提・技術リスク・工数妥当性を、AIと実装者の視点で整理します。"
@@ -176,25 +179,18 @@ const faqs = [
     </div>
   </section>
 
-  <section class="bg-background py-section">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div
-        class="rounded-3xl border border-border bg-surface p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
-      >
-        <div class="max-w-2xl">
-          <p class="text-sm font-semibold text-primary">次の一歩</p>
-          <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-            提出見積の前提整理からご相談ください。
-          </h2>
-          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            対象の見積概要と検討の締切が分かると、Estimate Audit
-            の適合範囲を具体的にご案内できます。
-          </p>
-        </div>
-        <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary mt-8 lg:mt-0">
-          Estimate Auditについて相談する
-        </a>
-      </div>
-    </div>
-  </section>
+  <NextStep
+    heading="提出見積の前提整理からご相談ください。"
+    lead="対象の見積概要と検討の締切が分かると、Estimate Audit の適合範囲を具体的にご案内できます。"
+    ctas={[
+      {
+        label: 'Estimate Auditについて相談する',
+        href: contactUrl,
+        primary: true,
+        isExternal: true,
+      },
+      { label: '料金の全体像を見る', href: pricingUrl },
+      { label: 'Team Beta（受託チーム向け）', href: teamBetaUrl },
+    ]}
+  />
 </MarketingLayout>

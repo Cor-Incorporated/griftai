@@ -2,20 +2,38 @@
 import { siteConfig } from '@/config';
 
 interface Props {
-  type: 'software' | 'faq' | 'organization';
+  type: 'software' | 'faq' | 'organization' | 'howto';
   faqItems?: Array<{ question: string; answer: string }>;
+  /** HowTo schema 用。name=見出し、text=手順説明 */
+  howtoName?: string;
+  howtoDescription?: string;
+  howtoSteps?: Array<{ name: string; text: string }>;
 }
 
-const { type, faqItems = [] } = Astro.props;
+const { type, faqItems = [], howtoName, howtoDescription, howtoSteps = [] } = Astro.props;
+
+const ORG_ID = `${siteConfig.url}/#organization`;
+const SOFTWARE_ID = `${siteConfig.url}/#software`;
 
 const softwareApplicationSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
+  '@id': SOFTWARE_ID,
   name: 'Grift',
+  alternateName: 'Grift Beta',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
+  url: siteConfig.url,
   description:
     '受託開発チームが参考見積と見積根拠を整理し、人間レビュー前提の見積プロセスを作るAI見積支援ツールです。',
+  featureList: [
+    '案件前提・スコープ・不確実性の整理（インテークワークスペース）',
+    'GitHub実績を参考材料とした見積根拠の提示',
+    '市場相場・類似案件との参考比較',
+    '参考見積レポートの生成',
+    '見積根拠メモ・レビュー履歴によるチームナレッジ蓄積',
+    '人間レビュー前提の最終判断フロー',
+  ],
   offers: {
     '@type': 'OfferCatalog',
     name: 'Grift Team Beta Pricing',
@@ -46,11 +64,7 @@ const softwareApplicationSchema = {
       },
     ],
   },
-  provider: {
-    '@type': 'Organization',
-    name: 'Cor.株式会社',
-    url: 'https://cor-jp.com',
-  },
+  provider: { '@id': ORG_ID },
 };
 
 const faqPageSchema =
@@ -69,13 +83,32 @@ const faqPageSchema =
       }
     : null;
 
+const howToSchema =
+  howtoSteps.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: howtoName,
+        description: howtoDescription,
+        step: howtoSteps.map((step, index) => ({
+          '@type': 'HowToStep',
+          position: index + 1,
+          name: step.name,
+          text: step.text,
+        })),
+      }
+    : null;
+
+// 後方互換用。通常は SEO.astro が @id 付きの詳細版を全ページに出力するため
+// こちらは MarketingLayout からは呼ばれない。
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: 'Cor.株式会社',
   url: 'https://cor-jp.com',
-  logo: `${siteConfig.url}/logo.svg`,
-  sameAs: [],
+  logo: `${siteConfig.url}/grift-wordmark.jpg`,
+  sameAs: [siteConfig.social.github, siteConfig.social.twitter].filter(Boolean),
 };
 ---
 
@@ -91,6 +124,11 @@ const organizationSchema = {
 {
   type === 'faq' && faqPageSchema && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
+  )
+}
+{
+  type === 'howto' && howToSchema && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   )
 }
 {

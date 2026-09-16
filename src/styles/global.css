@@ -420,6 +420,48 @@ html.js .stagger-children.is-visible > *:nth-child(6) {
   background: var(--color-border);
 }
 
+/* ==========================================================================
+   Scroll chrome — progress bar + scroll hint (corsweb パターン移植)
+   ========================================================================== */
+
+/* ページ上部のスクロール進捗バー。読了位置を可視化して滞在を促す。 */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: var(--color-primary);
+  pointer-events: none;
+}
+
+/* ファーストビューの「↓」スクロールヒント。少しスクロールしたら消える。 */
+.scroll-hint {
+  transition: opacity 0.4s ease;
+}
+
+html.scrolled .scroll-hint {
+  opacity: 0;
+}
+
+.scroll-hint-arrow {
+  display: inline-block;
+  animation: hint-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes hint-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.4rem);
+  }
+}
+
 @media (min-width: 640px) {
   .landing-container {
     padding-inline: 1.5rem;
@@ -473,7 +515,12 @@ html.js .stagger-children.is-visible > *:nth-child(6) {
     transform: none !important;
   }
 
-  .bar-pulse {
+  .bar-pulse,
+  .scroll-hint-arrow {
     animation: none !important;
+  }
+
+  .scroll-hint {
+    transition: none !important;
   }
 }

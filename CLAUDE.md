@@ -26,7 +26,10 @@ CI runs `npm run check` then `npm run build` on every PR and push. Both must pas
 **Stack**: Astro 5 (SSG) + Tailwind CSS v4 (via `@tailwindcss/vite`) + TypeScript (strict) + MDX
 
 **Published pages** (everything else is template scaffolding, not live):
-- `/` `/pricing` `/faq` `/contact` `/privacy` `/terms`
+- Marketing: `/` `/pricing` `/team-beta` `/estimate-audit` `/faq` `/contact`
+- Legal: `/privacy` `/terms`
+- GMO SEO columns: `/column` + 10 keyword pages (`ai-estimate-automation`, `ai-tool-requirement-definition`, `automation-ai-develop-estimate`, `automation-tool-requirement`, `basis-estimate-automation`, `cost-ai-develop-estimate`, `create-estimate-automation`, `market-price-ai-develop`, `requirement-definition-ai`, `tool-upstream-process-ai`)
+- Machine-readable: `/robots.txt` `/llms.txt` `/sitemap-index.xml`
 - Error pages: `403` `404` `500`
 
 **Key directories**:

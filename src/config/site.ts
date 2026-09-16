@@ -26,11 +26,13 @@ export const author = import.meta.env.SITE_AUTHOR || 'Cor.株式会社';
 /** Path to logo file (relative to /public) */
 export const logo = '/grift-mark.jpg';
 
-/** Path to Open Graph image (relative to /public) */
-export const ogImage = '/grift-og.svg';
+/** Path to Open Graph image (relative to /public). PNG 版を既定にする
+ * （SVG 版 /grift-og.svg は og:image 非対応のクローラ向けフォールバックとして残置） */
+export const ogImage = '/grift-og.png';
 
 /** Social media links */
 export const social: SocialLinks = {
+  twitter: 'https://x.com/cor_terisuke',
   github: 'https://github.com/Cor-Incorporated',
 };
 

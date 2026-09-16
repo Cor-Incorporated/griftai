@@ -9,6 +9,12 @@ const siteUrl = process.env.SITE_URL || siteConfig.url;
 
 export default defineConfig({
   site: siteUrl,
+  // hover で内部リンクをプリフェッチし、ClientRouter と合わせて
+  // ページ遷移をほぼ瞬時にする（滞在時間・体感速度の向上）
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
   integrations: [
     mdx(),
     icon(),

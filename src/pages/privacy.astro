@@ -1,5 +1,6 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
 
@@ -16,6 +17,7 @@ const legalNoticeUrl = getCorUrl('/legal/tokushoho/');
   title={`プライバシーポリシー - ${siteConfig.name}`}
   description={`${siteConfig.name} における個人情報および業務情報の取扱い方針。取得情報、利用目的、GitHub 連携、匿名化、問い合わせ窓口を掲載しています。`}
 >
+  <BreadcrumbNav items={[{ label: 'プライバシーポリシー' }]} />
   <section class="py-section">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <header class="mb-12">

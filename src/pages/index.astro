@@ -6,6 +6,9 @@ import SocialProofSection from '@/components/sections/marketing/SocialProofSecti
 import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
 import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
+import PageToc from '@/components/common/PageToc.astro';
+import NextStep from '@/components/common/NextStep.astro';
+import StructuredData from '@/components/common/StructuredData.astro';
 import { featuredColumnArticles } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
@@ -183,6 +186,65 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
   displayTitle: article.landingTitle ?? article.title,
   displayCategory: article.landingCategory ?? article.category,
 }));
+
+// AIO/回答エンジン向けの自己完結型要約。「Griftとは何か」を1ブロックで説明する。
+const griftFacts = [
+  {
+    term: '対象',
+    detail: '2〜10人の受託開発チーム。フリーランスの提案準備や発注企業の見積確認にも対応',
+  },
+  {
+    term: '役割分担',
+    detail: 'AIは参考見積と根拠の整理を担当。最終的な見積金額の決定は必ず人間が行う',
+  },
+  {
+    term: '料金目安',
+    detail:
+      'Team Beta 月額5万円〜 / Paid Trial 3ヶ月15万円〜 / Estimate Audit 100万円〜（いずれも個別案内）',
+  },
+  { term: '提供形態', detail: 'Webアプリケーション。現在ベータ版として提供範囲を検証中' },
+];
+
+const compareRows = [
+  {
+    aspect: '前提の整理',
+    before: '担当者の記憶と経験に依存し、認識ずれが後から発覚しやすい',
+    after: '案件前提・スコープ・不確実性を構造化し、チームで共有できる状態にする',
+  },
+  {
+    aspect: '金額の根拠',
+    before: '相場感や勘に頼りがちで、説明材料が残りにくい',
+    after: 'GitHub実績・市場相場・類似案件を参考材料として見積根拠に残す',
+  },
+  {
+    aspect: '属人性',
+    before: '見積が作れるのは代表やベテランだけになりがち',
+    after: '根拠メモとレビュー履歴をチームの資産として蓄積・再利用する',
+  },
+  {
+    aspect: '変更への対応',
+    before: '追加要件の境界が曖昧で、金額が後から膨らみやすい',
+    after: '変更条件・再見積が必要になるトリガーを事前に整理して共有する',
+  },
+  {
+    aspect: '提案時の説明力',
+    before: '「なぜこの金額か」を資料として示しにくい',
+    after: '前提・実績・相場を並べた参考見積レポートを提案前に確認できる',
+  },
+];
+
+const tocItems = [
+  { id: 'about', label: 'Griftとは' },
+  { id: 'problem', label: '課題' },
+  { id: 'value', label: 'できること' },
+  { id: 'compare', label: '従来との違い' },
+  { id: 'product', label: '製品画面' },
+  { id: 'flow', label: '利用の流れ' },
+  { id: 'scenarios', label: '利用シーン' },
+  { id: 'pricing', label: '料金' },
+  { id: 'faq', label: 'よくある質問' },
+  { id: 'column-promo', label: 'コラム' },
+];
 ---
 
 <MarketingLayout
@@ -192,7 +254,7 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
   description="Griftは、受託開発チームが「なぜこの金額なのか」を説明できるよう、参考見積と見積根拠を整理するAI見積支援ツールです。AIに丸投げせず、人間が確認・判断できる提案材料を増やします。"
   faqItems={faqPreview.map((item) => ({ question: item.q, answer: item.a }))}
 >
-  <section id="hero" class="section-animate bg-background">
+  <section id="hero" class="section-animate relative bg-background">
     <div class="landing-container py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:gap-7">
         <p class="section-kicker">見積を、勘から根拠へ。</p>
@@ -292,8 +354,47 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
         </aside>
       </div>
     </div>
+    {/* 下にコンテンツが続くことを示すスクロールヒント（装飾・読み上げ対象外） */}
+    <div
+      class="scroll-hint pointer-events-none absolute inset-x-0 bottom-4 hidden justify-center sm:flex"
+      aria-hidden="true"
+    >
+      <span class="scroll-hint-arrow text-2xl text-text-muted/50">↓</span>
+    </div>
   </section>
   <div class="hero-accent-line" aria-hidden="true"></div>
+
+  <PageToc items={tocItems} />
+
+  {
+    /* AIO/回答エンジン向け: 「Griftとは」を自己完結で説明する定義ブロック。
+      dl 構造で要点を機械可読に整理する。 */
+  }
+  <section id="about" class="section-animate border-b border-border bg-background">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+      <div class="fade-in-section grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div class="space-y-4">
+          <p class="text-sm font-semibold text-primary">Griftとは</p>
+          <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+            見積の「なぜ」を、チームで説明できるようにするAI見積支援ツール。
+          </h2>
+          <p class="text-pretty text-lg leading-8 text-text-muted">
+            Griftは、Cor.株式会社が提供する受託開発チーム向けのAI見積支援ツールです。GitHub実績・市場相場・案件前提をもとに「参考見積」と「見積根拠」を整理し、人間が責任を持って最終判断できる提案材料を作ります。
+          </p>
+        </div>
+        <dl class="stagger-children grid gap-3 sm:grid-cols-2">
+          {
+            griftFacts.map((fact) => (
+              <div class="rounded-2xl border border-border bg-surface p-5">
+                <dt class="text-sm font-semibold text-primary">{fact.term}</dt>
+                <dd class="mt-2 text-sm leading-7 text-text-muted text-pretty">{fact.detail}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
 
   <ServiceMessageSection />
 
@@ -363,6 +464,59 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
     </div>
   </section>
 
+  {
+    /* 従来の見積プロセスとの対比表。table 構造は検索エンジン/AI 回答の
+      抽出対象になりやすく、内容の機械可読性を高める。 */
+  }
+  <section
+    id="compare"
+    class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+  >
+    <div class="fade-in-section max-w-3xl space-y-4">
+      <p class="text-sm font-semibold text-primary">従来との違い</p>
+      <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
+        記憶と勘の見積から、根拠を残す見積へ。
+      </h2>
+      <p class="text-lg leading-8 text-text-muted text-pretty">
+        Griftは見積作業を自動化するだけのツールではありません。判断材料をチームで共有・蓄積し、説明できる見積プロセスに変えます。
+      </p>
+    </div>
+    <div
+      class="fade-in-section mt-10 overflow-x-auto"
+      role="region"
+      aria-label="従来の見積プロセスとの比較表。横スクロール可能です"
+      tabindex="0"
+    >
+      <table class="w-full min-w-[640px] border-collapse text-left">
+        <caption class="sr-only"> 従来の見積プロセスとGriftを使った見積プロセスの比較 </caption>
+        <thead>
+          <tr class="border-b-2 border-border">
+            <th scope="col" class="py-4 pr-4 text-sm font-semibold text-text">観点</th>
+            <th scope="col" class="py-4 pr-4 text-sm font-semibold text-text-muted">
+              従来の見積プロセス
+            </th>
+            <th scope="col" class="py-4 text-sm font-semibold text-primary">
+              Griftを使った見積プロセス
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            compareRows.map((row) => (
+              <tr class="border-b border-border align-top">
+                <th scope="row" class="py-4 pr-4 text-sm font-semibold text-text">
+                  {row.aspect}
+                </th>
+                <td class="py-4 pr-4 text-sm leading-7 text-text-muted">{row.before}</td>
+                <td class="py-4 text-sm leading-7 text-text">{row.after}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <div id="product" class="section-animate">
     <ProductShowcase />
   </div>
@@ -418,17 +572,17 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
           既存のデータを活かし、見積根拠を整理する流れをチームに組み込んでいきます。
         </p>
       </div>
-      <div class="stagger-children mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+      <ol class="stagger-children mt-10 grid list-none gap-4 md:grid-cols-2 xl:grid-cols-5">
         {
           flowSteps.map((item) => (
-            <article class="rounded-2xl border border-border bg-background p-5">
+            <li class="rounded-2xl border border-border bg-background p-5">
               <p class="text-sm font-semibold text-primary tabular-nums">{item.step}</p>
               <h3 class="mt-3 text-lg font-semibold text-balance text-text">{item.title}</h3>
               <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
-            </article>
+            </li>
           ))
         }
-      </div>
+      </ol>
     </div>
   </section>
 
@@ -575,11 +729,44 @@ const heroColumnArticles = featuredColumnArticles.map((article) => ({
         <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
           ※利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
         </p>
+        {/* 関連ページへの内部導線（回遊・滞在時間の向上） */}
+        <nav aria-label="関連ページ" class="mt-8 border-t border-border pt-6">
+          <p class="text-sm font-semibold text-text">詳しく知りたい方へ</p>
+          <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
+            <li><a href="/team-beta/" class="text-primary hover:underline">Team Beta の詳細</a></li>
+            <li><a href="/pricing/" class="text-primary hover:underline">料金の全体像</a></li>
+            <li>
+              <a href="/estimate-audit/" class="text-primary hover:underline">
+                Estimate Audit（発注企業向け）
+              </a>
+            </li>
+            <li><a href="/faq/" class="text-primary hover:underline">よくある質問</a></li>
+            <li><a href="/column/" class="text-primary hover:underline">コラム</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </section>
 
   <ColumnPromoSection />
+
+  <NextStep
+    heading="まずは相談か、詳細確認か。次の一歩を選んでください。"
+    lead="相談はAI受付で受け付けています。提供条件や導入の流れを先に確認したい方は、各ページへお進みください。"
+    ctas={[
+      { label: 'Team Betaについて相談する', href: finalCtaUrl, primary: true, isExternal: true },
+      { label: 'Team Beta の詳細を見る', href: '/team-beta/' },
+      { label: '料金の全体像を見る', href: '/pricing/' },
+    ]}
+  />
+
+  {/* 導入フローを HowTo 構造化データとして出力（検索/AI 回答での手順理解用） */}
+  <StructuredData
+    type="howto"
+    howtoName="Griftでの見積根拠の整理手順"
+    howtoDescription="相談内容の入力から見積根拠のナレッジ蓄積まで、Griftを使った見積プロセスの5ステップ。"
+    howtoSteps={flowSteps.map((step) => ({ name: step.title, text: step.body }))}
+  />
 
   <FloatingCTA />
 </MarketingLayout>

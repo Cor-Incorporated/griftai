@@ -178,39 +178,41 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 }
 
 <script>
-  const header = document.getElementById('site-header');
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const mobileMenuPanel = document.getElementById('mobile-menu-panel');
-  const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-  const menuIconOpen = document.getElementById('menu-icon-open');
-  const menuIconClose = document.getElementById('menu-icon-close');
+  function initHeader() {
+    const header = document.getElementById('site-header');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const menuIconOpen = document.getElementById('menu-icon-open');
+    const menuIconClose = document.getElementById('menu-icon-close');
 
-  function updateMenuPosition() {
-    if (header && mobileMenuPanel) {
-      const headerRect = header.getBoundingClientRect();
-      mobileMenuPanel.style.top = `${headerRect.bottom}px`;
+    if (!mobileMenuButton || !mobileMenu || !mobileMenuPanel || !mobileMenuBackdrop) return;
+
+    function updateMenuPosition() {
+      if (header && mobileMenuPanel) {
+        const headerRect = header.getBoundingClientRect();
+        mobileMenuPanel.style.top = `${headerRect.bottom}px`;
+      }
     }
-  }
 
-  function openMobileMenu() {
-    updateMenuPosition();
-    mobileMenu?.classList.remove('hidden');
-    mobileMenuButton?.setAttribute('aria-expanded', 'true');
-    menuIconOpen?.classList.add('hidden');
-    menuIconClose?.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
+    function openMobileMenu() {
+      updateMenuPosition();
+      mobileMenu?.classList.remove('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'true');
+      menuIconOpen?.classList.add('hidden');
+      menuIconClose?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
 
-  function closeMobileMenu() {
-    mobileMenu?.classList.add('hidden');
-    mobileMenuButton?.setAttribute('aria-expanded', 'false');
-    menuIconOpen?.classList.remove('hidden');
-    menuIconClose?.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
+    function closeMobileMenu() {
+      mobileMenu?.classList.add('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'false');
+      menuIconOpen?.classList.remove('hidden');
+      menuIconClose?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
 
-  if (mobileMenuButton && mobileMenu && mobileMenuPanel && mobileMenuBackdrop) {
     mobileMenuButton.addEventListener('click', () => {
       const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
       if (isExpanded) {
@@ -222,15 +224,35 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 
     mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-        closeMobileMenu();
-        mobileMenuButton.focus();
-      }
-    });
-
     mobileMenu.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMobileMenu);
     });
   }
+
+  // Escape は document リスナーなので、ページ遷移ごとの多重バインドを防ぐため一度だけ
+  let escapeBound = false;
+  function bindEscapeOnce() {
+    if (escapeBound) return;
+    document.addEventListener('keydown', (e) => {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIconOpen = document.getElementById('menu-icon-open');
+      const menuIconClose = document.getElementById('menu-icon-close');
+      if (e.key === 'Escape' && mobileMenuButton?.getAttribute('aria-expanded') === 'true') {
+        mobileMenu?.classList.add('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'false');
+        menuIconOpen?.classList.remove('hidden');
+        menuIconClose?.classList.add('hidden');
+        document.body.style.overflow = '';
+        mobileMenuButton.focus();
+      }
+    });
+    escapeBound = true;
+  }
+
+  // 初回 + ClientRouter のページ遷移後に再バインド（DOM は差し替わるため毎回実行）
+  document.addEventListener('astro:page-load', () => {
+    initHeader();
+    bindEscapeOnce();
+  });
 </script>

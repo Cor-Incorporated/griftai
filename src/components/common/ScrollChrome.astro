@@ -1,0 +1,49 @@
+---
+/**
+ * ScrollChrome — スクロール進捗バー + html.scrolled 制御
+ *
+ * corsweb Layout.astro のパターンを移植。
+ * - ページ上部に 3px の進捗バー（読了位置の可視化 → 滞在時間向上）
+ * - 40px 以上スクロールで <html> に .scrolled を付与
+ *   （ヒーローの .scroll-hint を消すために使用）
+ * - rAF スロットルで軽量化、ClientRouter 遷移後も astro:page-load で再計算
+ */
+---
+
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<script>
+  let chromeBound = false;
+
+  function updateScrollChrome() {
+    const bar = document.querySelector('.scroll-progress');
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    if (bar instanceof HTMLElement) {
+      bar.style.transform = `scaleX(${progress})`;
+    }
+    document.documentElement.classList.toggle('scrolled', window.scrollY > 40);
+  }
+
+  function initScrollChrome() {
+    // ページ遷移ごとに新しいページ高さで進捗を再計算する
+    updateScrollChrome();
+    // window は View Transition で破棄されないため、scroll/resize は一度だけバインド
+    if (chromeBound) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          updateScrollChrome();
+        });
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    chromeBound = true;
+  }
+
+  document.addEventListener('astro:page-load', initScrollChrome);
+</script>

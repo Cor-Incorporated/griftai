@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import SEO from '@components/common/SEO.astro';
 import '../styles/global.css';
 
@@ -9,6 +10,7 @@ interface Props {
   type?: 'website' | 'article';
   titleTag?: string;
   ogTitle?: string;
+  ogDescription?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -23,6 +25,7 @@ const {
   type = 'website',
   titleTag,
   ogTitle,
+  ogDescription,
   publishedDate,
   modifiedDate,
   author,
@@ -45,12 +48,14 @@ const {
       type={type}
       titleTag={titleTag}
       ogTitle={ogTitle}
+      ogDescription={ogDescription}
       publishedDate={publishedDate}
       modifiedDate={modifiedDate}
       author={author}
       tags={tags}
     />
     <meta name="google-site-verification" content="OttHDtQkiKDUNOCtDrvci_9l4_DpgbUc65j8UDtS5mA" />
+    <ClientRouter />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>

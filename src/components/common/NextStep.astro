@@ -1,0 +1,54 @@
+---
+/**
+ * NextStep — ページ末の誘導CTAカード（corsweb NextStep.astro 移植）
+ *
+ * 読了したユーザーを次の関連ページ・相談導線へ誘導し、
+ * サイト内回遊と滞在時間を伸ばす。griftai のトークン（cta-primary/secondary,
+ * border-border, bg-surface）で再実装。
+ */
+
+interface Cta {
+  label: string;
+  href: string;
+  /** true で target=_blank + rel=noreferrer */
+  isExternal?: boolean;
+  /** true で cta-primary、false で cta-secondary */
+  primary?: boolean;
+}
+
+interface Props {
+  heading: string;
+  lead?: string;
+  ctas: Cta[];
+}
+
+const { heading, lead, ctas } = Astro.props;
+---
+
+<section class="bg-background py-section">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <div
+      class="flex flex-col items-center gap-8 rounded-3xl border border-border bg-surface px-6 py-12 text-center sm:px-12 sm:py-16"
+    >
+      <div class="flex max-w-2xl flex-col gap-4">
+        <p class="text-sm font-semibold text-primary">次の一歩</p>
+        <h2 class="text-balance text-2xl font-bold text-text sm:text-3xl">{heading}</h2>
+        {lead && <p class="text-pretty text-lg leading-8 text-text-muted">{lead}</p>}
+      </div>
+      <div class="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center">
+        {
+          ctas.map((cta) => (
+            <a
+              href={cta.href}
+              target={cta.isExternal ? '_blank' : undefined}
+              rel={cta.isExternal ? 'noreferrer' : undefined}
+              class:list={[cta.primary ? 'cta-primary' : 'cta-secondary', 'w-full sm:w-auto']}
+            >
+              {cta.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

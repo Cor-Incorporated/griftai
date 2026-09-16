@@ -1,6 +1,7 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { Icon } from 'astro-icon/components';
 import { contactMethods, siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
@@ -15,6 +16,7 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
   title={`お問い合わせ - ${siteConfig.name}`}
   description="Grift Team Beta の導入相談・お問い合わせ窓口。Cor.株式会社のAI受付と電話窓口へご案内します。"
 >
+  <BreadcrumbNav items={[{ label: 'お問い合わせ' }]} />
   <PageHeader
     title="お問い合わせ"
     subtitle="Grift Beta の導入相談、デモ相談、提供条件の確認はこちらからご連絡ください。"

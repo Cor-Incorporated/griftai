@@ -161,9 +161,6 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
     });
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFloatingCta);
-  } else {
-    initFloatingCta();
-  }
+  // 初回 + ClientRouter のページ遷移後に再初期化
+  document.addEventListener('astro:page-load', initFloatingCta);
 </script>

@@ -9,6 +9,7 @@ interface Props {
   type?: 'website' | 'article';
   titleTag?: string;
   ogTitle?: string;
+  ogDescription?: string;
   publishedDate?: Date;
   modifiedDate?: Date;
   author?: string;
@@ -22,6 +23,7 @@ const {
   type = 'website',
   titleTag,
   ogTitle,
+  ogDescription,
   publishedDate,
   modifiedDate,
   author,
@@ -32,32 +34,84 @@ const canonicalURL = new URL(Astro.url.pathname, siteConfig.url);
 const fullTitle = `${title} | ${siteConfig.name}`;
 const documentTitle = titleTag || fullTitle;
 const socialTitle = ogTitle || documentTitle;
+const socialDescription = ogDescription || description;
 const imageUrl = image || siteConfig.ogImage || undefined;
 const ogImage = imageUrl ? new URL(imageUrl, siteConfig.url).href : undefined;
+const isDefaultOgImage = imageUrl === siteConfig.ogImage;
+const ogImageAlt = socialTitle;
+// https://x.com/<handle> → @<handle>（twitter:site は @付きハンドル形式）
+const twitterHandle = siteConfig.social.twitter?.match(/(?:x\.com|twitter\.com)\/([^/?]+)/)?.[1];
+const twitterSite = twitterHandle ? `@${twitterHandle.replace(/^@/, '')}` : undefined;
+
+// エンティティ参照（AIO/ナレッジグラフ向けに @id で相互リンク）
+const ORG_ID = `${siteConfig.url}/#organization`;
+const WEBSITE_ID = `${siteConfig.url}/#website`;
+const SOFTWARE_ID = `${siteConfig.url}/#software`;
+const contactAddress = siteConfig.contact.address;
 
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': WEBSITE_ID,
   name: siteConfig.name,
   description: siteConfig.description,
   url: siteConfig.url,
   inLanguage: 'ja-JP',
+  publisher: { '@id': ORG_ID },
 };
 
-const organizationSchema: Record<string, unknown> = {
+const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: siteConfig.author,
+  legalName: 'Cor.株式会社',
+  alternateName: ['Cor.inc', 'Cor株式会社'],
   url: 'https://cor-jp.com',
-  description: siteConfig.description,
-  sameAs: [siteConfig.social.twitter, siteConfig.social.github, siteConfig.social.discord].filter(
+  logo: new URL('/grift-wordmark.jpg', siteConfig.url).href,
+  description: '受託開発チーム向けAI見積支援ツール「Grift」を提供する、福岡発のAI・DX支援企業。',
+  email: 'company@cor-jp.com',
+  telephone: '+81-50-1792-9351',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${contactAddress.city}${contactAddress.street}`,
+    addressLocality: '福岡市',
+    addressRegion: contactAddress.state,
+    postalCode: contactAddress.zip,
+    addressCountry: 'JP',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    telephone: '+81-50-1792-9351',
+    email: 'company@cor-jp.com',
+    availableLanguage: ['Japanese'],
+  },
+  sameAs: ['https://cor-jp.com', siteConfig.social.github, siteConfig.social.twitter].filter(
     Boolean
   ),
+  founder: {
+    '@type': 'Person',
+    name: '寺田康佑',
+    alternateName: ['Kosuke Terada', 'terisuke'],
+    jobTitle: '代表取締役',
+    worksFor: { '@id': ORG_ID },
+  },
 };
 
-if (siteConfig.logo) {
-  organizationSchema.logo = new URL(siteConfig.logo, siteConfig.url).href;
-}
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${canonicalURL.href}#webpage`,
+  url: canonicalURL.href,
+  name: documentTitle,
+  description,
+  isPartOf: { '@id': WEBSITE_ID },
+  about: { '@id': SOFTWARE_ID },
+  inLanguage: 'ja-JP',
+  breadcrumb: { '@id': `${canonicalURL.href}#breadcrumb` },
+  ...(ogImage && { primaryImageOfPage: ogImage }),
+};
 
 const articleSchema =
   type === 'article' && publishedDate
@@ -79,7 +133,7 @@ const articleSchema =
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
-          '@id': canonicalURL.href,
+          '@id': `${canonicalURL.href}#webpage`,
         },
         keywords: tags.join(', '),
       }
@@ -107,6 +161,7 @@ const shouldEmitAutoBreadcrumb = !skipAutoBreadcrumbPaths.has(Astro.url.pathname
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
+  '@id': `${canonicalURL.href}#breadcrumb`,
   itemListElement: [
     {
       '@type': 'ListItem',
@@ -141,14 +196,19 @@ const breadcrumbSchema = {
 />
 
 <link rel="canonical" href={canonicalURL} />
+<link rel="sitemap" href="/sitemap-index.xml" />
 
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={socialTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={socialDescription} />
 <meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:locale" content="ja_JP" />
 {ogImage && <meta property="og:image" content={ogImage} />}
+{ogImage && <meta property="og:image:secure_url" content={ogImage} />}
+{ogImage && <meta property="og:image:alt" content={ogImageAlt} />}
+{ogImage && isDefaultOgImage && <meta property="og:image:width" content="1200" />}
+{ogImage && isDefaultOgImage && <meta property="og:image:height" content="630" />}
 {
   type === 'article' && publishedDate && (
     <meta property="article:published_time" content={publishedDate.toISOString()} />
@@ -157,13 +217,17 @@ const breadcrumbSchema = {
 {type === 'article' && author && <meta property="article:author" content={author} />}
 
 <meta property="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+{twitterSite && <meta property="twitter:site" content={twitterSite} />}
+{twitterSite && <meta property="twitter:creator" content={twitterSite} />}
 <meta property="twitter:url" content={canonicalURL} />
 <meta property="twitter:title" content={socialTitle} />
-<meta property="twitter:description" content={description} />
+<meta property="twitter:description" content={socialDescription} />
 {ogImage && <meta property="twitter:image" content={ogImage} />}
+{ogImage && <meta property="twitter:image:alt" content={ogImageAlt} />}
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(webPageSchema)} />
 {
   shouldEmitAutoBreadcrumb && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

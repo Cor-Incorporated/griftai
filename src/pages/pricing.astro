@@ -1,6 +1,8 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import NextStep from '@/components/common/NextStep.astro';
 import { Icon } from 'astro-icon/components';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -135,10 +137,34 @@ const onboardingSteps = [
   description="Griftは受託開発チームの見積根拠を整理するAI見積支援ツールです。Team Betaは月額5万円、Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に個別案内しています。"
   faqItems={pricingFaqs}
 >
+  <BreadcrumbNav items={[{ label: '料金プラン' }]} />
   <PageHeader
     title="Team Beta / Pricing"
     subtitle="見積根拠を、チームの資産にするための有料β。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。"
   />
+
+  {/* AIO/回答エンジン向け: 料金の要点を自己完結の dl で先出しする */}
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="rounded-3xl border border-border bg-surface p-6 sm:p-8">
+        <h2 class="text-xl font-bold text-text">料金の要点</h2>
+        <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">
+          Griftの提供プランは3種類です。いずれもベータ版として提供範囲を検証中のため、利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+        </p>
+        <dl class="mt-6 grid gap-4 sm:grid-cols-3">
+          {
+            betaPlans.map((plan) => (
+              <div class="rounded-2xl border border-border bg-background p-4">
+                <dt class="text-sm font-semibold text-text">{plan.name}</dt>
+                <dd class="mt-1 text-xs text-text-muted">{plan.target}</dd>
+                <dd class="mt-2 text-base font-bold tabular-nums text-primary">{plan.price}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -279,24 +305,13 @@ const onboardingSteps = [
     </div>
   </section>
 
-  <section class="bg-background py-section">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div
-        class="rounded-3xl border border-border bg-surface p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
-      >
-        <div class="max-w-2xl">
-          <p class="text-sm font-semibold text-primary">次の一歩</p>
-          <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-            自分たちの案件で使えるか、まずはご相談ください。
-          </h2>
-          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。
-          </p>
-        </div>
-        <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary mt-8 lg:mt-0">
-          Team Betaについて相談する
-        </a>
-      </div>
-    </div>
-  </section>
+  <NextStep
+    heading="自分たちの案件で使えるか、まずはご相談ください。"
+    lead="実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。"
+    ctas={[
+      { label: 'Team Betaについて相談する', href: contactUrl, primary: true, isExternal: true },
+      { label: 'Team Beta の詳細を見る', href: '/team-beta/' },
+      { label: 'Estimate Audit（発注企業向け）', href: '/estimate-audit/' },
+    ]}
+  />
 </MarketingLayout>

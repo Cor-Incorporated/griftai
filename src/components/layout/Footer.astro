@@ -2,6 +2,7 @@
 import { siteConfig } from '@/config';
 import type { FeatureFlags, NavigationItem } from '@/lib/types';
 import { corCta } from '@/lib/cor-cta';
+import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 
 const { features, contact, navigation } = siteConfig;
 const { footer } = navigation;
@@ -34,6 +35,11 @@ const legalLinks = filterByFeature(footer.legal);
         <p class="mt-3 max-w-sm text-sm leading-7 text-text-muted text-pretty">
           {siteConfig.description}
         </p>
+        {
+          /* 福岡を代表する企業100選 公式エンブレム。フッターは全ページに出るため、
+            どのページから流入した人にも届く。掲載条件はコンポーネント側で担保。 */
+        }
+        <Fukuoka100Emblem imgClass="h-16 w-auto" class="mt-5" />
         <div class="mt-4 space-y-1 text-sm text-text-muted">
           <p>
             {contact.address.state}

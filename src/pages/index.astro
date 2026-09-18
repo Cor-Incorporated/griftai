@@ -8,6 +8,7 @@ import ServiceMessageSection from '@/components/sections/marketing/ServiceMessag
 import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
 import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
+import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
 import { featuredColumnArticles } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -295,6 +296,11 @@ const tocItems = [
           <li class="surface-card p-3 sm:p-4">GitHub実績・市場相場を参考材料に</li>
           <li class="surface-card p-3 sm:p-4">Team Betaの利用チーム募集中</li>
         </ul>
+        {
+          /* 福岡を代表する企業100選 公式エンブレム。掲載条件（クリック遷移・掲載期限）は
+            コンポーネント側で担保。スマホ 56px、sm 以上で 80px。 */
+        }
+        <Fukuoka100Emblem imgClass="h-14 w-auto sm:h-20" />
       </div>
 
       <div class="mt-8 grid gap-6 sm:mt-10 lg:mt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">

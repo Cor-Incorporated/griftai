@@ -1,0 +1,53 @@
+---
+// 福岡を代表する企業100選 公式エンブレム。
+//
+// 運営（IOBI・和田様）の許諾条件をこのコンポーネント1箇所で担保する。掲載箇所を増やすときは
+// 必ずこれを使うこと。各ページに <img> を直書きすると、条件を1箇所でも落とした時点で違反になり、
+// 掲載期限が来たときの消し漏れも起きる。
+//   条件②: エンブレムのクリックで選出企業の特設ページへ遷移させる（FUKUOKA100_PAGE_URL）
+//   条件③: 掲載期限は 2027年7月末（isFukuoka100EmblemVisible / lib/fukuoka100.ts）
+//
+// 期限判定は「ビルド時」に評価される。本番は main への push でしか再ビルドされないため、
+// 期限が来ても自動では消えない（lib/fukuoka100.ts の FUKUOKA100_EMBLEM_ENABLED も参照）。
+import { FUKUOKA100_PAGE_URL, isFukuoka100EmblemVisible } from '@/lib/fukuoka100';
+
+interface Props {
+  /** wide=横型（狭い場所向け） / portrait=縦型（余白のある場所向け） */
+  variant?: 'wide' | 'portrait';
+  /** 表示サイズ等の Tailwind クラス。高さのみ指定し、幅は w-auto で比率を保つ。 */
+  imgClass?: string;
+  /** 外側 <a> に足すクラス（配置の調整用） */
+  class?: string;
+}
+
+const { variant = 'wide', imgClass = 'h-16 w-auto', class: className = '' } = Astro.props;
+
+// 条件③: 掲載期間外なら何も描画しない。
+const visible = isFukuoka100EmblemVisible();
+
+const src =
+  variant === 'portrait'
+    ? { path: '/images/fukuoka100-emblem-portrait.png', w: 293, h: 400 }
+    : { path: '/images/fukuoka100-emblem-wide.png', w: 640, h: 160 };
+---
+
+{
+  visible && (
+    <a
+      href={FUKUOKA100_PAGE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class={`inline-flex rounded-lg transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${className}`}
+    >
+      <img
+        src={src.path}
+        alt="福岡を代表する企業100選 2026-2027（Made In Local 選出）"
+        width={src.w}
+        height={src.h}
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+      />
+    </a>
+  )
+}

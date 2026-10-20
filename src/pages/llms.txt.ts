@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { contentAsOf, griftCli, siteConfig } from '@/config';
+import { contentAsOf, griftArticles, griftCli, siteConfig } from '@/config';
 
 /**
  * llms.txt — AI クローラ・LLM 向けサイト要約（https://llmstxt.org/ 準拠）
@@ -23,8 +23,8 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 ## 要点
 
 - 対象: 人材紹介会社・SESの営業（推薦の理由を根拠とともに伝える）と、エンジニア本人（経歴書に検算できる事実を添える）
-- 提供状況: CLIは公開中（PyPI「${griftCli.packageName}」v${griftCli.version}、${griftCli.releasedOn}公開、${griftCli.license}ライセンス、Python ${griftCli.pythonRequires}）。紹介会社さま向けの機能は試行（PoC）を準備中
-- 料金: CLIは無償。紹介会社さま・SES企業さまとの試行は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
+- 提供状況: CLIは公開中（PyPI「${griftCli.packageName}」v${griftCli.version}、${griftCli.releasedOn}公開、${griftCli.license}ライセンス、Python ${griftCli.pythonRequires}）。紹介会社さま向けの機能はテスト導入（PoC）を準備中
+- 料金: CLIは無償。紹介会社さま・SES企業さまのテスト導入は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
 - データの扱い: 手元のPCだけで動き、当社へデータを自動で送る機能はない。ネットワークを使う操作は本人が明示したときだけ
 - 検算: grift verify で保存したレポートを再計算し、VERIFIED / MISMATCH / CANNOT_VERIFY を返す
 - 主な観測: 帰属の区別（本人・他人・bot・生成物・fork元など11分類）、テスト併修率（test co-change）、手戻り率（corrective rework・観測のみ）、磨き直し（path retouch）、定着率（survival・オプション）、リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）
@@ -35,7 +35,7 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 ## 主要ページ
 
 - [トップ](${siteConfig.url}/): Griftとは・3つの約束・観測すること・検証の公開・推薦までの流れ・料金と提供状況
-- [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、試行は個別案内、正式版は2027年予定
+- [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年予定
 - [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
 - [コラム一覧](${siteConfig.url}/column/): 受託開発の見積・要件定義・上流工程とAIに関する解説記事
 - [お問い合わせ](${siteConfig.url}/contact/): Cor.株式会社のAI受付・電話窓口
@@ -48,6 +48,7 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - PyPI: ${griftCli.pypi}
 - 利用規範（norms）: ${griftCli.norms}
 - 指標の読み方（metrics-guide）: ${griftCli.metricsGuide}
+${griftArticles.map((article) => `- Griftの思想（${article.platform}）: ${article.url}`).join('\n')}
 
 ## 運営会社
 

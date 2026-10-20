@@ -18,13 +18,13 @@ export const announcement: AnnouncementConfig = {
   id: 'grift-beta-2026',
 
   /** Announcement text */
-  text: 'Grift — 経歴は盛れる。証拠は盛れない。紹介会社さま向けの試行を受付中',
+  text: 'Grift — 経歴は盛れる。証拠は盛れない。紹介会社さま向けのテスト導入を受付中',
 
   /** Optional link URL */
   href: corCta.griftTrial('grift-announcement'),
 
   /** Optional link text */
-  linkText: '試行について相談する',
+  linkText: '自社でテストしてみる',
 
   /** Visual style: 'primary' | 'secondary' | 'gradient' */
   variant: 'secondary',

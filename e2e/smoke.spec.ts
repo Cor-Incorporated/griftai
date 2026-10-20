@@ -83,7 +83,7 @@ test.describe('Landing page smoke tests', () => {
     await expect(intentCtas.first()).toBeVisible();
 
     const href = await intentCtas.first().getAttribute('href');
-    // 2026-10 以降、LP が送る intent は grift-team-beta（Grift の試行・CLI の相談）だけ。
+    // 2026-10 以降、LP が送る intent は grift-team-beta（Grift のテスト導入・CLI の相談）だけ。
     expect(href).toMatch(/intent=grift-team-beta/);
     expect(href).toContain('source=');
     expect(href).toContain('utm_source=grift');
@@ -187,5 +187,56 @@ test.describe('Grift CLI positioning (2026-10)', () => {
     await expect(page.locator('a[href*="intent=estimate-audit"]')).toHaveCount(0);
     await expect(page.locator('a[href*="intent=contract-dev"]')).toHaveCount(0);
     await expect(page.locator('a[href="/team-beta/"], a[href="/estimate-audit/"]')).toHaveCount(0);
+  });
+
+  test('agency CTA reads 自社でテストしてみる, not 試行', async ({ page }) => {
+    for (const path of ['/', '/pricing/', '/faq/', '/contact/']) {
+      await page.goto(path);
+      await expect(page.getByText(/試行/)).toHaveCount(0);
+    }
+    await page.goto('/');
+    const heroCta = page.locator('#hero a[href*="intent=grift-team-beta"]');
+    await expect(heroCta).toHaveText('自社でテストしてみる');
+  });
+
+  test('home links to the articles on Grift philosophy', async ({ page }) => {
+    await page.goto('/');
+    for (const url of [
+      'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1',
+      'https://note.com/cor_instrument/n/nd58ba0955317',
+    ]) {
+      await expect(page.locator(`#value a[href="${url}"]`)).toBeVisible();
+      await expect(page.locator(`footer a[href="${url}"]`)).toHaveCount(1);
+    }
+  });
+
+  test('the reading section leads to the articles and columns before pricing', async ({ page }) => {
+    await page.goto('/');
+    const reading = page.locator('#reading');
+    await expect(reading.locator('a[href^="https://qiita.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href^="https://note.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href="/column/"]')).toHaveCount(1);
+    const readingTop = (await reading.boundingBox())?.y ?? Infinity;
+    const pricingTop = (await page.locator('#pricing').boundingBox())?.y ?? -Infinity;
+    expect(readingTop).toBeLessThan(pricingTop);
+  });
+
+  test('header links to the columns', async ({ page, isMobile }) => {
+    await page.goto('/');
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu a[href="/column/"]')).toBeVisible();
+    } else {
+      await expect(page.locator('#site-header a[href="/column/"]')).toBeVisible();
+    }
+  });
+
+  test('tablet width uses the menu button instead of squeezing the header links', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 820, height: 1000 });
+    await page.goto('/');
+    await expect(page.locator('#mobile-menu-button')).toBeVisible();
+    await expect(page.locator('#site-header a[href="/column/"]')).toBeHidden();
   });
 });

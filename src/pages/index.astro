@@ -5,12 +5,12 @@ import ProductShowcase from '@/components/sections/marketing/ProductShowcase.ast
 import SocialProofSection from '@/components/sections/marketing/SocialProofSection.astro';
 import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
-import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
+import ReadingSection from '@/components/sections/marketing/ReadingSection.astro';
 import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
-import { contentAsOf, griftCli } from '@/config';
+import { contentAsOf, griftArticles, griftCli } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const heroPrimaryUrl = corCta.griftTrial('grift-lp-hero');
@@ -147,7 +147,7 @@ const audiences = [
       '経歴書と面談だけでは、推薦の理由が抽象的になりやすい。企業から「この方の強みは？」と聞かれても、具体的な材料を示しにくい。',
     support:
       '候補者本人が共有した記録から、案件との接点と面談で聞くことを整理し、推薦の理由を具体的にします。',
-    next: 'いま、紹介会社さま・SES企業さまとの試行（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
+    next: 'いま、紹介会社さま・SES企業さまのテスト導入（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
   },
   {
     id: 'for-engineers',
@@ -171,12 +171,12 @@ const pricingCards = [
     primary: false,
   },
   {
-    name: '紹介会社さま向けの試行（PoC）',
+    name: '紹介会社さま向けのテスト導入（PoC）',
     target: '人材紹介会社・SES企業',
     price: '個別にご案内',
     description:
-      '対象・件数に応じて、試行の範囲と費用を個別にご案内します。営業向けの画面は、試行として準備を進めています。',
-    cta: '試行について相談する',
+      '対象・件数に応じて、テストの範囲と費用を個別にご案内します。営業向けの画面は、テスト導入に向けて準備を進めています。',
+    cta: '自社でテストしてみる',
     href: pricingCtaUrl,
     primary: true,
   },
@@ -185,7 +185,7 @@ const pricingCards = [
     target: '紹介会社さま・SES企業さま',
     price: '2027年に提供開始予定',
     description:
-      '試行の結果をふまえて、2027年の提供開始を目指しています。価格は正式に決まってからお知らせします。',
+      'テスト導入の結果をふまえて、2027年の提供開始を目指しています。価格は正式に決まってからお知らせします。',
     cta: null,
     href: null,
     primary: false,
@@ -203,7 +203,7 @@ const faqPreview = [
   },
   {
     q: '料金はいくらですか？',
-    a: 'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまとの試行（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
+    a: 'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
   },
 ];
 
@@ -227,11 +227,11 @@ const griftFacts = [
   { term: '出さないもの', detail: '点数・順位・合否・等級。数値には必ず分子と分母を付ける' },
   {
     term: '提供状況',
-    detail: `CLIはPyPI・GitHubで公開中（${griftCli.packageName} v${griftCli.version}・${griftCli.license}ライセンス）。紹介会社さま向けの機能は試行を準備中`,
+    detail: `CLIはPyPI・GitHubで公開中（${griftCli.packageName} v${griftCli.version}・${griftCli.license}ライセンス）。紹介会社さま向けの機能はテスト導入を準備中`,
   },
   {
     term: '料金',
-    detail: 'CLIは無償。紹介会社さまとの試行は個別にご案内。正式版は2027年の提供開始を目指す',
+    detail: 'CLIは無償。紹介会社さまのテスト導入は個別にご案内。正式版は2027年の提供開始を目指す',
   },
 ];
 
@@ -243,10 +243,10 @@ const tocItems = [
   { id: 'product', label: '観測すること' },
   { id: 'proof', label: '検証の公開' },
   { id: 'flow', label: '推薦までの流れ' },
+  { id: 'reading', label: '思想とコラム' },
   { id: 'scenarios', label: '使う人ごとに' },
   { id: 'pricing', label: '料金と提供状況' },
   { id: 'faq', label: 'よくある質問' },
-  { id: 'column-promo', label: 'コラム' },
 ];
 ---
 
@@ -280,7 +280,7 @@ const tocItems = [
             rel="noreferrer"
             class="cta-primary w-full sm:w-auto"
           >
-            試行について相談する
+            自社でテストしてみる
           </a>
           <a
             href={griftCli.github}
@@ -460,7 +460,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
       rel="noreferrer"
       class="font-medium text-secondary hover:underline"
     >
-      → 紹介会社さま向けの試行について相談する
+      → 紹介会社さま・SES企業さまのテスト導入はこちら
     </a>
   </div>
 
@@ -487,6 +487,29 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
             </article>
           ))
         }
+      </div>
+      <div
+        class="fade-in-section mt-8 flex flex-col gap-4 rounded-2xl border border-border bg-background p-6 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-sm leading-7 text-text-muted text-pretty">
+          なぜ点数にしないのか。Griftの思想は、記事でも詳しく紹介しています。
+        </p>
+        <ul class="flex shrink-0 flex-col gap-3 sm:flex-row">
+          {
+            griftArticles.map((article) => (
+              <li>
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="cta-secondary w-full sm:w-auto"
+                >
+                  Griftの思想を{article.platform}で読む
+                </a>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   </section>
@@ -612,7 +635,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
           紹介会社・SESでの使い方
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          実行するのも、共有を決めるのも候補者本人です。営業はその記録をもとに、推薦の理由を具体的にします。営業向けの画面は、試行（PoC）として準備を進めています。
+          実行するのも、共有を決めるのも候補者本人です。営業はその記録をもとに、推薦の理由を具体的にします。営業向けの画面は、テスト導入（PoC）に向けて準備を進めています。
         </p>
       </div>
       <ol class="stagger-children mt-10 grid list-none gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -633,6 +656,9 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
     <SocialProofSection />
   </div>
 
+  {/* 思想の記事（Qiita・note）とコラムへの入口。ページ末尾まで読まなくても見つかる位置に置く。 */}
+  <ReadingSection />
+
   <section
     id="scenarios"
     class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
@@ -644,7 +670,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
         エンジニア本人は CLI
-        を無償で使えます。収益は、試行と正式版をご利用いただく紹介会社さま・SES企業さまからいただく想定です。
+        を無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さまからいただく想定です。
       </p>
     </div>
     <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2">
@@ -683,10 +709,10 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
       <div class="fade-in-section max-w-3xl space-y-4">
         <p class="text-sm font-semibold text-primary">料金と提供状況</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          CLIは無償。紹介会社さまとの試行は個別にご案内します。
+          CLIは無償。紹介会社さまのテスト導入は個別にご案内します。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          いまはCLIを公開し、紹介会社さま向けの機能を試行として準備している段階です。正式な価格は、決まってからこのページでお知らせします。
+          いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式な価格は、決まってからこのページでお知らせします。
         </p>
       </div>
       <div class="stagger-children mt-10 grid gap-5 lg:grid-cols-3">
@@ -769,19 +795,19 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
             推薦の理由を、確かめられる事実とともに。
           </h2>
           <p class="text-lg leading-8 text-text-muted text-pretty">
-            紹介会社さま・SES企業さまとの試行（PoC）のご相談を受け付けています。エンジニアの方は、GitHubからすぐに試せます。
+            紹介会社さま・SES企業さまのテスト導入（PoC）のご相談を受け付けています。エンジニアの方は、GitHubからすぐに試せます。
           </p>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href={finalCtaUrl} target="_blank" rel="noreferrer" class="cta-primary">
-            試行について相談する
+            自社でテストしてみる
           </a>
           <a href={griftCli.github} target="_blank" rel="noreferrer" class="cta-secondary">
             GitHubでGrift CLIを見る
           </a>
         </div>
         <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
-          ※試行の範囲と費用は、対象・件数に応じて個別にご案内します。相談はCor.株式会社のAI受付で受け付けています。
+          ※テストの範囲と費用は、対象・件数に応じて個別にご案内します。お申し込みはCor.株式会社のAI受付で受け付けています。
         </p>
         {/* 関連ページへの内部導線（回遊・滞在時間の向上） */}
         <nav aria-label="関連ページ" class="mt-8 border-t border-border pt-6">
@@ -800,19 +826,31 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
               </a>
             </li>
             <li><a href="/column/" class="text-primary hover:underline">コラム</a></li>
+            {
+              griftArticles.map((article) => (
+                <li>
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="text-primary hover:underline"
+                  >
+                    Griftの思想（{article.platform}）
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </nav>
       </div>
     </div>
   </section>
 
-  <ColumnPromoSection />
-
   <NextStep
-    heading="試行の相談か、まず手元で試すか。次の一歩を選んでください。"
-    lead="相談はCor.株式会社のAI受付で受け付けています。CLIはGitHubとPyPIで公開しています。"
+    heading="自社でテストしてみるか、まず手元で試すか。次の一歩を選んでください。"
+    lead="テストのお申し込みはCor.株式会社のAI受付で受け付けています。CLIはGitHubとPyPIで公開しています。"
     ctas={[
-      { label: '試行について相談する', href: finalCtaUrl, primary: true, isExternal: true },
+      { label: '自社でテストしてみる', href: finalCtaUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
       { label: 'よくある質問を見る', href: '/faq/' },
     ]}

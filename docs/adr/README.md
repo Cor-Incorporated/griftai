@@ -12,13 +12,13 @@
 | [ADR-0002](./ADR-0002-cta-intent-and-cor-bridge.md) | CTA intent と Cor 橋渡し（環境変数） | Accepted (2026-07-10) |
 | [ADR-0003](./ADR-0003-page-split-team-beta-estimate-audit.md) | `/team-beta/` と `/estimate-audit/` のページ分離 | Superseded by ADR-0005 (2026-10-20) |
 | [ADR-0004](./ADR-0004-cross-repo-canon-reference.md) | クロスリポジトリ契約の正本参照 | Accepted (2026-07-11) |
-| [ADR-0005](./ADR-0005-grift-cli-pivot.md) | Grift を CLI（OSS）＋紹介会社向け試行として打ち出す | Proposed (2026-10-20) |
+| [ADR-0005](./ADR-0005-grift-cli-pivot.md) | Grift を CLI（OSS）＋紹介会社向けテスト導入として打ち出す | Proposed (2026-10-20) |
 
 ## intent 正本（corsweb ADR-0014 が正本 / 本リポは参照）
 
 | intent | 意味 | Grift LP CTA |
 |---|---|---|
-| `grift-team-beta` | Grift の相談（2026-10 以降は CLI・紹介会社向け試行、ADR-0005） | ✅ 使用 |
+| `grift-team-beta` | Grift の相談（2026-10 以降は CLI・紹介会社向けテスト導入、ADR-0005） | ✅ 使用 |
 | `grift-paid-trial` | Grift Paid Trial（取り下げ） | ❌ 使用しない（ADR-0005） |
 | `estimate-audit` | Estimate Audit（取り下げ） | ❌ 使用しない（ADR-0005） |
 | `contract-dev` | 受託開発の相談（Cloudia→Grift テナント自動ハンドオフ） | ❌ **使用しない**（ADR-0004） |

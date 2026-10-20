@@ -56,6 +56,8 @@ GitHub Actions (`.github/workflows/ci.yml`):
 ## Key Conventions
 
 - All public-facing copy is Japanese. CTA links point to `https://cor-jp.com/contact/chat`.
+- Wording: call the agency trial 「テスト導入（PoC）」 and its CTA 「自社でテストしてみる」 (header: 「テストしてみる」); do not use 「試行」 (ADR-0005).
+- Links to the articles on Grift's philosophy (Qiita / note) live in `griftArticles` in `src/config/site.ts`.
 - Pricing: Grift CLI is free (MIT); the agency trial is "個別案内". Do not publish plan prices until the official price is decided (ADR-0005).
 - Sitemap is filtered to an allowlist of published pages (configured in `astro.config.mjs`).
 - Grift CLI facts (version, release date, license, links) come from `griftCli` in `src/config/site.ts`; keep them in sync with PyPI / Cor-Incorporated/grift-cli.

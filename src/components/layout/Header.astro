@@ -37,13 +37,13 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 
     {
       mainNavItems.length > 0 && (
-        <div class="hidden items-center gap-6 md:flex">
+        <div class="hidden items-center gap-1 lg:flex xl:gap-2">
           {mainNavItems.map((item) => (
             <a
               href={item.href}
               target={item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
-              class="rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
+              class="whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
             >
               {item.label}
             </a>
@@ -52,7 +52,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
       )
     }
 
-    <div class="hidden items-center gap-4 md:flex">
+    <div class="hidden items-center gap-4 lg:flex">
       {
         ghostCTAs.map((cta) => (
           <a
@@ -71,7 +71,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             href={primaryCTA.href}
             target="_blank"
             rel="noreferrer"
-            class="cta-primary px-5 py-2 text-sm"
+            class="cta-primary whitespace-nowrap px-5 py-2 text-sm"
           >
             {primaryCTA.label}
           </a>
@@ -79,7 +79,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
       }
     </div>
 
-    <div class="flex items-center gap-3 md:hidden">
+    <div class="flex items-center gap-3 lg:hidden">
       {
         !hasMobileMenu && primaryCTA && (
           <a
@@ -88,8 +88,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             rel="noreferrer"
             class="cta-primary px-4 py-2 text-xs sm:text-sm"
           >
-            <span class="sm:hidden">試行の相談</span>
-            <span class="hidden sm:inline">{primaryCTA.label}</span>
+            {primaryCTA.label}
           </a>
         )
       }
@@ -126,7 +125,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
   hasMobileMenu && (
     <div
       id="mobile-menu"
-      class="fixed inset-0 z-40 hidden md:hidden"
+      class="fixed inset-0 z-40 hidden lg:hidden"
       role="dialog"
       aria-modal="true"
       aria-label="モバイルナビゲーション"

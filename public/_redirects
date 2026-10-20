@@ -1,6 +1,6 @@
 # Cloudflare Pages redirects（https://developers.cloudflare.com/pages/configuration/redirects/）
 # 2026-10: 旧プラン（Team Beta / Estimate Audit）を取り下げ、案内ページを閉じた。
-# 被リンクと検索評価を引き継ぐため、旧URLはトップ（Grift の説明と試行の案内）へ恒久転送する。
+# 被リンクと検索評価を引き継ぐため、旧URLはトップ（Grift の説明とテスト導入の案内）へ恒久転送する。
 /team-beta /  301
 /team-beta/ /  301
 /estimate-audit /  301

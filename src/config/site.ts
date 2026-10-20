@@ -53,6 +53,12 @@ export const griftCli = {
   pythonRequires: '3.11以上',
 } as const;
 
+/** Grift の思想を書いた外部記事。トップ（3つの約束・開発の背景）・フッター・llms.txt が参照する。 */
+export const griftArticles = [
+  { platform: 'Qiita', url: 'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1' },
+  { platform: 'note', url: 'https://note.com/cor_instrument/n/nd58ba0955317' },
+] as const;
+
 /** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */
 export const contentAsOf = '2026-10-20';
 

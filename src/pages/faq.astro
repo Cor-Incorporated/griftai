@@ -84,7 +84,7 @@ const faqSections = [
       {
         question: '本人の同意なく、他人を測ってもよいですか？',
         answer:
-          '本人の同意なく個人の分析をする使い方は、利用規範で「非準拠」としています。紹介会社さまでの試行でも、実行と共有は候補者本人が行う流れを前提にしています。',
+          '本人の同意なく個人の分析をする使い方は、利用規範で「非準拠」としています。紹介会社さまでのテスト導入でも、実行と共有は候補者本人が行う流れを前提にしています。',
       },
     ],
   },
@@ -95,12 +95,12 @@ const faqSections = [
       {
         question: '料金はいくらですか？',
         answer:
-          'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまとの試行（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
+          'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
       },
       {
         question: 'どうやって始めればよいですか？',
         answer:
-          'エンジニアの方は、Python 3.11以上の環境で pipx install grift-cli を実行し、リポジトリの中で grift report を実行してください。紹介会社さま・SES企業さまは、AI受付から試行についてご相談ください。',
+          'エンジニアの方は、Python 3.11以上の環境で pipx install grift-cli を実行し、リポジトリの中で grift report を実行してください。紹介会社さま・SES企業さまは、AI受付からテスト導入をお申し込みください。',
       },
       {
         question: 'Team Beta や Estimate Audit はまだ申し込めますか？',
@@ -175,10 +175,10 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
   </section>
 
   <NextStep
-    heading="推薦業務で使えるか、まずはご相談ください。"
-    lead="紹介会社さま・SES企業さまの推薦の流れをお聞かせいただければ、試行の範囲と費用を個別にご案内します。"
+    heading="推薦業務で使えるか、自社でテストしてみませんか。"
+    lead="紹介会社さま・SES企業さまの推薦の流れをお聞かせいただければ、テストの範囲と費用を個別にご案内します。"
     ctas={[
-      { label: '試行について相談する', href: contactUrl, primary: true, isExternal: true },
+      { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
       { label: '料金と提供状況を見る', href: '/pricing/' },
     ]}

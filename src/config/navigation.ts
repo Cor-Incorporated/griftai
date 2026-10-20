@@ -11,7 +11,7 @@
 
 import type { Navigation } from '../lib/types';
 import { corCta, getCorUrl } from '../lib/cor-cta';
-import { griftCli } from './site';
+import { griftArticles, griftCli } from './site';
 
 export const navigation: Navigation = {
   /**
@@ -30,7 +30,7 @@ export const navigation: Navigation = {
     ],
     cta: [
       {
-        label: '試行について相談',
+        label: 'テストしてみる',
         href: corCta.griftTrial('grift-nav-header'),
         variant: 'primary',
       },
@@ -60,6 +60,10 @@ export const navigation: Navigation = {
     resources: [
       { label: '利用規範（norms）', href: griftCli.norms },
       { label: '指標の読み方', href: griftCli.metricsGuide },
+      ...griftArticles.map((article) => ({
+        label: `Griftの思想（${article.platform}）`,
+        href: article.url,
+      })),
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],

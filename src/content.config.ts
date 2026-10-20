@@ -51,4 +51,21 @@ const testimonials = defineCollection({
   }),
 });
 
-export const collections = { blog, docs, changelog, testimonials };
+// Grift のストーリー（よくある場面をもとにした架空の物語）。/column/<id>/ に出し、
+// トップの「課題」カードから1本ずつリンクする。架空であることはページ側で必ず表示する。
+const stories = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/stories' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    /** トップの「課題」カードのラベル（例: 紹介会社・SESの営業） */
+    who: z.string(),
+    /** トップの「課題」カードの見出し */
+    problem: z.string(),
+    lead: z.string(),
+    order: z.number(),
+    publishedDate: z.coerce.date(),
+  }),
+});
+
+export const collections = { blog, docs, changelog, testimonials, stories };

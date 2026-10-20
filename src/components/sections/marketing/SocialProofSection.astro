@@ -77,7 +77,9 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
               27001（ISMS）の第2段階審査を終えました。2026年12月ごろの認証登録を見込んでいます。
             </p>
           </li>
-          <li class="rounded-xl border border-border bg-surface p-4">
+          <li
+            class="relative rounded-xl border border-border bg-surface p-4 transition hover:border-primary/45"
+          >
             <p class="text-sm font-semibold text-text">福岡を代表する企業100選</p>
             <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
               「福岡を代表する企業100選 2026-2027」（Made In Local）に選ばれ、
@@ -85,7 +87,8 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
                 href={FUKUOKA100_PAGE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary underline underline-offset-2">特設ページ</a
+                class="text-primary underline underline-offset-2 after:absolute after:inset-0 after:rounded-xl"
+                >特設ページ</a
               >で紹介されています。
             </p>
           </li>
@@ -111,7 +114,8 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
                   href={engineerCafeCaseUrl}
                   target="_blank"
                   rel="noreferrer"
-                  class="text-primary underline underline-offset-2">事例を読む</a
+                  class="text-primary underline underline-offset-2 after:absolute after:inset-0 after:rounded-xl"
+                  >事例を読む</a
                 >
               </p>
             </div>

@@ -240,3 +240,69 @@ test.describe('Grift CLI positioning (2026-10)', () => {
     await expect(page.locator('#site-header a[href="/column/"]')).toBeHidden();
   });
 });
+
+test.describe('Grift stories (fictional) and card links', () => {
+  const storyPaths = [
+    '/column/story-recommendation-reason/',
+    '/column/story-java-5-years/',
+    '/column/story-ai-activity/',
+    '/column/story-score-cutoff/',
+  ];
+
+  test('each problem card on the top page links to its story', async ({ page }) => {
+    await page.goto('/');
+    const hrefs = await page
+      .locator('#problem a')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+    expect(hrefs).toEqual(storyPaths);
+  });
+
+  test('story pages say they are fiction and link back to the columns', async ({ page }) => {
+    for (const path of storyPaths) {
+      await page.goto(path);
+      await expect(page.locator('h1')).toBeVisible();
+      await expect(
+        page.getByText('この記事は、よくある場面をもとにした架空の物語です。')
+      ).toBeVisible();
+      await expect(page.locator('article a[href="/column/"]').first()).toBeVisible();
+    }
+  });
+
+  test('the column index lists the stories', async ({ page }) => {
+    await page.goto('/column/');
+    for (const path of storyPaths) {
+      await expect(page.locator(`#story-heading ~ ul a[href="${path}"]`)).toHaveCount(1);
+    }
+  });
+
+  test('the sitemap includes the stories', async ({ request }) => {
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    for (const path of storyPaths) {
+      expect(sitemap).toContain(`${path}</loc>`);
+    }
+  });
+
+  test('pricing and company cards respond to a click anywhere on the card', async ({ page }) => {
+    // カードの説明文のあたり（中央）を押しても、リンクに当たることを確かめる。
+    const cards = [
+      { path: '/', selector: '#pricing article' },
+      { path: '/pricing/', selector: 'article:has(a[href*="intent=grift-team-beta"])' },
+      { path: '/', selector: '#social-proof li:has(a[href*="madeinlocal.jp"])' },
+      { path: '/', selector: '#social-proof li:has(a[href*="engineer-cafe-navigator"])' },
+    ];
+    for (const { path, selector } of cards) {
+      await page.goto(path);
+      const card = page.locator(selector).first();
+      await card.scrollIntoViewIfNeeded();
+      const hitsLink = await card.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        const hit = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2
+        );
+        return Boolean(hit?.closest('a[href]'));
+      });
+      expect(hitsLink, `${path} ${selector}`).toBe(true);
+    }
+  });
+});

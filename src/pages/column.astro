@@ -1,7 +1,13 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import StoryCard from '@/components/common/StoryCard.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
+
+const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
+  (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
+);
 
 const title = 'AIを活用した要件定義・自動化ツール、AI開発に関するコラム一覧';
 const description =
@@ -38,6 +44,31 @@ const description =
               <h2>AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧</h2>
               <!-- メインバナーキャッチコピーここまで -->
             </div>
+
+            <!-- Grift のストーリー（架空の物語）ここから -->
+            <section class="not-prose u-mt50" aria-labelledby="story-heading">
+              <h2 id="story-heading" class="text-2xl font-semibold text-text">
+                Griftのストーリー（架空の物語）
+              </h2>
+              <p class="mt-3 text-base leading-7 text-text-muted">
+                推薦する営業と、推薦されるエンジニアの「よくある場面」を、架空の物語にしました。登場する人物・会社は実在しません。
+              </p>
+              <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+                {
+                  stories.map((story) => (
+                    <li>
+                      <StoryCard
+                        href={`/column/${story.id}/`}
+                        who={story.data.who}
+                        title={story.data.title}
+                        body={story.data.lead}
+                      />
+                    </li>
+                  ))
+                }
+              </ul>
+            </section>
+            <!-- Grift のストーリー（架空の物語）ここまで -->
 
             <!-- コンテンツ一覧ここから -->
             <section class="u-mt50 c-linkblock">

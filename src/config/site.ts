@@ -53,10 +53,14 @@ export const griftCli = {
   pythonRequires: '3.11以上',
 } as const;
 
-/** Grift の思想を書いた外部記事。トップ（3つの約束・開発の背景）・フッター・llms.txt が参照する。 */
+/** Grift の思想を書いた代表・寺田康佑の記事。トップ・ストーリー・フッター・llms.txt が参照する。 */
 export const griftArticles = [
-  { platform: 'Qiita', url: 'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1' },
-  { platform: 'note', url: 'https://note.com/cor_instrument/n/nd58ba0955317' },
+  {
+    platform: 'Qiita',
+    url: 'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1',
+    author: '寺田康佑',
+  },
+  { platform: 'note', url: 'https://note.com/cor_instrument/n/nd58ba0955317', author: '寺田康佑' },
 ] as const;
 
 /** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */

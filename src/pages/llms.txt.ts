@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { contentAsOf, griftArticles, griftCli, siteConfig } from '@/config';
 
 /**
@@ -7,7 +8,10 @@ import { contentAsOf, griftArticles, griftCli, siteConfig } from '@/config';
  * AI 検索・回答エンジンがサイト構造と提供価値を短時間で把握できるよう、
  * 主要ページ・製品情報・連絡先を Markdown 形式で提供する。
  */
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
+  const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
+    (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
+  );
   const body = `# Grift
 
 > ${siteConfig.description}
@@ -37,10 +41,16 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - [トップ](${siteConfig.url}/): Griftとは・3つの約束・観測すること・検証の公開・推薦までの流れ・料金と提供状況
 - [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年予定
 - [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
-- [コラム一覧](${siteConfig.url}/column/): 受託開発の見積・要件定義・上流工程とAIに関する解説記事
+- [コラム一覧](${siteConfig.url}/column/): Griftのストーリー（架空の物語）と、受託開発の見積・要件定義・上流工程とAIに関する解説記事
 - [お問い合わせ](${siteConfig.url}/contact/): Cor.株式会社のAI受付・電話窓口
 - [プライバシーポリシー](${siteConfig.url}/privacy/)
 - [利用規約](${siteConfig.url}/terms/)
+
+## Griftのストーリー（架空の物語）
+
+よくある場面をもとにした架空の物語。登場する人物・会社は実在せず、物語の中の数値は説明のための例。
+
+${stories.map((story) => `- [${story.data.title}](${siteConfig.url}/column/${story.id}/): ${story.data.who}「${story.data.problem}」`).join('\n')}
 
 ## 一次情報
 
@@ -48,7 +58,7 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - PyPI: ${griftCli.pypi}
 - 利用規範（norms）: ${griftCli.norms}
 - 指標の読み方（metrics-guide）: ${griftCli.metricsGuide}
-${griftArticles.map((article) => `- Griftの思想（${article.platform}）: ${article.url}`).join('\n')}
+${griftArticles.map((article) => `- Griftの思想（${article.platform}・代表 ${article.author}）: ${article.url}`).join('\n')}
 
 ## 運営会社
 

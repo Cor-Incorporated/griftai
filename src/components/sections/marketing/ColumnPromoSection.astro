@@ -1,6 +1,6 @@
 ---
 import { columnArticles } from '@/config';
-import { corCta } from '@/lib/cor-cta';
+import { getCorUrl } from '@/lib/cor-cta';
 
 const displayArticles = columnArticles.map((article) => ({
   ...article,
@@ -8,7 +8,8 @@ const displayArticles = columnArticles.map((article) => ({
   displayCategory: article.landingCategory ?? article.category,
   displaySummary: article.landingSummary ?? article.summary,
 }));
-const contactUrl = corCta.teamBeta('grift-lp-column-promo');
+// コラムは受託開発の見積・要件定義がテーマ。相談先は Grift ではなく Cor. の受託開発の案内に寄せる。
+const corWorksUrl = getCorUrl('/works/');
 ---
 
 <section
@@ -20,15 +21,15 @@ const contactUrl = corCta.teamBeta('grift-lp-column-promo');
       <div class="fade-in-section space-y-5">
         <p class="section-kicker">コラムで深掘りする</p>
         <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-          見積ノウハウ・導入コラム
+          受託開発の見積・要件定義コラム
         </h2>
         <p class="type-copy text-lg text-text-muted">
-          見積の考え方を学ぶ、導入前の不安を整理する、Griftが必要か判断するための情報を発信しています。
+          Griftの前身である見積支援アプリを開発していたころから、受託開発の見積・要件定義・上流工程とAIの付き合い方を発信しています。AI受託開発のご相談は、運営会社のCor.株式会社でお受けしています。
         </p>
         <div class="flex flex-col gap-3 sm:flex-row">
           <a href="/column/" class="cta-secondary">コラムを読む</a>
-          <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary">
-            Team Betaについて相談する
+          <a href={corWorksUrl} target="_blank" rel="noreferrer" class="cta-primary">
+            Cor.株式会社の開発実績を見る
           </a>
         </div>
       </div>

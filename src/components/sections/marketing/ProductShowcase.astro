@@ -1,149 +1,124 @@
 ---
 /**
- * ProductShowcase - Product output visualization
+ * ProductShowcase - What Grift CLI observes
  *
  * @description
- * Shows what the user actually gets from Grift: a reference estimate report
- * that compares project assumptions, internal records, and market evidence.
+ * Lists the observation layers Grift CLI (TEP) reports from git history.
+ * Wording follows the public metrics guide in Cor-Incorporated/grift-cli
+ * (docs/metrics-guide.md). Do not add metrics here that the CLI does not emit.
  *
  * @example
  * ```astro
  * <ProductShowcase />
  * ```
  */
+import { griftCli } from '@/config';
 
-interface ReportRow {
-  /** Label for the metric */
-  label: string;
-  /** Value to display */
-  value: string;
-  /** Optional color variant */
-  variant?: 'market' | 'proposal' | 'delta' | 'default';
+interface ObservationLayer {
+  /** 層の名前 */
+  layer: string;
+  /** その層が答える問い */
+  question: string;
+  /** 主な観測（CLI の英語名を併記） */
+  items: Array<{ name: string; detail: string }>;
 }
 
-const reportRows: ReportRow[] = [
-  { label: '案件前提', value: 'EC刷新', variant: 'default' },
-  { label: '自社実績', value: '4.0人月', variant: 'proposal' },
-  { label: '市場相場', value: '参考 480万', variant: 'market' },
-  { label: '参考見積', value: '参考 420万', variant: 'delta' },
+const layers: ObservationLayer[] = [
+  {
+    layer: '帰属',
+    question: 'このコミットは、誰の・何の仕事か',
+    items: [
+      {
+        name: '帰属の区別（origin・11分類）',
+        detail:
+          '本人の独自コミット、他人の仕事、bot、生成・ベンダー成果物、fork元から引き継いだ履歴などを分けて数えます。',
+      },
+    ],
+  },
+  {
+    layer: '証拠',
+    question: '変更に検証が伴っているか',
+    items: [
+      {
+        name: 'テスト併修率（test co-change）',
+        detail: '本番コードの変更と同じコミットで、テストも変更している割合。',
+      },
+      {
+        name: '定着率（survival・オプション）',
+        detail: '書いた行が180日後も残っている割合。指定したときだけ計測します。',
+      },
+    ],
+  },
+  {
+    layer: '観測',
+    question: 'どんな傾向があるか（合否には使わない）',
+    items: [
+      {
+        name: '手戻り率（corrective rework）',
+        detail:
+          '直近に触ったファイルを fix / revert でやり直した割合。傾向の記録であり、バグ件数ではありません。',
+      },
+      {
+        name: '磨き直し（path retouch）',
+        detail: '同じファイルを短い期間に再び触った割合。',
+      },
+    ],
+  },
+  {
+    layer: '文脈',
+    question: 'どんなリポジトリでの仕事か',
+    items: [
+      {
+        name: 'リポジトリの文脈（context profile）',
+        detail:
+          '実働日数、関わった人数と最多作成者の占有率、レビュー（PR）経由の割合、言語構成など。分類であって序列ではありません。',
+      },
+    ],
+  },
 ];
-
-const summaryItems = [
-  {
-    label: '案件前提',
-    value: '相談内容、対象機能、前提条件、不確実な要素を整理します。',
-  },
-  {
-    label: '自社実績',
-    value: 'GitHub実績や過去の開発傾向を参考材料として扱います。',
-  },
-  {
-    label: '市場相場',
-    value: '外部情報や類似案件を比較し、価格帯を検討するための参考情報として整理します。',
-  },
-  {
-    label: 'レビュー方針',
-    value: 'Griftの出力は参考情報として扱い、最終判断は人間が行います。',
-  },
-];
-
-const variantStyles = {
-  market: 'text-info',
-  proposal: 'text-success',
-  delta: 'text-primary',
-  default: 'text-text',
-};
 ---
 
 <section class="landing-container landing-section">
   <div class="fade-in-section max-w-3xl space-y-4">
-    <p class="section-kicker">機能</p>
+    <p class="section-kicker">観測すること</p>
     <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-      AIが参考見積と根拠を整理し、人間の判断を支援
+      誰の仕事か。検証が伴っているか。どんな文脈か。
     </h2>
     <p class="type-copy text-lg text-text-muted">
-      GitHub実績や市場相場、類似案件、技術リスクなどをAIが整理。提案前の判断材料を提示します。
+      Grift
+      CLIは、git履歴だけから次の観測を取り出します。どの数値にも分子と分母、計測の条件（定義の版・対象のコミット）が付き、母数が20未満のときは率を出さずに件数だけを示します。
     </p>
   </div>
 
   <div class="fade-in-section mt-10 surface-panel p-5 sm:p-6 lg:p-8">
-    {/* Report header */}
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p class="text-xs font-medium text-text-muted">参考見積レポートの出力イメージ</p>
-        <p class="mt-1 text-lg font-semibold text-text">案件前提 / 自社実績 / 市場相場</p>
-      </div>
-      <span
-        class="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+    <div class="grid gap-4 lg:grid-cols-2">
+      {
+        layers.map((layer) => (
+          <div class="card-lift rounded-2xl border border-border bg-background p-5">
+            <p class="text-xs font-medium text-primary">{layer.layer}</p>
+            <p class="mt-1 text-lg font-semibold text-text">{layer.question}</p>
+            <dl class="mt-4 space-y-4">
+              {layer.items.map((item) => (
+                <div>
+                  <dt class="text-sm font-semibold text-text">{item.name}</dt>
+                  <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="mt-4 text-center text-xs leading-6 text-text-muted">
+      観測できなかったものは「実績なし」ではなく、理由付きの「未観測（not_observed）」として出します。各指標の読み方は
+      <a
+        href={griftCli.metricsGuide}
+        target="_blank"
+        rel="noreferrer"
+        class="text-primary underline underline-offset-2">metrics-guide</a
       >
-        人間レビュー前提
-      </span>
-    </div>
-
-    <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-      {/* Price comparison card */}
-      <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-sm font-semibold text-text">3つの根拠比較</p>
-        <div class="mt-4 space-y-4">
-          {
-            reportRows.map((row) => (
-              <div class="flex items-baseline justify-between gap-4">
-                <span class="text-sm text-text-muted">{row.label}</span>
-                <span
-                  class:list={[
-                    'text-right font-bold tabular-nums',
-                    row.variant === 'delta' ? 'text-base' : 'text-2xl',
-                    variantStyles[row.variant ?? 'default'],
-                  ]}
-                >
-                  {row.value}
-                </span>
-              </div>
-            ))
-          }
-        </div>
-
-        {/* Visual bar comparison */}
-        <div class="mt-6 space-y-3">
-          <div>
-            <div class="flex items-center justify-between text-xs text-text-muted">
-              <span>市場相場</span>
-              <span>参考 480万</span>
-            </div>
-            <div class="mt-1 h-3 w-full rounded-full bg-info/20">
-              <div class="bar-pulse h-3 rounded-full bg-info" style="width: 100%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between text-xs text-text-muted">
-              <span>参考見積</span>
-              <span>参考 420万</span>
-            </div>
-            <div class="mt-1 h-3 w-full rounded-full bg-success/20">
-              <div class="bar-pulse h-3 rounded-full bg-success" style="width: 87.5%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Summary card */}
-      <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-sm font-semibold text-text">根拠サマリー</p>
-        <div class="mt-4 space-y-4">
-          {
-            summaryItems.map((item) => (
-              <div>
-                <p class="text-xs font-medium text-primary">{item.label}</p>
-                <p class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.value}</p>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-
-    <p class="mt-4 text-center text-xs text-text-muted">
-      ※サンプルデータです。ベータ版の出力は案件内容・連携データ・提供範囲に応じて変わります。最終的な見積金額の決定は人間が行うことを前提としています。
+      で平易に解説しています。
     </p>
   </div>
 </section>

@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '@/config';
+import { griftCli, siteConfig } from '@/config';
 import type { FeatureFlags, NavigationItem } from '@/lib/types';
 import { corCta } from '@/lib/cor-cta';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
@@ -7,8 +7,7 @@ import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 const { features, contact, navigation } = siteConfig;
 const { footer } = navigation;
 const currentYear = new Date().getFullYear();
-const teamBetaUrl = corCta.teamBeta('grift-nav-footer');
-const estimateAuditUrl = corCta.estimateAudit('grift-nav-footer-estimate-audit');
+const trialUrl = corCta.griftTrial('grift-nav-footer');
 
 const filterByFeature = (items: NavigationItem[]) =>
   items.filter((item) => !item.feature || features[item.feature as keyof FeatureFlags]);
@@ -48,22 +47,22 @@ const legalLinks = filterByFeature(footer.legal);
           </p>
           <p class="pt-2">
             <a
-              href={teamBetaUrl}
+              href={trialUrl}
               target="_blank"
               rel="noreferrer"
               class="transition-colors hover:text-text"
             >
-              Team Betaについて相談する
+              試行について相談する（紹介会社さま・SES企業さま）
             </a>
           </p>
           <p>
             <a
-              href={estimateAuditUrl}
+              href={griftCli.github}
               target="_blank"
               rel="noreferrer"
               class="transition-colors hover:text-text"
             >
-              Estimate Auditについて相談する（発注企業向け）
+              GitHubでGrift CLIを見る（エンジニアの方）
             </a>
           </p>
         </div>
@@ -92,7 +91,7 @@ const legalLinks = filterByFeature(footer.legal);
       {
         solutionsLinks.length > 0 && (
           <div>
-            <h3 class="mb-4 text-sm font-semibold text-text">活用領域</h3>
+            <h3 class="mb-4 text-sm font-semibold text-text">使い方</h3>
             <ul class="space-y-3">
               {solutionsLinks.map((link) => (
                 <li>

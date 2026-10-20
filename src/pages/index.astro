@@ -10,268 +10,268 @@ import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
-import { featuredColumnArticles } from '@/config';
+import { contentAsOf, griftCli } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
-const heroPrimaryUrl = corCta.teamBeta('grift-lp-hero');
-const heroSecondaryUrl = corCta.teamBeta('grift-lp-hero-secondary');
-const midCtaUrl = corCta.teamBeta('grift-lp-mid');
-const finalCtaUrl = corCta.teamBeta('grift-lp-final');
+const heroPrimaryUrl = corCta.griftTrial('grift-lp-hero');
+const midCtaUrl = corCta.griftTrial('grift-lp-mid');
+const pricingCtaUrl = corCta.griftTrial('grift-lp-pricing-trial');
+const finalCtaUrl = corCta.griftTrial('grift-lp-final');
+
+const asOfLabel = new Date(`${contentAsOf}T00:00:00+09:00`).toLocaleDateString('ja-JP', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// 3つの約束。ヒーローのチップ・#value・構造化データの説明で同じ言い回しを使う。
+const promises = [
+  {
+    title: '点数にしない',
+    lead: '出すのは検査値。判断するのは人です。',
+    body: '合成スコア・順位・合否・「シニア／ジュニア」のような等級は出しません。数値には必ず分子と分母を付け、母数が小さいときは率を出さずに件数だけを示します。',
+  },
+  {
+    title: '毎回同じ結果',
+    lead: '計測にAI（LLM）を使いません。',
+    body: '同じリポジトリ・同じ版なら、誰が実行しても同じ数値になります。指標の定義と検証結果は公開しており、保存したレポートは grift verify で再計算して検算できます。',
+  },
+  {
+    title: 'どこにも送らない',
+    lead: '手元のPCだけで動きます。',
+    body: '当社へデータを自動で送る機能はありません。privateリポジトリでも、集計値だけを本人の意思で共有できます。共有するかどうか、どのリポジトリを出すかは本人が決めます。',
+  },
+];
 
 const pains = [
   {
-    title: '曖昧な相談のまま見積を求められる',
-    body: '前提条件や対象範囲が揃わないまま、金額だけを先に求められる。何を含め、何を含めないかが整理されないと、後から認識のずれが生まれます。',
+    who: '紹介会社・SESの営業',
+    title: '「なぜこの方を薦めるのか」を具体的に言えない',
+    body: '経歴書と面談の印象だけでは、推薦の理由が「経験豊富です」「真面目な方です」といった言い換えになりがちです。',
   },
   {
-    title: '追加要件で金額と工数が膨らむ',
-    body: '要件追加や仕様変更の境界が曖昧なまま進むと、当初の見積と実際の作業に差が生まれます。変更条件を事前に共有できないことが、赤字や不信につながります。',
+    who: 'エンジニア本人',
+    title: '「Java 5年」では中身が伝わらない',
+    body: '年数や担当工程だけでは、どんな変更をどう確かめながら進めてきたのか、仕事の仕方が伝わりにくいままです。',
   },
   {
-    title: '無料の調査・提案が積み上がる',
-    body: 'ヒアリング、調査、複数案の検討に時間をかけても、受注につながらなければ負担だけが残ります。相談段階でどこまで扱うかを判断する材料が必要です。',
+    who: 'AI時代の前提',
+    title: 'GitHubの草やコミット数は、AIで量産できる',
+    body: '生成AIやエージェントを使えば、活動量は簡単に膨らみます。量の多さだけでは、推薦の根拠になりにくくなりました。',
   },
   {
-    title: 'なぜこの金額か説明できない',
-    body: '自社の実績や市場相場を並べて説明できないと、安く出すか高く見えるかの二択になりがちです。価格の根拠をチームで確認できる状態が求められます。',
-  },
-];
-
-const outcomes = [
-  {
-    title: '前提とやらないことを整理する',
-    body: '相談内容、対象範囲、不確実な要素、やらないことを整理し、見積の出発点をチームで確認しやすくします。',
-  },
-  {
-    title: '変更条件とリスクを可視化する',
-    body: '技術的な不確実性や追加要件の可能性を整理し、どの条件で再見積もりが必要になるかを説明しやすくします。',
-  },
-  {
-    title: '相談段階の判断材料を整える',
-    body: '案件にかける調査・提案の深さを検討し、受けるべき案件か、次の確認が必要な案件かをチームで判断しやすくします。',
-  },
-  {
-    title: '実績と相場を根拠として残す',
-    body: 'GitHub実績、市場相場、類似案件、レビュー内容を見積根拠として残し、次の案件で再利用しやすい会社資産へ変えていきます。',
+    who: '数値化の落とし穴',
+    title: 'スコアにした途端、条件が見えなくなる',
+    body: '1つの点数にまとめると、何を・どの期間で・どの母数で測ったのかが消え、足切りの道具として使われる不安が残ります。',
   },
 ];
 
-const proofPillars = [
+const compareRows = [
   {
-    title: '1. GitHub実績の参照',
-    body: 'GitHub上の開発履歴や実装傾向を、見積根拠の参考材料として整理します。「実績があります」だけでなく、提案時に説明しやすい材料へ変換することを目指します。',
+    aspect: '根拠の出どころ',
+    before: '本人の申告と、面談での印象',
+    after: 'git履歴から取り出した事実（検査値）',
   },
   {
-    title: '2. 市場相場の参考比較',
-    body: '一般的な受託開発の市場データや類似案件を参考に、価格帯を検討するための情報として整理します。相場や金額を保証するものではありません。',
+    aspect: 'AIによる量産',
+    before: 'コミット数・草・行数は簡単に膨らむ',
+    after: '本人・他人・bot・自動生成・fork元などを区別して数える',
   },
   {
-    title: '3. 見積レポート生成',
-    body: '案件前提、自社実績、市場相場、技術リスクを並べた参考レポートを作成します。提案前の確認や、チーム内レビューの材料として活用できます。',
+    aspect: '再現性',
+    before: '見る人によって解釈が変わる',
+    after: '同じリポジトリ・同じ版なら同じ数値。grift verify で検算できる',
+  },
+  {
+    aspect: '数値の扱い',
+    before: 'スコアや順位にすると、条件と限界が消える',
+    after: '分子・分母と観測できなかった理由を併記し、点数・順位は出さない',
+  },
+  {
+    aspect: '機密性',
+    before: 'privateリポジトリの仕事は見せられない',
+    after: '手元で計測し、集計値だけを本人の意思で共有できる',
+  },
+];
+
+const proofItems = [
+  {
+    title: '公開117リポジトリで検証',
+    body: '指標ごとに、区別できた比較と、まだ区別できていない比較の両方を公開しています。条件を広げて差が小さくなった比較も、基準を下げずにそのまま載せています（社内測定・第三者監査なし）。',
+  },
+  {
+    title: '利用規範（norms）を公開',
+    body: '「不在を負に読まない」「数値だけで足切りしない」「本人の同意なく他人を測らない」「監視に転用しない」「重み付けで換算しない」など7条を定め、守らない使い方は TEP と呼ばない決まりにしています。',
+  },
+  {
+    title: '再計算で検算できる',
+    body: 'grift verify は保存したレポートを同じ条件で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を返します。書き換えや食い違いを受け取った側で確かめられます。',
   },
 ];
 
 const flowSteps = [
   {
     step: '01',
-    title: '相談内容とやらないことを入力',
-    body: '相談内容、対象機能、納期、技術前提、現時点で扱わない範囲を入力し、見積の前提を整理します。',
+    title: '候補者が手元で実行',
+    body: '候補者本人が、自分のPCで Grift CLI を実行します。リポジトリやコードは外に出ません。',
   },
   {
     step: '02',
-    title: '前提・スコープ・不確実性を整理',
-    body: '要件の不足、追加確認が必要な点、仕様変更の可能性を整理し、比較できる状態を作ります。',
+    title: '検算できる事実を共有',
+    body: '共有するかどうか、どのリポジトリを出すかは本人が選びます。選んで出したことも、受け取る側に分かる形で残ります。',
   },
   {
     step: '03',
-    title: 'AIが参考見積と根拠を提示',
-    body: 'AIが案件前提・自社実績・市場相場をもとに、参考見積と見積根拠を整理します。',
+    title: '営業が接点を整理',
+    body: '案件で求められることと照らし合わせ、事実との接点と、面談で聞くべきことを整理します。',
   },
   {
     step: '04',
-    title: '人間がレビューし、最終判断',
-    body: 'Griftの出力は参考情報です。担当者が内容を確認し、微調整したうえで、責任を持って見積を判断します。',
+    title: '面談で確かめる',
+    body: '数値は合否の基準ではなく、問いのきっかけです。背景や判断の理由は、面談で本人から聞きます。',
   },
   {
     step: '05',
-    title: 'ノウハウとして蓄積・共有',
-    body: 'レビュー内容や見積根拠を残し、次回以降の案件で再利用しやすいチームナレッジとして蓄積します。',
+    title: '根拠を添えて推薦',
+    body: '「なぜこの方を薦めるのか」を、検算できる事実とともに企業へ伝えます。',
   },
 ];
 
-const scenarios = [
+const audiences = [
   {
-    label: '2〜10人の受託チーム',
-    title: '「見積はあの人に聞いて」を減らしたい。',
+    id: 'for-sales',
+    label: '人材紹介会社・SESの営業の方へ',
+    title: '「なぜこの方を薦めるのか」を、根拠とともに。',
     situation:
-      '受注を増やしたいのに、見積を作れるのは代表や経験豊富な上流メンバーだけ。他のメンバーが案件相談を受けても、金額判断は持ち帰りになってしまう。',
+      '経歴書と面談だけでは、推薦の理由が抽象的になりやすい。企業から「この方の強みは？」と聞かれても、具体的な材料を示しにくい。',
     support:
-      '案件前提、GitHub実績、市場相場、技術リスクを整理し、チームで確認できる見積根拠として残します。',
-    outcome:
-      '代表や一部メンバーに依存しすぎない見積プロセスを作り、PMや営業も提案前の判断材料を持ちやすくなります。',
+      '候補者本人が共有した記録から、案件との接点と面談で聞くことを整理し、推薦の理由を具体的にします。',
+    next: 'いま、紹介会社さま・SES企業さまとの試行（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
   },
   {
-    label: 'フリーランス開発者',
-    title: '案件は来る。でも見積の根拠説明がつらい。',
+    id: 'for-engineers',
+    label: 'エンジニアの方へ',
+    title: '経歴書に、検算できる1行を。',
     situation:
-      '紹介や既存顧客から相談は来るものの、毎回スプレッドシートと記憶を頼りに見積を作っている。相場感はあるが、発注者に説明する資料としては残りにくい。',
-    support:
-      '案件前提、市場相場、過去実績を整理し、提案前に確認できる参考見積と根拠メモを作成します。',
-    outcome: '見積の説明材料を用意しやすくなり、価格交渉や提案前の不安を減らしやすくなります。',
-  },
-  {
-    label: '発注企業 / Estimate Audit',
-    title: '提出された見積の前提を整理したい。',
-    situation:
-      'AI開発やシステム開発の見積を受け取ったが、金額の前提、技術リスク、工数妥当性を社内で説明しにくい。',
-    support:
-      '提出された見積の前提や技術リスク、工数妥当性を検討するための判断材料として、AIと実装者の視点で整理します。',
-    outcome:
-      '相見積もりや稟議前の確認材料として、どこを質問すべきか、どの前提を確認すべきかを整理しやすくなります。',
+      '「Java 5年」と書いても、どんな仕事の仕方をしてきたかは伝わらない。コミット数やGitHubの草は、もう判断材料になりにくい。',
+    support: `${griftCli.installCommand} で、手元のPCだけで始められます。無償・MITライセンスのOSSで、結果を出すかどうかは自分で決められます。`,
+    next: '指標の読み方は、非エンジニア向けの解説（metrics-guide）も GitHub で公開しています。',
   },
 ];
 
-const betaAccessInfo = [
+const pricingCards = [
   {
-    name: 'Grift Team Beta',
-    target: '2〜10人の受託チーム',
-    price: '月額5万円を基本に個別案内',
-    description:
-      'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
-    cta: 'Team Betaについて相談する',
-    href: corCta.teamBeta('grift-lp-pricing-team-beta'),
-    detailHref: '/team-beta/',
-    detailLabel: 'Team Beta の詳細',
+    name: 'Grift CLI',
+    target: 'エンジニア本人・どなたでも',
+    price: '無償（MITライセンス）',
+    description: `PyPI と GitHub で公開しています（${griftCli.packageName} v${griftCli.version}）。Python ${griftCli.pythonRequires}の環境で、${griftCli.installCommand} から始められます。`,
+    cta: 'GitHubでGrift CLIを見る',
+    href: griftCli.github,
+    primary: false,
   },
   {
-    name: 'Grift Paid Trial',
-    target: '小規模受託チーム',
-    price: '3ヶ月15万円を基本に個別案内',
+    name: '紹介会社さま向けの試行（PoC）',
+    target: '人材紹介会社・SES企業',
+    price: '個別にご案内',
     description:
-      'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
-    cta: '有料トライアルを相談する',
-    href: corCta.paidTrial('grift-lp-pricing-paid-trial'),
-    detailHref: '/pricing/',
-    detailLabel: '料金の全体像',
+      '対象・件数に応じて、試行の範囲と費用を個別にご案内します。営業向けの画面は、試行として準備を進めています。',
+    cta: '試行について相談する',
+    href: pricingCtaUrl,
+    primary: true,
   },
   {
-    name: 'Grift Estimate Audit',
-    target: '発注企業',
-    price: '100万円を基本に個別見積',
+    name: '正式版',
+    target: '紹介会社さま・SES企業さま',
+    price: '2027年に提供開始予定',
     description:
-      '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
-    cta: 'Estimate Auditについて相談する',
-    href: corCta.estimateAudit('grift-lp-pricing-estimate-audit'),
-    detailHref: '/estimate-audit/',
-    detailLabel: 'Estimate Audit の詳細',
+      '試行の結果をふまえて、2027年の提供開始を目指しています。価格は正式に決まってからお知らせします。',
+    cta: null,
+    href: null,
+    primary: false,
   },
 ];
 
 const faqPreview = [
   {
-    q: 'AIが見積金額を決めるのですか？',
-    a: 'いいえ。AIは参考見積と見積根拠を整理する支援ツールです。最終的な見積金額の決定は人間が行います。',
+    q: 'Griftとは何ですか？',
+    a: 'エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのCLIツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が、推薦の理由を根拠とともに伝えるために使えます。',
   },
   {
-    q: '最終判断は誰が行いますか？',
-    a: '最終的な見積金額の決定は人間が行います。AIが整理した材料をもとに、担当者が責任を持って確認・調整します。',
+    q: 'AIでエンジニアを評価するツールですか？',
+    a: 'いいえ。計測にAI（LLM）は使わず、点数・順位・合否も出しません。出すのは分子と分母の付いた検査値で、判断するのは人です。数値だけで足切りする使い方は、利用規範で禁止しています。',
   },
   {
     q: '料金はいくらですか？',
-    a: 'Team Betaは月額5万円を基本に個別案内しています。利用範囲・チーム規模・サポート内容に応じてご案内します。',
+    a: 'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまとの試行（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
   },
 ];
-
-const heroColumnArticles = featuredColumnArticles.map((article) => ({
-  ...article,
-  displayTitle: article.landingTitle ?? article.title,
-  displayCategory: article.landingCategory ?? article.category,
-}));
 
 // AIO/回答エンジン向けの自己完結型要約。「Griftとは何か」を1ブロックで説明する。
 const griftFacts = [
   {
-    term: '対象',
-    detail: '2〜10人の受託開発チーム。フリーランスの提案準備や発注企業の見積確認にも対応',
-  },
-  {
-    term: '役割分担',
-    detail: 'AIは参考見積と根拠の整理を担当。最終的な見積金額の決定は必ず人間が行う',
-  },
-  {
-    term: '料金目安',
+    term: '何をするか',
     detail:
-      'Team Beta 月額5万円〜 / Paid Trial 3ヶ月15万円〜 / Estimate Audit 100万円〜（いずれも個別案内）',
-  },
-  { term: '提供形態', detail: 'Webアプリケーション。現在ベータ版として提供範囲を検証中' },
-];
-
-const compareRows = [
-  {
-    aspect: '前提の整理',
-    before: '担当者の記憶と経験に依存し、認識ずれが後から発覚しやすい',
-    after: '案件前提・スコープ・不確実性を構造化し、チームで共有できる状態にする',
+      'エンジニアのgit履歴から、確かめられる事実（検査値）を取り出す。手法の名前はTEP（Technical Evidence Pipeline）',
   },
   {
-    aspect: '金額の根拠',
-    before: '相場感や勘に頼りがちで、説明材料が残りにくい',
-    after: 'GitHub実績・市場相場・類似案件を参考材料として見積根拠に残す',
+    term: '誰のためか',
+    detail:
+      '人材紹介会社・SESの営業（推薦の根拠づくり）と、エンジニア本人（経歴書に検算できる事実を添える）',
   },
   {
-    aspect: '属人性',
-    before: '見積が作れるのは代表やベテランだけになりがち',
-    after: '根拠メモとレビュー履歴をチームの資産として蓄積・再利用する',
+    term: '計測のしかた',
+    detail:
+      'AI（LLM）を使わない決定論的な計測。同じリポジトリ・同じ版なら、誰が実行しても同じ数値になる',
+  },
+  { term: '出さないもの', detail: '点数・順位・合否・等級。数値には必ず分子と分母を付ける' },
+  {
+    term: '提供状況',
+    detail: `CLIはPyPI・GitHubで公開中（${griftCli.packageName} v${griftCli.version}・${griftCli.license}ライセンス）。紹介会社さま向けの機能は試行を準備中`,
   },
   {
-    aspect: '変更への対応',
-    before: '追加要件の境界が曖昧で、金額が後から膨らみやすい',
-    after: '変更条件・再見積が必要になるトリガーを事前に整理して共有する',
-  },
-  {
-    aspect: '提案時の説明力',
-    before: '「なぜこの金額か」を資料として示しにくい',
-    after: '前提・実績・相場を並べた参考見積レポートを提案前に確認できる',
+    term: '料金',
+    detail: 'CLIは無償。紹介会社さまとの試行は個別にご案内。正式版は2027年の提供開始を目指す',
   },
 ];
 
 const tocItems = [
   { id: 'about', label: 'Griftとは' },
   { id: 'problem', label: '課題' },
-  { id: 'value', label: 'できること' },
-  { id: 'compare', label: '従来との違い' },
-  { id: 'product', label: '製品画面' },
-  { id: 'flow', label: '利用の流れ' },
-  { id: 'scenarios', label: '利用シーン' },
-  { id: 'pricing', label: '料金' },
+  { id: 'value', label: '3つの約束' },
+  { id: 'compare', label: '経歴書との違い' },
+  { id: 'product', label: '観測すること' },
+  { id: 'proof', label: '検証の公開' },
+  { id: 'flow', label: '推薦までの流れ' },
+  { id: 'scenarios', label: '使う人ごとに' },
+  { id: 'pricing', label: '料金と提供状況' },
   { id: 'faq', label: 'よくある質問' },
   { id: 'column-promo', label: 'コラム' },
 ];
 ---
 
 <MarketingLayout
-  title="Grift｜受託開発チームのAI見積支援ツール"
-  titleTag="Grift｜見積を、勘から根拠へ。"
-  ogTitle="見積を、勘から根拠へ。｜Grift"
-  description="Griftは、受託開発チームが「なぜこの金額なのか」を説明できるよう、参考見積と見積根拠を整理するAI見積支援ツールです。AIに丸投げせず、人間が確認・判断できる提案材料を増やします。"
+  title="Grift｜git履歴から確かめられる事実を取り出すOSS"
+  titleTag="Grift｜経歴は盛れる。証拠は盛れない。"
+  ogTitle="経歴は盛れる。証拠は盛れない。｜Grift"
+  description="Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのCLIです。点数や順位はつけず、AI（LLM）を使わないので誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が推薦の理由を根拠とともに伝えるために使えます。"
   faqItems={faqPreview.map((item) => ({ question: item.q, answer: item.a }))}
 >
   <section id="hero" class="section-animate relative bg-background">
     <div class="landing-container py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:gap-7">
-        <p class="section-kicker">見積を、勘から根拠へ。</p>
+        <p class="section-kicker">Grift CLI ・ OSS（MITライセンス）</p>
         <h1
           class="type-heading text-[clamp(2.25rem,7vw,5.75rem)] font-semibold leading-[1.05] text-text"
         >
-          <span class="block">なぜこの金額か、チームで説明できる。</span>
-          <span class="block">受託開発のためのAI見積支援ツール</span>
+          <span class="block">経歴は盛れる。</span>
+          <span class="block">証拠は盛れない。</span>
         </h1>
         <div class="type-copy max-w-3xl space-y-3 text-lg text-text-muted sm:text-xl">
           <p>
-            Griftは、GitHub実績・市場相場・案件前提をもとに、参考見積と見積根拠を整理するAI見積支援ツールです。
+            Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すツールです。点数や順位はつけません。
           </p>
-          <p>
-            AIに見積を丸投げするのではなく、人間が責任を持って確認し、説明できる提案材料を増やします。
-          </p>
+          <p>誰が実行しても同じ結果になり、受け取った側が検算できます。</p>
         </div>
         <div class="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
           <a
@@ -280,21 +280,26 @@ const tocItems = [
             rel="noreferrer"
             class="cta-primary w-full sm:w-auto"
           >
-            Team Betaについて相談する
+            試行について相談する
           </a>
           <a
-            href={heroSecondaryUrl}
+            href={griftCli.github}
             target="_blank"
             rel="noreferrer"
             class="cta-secondary w-full sm:w-auto"
           >
-            自分たちの案件で使えるか相談する
+            GitHubでGrift CLIを見る
           </a>
         </div>
         <ul class="grid w-full gap-3 text-left text-sm text-text-muted sm:grid-cols-3">
-          <li class="surface-card p-3 sm:p-4">人間レビュー前提のAI見積支援</li>
-          <li class="surface-card p-3 sm:p-4">GitHub実績・市場相場を参考材料に</li>
-          <li class="surface-card p-3 sm:p-4">Team Betaの利用チーム募集中</li>
+          {
+            promises.map((item) => (
+              <li class="surface-card p-3 sm:p-4">
+                <span class="font-semibold text-text">{item.title}</span>
+                <span class="block">{item.lead}</span>
+              </li>
+            ))
+          }
         </ul>
         {
           /* 福岡を代表する企業100選 公式エンブレム。掲載条件（クリック遷移・掲載期限）は
@@ -306,56 +311,68 @@ const tocItems = [
       <div class="mt-8 grid gap-6 sm:mt-10 lg:mt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
         <figure
           id="product-demo"
-          class="surface-panel overflow-hidden p-0"
-          aria-label="Grift インテークワークスペースの画面例"
+          class="surface-panel min-w-0 overflow-hidden p-0"
+          aria-label="Grift CLI の使い方の例"
         >
-          <div class="bg-surface p-3 sm:p-4">
-            <img
-              src="/images/grift-intake-workspace.png"
-              alt="Griftのインテークワークスペース。会社情報の入力と案件管理を一か所で行う画面例"
-              width="1426"
-              height="1103"
-              class="mx-auto max-h-[34rem] w-full object-contain"
-              loading="eager"
-              decoding="async"
-            />
+          <div class="bg-text p-4 sm:p-6">
+            <pre
+              class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール（Python 3.11以上）</span>
+<span class="text-secondary">$</span> {griftCli.installCommand}
+
+<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
+<span class="text-secondary">$</span> cd your-repo
+<span class="text-secondary">$</span> grift report
+
+<span class="text-background/60"># 同じ条件で再計算し、書き換えや食い違いを検出</span>
+<span class="text-secondary">$</span> grift verify
+VERIFIED: all fields match recomputation under recorded provenance
+
+<span class="text-background/60"># 出力の一例（数値には必ず分子と分母が付く）</span>
+test co-change: 0.2664 ratio（73 of 274）</code></pre>
           </div>
           <figcaption
             class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
           >
-            Grift
-            インテークワークスペース（ベータ版の画面例）。提供範囲や表示内容は検証状況により変わります。
+            出力の一例は、Grift CLI の README
+            に載せている公開リポジトリ（click）の計測結果です。コマンドの詳細は
+            <a
+              href={griftCli.github}
+              target="_blank"
+              rel="noreferrer"
+              class="text-primary underline underline-offset-2">GitHub</a
+            >
+            をご覧ください。
           </figcaption>
         </figure>
 
         <aside class="surface-card p-5 sm:p-6 lg:p-8">
-          <p class="section-kicker">見積の考え方を先に読む</p>
+          <p class="section-kicker">あなたに合う読み方</p>
           <h2 class="mt-3 type-heading text-2xl font-semibold text-text">
-            相談の前提を整え、見積の根拠につなげる。
+            推薦する人にも、推薦される人にも。
           </h2>
           <p class="mt-4 type-copy text-sm text-text-muted">
-            Griftは、インテークで案件の前提・スコープ・不確実性を整理し、提案前に確認すべき材料をチームで共有しやすくします。
+            Griftを使うのは、候補者を企業へ推薦する営業の方と、自分の仕事を確かめられる形で示したいエンジニアの方です。
           </p>
           <div class="mt-6 grid gap-3">
             {
-              heroColumnArticles.map((article) => (
+              audiences.map((audience) => (
                 <a
-                  href={article.href}
+                  href={`#${audience.id}`}
                   class="group rounded-2xl border border-border bg-background p-4 no-underline transition duration-200 ease-out hover:-translate-y-1 hover:border-primary/40"
                 >
-                  <p class="text-xs font-semibold text-primary">{article.displayCategory}</p>
+                  <p class="text-xs font-semibold text-primary">{audience.label}</p>
                   <p class="mt-1 type-heading text-sm font-semibold text-text group-hover:text-primary">
-                    {article.displayTitle}
+                    {audience.title}
                   </p>
                 </a>
               ))
             }
           </div>
           <a
-            href="/column/"
+            href="/faq/"
             class="mt-5 inline-flex text-sm font-semibold text-primary hover:underline"
           >
-            コラムを読む →
+            よくある質問を読む →
           </a>
         </aside>
       </div>
@@ -382,11 +399,13 @@ const tocItems = [
         <div class="space-y-4">
           <p class="text-sm font-semibold text-primary">Griftとは</p>
           <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-            見積の「なぜ」を、チームで説明できるようにするAI見積支援ツール。
+            git履歴から、確かめられる事実を取り出すOSSのツール。
           </h2>
           <p class="text-pretty text-lg leading-8 text-text-muted">
-            Griftは、Cor.株式会社が提供する受託開発チーム向けのAI見積支援ツールです。GitHub実績・市場相場・案件前提をもとに「参考見積」と「見積根拠」を整理し、人間が責任を持って最終判断できる提案材料を作ります。
+            Grift（グリフト）は、Cor.株式会社が開発・公開しているコマンドラインツール（Grift
+            CLI）です。エンジニアのgit履歴から、誰の仕事か・変更に検証が伴っているかといった事実を、AI（LLM）を使わずに取り出します。点数や順位はつけず、受け取った側が同じ条件で再計算して検算できます。
           </p>
+          <p class="text-sm text-text-muted">情報は{asOfLabel}時点のものです。</p>
         </div>
         <dl class="stagger-children grid gap-3 sm:grid-cols-2">
           {
@@ -411,17 +430,18 @@ const tocItems = [
     <div class="fade-in-section max-w-3xl space-y-4">
       <p class="text-sm font-semibold text-primary">課題</p>
       <h2 class="max-w-2xl text-3xl font-semibold leading-[1.18] text-text sm:text-4xl">
-        曖昧な相談を、そのまま見積にしていませんか？
+        経歴書と面談だけでは、伝わらないことがある。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        無料の調査や追加要件で見積が後から膨らみ、なぜその金額なのか説明しにくくなる構造を整理します。
+        推薦する側も、推薦される側も、「確かめられる材料」が足りないまま話を進めています。
       </p>
     </div>
     <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
       {
         pains.map((item) => (
           <article class="card-lift rounded-2xl border border-border bg-surface p-6">
-            <h3 class="text-xl font-semibold text-balance text-text">{item.title}</h3>
+            <p class="text-xs font-semibold text-primary">{item.who}</p>
+            <h3 class="mt-2 text-xl font-semibold text-balance text-text">{item.title}</h3>
             <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
           </article>
         ))
@@ -440,7 +460,7 @@ const tocItems = [
       rel="noreferrer"
       class="font-medium text-secondary hover:underline"
     >
-      → 見積根拠の整理を相談する
+      → 紹介会社さま向けの試行について相談する
     </a>
   </div>
 
@@ -449,19 +469,20 @@ const tocItems = [
   <section id="value" class="section-animate border-y border-border bg-surface">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <div class="fade-in-section max-w-3xl space-y-4">
-        <p class="text-sm font-semibold text-primary">価値</p>
+        <p class="text-sm font-semibold text-primary">3つの約束</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          曖昧な相談と根拠のない金額を、チームで確認できる前提へ。
+          点数にしない。毎回同じ結果。どこにも送らない。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          Griftは、案件の前提・スコープ・変更条件を整理し、人間が責任を持って説明できる見積根拠を増やします。
+          人を1つの数値に縮めることではなく、第三者が条件と限界を確かめられる事実を残すことを目指しています。
         </p>
       </div>
-      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
         {
-          outcomes.map((item) => (
+          promises.map((item) => (
             <article class="card-lift rounded-2xl border border-border bg-background p-6">
               <h3 class="text-xl font-semibold text-balance text-text">{item.title}</h3>
+              <p class="mt-2 text-sm font-semibold text-primary">{item.lead}</p>
               <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
             </article>
           ))
@@ -471,7 +492,7 @@ const tocItems = [
   </section>
 
   {
-    /* 従来の見積プロセスとの対比表。table 構造は検索エンジン/AI 回答の
+    /* 経歴書・活動量の指標との対比表。table 構造は検索エンジン/AI 回答の
       抽出対象になりやすく、内容の機械可読性を高める。 */
   }
   <section
@@ -479,31 +500,29 @@ const tocItems = [
     class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
   >
     <div class="fade-in-section max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-primary">従来との違い</p>
+      <p class="text-sm font-semibold text-primary">経歴書との違い</p>
       <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-        記憶と勘の見積から、根拠を残す見積へ。
+        申告と印象に、確かめられる事実を添える。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        Griftは見積作業を自動化するだけのツールではありません。判断材料をチームで共有・蓄積し、説明できる見積プロセスに変えます。
+        Griftは経歴書や面談を置き換えるものではありません。そこに書かれたことを、受け取った側が確かめられる材料を添えます。
       </p>
     </div>
     <div
       class="fade-in-section mt-10 overflow-x-auto"
       role="region"
-      aria-label="従来の見積プロセスとの比較表。横スクロール可能です"
+      aria-label="経歴書・活動量の指標とGriftの比較表。横スクロール可能です"
       tabindex="0"
     >
       <table class="w-full min-w-[640px] border-collapse text-left">
-        <caption class="sr-only"> 従来の見積プロセスとGriftを使った見積プロセスの比較 </caption>
+        <caption class="sr-only">経歴書・活動量の指標とGriftの比較</caption>
         <thead>
           <tr class="border-b-2 border-border">
             <th scope="col" class="py-4 pr-4 text-sm font-semibold text-text">観点</th>
             <th scope="col" class="py-4 pr-4 text-sm font-semibold text-text-muted">
-              従来の見積プロセス
+              経歴書・コミット数
             </th>
-            <th scope="col" class="py-4 text-sm font-semibold text-primary">
-              Griftを使った見積プロセス
-            </th>
+            <th scope="col" class="py-4 text-sm font-semibold text-primary">Grift</th>
           </tr>
         </thead>
         <tbody>
@@ -533,17 +552,35 @@ const tocItems = [
   >
     <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
       <div class="fade-in-section space-y-4">
-        <p class="text-sm font-semibold text-primary">見積根拠を支える3つの視点</p>
+        <p class="text-sm font-semibold text-primary">検証の公開</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          相場だけでも、経験だけでもない。複数の材料を重ねて判断する。
+          区別できたことも、まだ区別できないことも公開する。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          クライアントが本当に知りたいのは、金額そのものだけではありません。なぜその金額に至ったのか。Griftは、その「なぜ」を説明するための材料を複数の視点から整理します。
+          確かめられる事実を出す道具だからこそ、道具そのものも確かめられるようにしています。定義・検証結果・利用規範は、すべてGitHubで読めます。
         </p>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
+          <a
+            href={griftCli.norms}
+            target="_blank"
+            rel="noreferrer"
+            class="text-primary hover:underline"
+          >
+            利用規範（norms）を読む
+          </a>
+          <a
+            href={griftCli.metricsGuide}
+            target="_blank"
+            rel="noreferrer"
+            class="text-primary hover:underline"
+          >
+            指標の読み方（metrics-guide）を読む
+          </a>
+        </div>
       </div>
       <div class="stagger-children grid gap-4">
         {
-          proofPillars.map((item) => (
+          proofItems.map((item) => (
             <article class="card-lift rounded-2xl border border-border bg-surface p-6">
               <h3 class="text-lg font-semibold text-text">{item.title}</h3>
               <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{item.body}</p>
@@ -556,12 +593,12 @@ const tocItems = [
 
   <div class="py-8 text-center">
     <a
-      href={midCtaUrl}
+      href={griftCli.github}
       target="_blank"
       rel="noreferrer"
       class="font-medium text-primary hover:underline"
     >
-      → 自分たちの案件で使えるか相談する
+      → GitHubでGrift CLIを見る
     </a>
   </div>
 
@@ -570,12 +607,12 @@ const tocItems = [
   <section id="flow" class="section-animate border-y border-border bg-surface">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <div class="fade-in-section max-w-3xl space-y-4">
-        <p class="text-sm font-semibold text-primary">ご利用の流れ</p>
+        <p class="text-sm font-semibold text-primary">推薦までの流れ</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          導入からナレッジ蓄積までのステップ
+          紹介会社・SESでの使い方
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          既存のデータを活かし、見積根拠を整理する流れをチームに組み込んでいきます。
+          実行するのも、共有を決めるのも候補者本人です。営業はその記録をもとに、推薦の理由を具体的にします。営業向けの画面は、試行（PoC）として準備を進めています。
         </p>
       </div>
       <ol class="stagger-children mt-10 grid list-none gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -601,18 +638,22 @@ const tocItems = [
     class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
   >
     <div class="fade-in-section max-w-3xl space-y-4">
-      <p class="text-sm font-semibold text-primary">利用シーン</p>
+      <p class="text-sm font-semibold text-primary">使う人ごとに</p>
       <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-        チームの見積根拠を、用途に合わせて整理する。
+        推薦する営業と、推薦されるエンジニアのために。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        Griftは、受託開発チームの見積根拠整理を主軸に、フリーランスの提案準備や発注企業の見積確認にも活用できます。
+        エンジニア本人は CLI
+        を無償で使えます。収益は、試行と正式版をご利用いただく紹介会社さま・SES企業さまからいただく想定です。
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 xl:grid-cols-3">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2">
       {
-        scenarios.map((item) => (
-          <article class="card-lift rounded-3xl border border-border bg-surface p-6">
+        audiences.map((item) => (
+          <article
+            id={item.id}
+            class="card-lift scroll-mt-24 rounded-3xl border border-border bg-surface p-6"
+          >
             <span class="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-text-muted">
               {item.label}
             </span>
@@ -623,12 +664,12 @@ const tocItems = [
                 <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{item.situation}</p>
               </div>
               <div class="rounded-2xl border border-border bg-background p-4">
-                <p class="text-sm font-semibold text-text">Griftが助けること</p>
+                <p class="text-sm font-semibold text-text">Griftでできること</p>
                 <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{item.support}</p>
               </div>
               <div class="rounded-2xl border border-primary/20 bg-primary/5 p-4">
-                <p class="text-sm font-semibold text-text">期待できる変化</p>
-                <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{item.outcome}</p>
+                <p class="text-sm font-semibold text-text">次の一歩</p>
+                <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{item.next}</p>
               </div>
             </div>
           </article>
@@ -640,40 +681,45 @@ const tocItems = [
   <section id="pricing" class="section-animate border-y border-border bg-surface">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <div class="fade-in-section max-w-3xl space-y-4">
-        <p class="text-sm font-semibold text-primary">Team Beta / Pricing</p>
+        <p class="text-sm font-semibold text-primary">料金と提供状況</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          見積根拠を、チームの資産にするための有料β。
+          CLIは無償。紹介会社さまとの試行は個別にご案内します。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          現在、Griftは受託チーム向けTeam
-          Betaの提供に向けて、機能・価格・サポート範囲を検証中です。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+          いまはCLIを公開し、紹介会社さま向けの機能を試行として準備している段階です。正式な価格は、決まってからこのページでお知らせします。
         </p>
       </div>
       <div class="stagger-children mt-10 grid gap-5 lg:grid-cols-3">
         {
-          betaAccessInfo.map((item) => (
+          pricingCards.map((item) => (
             <article class="card-lift flex h-full flex-col rounded-2xl border border-border bg-background p-6">
               <p class="text-lg font-semibold text-text">{item.name}</p>
               <p class="mt-2 text-sm font-semibold text-primary">{item.target}</p>
-              <p class="mt-5 text-3xl font-bold tabular-nums text-text">{item.price}</p>
+              <p class="mt-5 text-2xl font-bold text-text">{item.price}</p>
               <p class="mt-5 flex-1 text-sm leading-7 text-text-muted text-pretty">
                 {item.description}
               </p>
-              <div class="mt-7 flex flex-col gap-2">
-                <a href={item.href} target="_blank" rel="noreferrer" class="cta-primary text-sm">
-                  {item.cta}
-                </a>
-                <a
-                  href={item.detailHref}
-                  class="text-center text-sm font-medium text-primary hover:underline"
-                >
-                  {item.detailLabel}
-                </a>
-              </div>
+              {item.href && item.cta && (
+                <div class="mt-7 flex flex-col gap-2">
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    class:list={[item.primary ? 'cta-primary' : 'cta-secondary', 'text-sm']}
+                  >
+                    {item.cta}
+                  </a>
+                </div>
+              )}
             </article>
           ))
         }
       </div>
+      <p class="mt-6 text-sm">
+        <a href="/pricing/" class="font-medium text-primary hover:underline">
+          料金と提供状況の詳細を見る →
+        </a>
+      </p>
     </div>
   </section>
 
@@ -685,10 +731,10 @@ const tocItems = [
       <div class="fade-in-section space-y-4">
         <p class="text-sm font-semibold text-primary">よくある質問</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          導入前に気になるポイントをまとめました。
+          使う前に気になるポイントをまとめました。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          「AIが見積金額を決めるのか」「最終判断は誰が行うのか」など、導入前に確認されやすい点を整理しています。
+          「AIで人を評価するのか」「データはどこへ行くのか」「料金は」など、よく聞かれる点を整理しています。
         </p>
         <a
           href="/faq"
@@ -718,35 +764,41 @@ const tocItems = [
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <div class="fade-in-section rounded-3xl border border-border bg-background p-8 lg:p-10">
         <div class="max-w-3xl space-y-4">
-          <p class="text-sm font-semibold text-primary">さあ、見積を根拠へ。</p>
+          <p class="text-sm font-semibold text-primary">経歴は盛れる。証拠は盛れない。</p>
           <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-            属人的な見積を、チームで説明できるプロセスへ。
+            推薦の理由を、確かめられる事実とともに。
           </h2>
           <p class="text-lg leading-8 text-text-muted text-pretty">
-            現在、受託チーム向けTeam
-            Betaの提供に向けて検証中です。自分たちの案件で使えるか、まずはご相談ください。
+            紹介会社さま・SES企業さまとの試行（PoC）のご相談を受け付けています。エンジニアの方は、GitHubからすぐに試せます。
           </p>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href={finalCtaUrl} target="_blank" rel="noreferrer" class="cta-primary">
-            Team Betaについて相談する
+            試行について相談する
+          </a>
+          <a href={griftCli.github} target="_blank" rel="noreferrer" class="cta-secondary">
+            GitHubでGrift CLIを見る
           </a>
         </div>
         <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
-          ※利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+          ※試行の範囲と費用は、対象・件数に応じて個別にご案内します。相談はCor.株式会社のAI受付で受け付けています。
         </p>
         {/* 関連ページへの内部導線（回遊・滞在時間の向上） */}
         <nav aria-label="関連ページ" class="mt-8 border-t border-border pt-6">
           <p class="text-sm font-semibold text-text">詳しく知りたい方へ</p>
           <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
-            <li><a href="/team-beta/" class="text-primary hover:underline">Team Beta の詳細</a></li>
-            <li><a href="/pricing/" class="text-primary hover:underline">料金の全体像</a></li>
+            <li><a href="/pricing/" class="text-primary hover:underline">料金と提供状況</a></li>
+            <li><a href="/faq/" class="text-primary hover:underline">よくある質問</a></li>
             <li>
-              <a href="/estimate-audit/" class="text-primary hover:underline">
-                Estimate Audit（発注企業向け）
+              <a
+                href={griftCli.pypi}
+                target="_blank"
+                rel="noreferrer"
+                class="text-primary hover:underline"
+              >
+                PyPI（grift-cli）
               </a>
             </li>
-            <li><a href="/faq/" class="text-primary hover:underline">よくある質問</a></li>
             <li><a href="/column/" class="text-primary hover:underline">コラム</a></li>
           </ul>
         </nav>
@@ -757,20 +809,20 @@ const tocItems = [
   <ColumnPromoSection />
 
   <NextStep
-    heading="まずは相談か、詳細確認か。次の一歩を選んでください。"
-    lead="相談はAI受付で受け付けています。提供条件や導入の流れを先に確認したい方は、各ページへお進みください。"
+    heading="試行の相談か、まず手元で試すか。次の一歩を選んでください。"
+    lead="相談はCor.株式会社のAI受付で受け付けています。CLIはGitHubとPyPIで公開しています。"
     ctas={[
-      { label: 'Team Betaについて相談する', href: finalCtaUrl, primary: true, isExternal: true },
-      { label: 'Team Beta の詳細を見る', href: '/team-beta/' },
-      { label: '料金の全体像を見る', href: '/pricing/' },
+      { label: '試行について相談する', href: finalCtaUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+      { label: 'よくある質問を見る', href: '/faq/' },
     ]}
   />
 
-  {/* 導入フローを HowTo 構造化データとして出力（検索/AI 回答での手順理解用） */}
+  {/* 推薦までの流れを HowTo 構造化データとして出力（検索/AI 回答での手順理解用） */}
   <StructuredData
     type="howto"
-    howtoName="Griftでの見積根拠の整理手順"
-    howtoDescription="相談内容の入力から見積根拠のナレッジ蓄積まで、Griftを使った見積プロセスの5ステップ。"
+    howtoName="Griftを使って、根拠とともにエンジニアを推薦する手順"
+    howtoDescription="候補者本人がGrift CLIを手元で実行し、検算できる事実を共有してから、営業が根拠を添えて推薦するまでの5ステップ。"
     howtoSteps={flowSteps.map((step) => ({ name: step.title, text: step.body }))}
   />
 

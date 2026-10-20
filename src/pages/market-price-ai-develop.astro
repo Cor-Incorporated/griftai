@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-market-price-ai-develop');
+const contactUrl = corCta.griftTrial('grift-column-market-price-ai-develop');
 
 const title = 'AI開発の相場とは？見積もりに影響する開発手法や技術スタックによる違い';
 const description =
@@ -64,17 +64,17 @@ const description =
             </div>
 
             <section class="u-mb30 c-block">
-              <h2 class="u-mb20 l-heading-secondary">AI開発の見積もり作成はCor株式会社へ</h2>
+              <h2 class="u-mb20 l-heading-secondary">AI開発の見積もりの相談ならCor.株式会社へ</h2>
               <p class="u-m0 u-pb1em">
-                AIを活用した新規事業の立ち上げにおいて、社内稟議を通すための説得力ある見積もり根拠の作成に苦労されている担当者の方も多いのではないでしょうか。Cor株式会社は、これまで曖昧になりがちだった上流工程の課題を解決し、適正な相場にもとづいたプロジェクトの進行をサポートするツールを提供しています。
+                AIを活用した新規事業の立ち上げにおいて、社内稟議を通すための説得力ある見積もり根拠の作成に苦労されている担当者の方も多いのではないでしょうか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                Cor株式会社が提供するAI見積自動化ツール「Grift」は、GitHubの実績データと市場相場を自動で照合し、客観的な根拠のある見積もりレポートを生成します。一般的な開発ツールがコーディングの支援にとどまるのに対し、「Grift」は発注前の「何を作るか」「いくらかかるか」という上流工程からAIで管理できる点が大きな強みです。
+                AI開発の相場は、開発手法や技術スタック、求める精度によって大きく変わります。Cor.株式会社では、AI開発を実際に手がける立場から、費用を左右する前提を整理し、見積もりの前提や根拠を説明できる形に整えるためのご相談をお受けしています。発注前の「何を作るか」「いくらかかるか」という上流工程からご相談いただけます。
               </p>
 
               <p class="u-m0 u-pb1em">
-                市場標準と自社提案の比較レポートを活用すれば、社内稟議の際にも「なぜこの価格なのか」を数字で明確に説明できるようになります。
+                見積もりの前提と根拠が整理されていれば、社内稟議の際にも「なぜこの価格なのか」を説明しやすくなります。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -82,7 +82,7 @@ const description =
               </p>
 
               <div class="c-btn u-pb30">
-                <a href="/#flow" class="c-btn-anchor">導入の流れはこちら</a>
+                <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
               </div>
             </section>
 
@@ -157,9 +157,9 @@ const description =
                   AIを安定して稼働させるためのインフラ環境も、相場を左右する重要な要素です。特にディープラーニングを用いる場合は、GPUなどの高性能なサーバー環境が必要となり、構築費用や月々のクラウド利用料といった運用コストが増大します。技術スタックの選定は、初期開発費用だけでなく導入後のランニングコストにも直結するため、長期的な視点での費用対効果を社内に示すことが求められます。
                 </p>
 
-                <h3 class="u-mb10 u-mt30 l-tertiary">見積もりでお悩みならCor株式会社へ</h3>
+                <h3 class="u-mb10 u-mt30 l-tertiary">見積もりでお悩みならCor.株式会社へ</h3>
                 <p class="u-m0 u-pb1em">
-                  AI開発の見積もりが適正かどうか判断に迷う場合は、Cor株式会社へご相談ください。Cor株式会社では、AIを活用した見積自動化ツール「Grift」を提供しており、市場データにもとづいた客観的な相場を提示します。
+                  AI開発の見積もりが適正かどうか判断に迷う場合は、Cor.株式会社へご相談ください。Cor.株式会社では、AI受託開発の現場で要件定義から見積もり、設計・実装・運用までを一貫して担っており、その経験をもとに見積もりの前提や内訳、相場と比べる際の観点についてご相談をお受けしています。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -246,11 +246,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AI開発の見積もり・相場にお悩みならCor株式会社へ</h3>
+              <h3 class="u-mb20">AI開発の見積もり・相場にお悩みならCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -325,19 +325,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-04.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

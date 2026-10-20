@@ -1,4 +1,5 @@
 ---
+import { getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
@@ -62,26 +63,26 @@ const description =
 
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">
-                要件定義の負担軽減はCor株式会社にお任せください
+                要件定義の負担軽減はCor.株式会社にご相談ください
               </h2>
               <p class="u-m0 u-pb1em">
-                システム開発の初期段階において、仕様の整理やドキュメント作成に多くの工数を割いている開発現場は数多く存在します。Cor株式会社は、そのような上流工程における複雑な課題を解決し、よりスムーズで効率的な開発体制を構築するサポートを提供しています。
+                システム開発の初期段階において、仕様の整理やドキュメント作成に多くの工数を割いている開発現場は数多く存在します。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、こうした上流工程の課題の整理から要件定義・見積もり、設計・実装・運用までを一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                受託開発の現場では、クライアントの要望を正確に引き出し、開発要件としてまとめ上げる作業に大きな負担がかかりがちです。Cor株式会社が提供するAI見積自動化ツール「Grift」を利用すれば、AIが対話形式のヒアリング内容から仕様を瞬時に構造化し、適正な相場に基づいた客観的な見積もり根拠を提示できます。
+                受託開発の現場では、クライアントの要望を正確に引き出し、開発要件としてまとめ上げる作業に大きな負担がかかりがちです。Cor.株式会社では、要件定義の進め方の見直しに加え、要件定義ツールや自動化の仕組みを取り入れる際の選び方、導入の手順についてもご相談をお受けしています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                SlackやJiraなどのタスク管理ツール、さらにはGitHubなどの技術的なサービスとも柔軟に連携できるため、開発チームが現在利用しているワークフローのなかに自然な形で組み込める点が大きな特徴です。
+                ツールを選ぶ際は、SlackやJiraなどのタスク管理ツールやGitHubなど、開発チームが現在利用しているワークフローのなかに無理なく組み込めるかどうかを確かめることが大切です。自社の体制に合った形を一緒に検討します。
               </p>
 
               <p class="u-m0 u-pb1em">
-                仕様策定にかかる時間を大幅に短縮し、エンジニアが本来のプログラミング業務に集中できる環境を整えたいとお考えの企業様は、ぜひ一度詳しいサービス内容をご確認ください。
+                仕様策定にかかる時間を短縮し、エンジニアが本来のプログラミング業務に集中できる環境を整えたいとお考えの企業様は、まずはCor.株式会社のこれまでの開発実績をご確認ください。
               </p>
 
               <div class="c-btn u-pb30">
-                <a href="/pricing/" class="c-btn-anchor">Griftのベータ提供を見る</a>
+                <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
               </div>
             </section>
 
@@ -161,16 +162,23 @@ const description =
                 </p>
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">
-                  見積もりを自動化するツールを提供するCor株式会社
+                  要件定義・見積もりの進め方を相談できるCor.株式会社
                 </h3>
                 <p class="u-m0 u-pb1em">
-                  受託開発における仕様策定の工数削減や、見積もり精度の向上を目指している方は、ぜひCor株式会社にご相談ください。Cor株式会社では、ヒアリング情報の構造化から見積もりの自動算出までをワンストップで実現するAIツール「Grift」を提供しています。ツールに関する情報は、よくある質問ページからもご確認いただけます。
+                  受託開発における仕様策定の工数削減や、見積もり精度の向上を目指している方は、ぜひCor.株式会社にご相談ください。Cor.株式会社では、AI受託開発・導入支援を通じて、ヒアリング内容の整理から要件定義・見積もり、設計・実装・運用までを一気通貫で伴走しています。これまでの取り組みは、開発実績のページからご確認いただけます。
                 </p>
 
                 <div class="c-btn u-pb30">
-                  <a href="/faq/" class="c-btn-anchor">よくある質問はこちら</a>
+                  <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
                 </div>
               </div>
+            </section>
+
+            <section class="u-mb30 c-block">
+              <h2 class="u-mb20 l-heading-secondary">現場でつまずきやすいポイントと専門家の活用法</h2>
+              <p class="u-m0 u-pb1em">要件定義ツールを使った自動化の仕組みや手順を理解していても、実際の現場では各ステップで思わぬ壁にぶつかることがあります。導入を成功させるためには、どの段階で課題が起きやすいのかをあらかじめ把握しておくことが大切です。</p>
+              <p class="u-m0 u-pb1em">まずヒアリングの段階では、クライアントと開発側の認識ズレが生じやすくなります。言葉の定義や優先順位の受け取り方が食い違ったまま進んでしまうと、後工程での手戻りにつながります。次に要件抽出のステップでは、仕様の漏れや矛盾が発生しやすく、ツールが自動生成したドラフトをそのまま採用してしまうリスクがあります。さらにツール定着の場面では、チームへの浸透不足から運用が形骸化するケースも少なくありません。</p>
+              <p class="u-m0 u-pb1em">こうした課題は、要件定義・ツール・自動化の各領域に精通した専門家のサポートを取り入れることで、大幅に軽減できます。Cor.株式会社では、導入初期から運用定着まで一貫して伴走支援を行っているため、自社だけで解決が難しいと感じた際はぜひご相談ください。</p>
             </section>
 
             <section class="u-mb30 c-block">
@@ -254,11 +262,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">要件定義の自動化ツールならCor株式会社にお任せください</h3>
+              <h3 class="u-mb20">要件定義の自動化のご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -333,19 +341,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-02.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

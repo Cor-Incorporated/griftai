@@ -83,7 +83,8 @@ test.describe('Landing page smoke tests', () => {
     await expect(intentCtas.first()).toBeVisible();
 
     const href = await intentCtas.first().getAttribute('href');
-    expect(href).toMatch(/intent=grift-team-beta|intent=grift-paid-trial|intent=estimate-audit/);
+    // 2026-10 以降、LP が送る intent は grift-team-beta（Grift の試行・CLI の相談）だけ。
+    expect(href).toMatch(/intent=grift-team-beta/);
     expect(href).toContain('source=');
     expect(href).toContain('utm_source=grift');
   });
@@ -139,8 +140,6 @@ test.describe('Key pages load correctly', () => {
   const pages = [
     { path: '/', titlePattern: /Grift/ },
     { path: '/pricing/', titlePattern: /料金|Grift/ },
-    { path: '/team-beta/', titlePattern: /Team Beta|Grift/ },
-    { path: '/estimate-audit/', titlePattern: /Estimate Audit|Grift/ },
     { path: '/faq/', titlePattern: /質問|FAQ|Grift/ },
     { path: '/contact/', titlePattern: /相談|お問い合わせ|Grift/ },
   ];
@@ -167,37 +166,26 @@ test.describe('Key pages load correctly', () => {
   });
 });
 
-test.describe('Phase 2 product pages', () => {
-  test('team-beta page CTA uses grift-team-beta intent', async ({ page }) => {
-    await page.goto('/team-beta/');
-    const cta = page
-      .locator('main a[href*="intent=grift-team-beta"], a[href*="intent=grift-team-beta"]:visible')
-      .first();
-    await expect(cta).toBeVisible();
-    // Nav link is desktop-only; assert presence in DOM
-    await expect(page.locator('#site-header a[href="/team-beta"]')).toHaveCount(1);
-  });
-
-  test('estimate-audit page CTA uses estimate-audit intent', async ({ page }) => {
-    await page.goto('/estimate-audit/');
-    const cta = page
-      .locator('main a[href*="intent=estimate-audit"], a[href*="intent=estimate-audit"]:visible')
-      .first();
-    await expect(cta).toBeVisible();
-  });
-
-  test('home shows product screenshot without private-alpha copy or contract-dev CTA', async ({
-    page,
-  }) => {
+test.describe('Grift CLI positioning (2026-10)', () => {
+  test('home shows the CLI usage example and links to the public repository', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('#product-demo')).toBeVisible();
-    await expect(page.locator('#product-demo img')).toHaveAttribute(
-      'alt',
-      /インテークワークスペース/
-    );
-    await expect(page.getByText('プロダクト画面プレースホルダ')).toHaveCount(0);
+    const demo = page.locator('#product-demo');
+    await expect(demo).toBeVisible();
+    await expect(demo).toContainText('pipx install grift-cli');
+    await expect(demo).toContainText('grift verify');
+
+    const github = page.locator('#hero a[href="https://github.com/Cor-Incorporated/grift-cli"]');
+    await expect(github.first()).toBeVisible();
+  });
+
+  test('home no longer offers the withdrawn plans or contract-dev CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByText('Team Beta')).toHaveCount(0);
+    await expect(page.getByText('Estimate Audit')).toHaveCount(0);
     await expect(page.getByText('プライベートベータ')).toHaveCount(0);
-    const contractDev = page.locator('a[href*="intent=contract-dev"]');
-    await expect(contractDev).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=grift-paid-trial"]')).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=estimate-audit"]')).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=contract-dev"]')).toHaveCount(0);
+    await expect(page.locator('a[href="/team-beta/"], a[href="/estimate-audit/"]')).toHaveCount(0);
   });
 });

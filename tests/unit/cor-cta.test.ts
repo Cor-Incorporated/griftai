@@ -39,16 +39,16 @@ describe('buildCorContactUrl', () => {
 
   it('uses preview base when PUBLIC_COR_BASE_URL is set', () => {
     vi.stubEnv('PUBLIC_COR_BASE_URL', 'https://preview-cor.example');
-    const href = corCta.paidTrial('grift-pricing-paid-trial');
+    const href = corCta.griftTrial('grift-pricing');
     expect(href.startsWith('https://preview-cor.example/contact/chat')).toBe(true);
-    expect(href).toContain('intent=grift-paid-trial');
-    expect(href).toContain('source=grift-pricing-paid-trial');
+    expect(href).toContain('intent=grift-team-beta');
+    expect(href).toContain('source=grift-pricing');
   });
 
-  it('maps aliases to the three product intents', () => {
-    expect(corCta.teamBeta('s')).toContain('intent=grift-team-beta');
-    expect(corCta.paidTrial('s')).toContain('intent=grift-paid-trial');
-    expect(corCta.estimateAudit('s')).toContain('intent=estimate-audit');
+  it('sends Grift consultations with the contract intent key', () => {
+    // intent キーは corsweb ADR-0014 の契約。提供内容が変わってもキーは変えない。
+    expect(corCta.griftTrial('s')).toContain('intent=grift-team-beta');
+    expect(Object.keys(corCta)).toEqual(['griftTrial']);
   });
 });
 

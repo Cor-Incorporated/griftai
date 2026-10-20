@@ -209,4 +209,34 @@ test.describe('Grift CLI positioning (2026-10)', () => {
       await expect(page.locator(`footer a[href="${url}"]`)).toHaveCount(1);
     }
   });
+
+  test('the reading section leads to the articles and columns before pricing', async ({ page }) => {
+    await page.goto('/');
+    const reading = page.locator('#reading');
+    await expect(reading.locator('a[href^="https://qiita.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href^="https://note.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href="/column/"]')).toHaveCount(1);
+    const readingTop = (await reading.boundingBox())?.y ?? Infinity;
+    const pricingTop = (await page.locator('#pricing').boundingBox())?.y ?? -Infinity;
+    expect(readingTop).toBeLessThan(pricingTop);
+  });
+
+  test('header links to the columns', async ({ page, isMobile }) => {
+    await page.goto('/');
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu a[href="/column/"]')).toBeVisible();
+    } else {
+      await expect(page.locator('#site-header a[href="/column/"]')).toBeVisible();
+    }
+  });
+
+  test('tablet width uses the menu button instead of squeezing the header links', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 820, height: 1000 });
+    await page.goto('/');
+    await expect(page.locator('#mobile-menu-button')).toBeVisible();
+    await expect(page.locator('#site-header a[href="/column/"]')).toBeHidden();
+  });
 });

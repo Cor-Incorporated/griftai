@@ -13,7 +13,6 @@
  * <SocialProofSection />
  * ```
  */
-import { griftArticles } from '@/config';
 import { getCorUrl } from '@/lib/cor-cta';
 import { FUKUOKA100_PAGE_URL } from '@/lib/fukuoka100';
 
@@ -47,24 +46,6 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
             生成AIで、経歴書も活動量もいくらでも整えられる時代です。それでも、確かめられる事実は盛れません。「経歴は盛れる。証拠は盛れない。」が、いまのGriftの起点です。
-          </p>
-          <p class="text-sm leading-7 text-text-muted text-pretty">
-            Griftの思想は記事でも紹介しています：
-            {
-              griftArticles.map((article, index) => (
-                <>
-                  {index > 0 && '／'}
-                  <a
-                    href={article.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    class="font-medium text-primary hover:underline"
-                  >
-                    {article.platform}
-                  </a>
-                </>
-              ))
-            }
           </p>
         </div>
         <div class="mt-6 flex items-center gap-4 rounded-xl border border-border bg-surface p-4">

@@ -26,6 +26,7 @@ export const navigation: Navigation = {
       { label: '使い方', href: '/#flow' },
       { label: '料金', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
+      { label: 'コラム', href: '/column/' },
       { label: 'GitHub', href: griftCli.github },
     ],
     cta: [

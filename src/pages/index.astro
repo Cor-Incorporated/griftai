@@ -5,7 +5,7 @@ import ProductShowcase from '@/components/sections/marketing/ProductShowcase.ast
 import SocialProofSection from '@/components/sections/marketing/SocialProofSection.astro';
 import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
-import ColumnPromoSection from '@/components/sections/marketing/ColumnPromoSection.astro';
+import ReadingSection from '@/components/sections/marketing/ReadingSection.astro';
 import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
@@ -243,10 +243,10 @@ const tocItems = [
   { id: 'product', label: '観測すること' },
   { id: 'proof', label: '検証の公開' },
   { id: 'flow', label: '推薦までの流れ' },
+  { id: 'reading', label: '思想とコラム' },
   { id: 'scenarios', label: '使う人ごとに' },
   { id: 'pricing', label: '料金と提供状況' },
   { id: 'faq', label: 'よくある質問' },
-  { id: 'column-promo', label: 'コラム' },
 ];
 ---
 
@@ -656,6 +656,9 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
     <SocialProofSection />
   </div>
 
+  {/* 思想の記事（Qiita・note）とコラムへの入口。ページ末尾まで読まなくても見つかる位置に置く。 */}
+  <ReadingSection />
+
   <section
     id="scenarios"
     class="section-animate mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
@@ -823,13 +826,25 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
               </a>
             </li>
             <li><a href="/column/" class="text-primary hover:underline">コラム</a></li>
+            {
+              griftArticles.map((article) => (
+                <li>
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="text-primary hover:underline"
+                  >
+                    Griftの思想（{article.platform}）
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </nav>
       </div>
     </div>
   </section>
-
-  <ColumnPromoSection />
 
   <NextStep
     heading="自社でテストしてみるか、まず手元で試すか。次の一歩を選んでください。"

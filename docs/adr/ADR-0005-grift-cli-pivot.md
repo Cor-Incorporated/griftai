@@ -16,7 +16,8 @@
 5. intent キーは契約（corsweb ADR-0014）どおり `grift-team-beta` を使い続け、意味を「Grift（CLI・テスト導入）の相談」に読み替える。`corCta` の別名は `griftTrial` だけにする（`grift-paid-trial` / `estimate-audit` は送らない）。
 6. GMO のコラムは残す。Grift を見積ツールとして説明していた文は、Cor.株式会社の AI 受託開発・導入支援としての相談に書き換える（ツールを提供しているとは書かない）。社名は「Cor.株式会社」にそろえる。
 7. LP に載せる CLI の事実（版・公開日・ライセンス・コマンド・指標名・117 リポジトリでの検証）は Cor-Incorporated/grift-cli の README・docs と PyPI に合わせ、`src/config/site.ts` の `griftCli` を唯一の出典にする。
-8. Grift の思想を書いた記事（Qiita・note）へのリンクは `src/config/site.ts` の `griftArticles` にまとめ、トップ（3つの約束・開発の背景）・フッター・llms.txt から張る。
+8. Grift の思想を書いた記事（Qiita・note）へのリンクは `src/config/site.ts` の `griftArticles` にまとめ、トップ（3つの約束の下・「思想とコラム」・最後の CTA）・フッター・llms.txt から張る。
+9. トップからの回遊のため、思想の記事と注目コラムをカード全体がリンクの「思想とコラム」（`#reading`）として開発の背景の直後（料金より前）に置き、ヘッダーにも「コラム」を置く。ヘッダーのリンクは 1024px 未満ではメニューにまとめる（768〜1023px で文字が折り返して崩れていたため）。
 
 ## 影響
 - ADR-0001（Team Beta / Paid Trial / Estimate Audit）と ADR-0003（/team-beta・/estimate-audit の分離）を Superseded にする。

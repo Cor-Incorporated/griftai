@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-ai-estimate-automation');
+const contactUrl = corCta.griftTrial('grift-column-ai-estimate-automation');
 
 const title = '見積もり自動化をAIで実現！人間と共存する役割分担とは';
 const description =
@@ -63,13 +63,13 @@ const description =
             </div>
 
             <section class="u-mb30 c-block">
-              <h2 class="u-mb20 l-heading-secondary">見積もり作成の属人化解消ならCor株式会社へ</h2>
+              <h2 class="u-mb20 l-heading-secondary">見積もり作成の属人化のご相談はCor.株式会社へ</h2>
               <p class="u-m0 u-pb1em">
-                開発プロジェクトにおいて、見積もり作成が特定の担当者に依存しており、業務負担の偏りや属人化にお悩みの方も多いのではないでしょうか。Cor株式会社では、AI開発における上流工程の複雑な課題を解決するAI見積自動化ツール「Grift」を提供しています。
+                開発プロジェクトにおいて、見積もり作成が特定の担当者に依存しており、業務負担の偏りや属人化にお悩みの方も多いのではないでしょうか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                従来、要件定義から見積もりの算出までには、専門知識を持つ担当者が多くの時間を充てる必要がありました。Cor株式会社が提供する「Grift」は、GitHubの実績データや市場相場をAIが自動で照合し、客観的な根拠のある数値を瞬時に生成します。AIが対話形式で曖昧な仕様を明確に構造化していくため、専門的な知識がなくても短期間で精度の高い要件定義と費用の算出が完了します。
+                従来、要件定義から見積もりの算出までには、専門知識を持つ担当者が多くの時間を充てる必要がありました。Cor.株式会社では、AI開発の現場で培った知見をもとに、見積もりの前提や根拠を説明できる形に整える進め方や、見積もり業務にAIツールを取り入れる際の選び方・導入の手順についてもご相談をお受けしています。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -162,15 +162,14 @@ const description =
                 </p>
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">
-                  AIを活用した見積もり自動化ならCor株式会社へ
+                  AIを活用した見積もり自動化の相談ならCor.株式会社へ
                 </h3>
                 <p class="u-m0 u-pb1em">
-                  見積もり業務の属人化を解消し、チーム全体の生産性を向上させたいとお考えの方は、ぜひCor株式会社へご相談ください。Cor株式会社が提供するAI見積自動化ツール「Grift」は、上流工程・要件定義をサポートし、見積もりの自動化を実現します。
+                  見積もり業務の属人化を解消し、チーム全体の生産性を向上させたいとお考えの方は、ぜひCor.株式会社へご相談ください。Cor.株式会社は、AI受託開発の現場で上流工程・要件定義から見積もり、設計・実装・運用までを一貫して担っており、その経験をもとに見積もり業務へのAI活用の進め方をご提案します。
                 </p>
 
                 <div class="c-btn u-pb30">
-                  <a href="/#value" class="c-btn-anchor">「Grift」ができること</a
-                  >
+                  <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
                 </div>
               </div>
             </section>
@@ -256,11 +255,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AIで見積もりを自動化するならCor株式会社にお任せください</h3>
+              <h3 class="u-mb20">AIを活用した見積もりのご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -335,19 +334,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-06.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

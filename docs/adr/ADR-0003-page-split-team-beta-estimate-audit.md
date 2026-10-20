@@ -1,6 +1,6 @@
 # ADR-0003 `/team-beta/` と `/estimate-audit/` のページ分離
 
-## ステータス: Accepted (2026-07-10)
+## ステータス: Superseded by [ADR-0005](./ADR-0005-grift-cli-pivot.md) (2026-10-20)（旧: Accepted 2026-07-10）
 
 ## 背景
 - 1 ページに受託チーム・フリーランス・発注企業を同強度で載せるとメッセージが混ざる（監査 §2, §9）。

@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-create-estimate-automation');
+const contactUrl = corCta.griftTrial('grift-column-create-estimate-automation');
 
 const title = '見積もり作成を自動化！ドキュメント構成や全体のフローを解説';
 const description =
@@ -65,10 +65,10 @@ const description =
 
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">
-                見積もり作成の標準化と自動化ならCor株式会社にお任せ
+                見積もり作成の標準化と自動化の相談はCor.株式会社へ
               </h2>
               <p class="u-m0 u-pb1em">
-                社内DXを推進する中で、見積もり作成のフローが標準化されておらず、担当者ごとのバラつきや確認作業の手間に課題を感じている方も多いのではないでしょうか。Cor株式会社では、見積もりの自動化を実現するAIツール「Grift」を提供しています。
+                社内DXを推進する中で、見積もり作成のフローが標準化されておらず、担当者ごとのバラつきや確認作業の手間に課題を感じている方も多いのではないでしょうか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -76,7 +76,7 @@ const description =
               </p>
 
               <p class="u-m0 u-pb1em">
-                Cor株式会社の「Grift」を導入することで、AIが対話形式で曖昧な仕様を明確に構造化し、GitHubの実績データや市場相場と照合して客観的な根拠のある数値を瞬時に生成します。これにより、専門的な知識がなくても短期間で精度の高い要件定義と費用の算出が完了し、社内全体での業務標準化がスムーズに進みます。
+                Cor.株式会社では、見積もり作成の前提となる要件の整理や、見積もりの前提や根拠を説明できる形に整える進め方、見積もり作成の自動化ツールを取り入れる際の選び方についてもご相談をお受けしています。社内全体での業務標準化を進めるうえで、どこから手をつけるべきかを一緒に整理します。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -173,15 +173,13 @@ const description =
                   プロジェクトの予算枠や希望する納期に合わせて、全体の金額やスケジュールを微調整する修正作業も重要です。システム上では、特定の項目の単価を調整したり、開発フェーズの優先順位を変更したりすることで、全体のバランスを見ながら柔軟に修正を加えることができます。また、いつ、誰が、どの部分を修正したのかという変更履歴が自動的に保存されるため、過去のバージョンとの比較や、修正の経緯を後から確認する際にも役立ちます。
                 </p>
 
-                <h3 class="u-mb10 u-mt30 l-tertiary">見積もり作成の自動化ならCor株式会社へ</h3>
+                <h3 class="u-mb10 u-mt30 l-tertiary">見積もり作成の自動化はCor.株式会社へご相談ください</h3>
                 <p class="u-m0 u-pb1em">
-                  見積もり作成のプロセスを標準化し、修正作業の手間を削減したいとお考えでしたら、ぜひCor株式会社へご相談ください。AIを活用した見積自動化ツール「Grift」が、要件定義から費用の算出までをサポートします。
+                  見積もり作成のプロセスを標準化し、修正作業の手間を削減したいとお考えでしたら、ぜひCor.株式会社へご相談ください。AI受託開発・導入支援の経験をもとに、要件定義から費用の算出までの進め方を一緒に整理します。
                 </p>
 
                 <div class="c-btn u-pb30">
-                  <a href="/#flow" class="c-btn-anchor"
-                    >「Grift」の導入の流れを見る</a
-                  >
+                  <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
                 </div>
               </div>
             </section>
@@ -265,11 +263,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">見積もり作成の自動化のご相談はCor株式会社へ</h3>
+              <h3 class="u-mb20">見積もり作成の自動化のご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -344,19 +342,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-07.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

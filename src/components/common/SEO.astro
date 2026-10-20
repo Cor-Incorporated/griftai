@@ -69,7 +69,10 @@ const organizationSchema = {
   alternateName: ['Cor.inc', 'Cor株式会社'],
   url: 'https://cor-jp.com',
   logo: new URL('/grift-wordmark.jpg', siteConfig.url).href,
-  description: '受託開発チーム向けAI見積支援ツール「Grift」を提供する、福岡発のAI・DX支援企業。',
+  description:
+    '福岡のAI実装会社。機密データを外に出さないローカルLLM、確かめられる根拠をつくる自社プロダクト「Grift」、設計から運用までのAI受託開発を軸に、教育や地域での場づくりにも取り組む。',
+  foundingDate: '2023-12',
+  award: '福岡を代表する企業100選 2026-2027',
   email: 'company@cor-jp.com',
   telephone: '+81-50-1792-9351',
   address: {
@@ -192,7 +195,7 @@ const breadcrumbSchema = {
   name="keywords"
   content={tags.length > 0
     ? tags.join(', ')
-    : 'AI見積支援,受託開発,見積根拠,参考見積,開発見積ツール,Team Beta,GitHub連携,市場相場'}
+    : 'Grift,Grift CLI,grift-cli,TEP,git履歴,エンジニア 経歴書,推薦根拠,人材紹介,SES営業,OSS'}
 />
 
 <link rel="canonical" href={canonicalURL} />

@@ -36,7 +36,7 @@ export const contactMethods: ContactMethod[] = [
     icon: 'lucide:message-circle',
     label: 'AI受付',
     value: 'AI受付で相談する',
-    href: corCta.teamBeta('grift-contact-methods'),
+    href: corCta.griftTrial('grift-contact-methods'),
   },
   {
     icon: 'lucide:phone',
@@ -55,7 +55,7 @@ export const contactFAQs: ContactFAQ[] = [
   {
     question: '問い合わせ方法は何ですか？',
     answer:
-      'AI受付に相談内容を入力してご連絡いただけます。案件概要やチーム規模を添えていただくとスムーズです。',
+      'AI受付に相談内容を入力してご連絡いただけます。会社の種類（人材紹介・SESなど）と推薦の対象を添えていただくとスムーズです。',
   },
   {
     question: '電話でも相談できますか？',

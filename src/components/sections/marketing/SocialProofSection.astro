@@ -1,43 +1,32 @@
 ---
 /**
- * SocialProofSection - Trust building section for beta stage
+ * SocialProofSection - Trust building section
  *
  * @description
- * Builds trust through beta status transparency, team credentials,
- * and technology trust signals. No fake testimonials — honest beta messaging.
+ * Builds trust through the founder's story and verifiable facts about the
+ * company behind Grift (Cor.株式会社). No testimonials or usage numbers:
+ * only facts that are public or confirmed (ISMS audit status, Fukuoka 100
+ * selection, the Engineer Cafe Navigator OSS).
  *
  * @example
  * ```astro
  * <SocialProofSection />
  * ```
  */
+import { getCorUrl } from '@/lib/cor-cta';
+import { FUKUOKA100_PAGE_URL } from '@/lib/fukuoka100';
 
-import { Icon } from 'astro-icon/components';
-
-interface TechSignal {
-  /** Lucide icon name */
-  icon: string;
-  /** Technology/integration name */
-  name: string;
-}
-
-const techSignals: TechSignal[] = [
-  { icon: 'lucide:github', name: 'GitHub実績' },
-  { icon: 'lucide:brain', name: 'ローカルLLM + クラウドAI' },
-  { icon: 'lucide:bar-chart-3', name: '市場相場の参考比較' },
-  { icon: 'lucide:shield-check', name: '人間レビュー前提' },
-];
+const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
 ---
 
 <section class="border-y border-border bg-surface">
   <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    {/* Alpha status */}
     <div class="text-center">
       <span
         class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary"
       >
         <span class="size-2 rounded-full bg-primary" aria-hidden="true"></span>
-        Grift Team Betaの利用チームを募集中（提供条件を検証中）
+        Grift CLIは公開中／紹介会社さま向けの試行（PoC）のご相談を受付中
       </span>
     </div>
 
@@ -46,20 +35,17 @@ const techSignals: TechSignal[] = [
       <article class="card-lift rounded-2xl border border-border bg-background p-6">
         <p class="text-sm font-semibold text-primary">開発の背景</p>
         <h3 class="mt-3 text-xl font-semibold text-balance text-text">
-          「なぜこの金額なのか？」に答えるために。
+          見積の根拠から、仕事の証拠へ。
         </h3>
         <div class="mt-4 space-y-3">
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            受託開発の現場で、見積の根拠を聞かれて苦しい思いをした経験が、Griftの出発点です。
+            Griftは2026年2月、受託開発の見積を支えるWebアプリとして始まりました。見積の根拠を探るうちに、いちばん確かな材料は、エンジニアが積み上げてきたgit履歴そのものだと気づきました。
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            経験や勘は価値があります。ただし、それが担当者の頭の中だけにある限り、発注者に渡せる説明材料にも、チームで再利用できる会社資産にもなりにくい。
+            8月にその計測の部分をコマンドラインツールとして切り出し、9月に旧Webアプリを止めて、人材紹介会社・SESの営業を支える方向へ舵を切りました。
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            Griftでやりたいのは、見積をAIに丸投げすることではありません。人間が責任を持って説明できる根拠を増やすことです。
-          </p>
-          <p class="text-sm leading-7 text-text-muted text-pretty">
-            担当者が根拠を持って説明しやすくなり、そのノウハウをチームの資産として残せる世界を目指して、Griftを開発しています。
+            生成AIで、経歴書も活動量もいくらでも整えられる時代です。それでも、確かめられる事実は盛れません。「経歴は盛れる。証拠は盛れない。」が、いまのGriftの起点です。
           </p>
         </div>
         <div class="mt-6 flex items-center gap-4 rounded-xl border border-border bg-surface p-4">
@@ -72,56 +58,75 @@ const techSignals: TechSignal[] = [
             loading="lazy"
           />
           <div>
-            <p class="text-sm font-semibold text-text">寺田康佑 / Cor.株式会社 代表</p>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-          <img
-            src="/images/logo_with_text.png"
-            alt="Cor.株式会社"
-            width="40"
-            height="40"
-            class="size-10 shrink-0 rounded-lg object-contain"
-            loading="lazy"
-          />
-          <div>
-            <p class="text-sm font-semibold text-text">
-              Backed by
-              <a
-                href="https://cor-jp.com"
-                target="_blank"
-                rel="noreferrer"
-                class="text-primary underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary-dark hover:decoration-primary-dark/60"
-              >
-                Cor.株式会社
-              </a>
-            </p>
-            <p class="text-xs text-text-muted">cor-jp.com</p>
+            <p class="text-sm font-semibold text-text">寺田康佑 / Cor.株式会社 代表取締役</p>
           </div>
         </div>
       </article>
 
-      {/* Technology trust signals */}
+      {/* Company facts */}
       <article class="card-lift rounded-2xl border border-border bg-background p-6">
-        <p class="text-sm font-semibold text-primary">技術基盤</p>
+        <p class="text-sm font-semibold text-primary">運営会社</p>
         <h3 class="mt-3 text-xl font-semibold text-balance text-text">
-          見積根拠を整理するための、AIと実装データの使い分け
+          福岡のAI実装会社、<span class="whitespace-nowrap">Cor.株式会社</span>が開発しています。
         </h3>
-        <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
-          扱う情報の機密度に応じて、クラウドAI・ローカルLLM・GitHub実績・市場相場などを使い分け、見積根拠の整理を支援します。外部AIを利用する場合は、利用規約やデータ保存設定を確認したうえで設計します。
+        <ul class="mt-5 space-y-4">
+          <li class="rounded-xl border border-border bg-surface p-4">
+            <p class="text-sm font-semibold text-text">情報セキュリティ</p>
+            <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
+              2026年10月、情報セキュリティの国際規格 ISO/IEC
+              27001（ISMS）の第2段階審査を終えました。2026年12月ごろの認証登録を見込んでいます。
+            </p>
+          </li>
+          <li class="rounded-xl border border-border bg-surface p-4">
+            <p class="text-sm font-semibold text-text">福岡を代表する企業100選</p>
+            <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
+              「福岡を代表する企業100選 2026-2027」（Made In Local）に選ばれ、
+              <a
+                href={FUKUOKA100_PAGE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary underline underline-offset-2">特設ページ</a
+              >で紹介されています。
+            </p>
+          </li>
+          <li class="flex items-start gap-4 rounded-xl border border-border bg-surface p-4">
+            {/* エンジニアカフェの公式ロゴ（黒の線画）。ダークモードでも読めるよう白地に置く。 */}
+            <span class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-white p-1">
+              <img
+                src="/images/partners/engineer-cafe-logo.png"
+                alt="Engineer Cafe（エンジニアカフェ）"
+                width="182"
+                height="162"
+                class="h-auto w-full"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+            <div>
+              <p class="text-sm font-semibold text-text">OSSの開発・運用実績</p>
+              <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
+                福岡市のエンジニアカフェ向けに、多言語音声AI受付「Engineer Cafe
+                Navigator」を開発し、OSSとして公開しています（実運用中）。
+                <a
+                  href={engineerCafeCaseUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="text-primary underline underline-offset-2">事例を読む</a
+                >
+              </p>
+            </div>
+          </li>
+        </ul>
+        <p class="mt-5 text-sm font-semibold text-text">
+          <a
+            href={getCorUrl('/')}
+            target="_blank"
+            rel="noreferrer"
+            class="text-primary underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary-dark hover:decoration-primary-dark/60"
+          >
+            Cor.株式会社のサイトを見る（cor-jp.com）
+          </a>
         </p>
-        <div class="mt-6 grid grid-cols-2 gap-4">
-          {
-            techSignals.map((signal) => (
-              <div class="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                  <Icon name={signal.icon} class="size-5 text-primary" aria-hidden="true" />
-                </div>
-                <p class="text-sm font-medium text-text">{signal.name}</p>
-              </div>
-            ))
-          }
-        </div>
       </article>
     </div>
   </div>

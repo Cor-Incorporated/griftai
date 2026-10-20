@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { siteConfig } from '@/config';
+import { contentAsOf, griftCli, siteConfig } from '@/config';
 
 /**
  * llms.txt — AI クローラ・LLM 向けサイト要約（https://llmstxt.org/ 準拠）
@@ -12,35 +12,52 @@ export const GET: APIRoute = () => {
 
 > ${siteConfig.description}
 
-GriftはCor.株式会社（福岡市）が提供する、受託開発チーム向けのAI見積支援ツール（ベータ版）。
-GitHub実績・市場相場・案件前提をもとに「参考見積」と「見積根拠」を整理し、
-人間が最終判断できる提案材料を作る。AIが見積金額を決定するのではなく、
-人間レビューを前提とした判断支援ツール。
+Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開している、エンジニアのgit履歴から
+「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。手法の名前はTEP（Technical Evidence Pipeline）。
+計測にAI（LLM）を使わない決定論的な計測で、同じリポジトリ・同じ版なら誰が実行しても同じ数値になる。
+合成スコア・順位・合否・等級は出さず、数値には必ず分子と分母を付ける。
+キャッチコピーは「経歴は盛れる。証拠は盛れない。」。
+
+情報は${contentAsOf}時点のもの。
+
+## 要点
+
+- 対象: 人材紹介会社・SESの営業（推薦の理由を根拠とともに伝える）と、エンジニア本人（経歴書に検算できる事実を添える）
+- 提供状況: CLIは公開中（PyPI「${griftCli.packageName}」v${griftCli.version}、${griftCli.releasedOn}公開、${griftCli.license}ライセンス、Python ${griftCli.pythonRequires}）。紹介会社さま向けの機能は試行（PoC）を準備中
+- 料金: CLIは無償。紹介会社さま・SES企業さまとの試行は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
+- データの扱い: 手元のPCだけで動き、当社へデータを自動で送る機能はない。ネットワークを使う操作は本人が明示したときだけ
+- 検算: grift verify で保存したレポートを再計算し、VERIFIED / MISMATCH / CANNOT_VERIFY を返す
+- 主な観測: 帰属の区別（本人・他人・bot・生成物・fork元など11分類）、テスト併修率（test co-change）、手戻り率（corrective rework・観測のみ）、磨き直し（path retouch）、定着率（survival・オプション）、リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）
+- 検証: 公開117リポジトリで指標を検証し、区別できた比較とできていない比較の両方を公開（社内測定・第三者監査なし）
+- 利用規範（norms・7条）: 不在を負に読まない／単独で足切りしない／申告を負に読まない／同意なき第三者プロファイリング禁止／監視への転用は非準拠／選択性の明示／重み付け・換算の禁止
+- 経緯: 2026年2月に受託開発向けのWeb見積アプリとして着手 → 8月に計測部分をCLIに切り出し → 9月に旧Webアプリを停止し、紹介会社・SESの営業支援へ方針転換。旧プラン（Team Beta / Paid Trial / Estimate Audit）は2026年10月に取り下げ
 
 ## 主要ページ
 
-- [トップ](${siteConfig.url}/): 製品概要・課題・価値・導入フロー・利用シーン
-- [Team Beta](${siteConfig.url}/team-beta/): 2〜10人の受託チーム向け有料β。月額5万円を基本に個別案内
-- [Estimate Audit](${siteConfig.url}/estimate-audit/): 発注企業向け。提出見積の前提・技術リスク・工数妥当性の整理。100万円を基本に個別見積
-- [料金](${siteConfig.url}/pricing/): Team Beta（月額5万円〜）/ Paid Trial（3ヶ月15万円〜）/ Estimate Audit（100万円〜）の提供条件
-- [FAQ](${siteConfig.url}/faq/): 参考見積・見積根拠・人間レビュー前提・GitHub連携・料金・機密情報の扱い
-- [コラム一覧](${siteConfig.url}/column/): 要件定義・見積支援・AI開発費用・上流工程に関する解説記事
+- [トップ](${siteConfig.url}/): Griftとは・3つの約束・観測すること・検証の公開・推薦までの流れ・料金と提供状況
+- [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、試行は個別案内、正式版は2027年予定
+- [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
+- [コラム一覧](${siteConfig.url}/column/): 受託開発の見積・要件定義・上流工程とAIに関する解説記事
 - [お問い合わせ](${siteConfig.url}/contact/): Cor.株式会社のAI受付・電話窓口
 - [プライバシーポリシー](${siteConfig.url}/privacy/)
 - [利用規約](${siteConfig.url}/terms/)
 
-## 提供プラン
+## 一次情報
 
-- **Grift Team Beta**: 受託開発チーム向け。見積プロセスの標準化とナレッジ蓄積。月額5万円を基本に個別案内
-- **Grift Paid Trial**: 3ヶ月の実案件検証向け。3ヶ月15万円を基本に個別案内
-- **Grift Estimate Audit**: 発注企業が受け取った見積の妥当性を検討する材料整理。100万円を基本に個別見積
+- GitHub: ${griftCli.github}
+- PyPI: ${griftCli.pypi}
+- 利用規範（norms）: ${griftCli.norms}
+- 指標の読み方（metrics-guide）: ${griftCli.metricsGuide}
 
 ## 運営会社
 
-- Cor.株式会社（Cor.inc）
+- Cor.株式会社（Cor.inc）— 福岡のAI実装会社
 - 所在地: 〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神パインクレスト719号
-- 電話: 050-1792-9351
+- 電話: 050-1792-9351（AI受付の電話窓口）
 - コーポレートサイト: https://cor-jp.com
+- 会社概要: https://cor-jp.com/company/
+- 情報セキュリティ: 2026年10月にISO/IEC 27001（ISMS）の第2段階審査を終了。2026年12月ごろの認証登録見込み（登録前のため「取得済み」ではない）
+- 福岡を代表する企業100選 2026-2027 に選出
 - 相談窓口: ${siteConfig.url}/contact/ 経由のAI受付
 
 ## コラム（解説記事）

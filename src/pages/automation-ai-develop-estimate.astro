@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-automation-ai-develop-estimate');
+const contactUrl = corCta.griftTrial('grift-column-automation-ai-develop-estimate');
 
 const title = 'AI開発の見積もりを自動化！算出のメカニズムやメリットを解説';
 const description =
@@ -64,25 +64,25 @@ const description =
             </div>
 
             <section class="u-mb30 c-block">
-              <h2 class="u-mb20 l-heading-secondary">AI見積自動化ツールならCor株式会社へ</h2>
+              <h2 class="u-mb20 l-heading-secondary">AI開発の見積もりの相談ならCor.株式会社へ</h2>
               <p class="u-m0 u-pb1em">
-                新規事業の企画において、開発費用の算出に時間がかかり、プロジェクトの進行が遅れてしまうとお悩みの方も多いのではないでしょうか。Cor株式会社では、AI開発における上流工程の複雑な課題を解決するAI見積自動化ツール「Grift」を提供しています。
+                新規事業の企画において、開発費用の算出に時間がかかり、プロジェクトの進行が遅れてしまうとお悩みの方も多いのではないでしょうか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                多くの開発プロジェクトでは、要件をすり合わせて費用を算出するまでに数週間から数か月という非常に長い期間を要します。Cor株式会社が提供する「Grift」は、GitHubの実績データと市場相場をAIが自動で照合し、客観的な根拠のある数値を瞬時に生成可能です。AIが対話形式で曖昧な仕様を明確に構造化していくため、専門的な知識がなくても短期間で精度の高い要件定義と費用の算出が完了します。
+                多くの開発プロジェクトでは、要件をすり合わせて費用を算出するまでに数週間から数か月という非常に長い期間を要します。Cor.株式会社では、見積もりの自動化ツールを取り入れる際の選び方や進め方に加え、AI開発の要件を早い段階で整理し、見積もりの前提や根拠を説明できる形に整えるためのご相談もお受けしています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                一般的な開発ツールがコーディングの支援にとどまるのに対し、Griftは発注前の「何を作るか」「いくらかかるか」という最も時間のかかる工程をAIで根本から管理できる点が大きな強みです。
+                発注前の「何を作るか」「いくらかかるか」という上流工程から、その後の設計・実装・運用までを見通したうえでご相談に乗れる点が、AI受託開発を一気通貫で手がけるCor.株式会社の特長です。
               </p>
 
               <p class="u-m0 u-pb1em">
-                属人的な作業から脱却し、正確でスピーディーな見積もりを実現してチーム全体の意思決定を加速させたいとお考えの方は、ぜひ一度お問い合わせください。具体的な導入手順や活用事例などの詳細な情報については、以下で詳しくご案内しています。
+                属人的な作業から脱却し、正確でスピーディーな見積もりを実現してチーム全体の意思決定を加速させたいとお考えの方は、ぜひ一度お問い合わせください。Cor.株式会社のこれまでの開発実績は、以下のページからご確認いただけます。
               </p>
 
               <div class="c-btn u-pb30">
-                <a href="/#flow" class="c-btn-anchor">導入の流れはこちら</a>
+                <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
               </div>
             </section>
 
@@ -163,9 +163,9 @@ const description =
                   新規事業の立ち上げ段階では、機能の増減によって全体の予算がどう変化するのかを複数パターンで詳細に比較したい場面が多々あります。自動化ツールを使えば、要件を少し変更するだけで即座に新しい金額が再計算されるため、様々なシナリオを想定したシミュレーションが容易になります。限られた予算の中で実装する機能の優先順位を論理的に決めたり、機能を絞ったスモールスタートの計画をスピーディーに立てたりと、柔軟で精度の高い企画立案で活躍します。
                 </p>
 
-                <h3 class="u-mb10 u-mt30 l-tertiary">AI開発の見積もり自動化ならCor株式会社へ</h3>
+                <h3 class="u-mb10 u-mt30 l-tertiary">AI開発の見積もり自動化の相談はCor.株式会社へ</h3>
                 <p class="u-m0 u-pb1em">
-                  新規事業の立ち上げにおいて、客観的なデータにもとづく迅速な意思決定を実現したい方は、ぜひCor株式会社へご相談ください。Cor株式会社が提供するAI見積自動化ツール「Grift」は、上流工程からAIで管理できるため、見積もり精度の向上や認識齟齬の削減に直結します。
+                  新規事業の立ち上げにおいて、客観的なデータにもとづく迅速な意思決定を実現したい方は、ぜひCor.株式会社へご相談ください。Cor.株式会社では、AI受託開発の現場で要件定義から見積もり、設計・実装・運用までを一貫して担っており、見積もりの前提や根拠を説明できる形に整えることで、認識齟齬の少ないプロジェクトの立ち上げをお手伝いします。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -177,6 +177,14 @@ const description =
                   >
                 </div>
               </div>
+            </section>
+
+            <section class="u-mb30 c-block">
+              <h2 class="u-mb20 l-heading-secondary">AI見積もり自動化の導入前に知っておきたいリスクと注意点</h2>
+              <p class="u-m0 u-pb1em">AI開発における見積もりの自動化は、意思決定のスピードアップや工数削減など多くのメリットをもたらします。一方で、導入前に把握しておくべき注意点もいくつか存在します。</p>
+              <p class="u-m0 u-pb1em">まず、AIによる算出精度は入力データの質に大きく依存します。要件の記述が曖昧だったり、情報が断片的だったりすると、どれほど高度なロジックを備えたツールであっても、算出結果の精度に影響が出ることがあります。正確な見積もりを得るためには、入力情報をできる限り具体的に整理することが重要です。</p>
+              <p class="u-m0 u-pb1em">次に、高度にカスタマイズされた要件や、前例の少ない新技術を組み合わせた開発案件では、AIだけで完結させることが難しい場面もあります。自動化ツールはあくまで意思決定を支援する手段であり、専門家との連携を完全に代替するものではありません。</p>
+              <p class="u-m0 u-pb1em">Cor.株式会社では、AI受託開発の現場で要件定義から見積もり、設計・実装・運用までを一貫して担いながら、こうした運用上の課題にも専門家として対応しています。ツールの活用と専門知識を組み合わせることで、より精度の高い要件定義と費用算出に近づけます。</p>
             </section>
 
             <section class="u-mb30 c-block">
@@ -260,11 +268,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AI開発の見積もりを自動化するツールのご相談はCor株式会社へ</h3>
+              <h3 class="u-mb20">AI開発の見積もり・自動化のご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -339,19 +347,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-05.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

@@ -4,10 +4,10 @@ import PageHeader from '@sections/content/PageHeader.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import { Icon } from 'astro-icon/components';
-import { siteConfig } from '@/config';
+import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
-const contactUrl = corCta.teamBeta('grift-faq');
+const contactUrl = corCta.griftTrial('grift-faq');
 
 const faqSections = [
   {
@@ -15,82 +15,97 @@ const faqSections = [
     name: 'Griftについて',
     faqs: [
       {
-        question: 'Griftは何を支援しますか？',
+        question: 'Griftとは何ですか？',
         answer:
-          'GitHub実績や市場相場、類似案件などのデータを整理し、提案前の判断材料となる「参考見積」と「見積根拠」の作成を支援します。',
+          'エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのコマンドラインツール（Grift CLI）です。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。Cor.株式会社が開発・公開しています。',
       },
       {
-        question: 'AIが見積金額を決めるのですか？',
+        question: '誰のためのツールですか？',
         answer:
-          'いいえ。AIはあくまで判断材料を整理・提示するツールです。見積のすべてをAIだけで完結させるものではありません。',
+          '人材紹介会社・SESの営業の方が「なぜこの方を薦めるのか」を根拠とともに伝えるため、そしてエンジニア本人が経歴書に検算できる事実を添えるためのツールです。',
       },
       {
-        question: '最終判断は誰が行いますか？',
+        question: 'TEPとは何ですか？',
         answer:
-          '最終的な見積金額の決定は人間が行います。AIが整理した材料をもとに、担当者が責任を持ってレビューし、微調整を行います。',
+          'Griftが使っている手法の名前で、Technical Evidence Pipeline の略です。git履歴から、誰の仕事か（帰属）と、変更に検証が伴っているか（テストの併修など）を決定論的に取り出します。利用規範（norms）を守る使い方だけを「TEP準拠」と呼びます。',
+      },
+      {
+        question: '以前の「AI見積支援ツール Grift」とは違うものですか？',
+        answer:
+          '同じ製品の方針を変えたものです。Griftは2026年2月に見積支援のWebアプリとして始まり、8月に計測の部分をCLIとして切り出し、9月に旧Webアプリの提供を止めました。いまは、git履歴から確かめられる事実を取り出すCLIと、紹介会社さま向けの推薦支援に取り組んでいます。',
       },
     ],
   },
   {
-    id: 'usage',
-    name: '機能と使い方',
+    id: 'how-it-works',
+    name: '計測のしかた',
     faqs: [
       {
-        question: 'GitHub連携は必須ですか？',
+        question: 'AIでエンジニアを評価するのですか？',
         answer:
-          '必須ではありません。連携していただくことで、過去の実績や開発傾向を参考材料として反映しやすくなります。GitHub連携なしでも、案件前提や市場相場をもとに見積根拠の整理は可能です。',
+          'いいえ。計測にAI（LLM）は使いません。合成スコア・順位・合否・等級も出しません。出すのは分子と分母の付いた検査値で、判断するのは人です。',
       },
       {
-        question: '市場相場はどのように扱いますか？',
+        question: '何を観測しますか？',
         answer:
-          '一般的な受託開発の市場データなどを参考に、価格帯を検討するための参考情報として提示します。金額や相場を保証するものではありません。',
+          '本人・他人・bot・生成物・fork元などを分ける帰属の区別、本番の変更にテストが伴っているか（テスト併修率）、fix・revertでのやり直し（手戻り率・観測のみ）、同じファイルの磨き直し、オプションで書いた行の定着率、そして実働日数や関わった人数、レビュー経由の割合などリポジトリの文脈です。',
       },
       {
-        question: 'Team Betaでは何ができますか？',
+        question: '同じリポジトリなら、本当に同じ結果になりますか？',
         answer:
-          '実際の案件情報をもとに見積根拠を整理し、チーム内でノウハウを蓄積するプロセスを体験いただけます。現在、最適な機能やサポート範囲を検証中です。',
+          'はい。同じリポジトリ・同じ版のGriftなら、誰が実行しても同じ数値になります。保存したレポートは grift verify で同じ条件のまま再計算し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。',
+      },
+      {
+        question: 'コミットが少ない人や、private の仕事が多い人は不利になりませんか？',
+        answer:
+          '観測できなかったものは「実績なし」ではなく、理由付きの「未観測」として出します。母数が20未満のときは率を出さずに件数だけを示します。git に写らない仕事や private な経歴を不利に読む使い方は、利用規範で禁止しています。',
+      },
+      {
+        question: '指標の信頼性はどう確かめていますか？',
+        answer:
+          '公開117リポジトリで指標を検証し、区別できた比較と、まだ区別できていない比較の両方をGitHubで公開しています。社内での測定で、第三者による監査は受けていません。',
       },
     ],
   },
   {
-    id: 'target-teams',
-    name: '対象チーム',
+    id: 'privacy',
+    name: 'データと同意',
     faqs: [
       {
-        question: 'どのようなチームに向いていますか？',
+        question: 'リポジトリやコードはどこかに送られますか？',
         answer:
-          '見積業務が代表や一部のベテランに集中しており、属人化を減らしたい、または見積ノウハウの共有を進めたい2〜10人程度の受託開発チームに向いています。',
+          'Grift CLI は手元のPCだけで動き、当社へデータを自動で送る機能はありません。公開リポジトリの情報を取りに行くなど、ネットワークを使う操作は本人が明示したときだけです。',
       },
       {
-        question: 'フリーランスでも使えますか？',
+        question: 'private リポジトリでも使えますか？',
         answer:
-          'はい、ご利用いただけます。ただし、Griftはチームでのナレッジ蓄積や属人化を減らすことを主眼に置いているため、Team Betaとしてご案内する機能はチーム向けが中心となります。',
+          '使えます。手元で計測し、共有したい集計値だけを本人の意思で渡せます。コードそのものを相手に見せる必要はありません。',
       },
       {
-        question: '発注企業でも使えますか？',
+        question: '本人の同意なく、他人を測ってもよいですか？',
         answer:
-          'はい。提出された見積の前提や技術リスク、工数妥当性を検討するための判断材料として整理する「Estimate Audit」プランをご用意しています。',
+          '本人の同意なく個人の分析をする使い方は、利用規範で「非準拠」としています。紹介会社さまでの試行でも、実行と共有は候補者本人が行う流れを前提にしています。',
       },
     ],
   },
   {
-    id: 'pricing-entry',
-    name: '導入と料金',
+    id: 'pricing',
+    name: '料金と導入',
     faqs: [
       {
         question: '料金はいくらですか？',
         answer:
-          '目安として、Grift Team Betaは月額5万円を基本に個別案内しています。ご利用範囲・チーム規模・サポート内容に応じてご案内します。',
+          'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまとの試行（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
       },
       {
-        question: '機密情報や案件情報はどう扱いますか？',
+        question: 'どうやって始めればよいですか？',
         answer:
-          '案件情報やGitHub連携情報は、利用範囲・保存先・アクセス権限を確認したうえで扱います。外部AIを利用する場合も、各サービスの規約、データ保存設定、学習利用の有無を確認し、必要に応じて匿名化や入力制限を行います。詳細は個別にご説明します。',
+          'エンジニアの方は、Python 3.11以上の環境で pipx install grift-cli を実行し、リポジトリの中で grift report を実行してください。紹介会社さま・SES企業さまは、AI受付から試行についてご相談ください。',
       },
       {
-        question: '契約前に相談できますか？',
+        question: 'Team Beta や Estimate Audit はまだ申し込めますか？',
         answer:
-          'もちろんです。現在ベータ版として提供範囲を検証中のため、まずはチームの課題や状況をヒアリングし、自分たちの案件で使えるかどうかのご相談から承っております。',
+          '2026年10月に取り下げたため、新しいお申し込みは受け付けていません。以前のプランについてのお問い合わせは、AI受付でお受けします。',
       },
     ],
   },
@@ -100,16 +115,16 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
 ---
 
 <MarketingLayout
-  title={`よくある質問 — AI見積支援ツール ${siteConfig.name}`}
-  titleTag="Griftのよくある質問｜AI見積支援と人間レビュー前提"
-  ogTitle="Griftのよくある質問｜AI見積支援ツール"
-  description="Griftに関するよくある質問ページです。参考見積、見積根拠、人間レビュー前提、GitHub連携、料金、機密情報の扱いなど、導入検討に必要な情報をQ&A形式でまとめています。"
+  title={`よくある質問 — git履歴から確かめられる事実を取り出す ${siteConfig.name}`}
+  titleTag="Griftのよくある質問｜計測のしかた・データの扱い・料金"
+  ogTitle="Griftのよくある質問｜Grift"
+  description="Grift（Grift CLI）のよくある質問です。AIで人を評価するのか、何を観測するのか、データはどこへ行くのか、本人の同意、料金と始め方などをQ&A形式でまとめています。"
   faqItems={allFaqItems}
 >
   <BreadcrumbNav items={[{ label: 'よくある質問' }]} />
   <PageHeader
     title="よくある質問"
-    subtitle="AI見積支援ツール Grift について、導入前に確認されやすい内容をまとめました。"
+    subtitle="Grift（Grift CLI）について、使う前に確認されやすい内容をまとめました。"
   />
 
   {/* カテゴリ別アンカーリンク（ページ内回遊・構造把握用） */}
@@ -160,12 +175,12 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
   </section>
 
   <NextStep
-    heading="自分たちの案件で使えるか、まずはご相談ください。"
-    lead="案件の種類やチーム体制によって最適な使い方は変わります。具体的な状況をお聞かせいただければ、Griftがどう役立つかを個別にご案内します。"
+    heading="推薦業務で使えるか、まずはご相談ください。"
+    lead="紹介会社さま・SES企業さまの推薦の流れをお聞かせいただければ、試行の範囲と費用を個別にご案内します。"
     ctas={[
-      { label: 'Team Betaについて相談する', href: contactUrl, primary: true, isExternal: true },
-      { label: '料金の全体像を見る', href: '/pricing/' },
-      { label: 'コラムで深掘りする', href: '/column/' },
+      { label: '試行について相談する', href: contactUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+      { label: '料金と提供状況を見る', href: '/pricing/' },
     ]}
   />
 </MarketingLayout>

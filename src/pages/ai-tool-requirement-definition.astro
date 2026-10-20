@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-ai-tool-requirement-definition');
+const contactUrl = corCta.griftTrial('grift-column-ai-tool-requirement-definition');
 
 const title =
   'AIを活用した要件定義ツールで属人化を防ぐ！要件定義の進め方や必須スキル';
@@ -66,14 +66,14 @@ const description =
 
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">
-                要件定義の効率化に関するご相談はCor株式会社へ
+                要件定義の効率化に関するご相談はCor.株式会社へ
               </h2>
               <p class="u-m0 u-pb1em">
-                開発プロジェクトにおいて、要件定義や見積もりの作成に多くのリソースを割いている方も多いのではないでしょうか。Cor株式会社は、これまで属人的かつ曖昧になりがちだった上流工程の課題を解決し、開発チームが本来の業務に集中できる環境づくりをサポートしています。
+                開発プロジェクトにおいて、要件定義や見積もりの作成に多くのリソースを割いている方も多いのではないでしょうか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、属人的かつ曖昧になりがちな上流工程の課題の整理から、要件定義・見積もり、設計・実装・運用までを一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                Cor株式会社では、受託開発の現場やフリーランスの方々が直面する「見積もりの根拠がクライアントに明確に示せない」「担当者によって提案金額が大きくブレてしまう」といった深刻なお悩みを解決する、AI見積自動化ツール「Grift」を提供しています。
+                受託開発の現場やフリーランスの方々が「見積もりの根拠がクライアントに明確に示せない」「担当者によって提案金額が大きくブレてしまう」といった深刻なお悩みを抱えるケースは少なくありません。Cor.株式会社では、要件定義の進め方や、見積もりの前提や根拠を説明できる形に整える方法、要件定義にAIツールを取り入れる際の選び方についてご相談をお受けしています。
               </p>
 
               <p class="u-m0 u-pb1em">
@@ -81,11 +81,11 @@ const description =
               </p>
 
               <p class="u-m0 u-pb1em">
-                少人数のチームでも一貫した品質の提案書を作成し、新しいメンバーにもスムーズに引き継げる体制を整えたいとお考えの方は、ぜひ一度お問い合わせください。ベータ提供の詳細については、以下のページからご確認ください。
+                少人数のチームでも一貫した品質の提案書を作成し、新しいメンバーにもスムーズに引き継げる体制を整えたいとお考えの方は、ぜひ一度お問い合わせください。Cor.株式会社のこれまでの開発実績は、以下のページからご確認いただけます。
               </p>
 
               <div class="c-btn u-pb30">
-                <a href="/pricing/" class="c-btn-anchor">ベータ提供の詳細を見る</a>
+                <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
               </div>
             </section>
 
@@ -170,9 +170,9 @@ const description =
                   発注前の段階からAIを活用すれば、プロジェクト全体を最初から最後まで適正に管理できます。見積もりや仕様の精度が高まり、開発着手後の手戻りやトラブルが減少するため、結果的に利益率の確保とスケジュールの遵守につながります。ツールの選び方としては、自社のワークフローにスムーズに馴染むか、客観的な市場データを提示できるかといった実用的な点を基準に置くと良いでしょう。
                 </p>
 
-                <h3 class="u-mb10 u-mt30 l-tertiary">上流工程の自動化ならCor株式会社へ</h3>
+                <h3 class="u-mb10 u-mt30 l-tertiary">上流工程のAI活用の相談ならCor.株式会社へ</h3>
                 <p class="u-m0 u-pb1em">
-                  要件定義の精度向上や見積もりの自動化をご検討中でしたら、Cor株式会社へご相談ください。Cor株式会社では、GitHub実績と市場相場を自動で照合し、要件定義や見積もりを自動化するツールを提供しています。導入に関する具体的なご相談は、お気軽にお問い合わせください。
+                  要件定義の精度向上や見積もりの自動化をご検討中でしたら、Cor.株式会社へご相談ください。Cor.株式会社では、AI受託開発・導入支援を通じて、要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。自社に合ったAIツールの選び方や導入の進め方についても、お気軽にお問い合わせください。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -265,11 +265,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AIを活用した要件定義ツールのご相談はCor株式会社へ</h3>
+              <h3 class="u-mb20">AIを活用した要件定義ツールのご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -344,19 +344,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-01.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

@@ -26,7 +26,7 @@ interface Props {
 }
 
 const { heroSelector = '#hero' } = Astro.props;
-const contactUrl = corCta.teamBeta('grift-lp-floating');
+const contactUrl = corCta.griftTrial('grift-lp-floating');
 ---
 
 <div
@@ -40,7 +40,7 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
     style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
   >
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
-      <p class="hidden text-sm text-text-muted sm:block">Grift Team Beta</p>
+      <p class="hidden text-sm text-text-muted sm:block">Grift ・ 紹介会社さま向けの試行</p>
       <div class="flex flex-1 items-center gap-3 sm:flex-none">
         <a
           href={contactUrl}
@@ -49,7 +49,7 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
           tabindex="-1"
           class="cta-primary flex-1 px-5 py-2.5 text-sm sm:flex-none"
         >
-          ベータについて相談する
+          試行について相談する
         </a>
         <button
           type="button"

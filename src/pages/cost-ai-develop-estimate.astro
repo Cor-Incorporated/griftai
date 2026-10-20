@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-cost-ai-develop-estimate');
+const contactUrl = corCta.griftTrial('grift-column-cost-ai-develop-estimate');
 
 const title = 'AI開発の見積もり費用はどう決まる？内訳や変動要因を解説';
 const description =
@@ -64,18 +64,18 @@ const description =
 
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">
-                AI開発の予算確保段階でお悩みならCor株式会社へご相談ください
+                AI開発の予算確保段階でお悩みならCor.株式会社へご相談ください
               </h2>
               <p class="u-m0 u-pb1em">
-                AI開発を進めるうえで、見積もりの妥当性を判断することは非常に重要です。しかし、専門的な知識がない状態で適正な費用を見極めるのは簡単ではありません。Cor株式会社では、これまで属人的になりがちだった見積もり作成のプロセスを、AIを活用して自動化・最適化するサポートを行っています。
+                AI開発を進めるうえで、見積もりの妥当性を判断することは非常に重要です。しかし、専門的な知識がない状態で適正な費用を見極めるのは簡単ではありません。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                一般的な開発ツールがコーディングの支援にとどまるのに対し、Cor株式会社のサービスは発注前の「何を作るか」「いくらかかるか」という上流工程からサポートできる点が大きな強みです。過去の開発実績と市場の相場データを自動で照合し、客観的な根拠にもとづいた見積もりを提示します。これにより、発注側と受注側の認識のズレをなくし、納得感のあるプロジェクト進行を実現します。
+                PoCで終わらせず運用まで見据えたうえで、発注前の「何を作るか」「いくらかかるか」という上流工程からご相談いただける点が、Cor.株式会社の特長です。AI開発の費用を左右する要件や前提を早い段階で整理し、見積もりの前提や根拠を説明できる形に整えることで、発注側と受注側の認識のズレを減らし、納得感のあるプロジェクト進行を目指します。
               </p>
 
               <p class="u-m0 u-pb1em">
-                AI開発における費用の不透明さに課題を感じている方は、ぜひ一度ご相談ください。客観的なデータにもとづいた、説得力のある提案でプロジェクトを成功へと導きます。
+                AI開発における費用の不透明さに課題を感じている方は、ぜひ一度ご相談ください。前提と根拠を明確にした提案で、プロジェクトの成功に向けて伴走します。
               </p>
 
               <div class="c-btn u-pb30">
@@ -187,13 +187,13 @@ const description =
                   見積もりの段階で、開発会社と要件の認識をしっかりとすり合わせることが不可欠です。曖昧な要件のまま進めると、後から追加費用が発生する原因になります。上流工程からしっかりと要件を定義し、費用の根拠を明確にすることで、予算超過のリスクを減らすことができます。
                 </p>
 
-                <h3 class="u-mb10 u-mt30 l-tertiary">AI開発の費用感でお悩みならCor株式会社へ</h3>
+                <h3 class="u-mb10 u-mt30 l-tertiary">AI開発の費用感でお悩みならCor.株式会社へ</h3>
                 <p class="u-m0 u-pb1em">
-                  AI開発の予算管理や適正な費用の算出でお悩みなら、Cor株式会社にご相談ください。Cor株式会社が提供するAI見積自動化ツール「Grift」は、GitHubの実績データと市場相場を照合し、客観的な根拠のある見積もりレポートを生成します。
+                  AI開発の予算管理や適正な費用の算出でお悩みなら、Cor.株式会社にご相談ください。Cor.株式会社では、AI受託開発の現場で要件定義から見積もり、設計・実装・運用までを一貫して担っており、その経験をもとにAI開発の費用の内訳や見積もりの前提を説明できる形に整えるお手伝いをしています。
                 </p>
 
                 <div class="c-btn u-pb30">
-                  <a href="/#scenarios" class="c-btn-anchor">活用シーンを見る</a>
+                  <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
                 </div>
               </div>
             </section>
@@ -279,11 +279,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AI開発の適正な費用と見積もりにお悩みならCor株式会社へ</h3>
+              <h3 class="u-mb20">AI開発の適正な費用と見積もりにお悩みならCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -358,19 +358,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-03.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

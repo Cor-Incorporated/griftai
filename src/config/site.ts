@@ -15,7 +15,7 @@ export const name = import.meta.env.SITE_NAME || 'Grift';
 /** Site description for SEO and meta tags */
 export const description =
   import.meta.env.SITE_DESCRIPTION ||
-  'Griftは、受託開発チームが「なぜこの金額なのか」を説明できるよう、参考見積と見積根拠を整理するAI見積支援ツールです。';
+  'Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が、推薦の理由を根拠とともに伝えるために使えます。';
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';
@@ -36,9 +36,29 @@ export const social: SocialLinks = {
   github: 'https://github.com/Cor-Incorporated',
 };
 
+/**
+ * Grift CLI（OSS）の公開情報。LP・FAQ・構造化データ・llms.txt の共通の出典。
+ * 版を上げたら version / releasedOn を PyPI の公開日（JST）に合わせて更新する。
+ */
+export const griftCli = {
+  github: 'https://github.com/Cor-Incorporated/grift-cli',
+  pypi: 'https://pypi.org/project/grift-cli/',
+  norms: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/norms.md',
+  metricsGuide: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/metrics-guide.md',
+  packageName: 'grift-cli',
+  installCommand: 'pipx install grift-cli',
+  version: '0.7.2',
+  releasedOn: '2026-09-08',
+  license: 'MIT',
+  pythonRequires: '3.11以上',
+} as const;
+
+/** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */
+export const contentAsOf = '2026-10-20';
+
 /** Legal configuration for privacy policy and terms pages */
 export const legal: LegalConfig = {
-  privacyEmail: corCta.teamBeta('grift-legal-privacy'),
-  legalEmail: corCta.teamBeta('grift-legal-terms'),
+  privacyEmail: corCta.griftTrial('grift-legal-privacy'),
+  legalEmail: corCta.griftTrial('grift-legal-terms'),
   lastUpdated: '2026-03-12',
 };

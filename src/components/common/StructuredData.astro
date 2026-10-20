@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '@/config';
+import { griftCli, siteConfig } from '@/config';
 
 interface Props {
   type: 'software' | 'faq' | 'organization' | 'howto';
@@ -20,49 +20,34 @@ const softwareApplicationSchema = {
   '@type': 'SoftwareApplication',
   '@id': SOFTWARE_ID,
   name: 'Grift',
-  alternateName: 'Grift Beta',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
+  alternateName: ['Grift CLI', griftCli.packageName],
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: `Python ${griftCli.pythonRequires}`,
+  softwareVersion: griftCli.version,
   url: siteConfig.url,
+  downloadUrl: griftCli.pypi,
+  installUrl: griftCli.github,
+  sameAs: [griftCli.github, griftCli.pypi],
+  license: 'https://opensource.org/licenses/MIT',
+  isAccessibleForFree: true,
   description:
-    '受託開発チームが参考見積と見積根拠を整理し、人間レビュー前提の見積プロセスを作るAI見積支援ツールです。',
+    'エンジニアのgit履歴から「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。計測にAI（LLM）を使わず、同じリポジトリ・同じ版なら誰が実行しても同じ数値になる。点数・順位・合否は出さない。',
   featureList: [
-    '案件前提・スコープ・不確実性の整理（インテークワークスペース）',
-    'GitHub実績を参考材料とした見積根拠の提示',
-    '市場相場・類似案件との参考比較',
-    '参考見積レポートの生成',
-    '見積根拠メモ・レビュー履歴によるチームナレッジ蓄積',
-    '人間レビュー前提の最終判断フロー',
+    '帰属の区別（本人・他人・bot・生成物・fork元など11分類）',
+    'テスト併修率（test co-change）など、変更に検証が伴っているかの観測',
+    '手戻り率・磨き直し・定着率（オプション）の観測',
+    'リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）',
+    '数値ごとの分子・分母と計測条件の併記',
+    'grift verify による再計算での検算（VERIFIED / MISMATCH / CANNOT_VERIFY）',
+    '手元のPCだけで動作し、当社への自動送信なし',
   ],
   offers: {
-    '@type': 'OfferCatalog',
-    name: 'Grift Team Beta Pricing',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        name: 'Grift Team Beta',
-        price: '50000',
-        priceCurrency: 'JPY',
-        description: '月額5万円を基本に個別案内',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-      {
-        '@type': 'Offer',
-        name: 'Grift Paid Trial',
-        price: '150000',
-        priceCurrency: 'JPY',
-        description: '3ヶ月15万円を基本に個別案内',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-      {
-        '@type': 'Offer',
-        name: 'Grift Estimate Audit',
-        price: '1000000',
-        priceCurrency: 'JPY',
-        description: '100万円を基本に個別見積',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-    ],
+    '@type': 'Offer',
+    name: 'Grift CLI（MITライセンス）',
+    price: '0',
+    priceCurrency: 'JPY',
+    url: griftCli.pypi,
+    availability: 'https://schema.org/InStock',
   },
   provider: { '@id': ORG_ID },
 };

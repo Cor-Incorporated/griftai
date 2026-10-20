@@ -5,11 +5,11 @@
     <rect x="120" y="126" width="128" height="128" rx="28" />
     <path d="M166 162h32c17.673 0 32 14.327 32 32s-14.327 32-32 32h-32v-64Zm24 20v24h10c6.627 0 12-5.373 12-12s-5.373-12-12-12h-10Z" fill="#FFFDF8" />
   </g>
-  <text x="120" y="332" fill="#33261A" font-size="64" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-weight="700">
-    見積を、勘から根拠へ。
+  <text x="120" y="332" fill="#33261A" font-size="60" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-weight="700">
+    経歴は盛れる。証拠は盛れない。
   </text>
   <text x="120" y="396" fill="#6E5A49" font-size="28" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    受託開発チームの見積根拠を可視化するAI見積支援ツール
+    git履歴から、確かめられる事実を取り出すOSS ― Grift CLI
   </text>
   <g transform="translate(120 454)">
     <rect width="244" height="72" rx="18" fill="#F3EBDD" stroke="#E3D7C4" />

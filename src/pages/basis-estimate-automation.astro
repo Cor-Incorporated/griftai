@@ -1,10 +1,10 @@
 ---
-import { corCta } from '@/lib/cor-cta';
+import { corCta, getCorUrl } from '@/lib/cor-cta';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
-const contactUrl = corCta.teamBeta('grift-column-basis-estimate-automation');
+const contactUrl = corCta.griftTrial('grift-column-basis-estimate-automation');
 
 const title = '自動化ツールで出した見積もりの根拠は？妥当性の見極め方';
 const description =
@@ -64,24 +64,24 @@ const description =
 
             <section class="u-mb30 c-block">
               <h2 class="u-mb20 l-heading-secondary">
-                見積もりの自動化ツールに関するご相談はCor株式会社へ
+                見積もりの自動化ツールに関するご相談はCor.株式会社へ
               </h2>
               <p class="u-m0 u-pb1em">
-                システム開発の外注において、ベンダーから提示された金額が適正かどうか判断に迷うことはありませんか。Cor株式会社では、AI見積自動化ツール「Grift」を提供しています。
+                システム開発の外注において、ベンダーから提示された金額が適正かどうか判断に迷うことはありませんか。Cor.株式会社は福岡のAI実装会社として、AI受託開発・導入支援を通じて、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走しています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                一般的な開発ツールがコーディング支援にとどまるのに対し、Cor株式会社のサービスは発注前の段階からAIを活用している点が大きな特徴です。複数のAIプロバイダによる市場相場の調査結果と、GitHub上の開発実績データを自動で照合することで、なぜその価格になるのかという明確な理由を提示します。
+                Cor.株式会社では、受託開発の現場で見積もりを作る側として培った経験をもとに、見積もりの前提や根拠を説明できる形に整える方法や、自動化ツールで出した見積もりの妥当性を確かめる観点についてもご相談をお受けしています。
               </p>
 
               <p class="u-m0 u-pb1em">
-                これにより、発注側は社内での稟議や決裁において、自信を持って金額の妥当性を説明できるようになります。属人的な判断や曖昧な経験則を排除し、市場標準と自社提案の比較レポートを通じて、双方が納得できるスムーズなプロジェクト進行を実現します。
+                見積もりの前提や根拠が整理されていれば、発注側は社内での稟議や決裁において、金額の妥当性を説明しやすくなります。属人的な判断や曖昧な経験則だけに頼らず、双方が納得できる形でプロジェクトを進めるためのお手伝いをいたします。
               </p>
 
-              <p class="u-m0 u-pb1em">導入方法は以下からご確認ください。</p>
+              <p class="u-m0 u-pb1em">Cor.株式会社の開発実績は以下からご確認ください。</p>
 
               <div class="c-btn u-pb30">
-                <a href="/#flow" class="c-btn-anchor">導入の流れはこちら</a>
+                <a href={getCorUrl('/works/')} class="c-btn-anchor" target="_blank" rel="noopener noreferrer">Cor.株式会社の開発実績を見る</a>
               </div>
             </section>
 
@@ -171,10 +171,10 @@ const description =
                 </p>
 
                 <h3 class="u-mb10 u-mt30 l-tertiary">
-                  見積もり自動化の根拠にお悩みならCor株式会社へ
+                  見積もり自動化の根拠にお悩みならCor.株式会社へ
                 </h3>
                 <p class="u-m0 u-pb1em">
-                  Cor株式会社では、AI見積自動化ツール「Grift」を提供しています。見積もり金額を提示するだけでなく、市場相場と開発実績を照合した客観的なレポートの提供も可能です。社内稟議をスムーズに進めたい方は、ぜひ一度ご相談ください。
+                  Cor.株式会社では、AI受託開発・導入支援の中で要件定義や見積もりを担ってきた経験をもとに、自動化ツールで出した見積もりの根拠を確かめる観点や、見積もりの前提を説明できる形に整える方法についてご相談をお受けしています。社内稟議をスムーズに進めたい方は、ぜひ一度ご相談ください。
                 </p>
 
                 <div class="c-btn u-pb30">
@@ -269,11 +269,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">見積もりの根拠も提示する自動化ツールならCor株式会社</h3>
+              <h3 class="u-mb20">見積もりの根拠や自動化のご相談ならCor.株式会社</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -348,19 +348,19 @@ const description =
             "image": "${siteConfig.url}/images/columns/head-mv-08.jpg",
             "author": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "url": "${siteConfig.url}/"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Cor株式会社",
+              "name": "Cor.株式会社",
               "logo": {
                 "@type": "ImageObject",
                 "url": "${siteConfig.url}/grift-wordmark.jpg"
               }
             },
             "datePublished": "2026-06-18",
-            "dateModified": "2026-06-18"
+            "dateModified": "2026-10-20"
           }
         `} />
         <!-- コンテンツここまで -->

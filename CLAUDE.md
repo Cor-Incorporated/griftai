@@ -28,6 +28,7 @@ CI runs `npm run check` then `npm run build` on every PR and push. Both must pas
 **Published pages** (everything else is template scaffolding, not live):
 - Marketing: `/` `/pricing` `/faq` `/contact` (`/team-beta` and `/estimate-audit` were removed; `public/_redirects` sends them to `/` with 301)
 - Legal: `/privacy` `/terms`
+- Grift stories (fictional): `/column/<id>/` from `src/content/stories/*.md` (linked from the top page's 課題 cards; always shown as 架空の物語)
 - GMO SEO columns: `/column` + 10 keyword pages (`ai-estimate-automation`, `ai-tool-requirement-definition`, `automation-ai-develop-estimate`, `automation-tool-requirement`, `basis-estimate-automation`, `cost-ai-develop-estimate`, `create-estimate-automation`, `market-price-ai-develop`, `requirement-definition-ai`, `tool-upstream-process-ai`)
 - Machine-readable: `/robots.txt` `/llms.txt` `/sitemap-index.xml`
 - Error pages: `403` `404` `500`

@@ -18,6 +18,8 @@
 7. LP に載せる CLI の事実（版・公開日・ライセンス・コマンド・指標名・117 リポジトリでの検証）は Cor-Incorporated/grift-cli の README・docs と PyPI に合わせ、`src/config/site.ts` の `griftCli` を唯一の出典にする。
 8. Grift の思想を書いた記事（Qiita・note）へのリンクは `src/config/site.ts` の `griftArticles` にまとめ、トップ（3つの約束の下・「思想とコラム」・最後の CTA）・フッター・llms.txt から張る。
 9. トップからの回遊のため、思想の記事と注目コラムをカード全体がリンクの「思想とコラム」（`#reading`）として開発の背景の直後（料金より前）に置き、ヘッダーにも「コラム」を置く。ヘッダーのリンクは 1024px 未満ではメニューにまとめる（768〜1023px で文字が折り返して崩れていたため）。
+10. トップの「課題」の4枚のカードは、それぞれの場面を描いた「Griftのストーリー（架空の物語）」（`src/content/stories/*.md` → `/column/<id>/`）へカード全体でリンクする。物語であることは本文の前に必ず表示し（登場する人物・会社は実在しない、数値は説明のための例）、成果を保証する書き方や実在の利用者の声に見える書き方はしない。Grift の機能の説明は公開中の grift-cli の README・docs・norms に合わせる。
+11. 1つの行き先しか持たないカード（料金・運営会社の選出と OSS 実績・ストーリー）は、カード全体を押せるようにする（代表の指摘「リンク範囲が狭い」、2026-10-20）。
 
 ## 影響
 - ADR-0001（Team Beta / Paid Trial / Estimate Audit）と ADR-0003（/team-beta・/estimate-audit の分離）を Superseded にする。

@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -6,6 +7,11 @@ import tailwindcss from '@tailwindcss/vite';
 import { siteConfig } from './src/config';
 
 const siteUrl = process.env.SITE_URL || siteConfig.url;
+
+// Grift のストーリー（/column/<id>/）。src/content/stories の .md と1対1。
+const storyPaths = readdirSync(new URL('./src/content/stories/', import.meta.url))
+  .filter((file) => file.endsWith('.md'))
+  .map((file) => `/column/${file.replace(/\.md$/, '')}/`);
 
 export default defineConfig({
   site: siteUrl,
@@ -39,6 +45,7 @@ export default defineConfig({
           '/market-price-ai-develop/',
           '/requirement-definition-ai/',
           '/tool-upstream-process-ai/',
+          ...storyPaths,
         ]);
 
         const pathname = new URL(page).pathname;

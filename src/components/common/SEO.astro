@@ -159,7 +159,9 @@ const skipAutoBreadcrumbPaths = new Set([
   '/requirement-definition-ai/',
   '/tool-upstream-process-ai/',
 ]);
-const shouldEmitAutoBreadcrumb = !skipAutoBreadcrumbPaths.has(Astro.url.pathname);
+// /column/<id>/（Grift のストーリー）もページ側で3階層の breadcrumb を出す。
+const shouldEmitAutoBreadcrumb =
+  !skipAutoBreadcrumbPaths.has(Astro.url.pathname) && !Astro.url.pathname.startsWith('/column/');
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',

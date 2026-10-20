@@ -7,11 +7,6 @@
  */
 import { columnArticles, griftArticles } from '@/config';
 
-const articleNotes: Record<(typeof griftArticles)[number]['platform'], string> = {
-  Qiita: '代表・寺田康佑の記事（Qiita）',
-  note: 'note の記事',
-};
-
 const featuredColumns = columnArticles
   .filter((article) => article.featured)
   .map((article) => ({
@@ -52,7 +47,7 @@ const featuredColumns = columnArticles
                       Griftの思想を{article.platform}で読む
                     </span>
                     <span class="mt-1 block text-sm text-text-muted">
-                      {articleNotes[article.platform]}
+                      代表・{article.author}の記事（{article.platform}）
                     </span>
                   </span>
                   <span class="shrink-0 text-lg text-primary" aria-hidden="true">

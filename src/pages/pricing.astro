@@ -133,8 +133,17 @@ const trialSteps = [
       <div class="grid gap-5 lg:grid-cols-2">
         {
           offerings.map((item) => (
-            <article class="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
-              <p class="text-lg font-semibold text-text">{item.name}</p>
+            <article class="card-lift relative flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
+              <p class="text-lg font-semibold text-text">
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {item.name}
+                </a>
+              </p>
               <p class="mt-2 text-sm font-semibold text-primary">{item.target}</p>
               <p class="mt-5 text-pretty text-sm leading-7 text-text-muted">{item.description}</p>
               <div class="mt-6">
@@ -154,7 +163,10 @@ const trialSteps = [
                   href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  class:list={[item.primary ? 'cta-primary' : 'cta-secondary', 'w-full text-sm']}
+                  class:list={[
+                    item.primary ? 'cta-primary' : 'cta-secondary',
+                    'relative z-10 w-full text-sm',
+                  ]}
                 >
                   {item.cta}
                 </a>

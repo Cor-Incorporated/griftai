@@ -11,7 +11,8 @@ import NextStep from '@/components/common/NextStep.astro';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
-import { contentAsOf, griftArticles, griftCli } from '@/config';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import { contentAsOf, griftArticles, griftCli, griftCliDeck } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const heroPrimaryUrl = corCta.griftTrial('grift-lp-hero');
@@ -36,7 +37,7 @@ const promises = [
   {
     title: '毎回同じ結果',
     lead: '計測にAI（LLM）を使いません。',
-    body: '同じリポジトリ・同じ版なら、誰が実行しても同じ数値になります。指標の定義と検証結果は公開しており、保存したレポートは grift verify で再計算して検算できます。',
+    body: '同じリポジトリ・同じ版なら、誰が実行しても同じ数値になります。指標の定義と検証結果は公開しています。保存したレポートは grift verify で再計算して検算できます。',
   },
   {
     title: 'どこにも送らない',
@@ -56,7 +57,7 @@ const pains = [
   {
     who: 'エンジニア本人',
     title: '「Java 5年」では中身が伝わらない',
-    body: '年数や担当工程だけでは、どんな変更をどう確かめながら進めてきたのか、仕事の仕方が伝わりにくいままです。',
+    body: '年数や担当工程だけでは、どんな変更をどう確かめながら進めてきたのかという仕事の仕方が、伝わりにくいままです。',
     story: '/column/story-java-5-years/',
   },
   {
@@ -104,7 +105,7 @@ const compareRows = [
 const proofItems = [
   {
     title: '公開117リポジトリで検証',
-    body: '指標ごとに、区別できた比較と、まだ区別できていない比較の両方を公開しています。条件を広げて差が小さくなった比較も、基準を下げずにそのまま載せています（社内測定・第三者監査なし）。',
+    body: '指標ごとに、区別できた比較と、まだ区別できていない比較の両方を公開しています。条件を広げて差が小さくなった比較も、基準を下げずにそのまま載せています。社内での測定で、第三者による監査は受けていません。',
   },
   {
     title: '利用規範（norms）を公開',
@@ -112,7 +113,7 @@ const proofItems = [
   },
   {
     title: '再計算で検算できる',
-    body: 'grift verify は保存したレポートを同じ条件で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を返します。書き換えや食い違いを受け取った側で確かめられます。',
+    body: 'grift verify は保存したレポートを同じ条件で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を返します。書き換えや食い違いがないかを、受け取った側で確かめられます。',
   },
 ];
 
@@ -130,7 +131,7 @@ const flowSteps = [
   {
     step: '03',
     title: '営業が接点を整理',
-    body: '案件で求められることと照らし合わせ、事実との接点と、面談で聞くべきことを整理します。',
+    body: '共有された事実を案件で求められることと照らし合わせ、接点と、面談で聞くべきことを整理します。',
   },
   {
     step: '04',
@@ -150,7 +151,7 @@ const audiences = [
     label: '人材紹介会社・SESの営業の方へ',
     title: '「なぜこの方を薦めるのか」を、根拠とともに。',
     situation:
-      '経歴書と面談だけでは、推薦の理由が抽象的になりやすい。企業から「この方の強みは？」と聞かれても、具体的な材料を示しにくい。',
+      '経歴書と面談だけでは、推薦の理由が抽象的になりがちです。企業から「この方の強みは？」と聞かれても、具体的な材料をなかなか示せません。',
     support:
       '候補者本人が共有した記録から、案件との接点と面談で聞くことを整理し、推薦の理由を具体的にします。',
     next: 'いま、紹介会社さま・SES企業さまのテスト導入（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
@@ -160,9 +161,9 @@ const audiences = [
     label: 'エンジニアの方へ',
     title: '経歴書に、検算できる1行を。',
     situation:
-      '「Java 5年」と書いても、どんな仕事の仕方をしてきたかは伝わらない。コミット数やGitHubの草は、もう判断材料になりにくい。',
+      '「Java 5年」と書いても、どんな仕事の仕方をしてきたかは伝わりません。コミット数やGitHubの草は、もう判断材料になりにくくなりました。',
     support: `${griftCli.installCommand} で、手元のPCだけで始められます。無償・MITライセンスのOSSで、結果を出すかどうかは自分で決められます。`,
-    next: '指標の読み方は、非エンジニア向けの解説（metrics-guide）も GitHub で公開しています。',
+    next: '指標の読み方を非エンジニア向けに解説した文書（metrics-guide）も、GitHub で公開しています。',
   },
 ];
 
@@ -189,7 +190,7 @@ const pricingCards = [
   {
     name: '正式版',
     target: '紹介会社さま・SES企業さま',
-    price: '2027年に提供開始予定',
+    price: '2027年の提供開始を目指しています',
     description:
       'テスト導入の結果をふまえて、2027年の提供開始を目指しています。価格は正式に決まってからお知らせします。',
     cta: null,
@@ -297,6 +298,16 @@ const tocItems = [
             GitHubでGrift CLIを見る
           </a>
         </div>
+        {
+          /* 問い合わせより気軽な次の一歩として、紹介資料を申し込みなしでダウンロードできるようにする（2026-10-20 GMO 定例） */
+        }
+        <a
+          href={griftCliDeck.href}
+          download
+          class="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+        >
+          まずは資料で確かめる（{griftCliDeck.format}・{griftCliDeck.pages}ページ）
+        </a>
         <ul class="grid w-full gap-3 text-left text-sm text-text-muted sm:grid-cols-3">
           {
             promises.map((item) => (
@@ -409,7 +420,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
           </h2>
           <p class="text-pretty text-lg leading-8 text-text-muted">
             Grift（グリフト）は、Cor.株式会社が開発・公開しているコマンドラインツール（Grift
-            CLI）です。エンジニアのgit履歴から、誰の仕事か・変更に検証が伴っているかといった事実を、AI（LLM）を使わずに取り出します。点数や順位はつけず、受け取った側が同じ条件で再計算して検算できます。
+            CLI）です。エンジニアのgit履歴から、誰の仕事か、変更に検証が伴っているかといった事実を、AI（LLM）を使わずに取り出します。点数や順位はつけず、受け取った側が同じ条件で再計算して検算できます。
           </p>
           <p class="text-sm text-text-muted">情報は{asOfLabel}時点のものです。</p>
         </div>
@@ -482,7 +493,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
           点数にしない。毎回同じ結果。どこにも送らない。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
-          人を1つの数値に縮めることではなく、第三者が条件と限界を確かめられる事実を残すことを目指しています。
+          Griftは、人を1つの数値に縮めることではなく、第三者が条件と限界を確かめられる事実を残すことを目指しています。
         </p>
       </div>
       <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
@@ -536,7 +547,7 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
         申告と印象に、確かめられる事実を添える。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        Griftは経歴書や面談を置き換えるものではありません。そこに書かれたことを、受け取った側が確かめられる材料を添えます。
+        Griftは経歴書や面談を置き換えるものではありません。そこに書かれたことを受け取った側が確かめられるように、材料を添えます。
       </p>
     </div>
     <div
@@ -833,6 +844,9 @@ test co-change: 0.2664 ratio（73 of 274）</code></pre>
         <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
           ※テストの範囲と費用は、対象・件数に応じて個別にご案内します。お申し込みはCor.株式会社のAI受付で受け付けています。
         </p>
+        <div class="mt-8">
+          <DocumentDownload headingLevel="h3" />
+        </div>
         {/* 関連ページへの内部導線（回遊・滞在時間の向上） */}
         <nav aria-label="関連ページ" class="mt-8 border-t border-border pt-6">
           <p class="text-sm font-semibold text-text">詳しく知りたい方へ</p>

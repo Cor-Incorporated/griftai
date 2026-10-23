@@ -2,6 +2,7 @@
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
 import { contactMethods, siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
@@ -95,6 +96,11 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
           </div>
         </article>
       </div>
+    </div>
+  </section>
+  <section class="bg-background pb-section">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <DocumentDownload />
     </div>
   </section>
 </MarketingLayout>

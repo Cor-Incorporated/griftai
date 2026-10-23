@@ -1,5 +1,7 @@
 # Terms Of Service Draft
 
+> **注記（2026-10-20）**: 本文は 2026-03 時点の旧サービス（Grift Beta・Web アプリ）向けのドラフトで、現行の内容ではない。2026-10 の改訂案は `src/pages/terms.astro` と [08-legal-revision-2026-10-review.md](./08-legal-revision-2026-10-review.md) を参照。
+
 最終更新日: 2026-03-12
 
 この利用規約（以下「本規約」）は、Cor株式会社（Cor.inc、以下「当社」）が提供する Grift Beta（以下「本サービス」）の利用条件を定めるものです。  

@@ -306,3 +306,65 @@ test.describe('Grift stories (fictional) and card links', () => {
     }
   });
 });
+
+test.describe('Article author, key points and the downloadable deck (2026-10)', () => {
+  const columnPaths = ['/ai-estimate-automation/', '/requirement-definition-ai/'];
+  const deckHref = '/downloads/grift-cli-overview.pdf';
+
+  test('the deck PDF is served', async ({ request }) => {
+    const response = await request.get(deckHref);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('pdf');
+  });
+
+  test('the top page offers the deck from the hero and the final CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator(`#hero a[href="${deckHref}"]`)).toBeVisible();
+    await expect(
+      page.locator(`#cta [data-testid="document-download"] a[href="${deckHref}"]`)
+    ).toHaveCount(1);
+  });
+
+  test('pricing, faq and contact end with the deck download', async ({ page }) => {
+    for (const path of ['/pricing/', '/faq/', '/contact/']) {
+      await page.goto(path);
+      await expect(
+        page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+      ).toHaveCount(1);
+    }
+  });
+
+  test('columns show key points, the author and the deck', async ({ page }) => {
+    for (const path of columnPaths) {
+      await page.goto(path);
+      await expect(page.getByTestId('key-points')).toContainText('この記事でわかること');
+      const author = page.getByTestId('article-author');
+      await expect(author).toContainText('寺田 康佑');
+      await expect(author).toContainText('Cor.株式会社');
+      await expect(author.locator('a[href="https://note.com/cor_instrument"]')).toHaveCount(1);
+      await expect(
+        page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+      ).toHaveCount(1);
+    }
+  });
+
+  test('stories show the author and the deck', async ({ page }) => {
+    await page.goto('/column/story-java-5-years/');
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+    await expect(
+      page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+    ).toHaveCount(1);
+  });
+
+  test('the article author is the founder Person shared with cor-jp.com', async ({ page }) => {
+    await page.goto('/column/story-java-5-years/');
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((nodes) => nodes.map((node) => JSON.parse(node.textContent ?? '{}')));
+    const article = blocks.find((block) => block['@type'] === 'Article');
+    expect(article?.author?.['@id']).toBe('https://cor-jp.com/#person-kousuke-terada');
+    expect(article?.publisher).toEqual({ '@id': 'https://griftai.org/#organization' });
+    const person = blocks.find((block) => block['@type'] === 'Person');
+    expect(person?.sameAs).toContain('https://note.com/cor_instrument');
+  });
+});

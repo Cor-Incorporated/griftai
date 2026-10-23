@@ -39,7 +39,7 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 ## 主要ページ
 
 - [トップ](${siteConfig.url}/): Griftとは・3つの約束・観測すること・検証の公開・推薦までの流れ・料金と提供状況
-- [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年予定
+- [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年の提供開始を目指す
 - [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
 - [コラム一覧](${siteConfig.url}/column/): Griftのストーリー（架空の物語）と、受託開発の見積・要件定義・上流工程とAIに関する解説記事
 - [お問い合わせ](${siteConfig.url}/contact/): Cor.株式会社のAI受付・電話窓口
@@ -62,7 +62,7 @@ ${griftArticles.map((article) => `- Griftの思想（${article.platform}・代�
 
 ## 運営会社
 
-- Cor.株式会社（Cor.inc）— 福岡のAI実装会社
+- Cor.株式会社（Cor.inc）: 福岡のAI実装会社
 - 所在地: 〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神パインクレスト719号
 - 電話: 050-1792-9351（AI受付の電話窓口）
 - コーポレートサイト: https://cor-jp.com

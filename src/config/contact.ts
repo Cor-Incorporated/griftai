@@ -50,10 +50,10 @@ export const contactMethods: ContactMethod[] = [
 export const contactFAQs: ContactFAQ[] = [
   {
     question: '問い合わせはどこに送られますか？',
-    answer: 'Griftからのお問い合わせは、Cor.株式会社のAI受付に集約します。',
+    answer: 'Griftからのお問い合わせはCor.株式会社のAI受付に集約します。',
   },
   {
-    question: '問い合わせ方法は何ですか？',
+    question: 'どうやって問い合わせればよいですか？',
     answer:
       'AI受付に相談内容を入力してご連絡いただけます。会社の種類（人材紹介・SESなど）と推薦の対象を添えていただくとスムーズです。',
   },

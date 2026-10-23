@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '@/config';
+import { founder, siteConfig } from '@/config';
 import { getRobotsMetaContent } from '@/lib/site-env';
 
 interface Props {
@@ -93,13 +93,20 @@ const organizationSchema = {
   sameAs: ['https://cor-jp.com', siteConfig.social.github, siteConfig.social.twitter].filter(
     Boolean
   ),
-  founder: {
-    '@type': 'Person',
-    name: '寺田康佑',
-    alternateName: ['Kosuke Terada', 'terisuke'],
-    jobTitle: '代表取締役',
-    worksFor: { '@id': ORG_ID },
-  },
+  founder: { '@id': founder.personId },
+};
+
+// 代表（記事の書き手）。cor-jp.com の Person と同じ @id にして、2 つのサイトで同じ人物だと示す（config/author.ts）
+const founderSchema = {
+  '@type': 'Person',
+  '@id': founder.personId,
+  name: founder.name,
+  alternateName: [...founder.alternateNames],
+  jobTitle: founder.jobTitle,
+  worksFor: { '@id': ORG_ID },
+  image: founder.image,
+  url: founder.profileUrl,
+  sameAs: founder.links.map((link) => link.href),
 };
 
 const webPageSchema = {
@@ -126,14 +133,9 @@ const articleSchema =
         image: ogImage,
         datePublished: publishedDate.toISOString(),
         dateModified: (modifiedDate || publishedDate).toISOString(),
-        author: {
-          '@type': 'Person',
-          name: author || siteConfig.author,
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: siteConfig.name,
-        },
+        // 書き手は代表（コラムとストーリーの著者欄と同じ）。author を渡したページだけ名前で出す
+        author: author ? { '@type': 'Person', name: author } : founderSchema,
+        publisher: { '@id': ORG_ID },
         mainEntityOfPage: {
           '@type': 'WebPage',
           '@id': `${canonicalURL.href}#webpage`,
@@ -232,6 +234,11 @@ const breadcrumbSchema = {
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({ '@context': 'https://schema.org', ...founderSchema })}
+/>
 <script is:inline type="application/ld+json" set:html={JSON.stringify(webPageSchema)} />
 {
   shouldEmitAutoBreadcrumb && (

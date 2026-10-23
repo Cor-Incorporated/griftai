@@ -9,6 +9,8 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
+import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { griftArticles, griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
@@ -94,6 +96,10 @@ const breadcrumbSchema = {
         <Content />
       </div>
 
+      <div class="mt-14">
+        <ArticleAuthor heading="この物語を書いた人" />
+      </div>
+
       <section class="mt-14 rounded-2xl border border-border bg-surface p-6">
         <h2 class="text-lg font-semibold text-text">この物語の背景にある課題</h2>
         <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">
@@ -154,12 +160,16 @@ const breadcrumbSchema = {
           >
         </p>
       </section>
+
+      <div class="mt-14">
+        <DocumentDownload />
+      </div>
     </div>
   </article>
 
   <NextStep
     heading="自社の推薦業務で、確かめてみませんか。"
-    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で受け付けています。エンジニアの方は、GitHubからすぐに試せます。"
+    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
     ctas={[
       { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },

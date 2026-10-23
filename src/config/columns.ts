@@ -53,7 +53,7 @@ export const columnArticles: ColumnArticle[] = [
     summary: 'AIと人間がどこを担うべきか、見積もり作成の現実的な分担を整理します。',
     featured: true,
     landingTitle: 'AIと人間の見積レビュー分担',
-    landingSummary: 'AIが整理する参考情報と、人間が判断する範囲を実務目線で整理します。',
+    landingSummary: 'AIが整理する参考情報と、人間が判断する範囲を、実務の目線でまとめます。',
   },
   {
     title: '見積もり作成を自動化するドキュメント構成',
@@ -69,13 +69,14 @@ export const columnArticles: ColumnArticle[] = [
     category: '見積支援',
     summary: 'ツールが出した見積もりの妥当性を、根拠から見極める観点をまとめています。',
     landingTitle: '見積支援ツールの出力を根拠から見る',
-    landingSummary: '参考見積の妥当性を、前提・相場・実績の観点から見極める考え方です。',
+    landingSummary:
+      'ツールが出した見積もりの妥当性を、前提・相場・実績の観点から見極める考え方です。',
   },
   {
     title: '要件定義にAIを導入する理由と体制づくり',
     href: '/requirement-definition-ai/',
     category: '上流工程',
-    summary: '開発の上流工程へAIを入れる前に整えるべき体制と品質管理を解説します。',
+    summary: '開発の上流工程にAIを入れる前に整えるべき体制と品質管理を解説します。',
   },
   {
     title: '上流工程を効率化するAIツールの選定基準',

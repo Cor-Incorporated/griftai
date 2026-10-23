@@ -67,3 +67,7 @@ blob-report/
 .settings/
 *.sublime-project
 *.sublime-workspace
+
+# yomiyasu の検査の記録（.claude/skills/yomiyasu/scripts/yomiyasu_check.py が作る。原文と最終稿の全文が入る）
+.yomiyasu/
+__pycache__/

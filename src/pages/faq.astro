@@ -3,6 +3,7 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
 import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -48,7 +49,7 @@ const faqSections = [
       {
         question: '何を観測しますか？',
         answer:
-          '本人・他人・bot・生成物・fork元などを分ける帰属の区別、本番の変更にテストが伴っているか（テスト併修率）、fix・revertでのやり直し（手戻り率・観測のみ）、同じファイルの磨き直し、オプションで書いた行の定着率、そして実働日数や関わった人数、レビュー経由の割合などリポジトリの文脈です。',
+          '本人・他人・bot・生成物・fork元などを分ける帰属の区別、本番の変更にテストが伴っているか（テスト併修率）、fix・revertでのやり直し（手戻り率・観測のみ）、同じファイルの磨き直し、書いた行の定着率（オプション）、そして実働日数や関わった人数、レビュー経由の割合などリポジトリの文脈です。',
       },
       {
         question: '同じリポジトリなら、本当に同じ結果になりますか？',
@@ -171,6 +172,12 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
           </div>
         ))
       }
+    </div>
+  </section>
+
+  <section class="bg-background pb-section">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <DocumentDownload />
     </div>
   </section>
 

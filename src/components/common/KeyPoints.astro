@@ -1,0 +1,31 @@
+---
+/**
+ * KeyPoints — コラムの冒頭の「この記事でわかること」。読み始める前に、何が書いてあるかを示す。
+ *
+ * 文はコラム一覧のカードと同じ config/columns.ts の summary（新しい内容は足さない）。
+ * 見つからないページでは何も出さない。
+ */
+import { columnArticles } from '@/config';
+
+interface Props {
+  /** コラムのパス（例: /ai-estimate-automation/） */
+  href: string;
+}
+
+const article = columnArticles.find((column) => column.href === Astro.props.href);
+---
+
+{
+  article && (
+    <aside
+      class="mb-10 rounded-2xl border-l-4 border-primary bg-surface px-5 py-4"
+      aria-labelledby="key-points-heading"
+      data-testid="key-points"
+    >
+      <h2 id="key-points-heading" class="text-sm font-semibold text-text">
+        この記事でわかること
+      </h2>
+      <p class="mt-2 leading-7 text-text-muted text-pretty">{article.summary}</p>
+    </aside>
+  )
+}

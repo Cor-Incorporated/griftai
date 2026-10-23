@@ -14,6 +14,8 @@ export * from './features';
 export * from './content';
 export * from './contact';
 export * from './columns';
+export * from './author';
+export * from './documents';
 
 // Re-export types for convenience
 export type {

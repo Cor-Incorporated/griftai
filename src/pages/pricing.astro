@@ -3,6 +3,7 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
 import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -21,7 +22,7 @@ const offerings = [
       'git履歴から確かめられる事実を取り出すコマンドラインツールです。手元のPCだけで動き、当社へデータを自動で送る機能はありません。',
     features: [
       `${griftCli.installCommand} でインストール（Python ${griftCli.pythonRequires}）`,
-      '計測にAI（LLM）を使わない決定論的な計測',
+      'AI（LLM）を使わない決定論的な計測',
       'grift verify による再計算での検算',
       '指標の定義・検証結果・利用規範を公開',
     ],
@@ -62,7 +63,7 @@ const pricingFaqs = [
   {
     question: '以前案内していた Team Beta・Paid Trial・Estimate Audit はどうなりましたか？',
     answer:
-      '2026年10月に取り下げました。Griftは見積支援のWebアプリから、git履歴から確かめられる事実を取り出すCLIと、紹介会社さま向けの推薦支援へ方針を変えています。以前のプランについてのお問い合わせも、AI受付でお受けします。',
+      '2026年10月に取り下げました。Griftは方針を変え、見積支援のWebアプリに代えて、git履歴から確かめられる事実を取り出すCLIと、紹介会社さま向けの推薦支援に取り組んでいます。以前のプランについてのお問い合わせも、AI受付でお受けします。',
   },
   {
     question: 'エンジニア本人に費用はかかりますか？',
@@ -121,7 +122,7 @@ const trialSteps = [
           <div class="rounded-2xl border border-border bg-background p-4">
             <dt class="text-sm font-semibold text-text">正式版</dt>
             <dd class="mt-1 text-xs text-text-muted">紹介会社さま・SES企業さま</dd>
-            <dd class="mt-2 text-base font-bold text-primary">2027年に提供開始予定</dd>
+            <dd class="mt-2 text-base font-bold text-primary">2027年の提供開始を目指しています</dd>
           </div>
         </dl>
       </div>
@@ -223,6 +224,12 @@ const trialSteps = [
           }
         </ol>
       </div>
+    </div>
+  </section>
+
+  <section class="bg-background pb-section">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <DocumentDownload />
     </div>
   </section>
 

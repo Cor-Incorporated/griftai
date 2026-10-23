@@ -1,0 +1,68 @@
+---
+/**
+ * ArticleAuthor — コラムとストーリーの著者欄（書いた人と、会社の紹介）。
+ *
+ * 2026-10-20 の GMO 定例で決めた「個人の著者＋会社のプロフィール」の形（E-E-A-T）。
+ * 中身は config/author.ts（cor-jp.com の著者情報と同じ）。構造化データの Person も同じ値を使う。
+ */
+import { company, founder } from '@/config';
+
+interface Props {
+  heading?: string;
+}
+
+const { heading = 'この記事を書いた人' } = Astro.props;
+---
+
+<aside
+  class="rounded-2xl border border-border bg-surface p-6"
+  aria-labelledby="article-author-heading"
+  data-testid="article-author"
+>
+  <h2 id="article-author-heading" class="text-sm font-semibold text-text-muted">{heading}</h2>
+  <div class="mt-4 flex items-start gap-4">
+    {/* 隣に氏名を出しているので代替テキストは空にする（読み上げの重複を避ける） */}
+    <img
+      src={founder.avatar}
+      alt=""
+      width="64"
+      height="64"
+      loading="lazy"
+      decoding="async"
+      class="h-16 w-16 shrink-0 rounded-full object-cover"
+    />
+    <div class="min-w-0">
+      <p class="font-semibold text-text">{founder.name}</p>
+      <p class="text-sm text-text-muted">{founder.jobTitle} / {company.name}</p>
+      <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{founder.bio}</p>
+      <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        {
+          founder.links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noreferrer me"
+                class="text-text-muted underline-offset-2 hover:text-primary hover:underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="mt-5 border-t border-border pt-4">
+    <p class="font-semibold text-text">{company.name}</p>
+    <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">{company.lead}</p>
+    <a
+      href={company.profileUrl}
+      target="_blank"
+      rel="noreferrer"
+      class="mt-3 inline-flex text-sm font-semibold text-primary hover:underline"
+    >
+      会社概要を見る<span aria-hidden="true" class="ml-1">↗</span>
+    </a>
+  </div>
+</aside>

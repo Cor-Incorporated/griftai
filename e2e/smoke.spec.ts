@@ -139,6 +139,7 @@ test.describe('Landing page smoke tests', () => {
 test.describe('Key pages load correctly', () => {
   const pages = [
     { path: '/', titlePattern: /Grift/ },
+    { path: '/tep/', titlePattern: /TEP/ },
     { path: '/pricing/', titlePattern: /料金|Grift/ },
     { path: '/faq/', titlePattern: /質問|FAQ|Grift/ },
     { path: '/contact/', titlePattern: /相談|お問い合わせ|Grift/ },
@@ -190,7 +191,7 @@ test.describe('Grift CLI positioning (2026-10)', () => {
   });
 
   test('agency CTA reads 自社でテストしてみる, not 試行', async ({ page }) => {
-    for (const path of ['/', '/pricing/', '/faq/', '/contact/']) {
+    for (const path of ['/', '/tep/', '/pricing/', '/faq/', '/contact/']) {
       await page.goto(path);
       await expect(page.getByText(/試行/)).toHaveCount(0);
     }
@@ -325,8 +326,8 @@ test.describe('Article author, key points and the downloadable deck (2026-10)', 
     ).toHaveCount(1);
   });
 
-  test('pricing, faq and contact end with the deck download', async ({ page }) => {
-    for (const path of ['/pricing/', '/faq/', '/contact/']) {
+  test('pricing, faq, contact and the TEP page end with the deck download', async ({ page }) => {
+    for (const path of ['/pricing/', '/faq/', '/contact/', '/tep/']) {
       await page.goto(path);
       await expect(
         page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
@@ -366,5 +367,73 @@ test.describe('Article author, key points and the downloadable deck (2026-10)', 
     expect(article?.publisher).toEqual({ '@id': 'https://griftai.org/#organization' });
     const person = blocks.find((block) => block['@type'] === 'Person');
     expect(person?.sameAs).toContain('https://note.com/cor_instrument');
+  });
+});
+
+test.describe('TEP page and plain words (2026-10)', () => {
+  test('the TEP page follows the reader-first outline', async ({ page }) => {
+    const response = await page.goto('/tep/');
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('h1')).toHaveText('git履歴から、確かめられる事実を取り出す方法');
+    for (const id of ['why', 'what', 'how', 'not', 'compare', 'use', 'next']) {
+      await expect(page.locator(`section#${id}`)).toHaveCount(1);
+    }
+    // 架空の例は、架空であることを先に書く
+    await expect(page.locator('#use figure figcaption')).toContainText('架空の例です。');
+  });
+
+  test('CLI names stay in the folded glossary of the TEP page', async ({ page }) => {
+    await page.goto('/tep/');
+    const terms = page.locator('details#terms');
+    await expect(terms).not.toHaveAttribute('open', /.*/);
+    await expect(terms.locator('table')).toContainText('surface_profile');
+    await expect(terms.locator('table')).toContainText('テスト併修率');
+  });
+
+  test('the TEP page names the founder as the Article author', async ({ page }) => {
+    await page.goto('/tep/');
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((nodes) => nodes.map((node) => JSON.parse(node.textContent ?? '{}')));
+    const article = blocks.find((block) => block['@type'] === 'Article');
+    expect(article?.author?.['@id']).toBe('https://cor-jp.com/#person-kousuke-terada');
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+  });
+
+  test('the top page and the FAQ link to the TEP page', async ({ page, isMobile }) => {
+    await page.goto('/');
+    await expect(page.locator('#about a[href="/tep/"]')).toHaveCount(1);
+    await expect(page.locator('#product a[href="/tep/#terms"]')).toHaveCount(1);
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu a[href="/tep/"]')).toBeVisible();
+    } else {
+      await expect(page.locator('#site-header a[href="/tep/"]')).toBeVisible();
+    }
+    await page.goto('/faq/');
+    await expect(page.locator('#about-grift a[href="/tep/"]')).toHaveCount(1);
+  });
+
+  test('the top page lists observations in plain words without CLI key names', async ({ page }) => {
+    await page.goto('/');
+    const product = page.locator('#product');
+    await expect(product).toContainText('テストも一緒に変えた割合（テスト併修率）');
+    for (const key of [
+      'surface_profile',
+      'change_rhythm',
+      'verification_profile',
+      'not_observed',
+      'report-v2',
+    ]) {
+      await expect(product).not.toContainText(key);
+    }
+  });
+
+  test('llms.txt and the sitemap list the TEP page', async ({ request }) => {
+    const llms = await (await request.get('/llms.txt')).text();
+    expect(llms).toContain('/tep/');
+    expect(llms).toContain('| テスト併修率 | テストも一緒に変えた割合 | test co-change |');
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    expect(sitemap).toContain('/tep/</loc>');
   });
 });

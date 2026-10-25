@@ -31,6 +31,18 @@ test.describe('Accessibility — WCAG 2 AA', () => {
     expect(critical).toEqual([]);
   });
 
+  test('TEP page has no critical a11y violations', async ({ page }) => {
+    await page.goto('/tep/');
+
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    const critical = results.violations.filter(
+      (v) => v.impact === 'critical' || v.impact === 'serious'
+    );
+
+    expect(critical).toEqual([]);
+  });
+
   test('faq page has no critical a11y violations', async ({ page }) => {
     await page.goto('/faq/');
 

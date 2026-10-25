@@ -64,7 +64,7 @@ export const griftArticles = [
 ] as const;
 
 /** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */
-export const contentAsOf = '2026-10-20';
+export const contentAsOf = '2026-10-26';
 
 /** Legal configuration for privacy policy and terms pages */
 export const legal: LegalConfig = {

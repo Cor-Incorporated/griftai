@@ -5,20 +5,24 @@
  * 読み手の中心は紹介会社・SES の営業と案件の担当、そしてエンジニア本人。
  * 数えるものの説明と用語の対応表は config/tep.ts から読む（トップの「観測すること」と llms.txt も同じ）。
  * 「作った理由」は代表の一人称で、note「AI時代のプロジェクトをどう評価するのか」（2026-08-24）の事実だけを使う。
+ * 数（20件、180日など）は config/tep.ts の tepFacts から、記事とストーリーの題は config と content から読む。
  */
+import { getEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import CliName from '@/components/common/CliName.astro';
 import {
   company,
   founder,
   griftArticles,
   griftCli,
-  tepAlignmentTools,
+  tepAlignmentTool,
   tepComparisons,
+  tepFacts,
   tepLabel,
   tepObservationGroups,
   tepTerms,
@@ -29,6 +33,24 @@ const salesCtaUrl = corCta.griftTrial('grift-tep');
 const finalCtaUrl = corCta.griftTrial('grift-tep-final');
 const noteArticle = griftArticles.find((article) => article.platform === 'note');
 const qiitaArticle = griftArticles.find((article) => article.platform === 'Qiita');
+const example = tepFacts.readmeExample;
+
+// 次に読むストーリー。題は content から読み、見つからなければ build を止める（slug の変更で 404 にしない）
+const storyReads = await Promise.all(
+  [
+    { id: 'story-ai-activity', detail: '誰の変更かを分けて数える場面です。' },
+    { id: 'story-score-cutoff', detail: '点数にすると消える条件の話です。' },
+  ].map(async ({ id, detail }) => {
+    const story = await getEntry('stories', id);
+    if (!story) throw new Error(`/tep/ links to a missing story: ${id}`);
+    return {
+      href: `/column/${story.id}/`,
+      label: story.data.title,
+      detail: `Griftのストーリー（架空の物語）。${detail}`,
+      external: false,
+    };
+  })
+);
 
 const tocItems = [
   { id: 'why', label: '作った理由' },
@@ -43,7 +65,7 @@ const tocItems = [
 const rules = [
   {
     title: '数え方と件数を一緒に出す',
-    body: 'どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかを付けます。Grift CLIのREADMEに載せている公開リポジトリ（click）の例では、本番のコードを変えた274件のコミットのうち73件で、テストも一緒に変えていました。割合だけなら0.2664ですが、TEPは「274件のうち73件」と読める形で残します。数えた件数が20件に満たないときは、割合を出さずに件数だけを示します。',
+    body: `どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかを付けます。Grift CLIのREADMEに載せている公開リポジトリ（${example.repo}）の例では、本番のコードを変えた${example.denominator}件のコミットのうち${example.numerator}件で、テストも一緒に変えていました。割合だけなら${example.ratio}ですが、TEPは「${example.denominator}件のうち${example.numerator}件」と読める形で残します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。`,
   },
   {
     title: '見えないものは「見えない」と書く',
@@ -91,7 +113,7 @@ const exampleRows = [
     comparison: '重なり',
   },
   {
-    item: '直近180日に変更を記録した日数',
+    item: `直近${tepFacts.rhythmWindowDays}日に変更を記録した日数`,
     required: '20日以上',
     observed: '14日',
     comparison: '範囲外',
@@ -111,20 +133,22 @@ const exampleRows = [
   },
 ];
 
-// 案件側の手順のうち、道具の説明は config/tep.ts の tepAlignmentTools（トップの「観測すること」と同じ文）を使う。
-const [projectTool, alignTool, teamTool] = tepAlignmentTools;
+// 案件側の手順のうち、道具の説明とコマンドは config/tep.ts の tepAlignmentTools（トップの「観測すること」と同じ文）を id で引く。
+const projectTool = tepAlignmentTool('project');
+const alignTool = tepAlignmentTool('align');
+const teamTool = tepAlignmentTool('team');
 const salesSteps = [
   {
     title: '候補者に実行してもらう',
     body: '候補者本人に、手元でGrift CLIを実行してもらいます。共有するかどうか、どのリポジトリを出すかは本人が決めます。',
   },
-  { title: '案件で求めることを書き出す（grift project）', body: projectTool.description },
-  { title: '候補者の記録と並べる（grift align）', body: alignTool.description },
+  { title: `案件で求めることを書き出す（${projectTool.command}）`, body: projectTool.description },
+  { title: `候補者の記録と並べる（${alignTool.command}）`, body: alignTool.description },
   {
     title: '面談で聞くことを決める',
     body: '「範囲外」や「0件」は、能力が足りないという意味ではありません。並びを見て、何があったのかを聞くきっかけにしてください。',
   },
-  { title: 'チームで見る（grift align --team）', body: teamTool.description },
+  { title: `チームで見る（${teamTool.command}）`, body: teamTool.description },
 ];
 
 const engineerSteps = [
@@ -153,23 +177,12 @@ const nextReads = [
     detail: '計測のしかた、データと同意、料金と始め方をまとめています。',
     external: false,
   },
-  {
-    href: '/column/story-ai-activity/',
-    label: '「草」が真緑の候補者と、まばらな候補者を比べたSES営業の話',
-    detail: 'Griftのストーリー（架空の物語）。誰の変更かを分けて数える場面です。',
-    external: false,
-  },
-  {
-    href: '/column/story-score-cutoff/',
-    label: 'エンジニアを100点満点で採点しようとした会社の話',
-    detail: 'Griftのストーリー（架空の物語）。点数にすると消える条件の話です。',
-    external: false,
-  },
+  ...storyReads,
   ...(qiitaArticle
     ? [
         {
           href: qiitaArticle.url,
-          label: 'Git履歴を技量スコアにせず、検算できるCLIを作った（Qiita）',
+          label: `${qiitaArticle.title}（${qiitaArticle.platform}）`,
           detail: `代表・${qiitaArticle.author}の技術の記事。何を数え、何を言えないかを書いています。`,
           external: true,
         },
@@ -260,7 +273,8 @@ const nextReads = [
                 rel="noreferrer"
                 class="font-semibold text-primary hover:underline"
               >
-                この話は、noteの「AI時代のプロジェクトをどう評価するのか」に詳しく書きました ↗
+                この話は、{noteArticle.platform}の「{noteArticle.title}」に詳しく書きました
+                <span aria-hidden="true"> ↗</span>
               </a>
             </p>
           )
@@ -297,7 +311,7 @@ const nextReads = [
                       {item.cannotTell}
                     </p>
                     <p class="mt-2 text-xs text-text-muted">
-                      CLIの出力では <code class="font-mono">{item.cli}</code>
+                      CLIの出力では <CliName cli={item.cli} note={item.cliNote} />
                     </p>
                   </div>
                 ))}
@@ -345,9 +359,13 @@ const nextReads = [
                 {
                   tepTerms.map((term) => (
                     <tr class="border-b border-border align-top">
-                      <td class="py-3 pr-4 text-text">{term.plain}</td>
+                      <th scope="row" class="py-3 pr-4 font-normal text-text">
+                        {term.plain}
+                      </th>
                       <td class="py-3 pr-4 text-text-muted">{term.site}</td>
-                      <td class="py-3 font-mono text-xs text-text-muted">{term.cli}</td>
+                      <td class="py-3 text-xs text-text-muted">
+                        <CliName cli={term.cli} note={term.cliNote} />
+                      </td>
                     </tr>
                   ))
                 }
@@ -360,7 +378,9 @@ const nextReads = [
                 <div class="py-3">
                   <dt class="font-semibold text-text">{term.plain}</dt>
                   <dd class="mt-1 text-sm text-text-muted">サイトの用語 {term.site}</dd>
-                  <dd class="mt-1 font-mono text-xs break-words text-text-muted">{term.cli}</dd>
+                  <dd class="mt-1 text-xs break-words text-text-muted">
+                    CLIの出力では <CliName cli={term.cli} note={term.cliNote} />
+                  </dd>
                 </div>
               ))
             }
@@ -402,7 +422,8 @@ const nextReads = [
           href={griftCli.norms}
           target="_blank"
           rel="noreferrer"
-          class="font-semibold text-primary hover:underline">利用規範（norms）を読む ↗</a
+          class="font-semibold text-primary hover:underline"
+          >利用規範（norms）を読む<span aria-hidden="true"> ↗</span></a
         >
       </p>
     </section>
@@ -652,3 +673,14 @@ const nextReads = [
     ]}
   />
 </MarketingLayout>
+
+<script>
+  // トップの「用語の対応表」リンク（/tep/#terms）から来たときは、折りたたみを開いて見せる
+  const openTermsFromHash = (): void => {
+    if (window.location.hash !== '#terms') return;
+    const terms = document.getElementById('terms');
+    if (terms instanceof HTMLDetailsElement) terms.open = true;
+  };
+  document.addEventListener('astro:page-load', openTermsFromHash);
+  window.addEventListener('hashchange', openTermsFromHash);
+</script>

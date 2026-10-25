@@ -5,7 +5,7 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
-import { griftCli, siteConfig } from '@/config';
+import { griftCli, siteConfig, tepComparisonSummary, tepFacts } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const contactUrl = corCta.griftTrial('grift-faq');
@@ -56,14 +56,12 @@ const faqSections: Array<{ id: string; name: string; faqs: FaqItem[] }> = [
       },
       {
         question: '何を観測しますか？',
-        answer:
-          'git履歴から、誰の変更か（本人・ほかの人・bot・自動生成されたファイル・fork元から引き継いだ記録などの区別）、どの部分を変えたか（画面・サーバー側・データ・テスト・文書など11の区分）、変更のペース（直近180日に変更を記録した日数と、変更の間隔）、テストも一緒に変えた割合とテストの種類、どんなリポジトリか（関わった人の数や取り込みの記録の割合など）を数えます。修正でのやり直しの割合も出しますが、傾向の記録として扱い、合否には使いません。指定したときだけ、いまのコードの新しさ（定着率）も出します。どの数値にも「何件のうち何件か」が付き、職種や能力を決めるものではありません。',
+        answer: `git履歴から、誰の変更か（本人・ほかの人・bot・自動生成されたファイル・fork元から引き継いだ記録などの区別）、どの部分を変えたか（画面・サーバー側・データ・テスト・文書など${tepFacts.surfaceCount}の区分）、変更のペース（直近${tepFacts.rhythmWindowDays}日に変更を記録した日数と、変更の間隔）、テストも一緒に変えた割合とテストの種類、どんなリポジトリか（関わった人の数や取り込みの記録の割合など）を数えます。修正でのやり直しの割合も出しますが、傾向の記録として扱い、合否には使いません。指定したときだけ、いまのコードの新しさ（定着率）も出します。どの数値にも「何件のうち何件か」が付き、職種や能力を決めるものではありません。`,
         link: { href: '/tep/#what', label: 'TEPが見るもの（それぞれで分からないこと）' },
       },
       {
         question: '案件で求められることと、どう照らし合わせますか？',
-        answer:
-          '案件で求める作業の区分・テストの種類・変更のペースなどを、案件側が項目ごとに書き出します（grift project）。grift align はその要求と候補者の記録を項目ごとに並べ、重なり・範囲外・0件・未観測・要求なしの5通りで示します。総合点・順位・合否は計算しません。「範囲外」は能力が足りないという意味ではなく、面談で聞くことを決める手がかりです。チームで見るとき（grift align --team）は要求を満たす人数だけを出し、3人未満のチームでは集計しません。',
+        answer: `案件で求める作業の区分・テストの種類・変更のペースなどを、案件側が項目ごとに書き出します（grift project）。grift align はその要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否は計算しません。「範囲外」は能力が足りないという意味ではなく、面談で聞くことを決める手がかりです。チームで見るとき（grift align --team）は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しません。`,
         link: { href: '/tep/#use', label: '使い方と架空の例' },
       },
       {
@@ -73,8 +71,7 @@ const faqSections: Array<{ id: string; name: string; faqs: FaqItem[] }> = [
       },
       {
         question: 'コミットが少ない人や、非公開（private）の仕事が多い人は不利になりませんか？',
-        answer:
-          '観測できなかったものは「実績なし」ではなく、理由付きの「未観測」として出します。数えた件数が20件に満たないときは、割合を出さずに件数だけを示します。gitに写らない仕事や非公開の経歴を不利に読む使い方は、利用規範で禁止しています。',
+        answer: `観測できなかったものは「実績なし」ではなく、理由付きの「未観測」として出します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。gitに写らない仕事や非公開の経歴を不利に読む使い方は、利用規範で禁止しています。`,
       },
       {
         question: '指標の信頼性はどう確かめていますか？',

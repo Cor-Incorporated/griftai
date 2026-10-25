@@ -5,7 +5,10 @@ import {
   griftArticles,
   griftCli,
   siteConfig,
+  tepCliText,
+  tepComparisonSummary,
   tepComparisons,
+  tepFacts,
   tepLabel,
   tepObservationGroups,
   tepTerms,
@@ -26,7 +29,6 @@ export const GET: APIRoute = async () => {
     .flatMap((group) => group.observations)
     .map((item) => tepLabel(item))
     .join('、');
-  const comparisons = tepComparisons.map((item) => item.site).join('・');
   const body = `# Grift
 
 > ${siteConfig.description}
@@ -47,8 +49,8 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - 料金: CLIは無償。紹介会社さま・SES企業さまのテスト導入は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
 - データの扱い: 手元のPCだけで動き、当社へデータを自動で送る機能はない。ネットワークを使う操作は本人が明示したときだけ
 - 検算: grift verify で保存したレポートを再計算し、VERIFIED / MISMATCH / CANNOT_VERIFY を返す
-- 主な観測: ${observations}。関わり方は本人の同意が記録されているときだけ出す。手戻り率と磨き直しは傾向の記録で合否に使わない。定着率は指定したときだけ出し、いまのコードの行が書かれてからの新しさを表す指数で、180日後に残った行の割合ではない。どれも「何件のうち何件か」付きで、職種や能力の判定ではない。CLIの出力での名前は下の「用語の対応」
-- 案件側の宣言との並び: 案件で求める作業の区分・テストの種類・変更のペースなどを案件側が項目ごとに書き出し（grift project）、grift align が候補者の記録と項目ごとに並べる。並びは${comparisons}の5通りで、総合点・順位・合否・推薦は計算しない。grift align --team は要求を満たす人数だけを出し、3人未満のチームでは集計しない
+- 主な観測: ${observations}。関わり方は本人の同意が記録されているときだけ出す。手戻り率と磨き直しは傾向の記録で合否に使わない。定着率は指定したときだけ出し、いまのコードの行が書かれてからの新しさを表す指数で、${tepFacts.survivalTauDays}日後に残った行の割合ではない。どれも「何件のうち何件か」付きで、職種や能力の判定ではない。CLIの出力での名前は下の「用語の対応」
+- 案件側の宣言との並び: 案件で求める作業の区分・テストの種類・変更のペースなどを案件側が項目ごとに書き出し（grift project）、grift align が候補者の記録と項目ごとに並べる。並びは${tepComparisonSummary}で、総合点・順位・合否・推薦は計算しない。grift align --team は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しない
 - 検証: 公開117リポジトリで指標を検証し、区別できた比較とできていない比較の両方を公開（社内測定・第三者監査なし）
 - 利用規範（norms・7条）: 不在を負に読まない／単独で足切りしない／申告を負に読まない／同意なき第三者プロファイリング禁止／監視への転用は非準拠／選択性の明示／重み付け・換算の禁止
 - 経緯: 2026年2月に受託開発向けのWeb見積アプリとして着手 → 8月に計測部分をCLIに切り出し → 9月に旧Webアプリを停止し、紹介会社・SESの営業支援へ方針転換。旧プラン（Team Beta / Paid Trial / Estimate Audit）は2026年10月に取り下げ
@@ -77,9 +79,9 @@ ${stories.map((story) => `- [${story.data.title}](${siteConfig.url}/column/${sto
 
 | サイトの用語 | やさしい言い方 | CLI |
 |---|---|---|
-${tepTerms.map((term) => `| ${term.site} | ${term.plain} | ${term.cli} |`).join('\n')}
+${tepTerms.map((term) => `| ${term.site} | ${term.plain} | ${tepCliText(term)} |`).join('\n')}
 
-並びの5通り（grift align の comparison）: ${tepComparisons.map((item) => `${item.site}（${item.cli}）`).join('、')}
+並びの${tepComparisons.length}通り（grift align の comparison）: ${tepComparisons.map((item) => `${item.site}（${item.cli}）`).join('、')}
 
 ## 一次情報
 

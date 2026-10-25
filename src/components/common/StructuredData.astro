@@ -1,5 +1,5 @@
 ---
-import { griftCli, siteConfig } from '@/config';
+import { griftCli, siteConfig, tepLabel, tepObservationGroups } from '@/config';
 
 interface Props {
   type: 'software' | 'faq' | 'organization' | 'howto';
@@ -32,11 +32,9 @@ const softwareApplicationSchema = {
   isAccessibleForFree: true,
   description:
     'エンジニアのgit履歴から「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。計測にAI（LLM）を使わず、同じリポジトリ・同じ版なら誰が実行しても同じ数値になる。点数・順位・合否は出さない。',
+  // 観測の名前は config/tep.ts から作る（/tep/・トップの「観測すること」・llms.txt と同じ言葉）
   featureList: [
-    '誰の変更かの区別（本人・ほかの人・bot・自動生成されたファイル・fork元から引き継いだ記録など11分類）',
-    'テストも一緒に変えた割合（テスト併修率）など、変更にテストが伴っているかの観測',
-    '修正でのやり直し（手戻り率）・同じファイルへの戻り（磨き直し）・いまのコードの新しさ（定着率、指定したときだけ）の観測',
-    'リポジトリの様子（変更を記録した日数・関わった人の数・取り込みの記録の割合など）',
+    ...tepObservationGroups.flatMap((group) => group.observations).map((item) => tepLabel(item)),
     '数値ごとの「何件のうち何件か」と計測条件の併記',
     'grift verify による再計算での検算（VERIFIED / MISMATCH / CANNOT_VERIFY）',
     '手元のPCだけで動作し、当社への自動送信なし',

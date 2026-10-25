@@ -1,0 +1,14 @@
+---
+/**
+ * CliName — CLI の出力での名前。補足（例: 11分類）は code の外に括弧で添える。
+ * 値は config/tep.ts の cli / cliNote から渡す（キー名はそのファイルにだけ書く）。
+ */
+interface Props {
+  cli: string;
+  note?: string | undefined;
+}
+
+const { cli, note } = Astro.props;
+---
+
+<code class="font-mono">{cli}</code>{note && `（${note}）`}

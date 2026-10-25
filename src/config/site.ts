@@ -58,9 +58,15 @@ export const griftArticles = [
   {
     platform: 'Qiita',
     url: 'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1',
+    title: 'Git履歴を技量スコアにせず、検算できるCLIを作った',
     author: '寺田康佑',
   },
-  { platform: 'note', url: 'https://note.com/cor_instrument/n/nd58ba0955317', author: '寺田康佑' },
+  {
+    platform: 'note',
+    url: 'https://note.com/cor_instrument/n/nd58ba0955317',
+    title: 'AI時代のプロジェクトをどう評価するのか',
+    author: '寺田康佑',
+  },
 ] as const;
 
 /** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */

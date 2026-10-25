@@ -13,7 +13,7 @@
  * <ProductShowcase />
  * ```
  */
-import { griftCli, tepAlignmentTools, tepLabel, tepObservationGroups } from '@/config';
+import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups } from '@/config';
 ---
 
 <section class="landing-container landing-section">
@@ -24,7 +24,9 @@ import { griftCli, tepAlignmentTools, tepLabel, tepObservationGroups } from '@/c
     </h2>
     <p class="type-copy text-lg text-text-muted">
       Grift
-      CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が20件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。
+      CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が{
+        tepFacts.minCount
+      }件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。
     </p>
   </div>
 

@@ -12,13 +12,22 @@ import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
-import { contentAsOf, griftArticles, griftCli, griftCliDeck } from '@/config';
+import {
+  contentAsOf,
+  griftArticles,
+  griftCli,
+  griftCliDeck,
+  tepComparisonSummary,
+  tepFacts,
+} from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const heroPrimaryUrl = corCta.griftTrial('grift-lp-hero');
 const midCtaUrl = corCta.griftTrial('grift-lp-mid');
 const pricingCtaUrl = corCta.griftTrial('grift-lp-pricing-trial');
 const finalCtaUrl = corCta.griftTrial('grift-lp-final');
+
+const example = tepFacts.readmeExample;
 
 const asOfLabel = new Date(`${contentAsOf}T00:00:00+09:00`).toLocaleDateString('ja-JP', {
   timeZone: 'Asia/Tokyo',
@@ -132,7 +141,7 @@ const flowSteps = [
   {
     step: '03',
     title: '営業が接点を整理',
-    body: '案件側が求めることを項目ごとに書き出し（grift project）、共有された事実と並べて（grift align）、接点と面談で聞くことを整理します。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、点数にはなりません。',
+    body: `案件側が求めることを項目ごとに書き出し（grift project）、共有された事実と並べて（grift align）、接点と面談で聞くことを整理します。並びは${tepComparisonSummary}で、点数にはなりません。`,
   },
   {
     step: '04',
@@ -351,13 +360,16 @@ const tocItems = [
 VERIFIED: all fields match recomputation under recorded provenance
 
 <span class="text-background/60"># 出力の一例（何件のうち何件かが必ず付く）</span>
-test co-change: 0.2664 ratio（73 of 274）</code></pre>
+test co-change: {example.ratio} ratio（{example.numerator} of {example.denominator}）</code></pre>
           </div>
           <figcaption
             class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
           >
-            出力の一例は、Grift CLI の README
-            に載せている公開リポジトリ（click）の計測結果です。本番のコードを変えた274件のコミットのうち73件で、テストも一緒に変えていた、という意味です。コマンドの詳細は
+            出力の一例は、Grift CLI の README に載せている公開リポジトリ（{
+              example.repo
+            }）の計測結果です。本番のコードを変えた{example.denominator}件のコミットのうち{
+              example.numerator
+            }件で、テストも一緒に変えていた、という意味です。コマンドの詳細は
             <a
               href={griftCli.github}
               target="_blank"

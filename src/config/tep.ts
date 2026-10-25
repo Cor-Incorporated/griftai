@@ -1,23 +1,49 @@
 /**
  * TEP（Technical Evidence Pipeline）の説明に使う言葉と、TEP が数えるものの一覧。
- * /tep/、トップの「観測すること」（ProductShowcase）、llms.txt がここを読む。
+ * /tep/、トップの「観測すること」（ProductShowcase）、FAQ、llms.txt、構造化データがここを読む。
  *
  * 読み手の中心は、紹介会社・SES の営業と案件の担当（非エンジニア）とエンジニア本人。
  * 本文は平易な言い方（plain）を主にし、サイトの用語（site。2026-10-25 の #77 で決めた訳語）は括弧に添える。
- * CLI の出力での名前（cli。英語の名前とキー名）はこのファイルにだけ書き、ページはここから読んで出す。
- * ほかのファイルにキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）が落ちる。
+ * CLI のキー名（下線を含む名前と、report-v2 のような版付きの出力形式の名前。規則は
+ * scripts/lib/cli-key-names.mjs）は、このファイルの `cli` / `cliNote` の値にだけ書き、ページはここから読んで出す。
+ * ほかの場所にキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）と e2e が落ちる。
+ * 英語の指標名（test co-change など）とコマンド名は、元の語として括弧や脚注に出してよい。
  *
- * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.7.2。dev の main でも同じ）:
- * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で 11 区分）
- * - 変更のペース: rhythm.py（180 日の窓。間隔の中央値と 90 パーセンタイル、2 日以内と 30 日以上の割合）
+ * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.7.2。dev の main でも同じ）。数は tepFacts にまとめた:
+ * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で分ける）
+ * - 変更のペース: rhythm.py（間隔の中央値と 90 パーセンタイル、短い間隔と長い間隔の割合）
  * - テストの付け方: verification_profile.py
  * - いまのコードの新しさ: survival.py（いまの行の経過日数に exp(-日数/180) の重みを付けた平均）。
  *   180 日後に残った行の割合ではない。サイトの用語「定着率」と中身が食い違うので、呼び名は見直しを待っている
  * - 関わり方: role_profile.py（同意の記録がある identity のときだけ出る）
- * - 案件との並び: docs/alignment-schema.md の 5 通りと complementarity.py（3 人未満は集計しない）
+ * - 案件との並び: docs/alignment-schema.md の comparison と complementarity.py の MIN_TEAM_SIZE
  * サイトの用語と CLI の語の対応は、CLI 側の docs/metrics-guide.md の対応表（0.8.0 から）にもある。
  * 平易な言い方は、CLI で設計中の「特性プロフィール」の言葉に合わせて、あとでそろえる前提（2026-10-26 時点）。
  */
+
+/** grift-cli のコードで決まっている数（v0.7.2 で確認）。本文に出す数はここから読む */
+export const tepFacts = {
+  /** これより少ない件数では割合を出さない（MIN_POPULATION_FOR_RATES） */
+  minCount: 20,
+  /** 帰属の分類の数（origin） */
+  originClassCount: 11,
+  /** 変えた部分の区分の数（SURFACES） */
+  surfaceCount: 11,
+  /** 変更のペースを数える窓の日数（RHYTHM_WINDOW_DAYS） */
+  rhythmWindowDays: 180,
+  /** 短い間隔とみなす日数（burst_share の境界） */
+  burstGapDays: 2,
+  /** 長い間隔とみなす日数（long_gap_share の境界） */
+  longGapDays: 30,
+  /** やり直しを数える窓の日数（rework） */
+  reworkWindowDays: 21,
+  /** いまのコードの新しさで重みの目安にする日数（survival の TAU_DAYS） */
+  survivalTauDays: 180,
+  /** チームで集計する最少の人数（MIN_TEAM_SIZE） */
+  minTeamSize: 3,
+  /** Grift CLI の README に載せている公開リポジトリ（click）の例 */
+  readmeExample: { repo: 'click', numerator: 73, denominator: 274, ratio: '0.2664' },
+} as const;
 
 /** TEP が数えるもの 1 つ */
 export interface TepObservation {
@@ -31,6 +57,8 @@ export interface TepObservation {
   cannotTell: string;
   /** CLI の出力での名前 */
   cli: string;
+  /** CLI の名前の補足（括弧に添える） */
+  cliNote?: string;
 }
 
 /** 1 つの問いに答える観測のまとまり */
@@ -41,14 +69,18 @@ export interface TepObservationGroup {
   question: string;
   /** 扱いの補足（合否に使わない、指定したときだけ など） */
   note?: string;
-  observations: TepObservation[];
+  observations: readonly TepObservation[];
 }
 
 /** 本文での名前。サイトの用語があれば括弧に添える（例: テストも一緒に変えた割合（テスト併修率）） */
 export const tepLabel = (item: { plain: string; site?: string }): string =>
   item.site && item.site !== item.plain ? `${item.plain}（${item.site}）` : item.plain;
 
-export const tepObservationGroups: TepObservationGroup[] = [
+/** CLI の名前に補足を添えた文字列（llms.txt など、文字だけで出す場所で使う） */
+export const tepCliText = (item: { cli: string; cliNote?: string }): string =>
+  item.cliNote ? `${item.cli}（${item.cliNote}）` : item.cli;
+
+export const tepObservationGroups: readonly TepObservationGroup[] = [
   {
     id: 'who',
     question: '誰の変更か',
@@ -56,10 +88,10 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: '誰の変更かの区別',
         site: '帰属の区別',
-        counts:
-          'コミット（変更を記録した1件）ごとに、本人の変更、ほかの人の変更、自動で動くプログラム（bot）の変更、自動で作られたファイルや外から取り込んだコード、コピー元のリポジトリ（fork元）から引き継いだ記録などを、11の分類で分けて数えます。',
+        counts: `コミット（変更を記録した1件）ごとに、本人の変更、ほかの人の変更、自動で動くプログラム（bot）の変更、自動で作られたファイルや外から取り込んだコード、コピー元のリポジトリ（fork元）から引き継いだ記録などを、${tepFacts.originClassCount}の分類で分けて数えます。`,
         cannotTell: 'コードの良し悪しは分かりません。',
-        cli: 'origin（11分類）',
+        cli: 'origin',
+        cliNote: `${tepFacts.originClassCount}分類`,
       },
     ],
   },
@@ -70,8 +102,7 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: '変えた部分の区分',
         site: '作業領域',
-        counts:
-          '変えたファイルの場所と種類から、画面、サーバー側、データ、基盤、テスト、文書、自動化の設定（CI/CD）、監視、設定ファイル、生成物・外部のコード、そのほかの11の区分に分けて、区分ごとに変えたコミットの件数を数えます。',
+        counts: `変えたファイルの場所と種類から、画面、サーバー側、データ、基盤、テスト、文書、自動化の設定（CI/CD）、監視、設定ファイル、生成物・外部のコード、そのほかの${tepFacts.surfaceCount}の区分に分けて、区分ごとに変えたコミットの件数を数えます。`,
         cannotTell:
           'ファイルの名前から機械的に分けるので、職種や得意分野を決めるものではありません。',
         cli: 'surface_profile',
@@ -85,8 +116,7 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: '変更のペース',
         site: '変更リズム',
-        counts:
-          '直近180日のうち、変更を記録した日が何日あったかを数えます。変更と変更のあいだが何日空いたかも、真ん中の値と長いほうから1割にあたる値で示し、2日以内の間隔と30日以上の間隔の割合も出します。',
+        counts: `直近${tepFacts.rhythmWindowDays}日のうち、変更を記録した日が何日あったかを数えます。変更と変更のあいだが何日空いたかも、真ん中の値と長いほうから1割にあたる値で示し、${tepFacts.burstGapDays}日以内の間隔と${tepFacts.longGapDays}日以上の間隔の割合も出します。`,
         cannotTell:
           '労働時間や勤怠、意欲、納期を守ったかは分かりません。毎日小さな変更を記録すれば日数は増え、まとめて記録すれば減ります。',
         cli: 'change_rhythm',
@@ -146,8 +176,7 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: '修正でのやり直し',
         site: '手戻り率',
-        counts:
-          '21日以内に触ったファイルを、修正（fix）や取り消し（revert）などの件名で、もう一度変えたコミットの割合です。',
+        counts: `${tepFacts.reworkWindowDays}日以内に触ったファイルを、修正（fix）や取り消し（revert）などの件名で、もう一度変えたコミットの割合です。`,
         cannotTell:
           'バグの件数や品質ではありません。件名の付け方で出方が変わるので、人と比べたり合否に使ったりしません。',
         cli: 'corrective rework',
@@ -155,7 +184,7 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: '同じファイルへの戻り',
         site: '磨き直し',
-        counts: '本番のコードの同じファイルに、21日以内にもう一度手を入れたコミットの割合です。',
+        counts: `本番のコードの同じファイルに、${tepFacts.reworkWindowDays}日以内にもう一度手を入れたコミットの割合です。`,
         cannotTell: '手戻りや不具合の件数ではありません。',
         cli: 'path retouch',
       },
@@ -169,45 +198,12 @@ export const tepObservationGroups: TepObservationGroup[] = [
       {
         plain: 'いまのコードの新しさ',
         site: '定着率',
-        counts:
-          'いまのコードに残っている行が、書かれてからどれくらい経っているかを、180日を目安に重みを付けて平均した値です。1に近いほど、最近書かれた行が多いことを表します。',
-        cannotTell:
-          '180日後に残った行の割合や、コードの品質ではありません。リポジトリ全体の値で、一人ひとりの値ではありません。',
-        cli: 'survival（--survival を付けたとき）',
+        counts: `いまのコードに残っている行が、書かれてからどれくらい経っているかを、${tepFacts.survivalTauDays}日を目安に重みを付けて平均した値です。1に近いほど、最近書かれた行が多いことを表します。`,
+        cannotTell: `${tepFacts.survivalTauDays}日後に残った行の割合や、コードの品質ではありません。リポジトリ全体の値で、一人ひとりの値ではありません。`,
+        cli: 'survival',
+        cliNote: '--survival を付けたとき',
       },
     ],
-  },
-];
-
-/** 案件の要求と記録を並べるときの道具 */
-export interface TepAlignmentTool {
-  plain: string;
-  site: string;
-  description: string;
-  cli: string;
-}
-
-export const tepAlignmentTools: TepAlignmentTool[] = [
-  {
-    plain: '案件側が書き出す要求',
-    site: '案件側の宣言',
-    description:
-      '案件で求める作業の区分、テストの種類、変更のペースなどを、案件側が項目ごとに書き出します。書かなかった項目は「要求なし」として扱い、0や不足にはなりません。',
-    cli: 'grift project（project-v1）',
-  },
-  {
-    plain: '項目ごとの並び',
-    site: '軸ごとの並び',
-    description:
-      '案件側の要求と候補者の記録を項目ごとに並べ、重なり・範囲外・0件・未観測・要求なしの5通りで示します。総合点・順位・合否・推薦は計算しません。',
-    cli: 'grift align（alignment-v1）',
-  },
-  {
-    plain: 'チームで見るとき',
-    site: 'チーム単位の充足',
-    description:
-      '要求を満たす人数だけを出し、一人ひとりの数値は出しません。3人未満のチームでは集計しません。2人だと、誰が満たしていないかが分かってしまうためです。',
-    cli: 'grift align --team',
   },
 ];
 
@@ -218,7 +214,7 @@ export interface TepComparison {
   cli: string;
 }
 
-export const tepComparisons: TepComparison[] = [
+export const tepComparisons: readonly TepComparison[] = [
   {
     site: '重なり',
     meaning: '記録が案件の求める項目や範囲と重なっている',
@@ -246,35 +242,97 @@ export const tepComparisons: TepComparison[] = [
   },
 ];
 
+/** 並びの言い方（例: 重なり・範囲外・0件・未観測・要求なしの5通り）。FAQ・トップの流れ・llms.txt も使う */
+export const tepComparisonSummary = `${tepComparisons.map((item) => item.site).join('・')}の${tepComparisons.length}通り`;
+
+/** 案件の要求と記録を並べるときの道具 */
+export interface TepAlignmentTool {
+  /** 手順と結びつけるための id */
+  id: 'project' | 'align' | 'team';
+  plain: string;
+  site: string;
+  description: string;
+  /** 手順に添えるコマンド */
+  command: string;
+  cli: string;
+  cliNote?: string;
+}
+
+export const tepAlignmentTools: readonly TepAlignmentTool[] = [
+  {
+    id: 'project',
+    plain: '案件側が書き出す要求',
+    site: '案件側の宣言',
+    description:
+      '案件で求める作業の区分、テストの種類、変更のペースなどを、案件側が項目ごとに書き出します。書かなかった項目は「要求なし」として扱い、0や不足にはなりません。',
+    command: 'grift project',
+    cli: 'grift project',
+    cliNote: 'project-v1',
+  },
+  {
+    id: 'align',
+    plain: '項目ごとの並び',
+    site: '軸ごとの並び',
+    description: `案件側の要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否・推薦は計算しません。`,
+    command: 'grift align',
+    cli: 'grift align',
+    cliNote: 'alignment-v1',
+  },
+  {
+    id: 'team',
+    plain: 'チームで見るとき',
+    site: 'チーム単位の充足',
+    description: `要求を満たす人数だけを出し、一人ひとりの数値は出しません。${tepFacts.minTeamSize}人未満のチームでは集計しません。${tepFacts.minTeamSize - 1}人だと、誰が満たしていないかが分かってしまうためです。`,
+    command: 'grift align --team',
+    cli: 'grift align --team',
+  },
+];
+
+/** id で道具を引く（並び順に頼らない） */
+export const tepAlignmentTool = (id: TepAlignmentTool['id']): TepAlignmentTool => {
+  const tool = tepAlignmentTools.find((item) => item.id === id);
+  if (!tool) throw new Error(`tepAlignmentTools has no item with id "${id}"`);
+  return tool;
+};
+
 /** 用語の対応表の 1 行 */
 export interface TepTerm {
   plain: string;
   site: string;
   cli: string;
+  cliNote?: string;
 }
 
 /**
  * 用語の対応表（このページの言い方・サイトの用語・CLI の出力での名前）。/tep/ の表と llms.txt の表が読む。
  * 観測と並びの道具の行は上の一覧から作るので、言い換えを変えるときは上だけを直す。
  */
-export const tepTerms: TepTerm[] = [
+export const tepTerms: readonly TepTerm[] = [
   {
     plain: 'git履歴から数えた値',
     site: '検査値',
-    cli: 'observed value（kind: observed の value と unit）',
+    cli: 'observed value',
+    cliNote: 'kind: observed の value と unit',
   },
   ...tepObservationGroups.flatMap((group) =>
     group.observations.map((item) => ({
       plain: item.plain,
       site: item.site ?? item.plain,
       cli: item.cli,
+      cliNote: item.cliNote,
     }))
   ),
-  ...tepAlignmentTools.map((tool) => ({ plain: tool.plain, site: tool.site, cli: tool.cli })),
+  ...tepAlignmentTools.map((tool) => ({
+    plain: tool.plain,
+    site: tool.site,
+    cli: tool.cli,
+    cliNote: tool.cliNote,
+  })),
   {
     plain: '数えられなかったもの',
     site: '未観測',
-    cli: 'not_observed（理由のコード付き）',
+    cli: 'not_observed',
+    cliNote: '理由のコード付き',
   },
   {
     plain: 'git履歴から確かめられる事実を取り出す方法',

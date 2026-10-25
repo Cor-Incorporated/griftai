@@ -31,7 +31,8 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - 料金: CLIは無償。紹介会社さま・SES企業さまのテスト導入は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
 - データの扱い: 手元のPCだけで動き、当社へデータを自動で送る機能はない。ネットワークを使う操作は本人が明示したときだけ
 - 検算: grift verify で保存したレポートを再計算し、VERIFIED / MISMATCH / CANNOT_VERIFY を返す
-- 主な観測: 帰属の区別（本人・他人・bot・生成物・fork元など11分類）、テスト併修率（test co-change）、手戻り率（corrective rework・観測のみ）、磨き直し（path retouch）、定着率（survival・オプション）、リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）
+- 主な観測: 帰属の区別（本人・他人・bot・生成物・fork元など11分類）、テスト併修率（test co-change）、手戻り率（corrective rework・観測のみ）、磨き直し（path retouch）、定着率（survival・オプション）、リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）、作業領域と検証の形（report-v2 の surface_profile・change_rhythm・verification_profile。分子と分母付きで、職種や能力の判定ではない）
+- 案件側の宣言との並び: 案件が求める領域・検証・リズムを案件側が grift project で宣言し、grift align が候補者の観測と軸ごとに並べる。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、総合点・順位・合否は計算しない。grift align --team は要求を満たす人数だけを出し、3名未満では出さない
 - 検証: 公開117リポジトリで指標を検証し、区別できた比較とできていない比較の両方を公開（社内測定・第三者監査なし）
 - 利用規範（norms・7条）: 不在を負に読まない／単独で足切りしない／申告を負に読まない／同意なき第三者プロファイリング禁止／監視への転用は非準拠／選択性の明示／重み付け・換算の禁止
 - 経緯: 2026年2月に受託開発向けのWeb見積アプリとして着手 → 8月に計測部分をCLIに切り出し → 9月に旧Webアプリを停止し、紹介会社・SESの営業支援へ方針転換。旧プラン（Team Beta / Paid Trial / Estimate Audit）は2026年10月に取り下げ
@@ -51,6 +52,22 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 よくある場面をもとにした架空の物語。登場する人物・会社は実在せず、物語の中の数値は説明のための例。
 
 ${stories.map((story) => `- [${story.data.title}](${siteConfig.url}/column/${story.id}/): ${story.data.who}「${story.data.problem}」`).join('\n')}
+
+## 用語の対応（サイトの言葉とCLIの言葉）
+
+サイトの訳語と、CLI の出力・文書（metrics-guide）の語の対応。CLI 側の metrics-guide も同じ対応表を持つ。
+
+| サイト | CLI |
+|---|---|
+| 検査値 | observed value（kind: observed の value と unit） |
+| テスト併修率 | test co-change（metrics-guide では「テスト同期変更率」） |
+| 手戻り率 | corrective rework |
+| 磨き直し | path retouch |
+| 定着率 | survival |
+| リポジトリの文脈 | context profile |
+| 作業領域・変更リズム・検証の形 | surface_profile・change_rhythm・verification_profile |
+| 帰属の区別 | origin（11分類） |
+| TEP | Technical Evidence Pipeline |
 
 ## 一次情報
 

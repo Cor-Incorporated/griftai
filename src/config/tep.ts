@@ -1,0 +1,284 @@
+/**
+ * TEP（Technical Evidence Pipeline）の説明に使う言葉と、TEP が数えるものの一覧。
+ * /tep/、トップの「観測すること」（ProductShowcase）、llms.txt がここを読む。
+ *
+ * 読み手の中心は、紹介会社・SES の営業と案件の担当（非エンジニア）とエンジニア本人。
+ * 本文は平易な言い方（plain）を主にし、サイトの用語（site。2026-10-25 の #77 で決めた訳語）は括弧に添える。
+ * CLI の出力での名前（cli。英語の名前とキー名）はこのファイルにだけ書き、ページはここから読んで出す。
+ * ほかのファイルにキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）が落ちる。
+ *
+ * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.7.2。dev の main でも同じ）:
+ * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で 11 区分）
+ * - 変更のペース: rhythm.py（180 日の窓。間隔の中央値と 90 パーセンタイル、2 日以内と 30 日以上の割合）
+ * - テストの付け方: verification_profile.py
+ * - いまのコードの新しさ: survival.py（いまの行の経過日数に exp(-日数/180) の重みを付けた平均）。
+ *   180 日後に残った行の割合ではない。サイトの用語「定着率」と中身が食い違うので、呼び名は見直しを待っている
+ * - 関わり方: role_profile.py（同意の記録がある identity のときだけ出る）
+ * - 案件との並び: docs/alignment-schema.md の 5 通りと complementarity.py（3 人未満は集計しない）
+ * サイトの用語と CLI の語の対応は、CLI 側の docs/metrics-guide.md の対応表（0.8.0 から）にもある。
+ * 平易な言い方は、CLI で設計中の「特性プロフィール」の言葉に合わせて、あとでそろえる前提（2026-10-26 時点）。
+ */
+
+/** TEP が数えるもの 1 つ */
+export interface TepObservation {
+  /** 本文で使う平易な名前 */
+  plain: string;
+  /** サイトの用語。平易な名前と同じときは省く */
+  site?: string;
+  /** 何を数えるか */
+  counts: string;
+  /** これだけでは分からないこと */
+  cannotTell: string;
+  /** CLI の出力での名前 */
+  cli: string;
+}
+
+/** 1 つの問いに答える観測のまとまり */
+export interface TepObservationGroup {
+  /** ページ内リンクの id */
+  id: string;
+  /** このまとまりが答える問い */
+  question: string;
+  /** 扱いの補足（合否に使わない、指定したときだけ など） */
+  note?: string;
+  observations: TepObservation[];
+}
+
+/** 本文での名前。サイトの用語があれば括弧に添える（例: テストも一緒に変えた割合（テスト併修率）） */
+export const tepLabel = (item: { plain: string; site?: string }): string =>
+  item.site && item.site !== item.plain ? `${item.plain}（${item.site}）` : item.plain;
+
+export const tepObservationGroups: TepObservationGroup[] = [
+  {
+    id: 'who',
+    question: '誰の変更か',
+    observations: [
+      {
+        plain: '誰の変更かの区別',
+        site: '帰属の区別',
+        counts:
+          'コミット（変更を記録した1件）ごとに、本人の変更、ほかの人の変更、自動で動くプログラム（bot）の変更、自動で作られたファイルや外から取り込んだコード、コピー元のリポジトリ（fork元）から引き継いだ記録などを、11の分類で分けて数えます。',
+        cannotTell: 'コードの良し悪しは分かりません。',
+        cli: 'origin（11分類）',
+      },
+    ],
+  },
+  {
+    id: 'work',
+    question: 'どの部分を変えたか',
+    observations: [
+      {
+        plain: '変えた部分の区分',
+        site: '作業領域',
+        counts:
+          '変えたファイルの場所と種類から、画面、サーバー側、データ、基盤、テスト、文書、自動化の設定（CI/CD）、監視、設定ファイル、生成物・外部のコード、そのほかの11の区分に分けて、区分ごとに変えたコミットの件数を数えます。',
+        cannotTell:
+          'ファイルの名前から機械的に分けるので、職種や得意分野を決めるものではありません。',
+        cli: 'surface_profile',
+      },
+    ],
+  },
+  {
+    id: 'pace',
+    question: 'どんなペースで変えたか',
+    observations: [
+      {
+        plain: '変更のペース',
+        site: '変更リズム',
+        counts:
+          '直近180日のうち、変更を記録した日が何日あったかを数えます。変更と変更のあいだが何日空いたかも、真ん中の値と長いほうから1割にあたる値で示し、2日以内の間隔と30日以上の間隔の割合も出します。',
+        cannotTell:
+          '労働時間や勤怠、意欲、納期を守ったかは分かりません。毎日小さな変更を記録すれば日数は増え、まとめて記録すれば減ります。',
+        cli: 'change_rhythm',
+      },
+    ],
+  },
+  {
+    id: 'test',
+    question: 'テストと一緒に変えたか',
+    observations: [
+      {
+        plain: 'テストも一緒に変えた割合',
+        site: 'テスト併修率',
+        counts:
+          '本番のコード（テストと文書以外）を変えたコミットのうち、同じコミットでテストも変えたものの割合です。',
+        cannotTell:
+          'テストが通ったか、テストやコードの質は分かりません。文書や設計が中心の仕事のように、テストが前提でない仕事では低く出るのが自然です。',
+        cli: 'test co-change',
+      },
+      {
+        plain: 'テストの付け方',
+        site: '検証の形',
+        counts:
+          'テストを触ったコミットの割合、テストの種類（単体・結合・E2E・契約）、不具合の修正（fix・revert）のうちテストも一緒に変えたものの割合を出します。',
+        cannotTell: 'テストの担当（QA）に向いているかは分かりません。',
+        cli: 'verification_profile',
+      },
+    ],
+  },
+  {
+    id: 'with',
+    question: 'どんなリポジトリでどう関わったか',
+    observations: [
+      {
+        plain: 'リポジトリの様子',
+        site: 'リポジトリの文脈',
+        counts:
+          '関わった人の数、いちばん多く変更した人が占める割合（名前は出しません）、取り込み（マージ）の記録の割合、使っている言語、活動の密度など、数値が出たリポジトリの様子を並べます。',
+        cannotTell: '個人の能力や、チームの優劣は分かりません。分類であって、序列ではありません。',
+        cli: 'context profile',
+      },
+      {
+        plain: '関わり方',
+        counts:
+          '本人の同意が記録されているときだけ、新しいファイルを作ったコミット、既にあるファイルを直したコミット、取り込み（マージ）のコミット、本人が付けたリリースの印の数などを出します。',
+        cannotTell:
+          '職種を決めるものではありません。CLIが確かめるのは同意が記録されていることで、同意そのものではありません。',
+        cli: 'role_profile',
+      },
+    ],
+  },
+  {
+    id: 'rework',
+    question: 'すぐに直したか',
+    note: '傾向の記録で、合否には使いません。',
+    observations: [
+      {
+        plain: '修正でのやり直し',
+        site: '手戻り率',
+        counts:
+          '21日以内に触ったファイルを、修正（fix）や取り消し（revert）などの件名で、もう一度変えたコミットの割合です。',
+        cannotTell:
+          'バグの件数や品質ではありません。件名の付け方で出方が変わるので、人と比べたり合否に使ったりしません。',
+        cli: 'corrective rework',
+      },
+      {
+        plain: '同じファイルへの戻り',
+        site: '磨き直し',
+        counts: '本番のコードの同じファイルに、21日以内にもう一度手を入れたコミットの割合です。',
+        cannotTell: '手戻りや不具合の件数ではありません。',
+        cli: 'path retouch',
+      },
+    ],
+  },
+  {
+    id: 'age',
+    question: 'いまのコードはどれくらい新しいか',
+    note: '計測を指定したときだけ出します。',
+    observations: [
+      {
+        plain: 'いまのコードの新しさ',
+        site: '定着率',
+        counts:
+          'いまのコードに残っている行が、書かれてからどれくらい経っているかを、180日を目安に重みを付けて平均した値です。1に近いほど、最近書かれた行が多いことを表します。',
+        cannotTell:
+          '180日後に残った行の割合や、コードの品質ではありません。リポジトリ全体の値で、一人ひとりの値ではありません。',
+        cli: 'survival（--survival を付けたとき）',
+      },
+    ],
+  },
+];
+
+/** 案件の要求と記録を並べるときの道具 */
+export interface TepAlignmentTool {
+  plain: string;
+  site: string;
+  description: string;
+  cli: string;
+}
+
+export const tepAlignmentTools: TepAlignmentTool[] = [
+  {
+    plain: '案件側が書き出す要求',
+    site: '案件側の宣言',
+    description:
+      '案件で求める作業の区分、テストの種類、変更のペースなどを、案件側が項目ごとに書き出します。書かなかった項目は「要求なし」として扱い、0や不足にはなりません。',
+    cli: 'grift project（project-v1）',
+  },
+  {
+    plain: '項目ごとの並び',
+    site: '軸ごとの並び',
+    description:
+      '案件側の要求と候補者の記録を項目ごとに並べ、重なり・範囲外・0件・未観測・要求なしの5通りで示します。総合点・順位・合否・推薦は計算しません。',
+    cli: 'grift align（alignment-v1）',
+  },
+  {
+    plain: 'チームで見るとき',
+    site: 'チーム単位の充足',
+    description:
+      '要求を満たす人数だけを出し、一人ひとりの数値は出しません。3人未満のチームでは集計しません。2人だと、誰が満たしていないかが分かってしまうためです。',
+    cli: 'grift align --team',
+  },
+];
+
+/** 項目ごとの並びの 5 通り（サイトの用語のまま使う） */
+export interface TepComparison {
+  site: string;
+  meaning: string;
+  cli: string;
+}
+
+export const tepComparisons: TepComparison[] = [
+  {
+    site: '重なり',
+    meaning: '記録が案件の求める項目や範囲と重なっている',
+    cli: 'overlap',
+  },
+  {
+    site: '範囲外',
+    meaning: '記録の値が案件の書いた範囲の外にある。能力が足りないという意味ではない',
+    cli: 'outside_declared_range',
+  },
+  {
+    site: '0件',
+    meaning: '数えた範囲で、その項目の記録が0件だった',
+    cli: 'observed_zero',
+  },
+  {
+    site: '未観測',
+    meaning: '記録が渡されていない、件数が少ないなどで、比べられなかった',
+    cli: 'not_observed',
+  },
+  {
+    site: '要求なし',
+    meaning: '案件側がその項目を求めていない',
+    cli: 'not_declared',
+  },
+];
+
+/** 用語の対応表の 1 行 */
+export interface TepTerm {
+  plain: string;
+  site: string;
+  cli: string;
+}
+
+/**
+ * 用語の対応表（このページの言い方・サイトの用語・CLI の出力での名前）。/tep/ の表と llms.txt の表が読む。
+ * 観測と並びの道具の行は上の一覧から作るので、言い換えを変えるときは上だけを直す。
+ */
+export const tepTerms: TepTerm[] = [
+  {
+    plain: 'git履歴から数えた値',
+    site: '検査値',
+    cli: 'observed value（kind: observed の value と unit）',
+  },
+  ...tepObservationGroups.flatMap((group) =>
+    group.observations.map((item) => ({
+      plain: item.plain,
+      site: item.site ?? item.plain,
+      cli: item.cli,
+    }))
+  ),
+  ...tepAlignmentTools.map((tool) => ({ plain: tool.plain, site: tool.site, cli: tool.cli })),
+  {
+    plain: '数えられなかったもの',
+    site: '未観測',
+    cli: 'not_observed（理由のコード付き）',
+  },
+  {
+    plain: 'git履歴から確かめられる事実を取り出す方法',
+    site: 'TEP',
+    cli: 'Technical Evidence Pipeline',
+  },
+];

@@ -33,6 +33,10 @@ test.describe('Accessibility — WCAG 2 AA', () => {
 
   test('TEP page has no critical a11y violations', async ({ page }) => {
     await page.goto('/tep/');
+    // 折りたたみの用語の対応表も開いて検査する
+    await page.locator('details#terms').evaluate((details) => {
+      (details as HTMLDetailsElement).open = true;
+    });
 
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 

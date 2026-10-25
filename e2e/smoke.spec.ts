@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import { cliKeyNames, keyNamePattern } from '../scripts/lib/cli-key-names.mjs';
+import { tepComparisons, tepTerms } from '../src/config/tep';
 
 test.describe('Landing page smoke tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -371,23 +373,44 @@ test.describe('Article author, key points and the downloadable deck (2026-10)', 
 });
 
 test.describe('TEP page and plain words (2026-10)', () => {
-  test('the TEP page follows the reader-first outline', async ({ page }) => {
+  // 本文に出さない CLI のキー名。ソースの検査（scripts/check-plain-terms.mjs）と同じ規則で、config/tep.ts の値から作る
+  const keyNames = cliKeyNames(
+    [...tepTerms, ...tepComparisons].flatMap((item) => [
+      item.cli,
+      ...('cliNote' in item && item.cliNote ? [item.cliNote] : []),
+    ])
+  );
+
+  test('the TEP page follows the reader-first outline in order', async ({ page }) => {
     const response = await page.goto('/tep/');
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveText('git履歴から、確かめられる事実を取り出す方法');
-    for (const id of ['why', 'what', 'how', 'not', 'compare', 'use', 'next']) {
-      await expect(page.locator(`section#${id}`)).toHaveCount(1);
-    }
+    const ids = await page
+      .locator('main section[id]')
+      .evaluateAll((sections) => sections.map((section) => section.id));
+    expect(ids).toEqual(['why', 'what', 'how', 'not', 'compare', 'use', 'next']);
     // 架空の例は、架空であることを先に書く
     await expect(page.locator('#use figure figcaption')).toContainText('架空の例です。');
   });
 
-  test('CLI names stay in the folded glossary of the TEP page', async ({ page }) => {
+  test('the glossary is folded and shows CLI names in the layout for each width', async ({
+    page,
+    isMobile,
+  }) => {
     await page.goto('/tep/');
     const terms = page.locator('details#terms');
     await expect(terms).not.toHaveAttribute('open', /.*/);
-    await expect(terms.locator('table')).toContainText('surface_profile');
-    await expect(terms.locator('table')).toContainText('テスト併修率');
+    await terms.locator('summary').click();
+    // スマホでは表の代わりに積んだ一覧を見せる。見えている方に CLI の名前とサイトの用語がある
+    const shown = isMobile ? terms.locator('dl') : terms.locator('table');
+    await expect(shown).toBeVisible();
+    await expect(shown).toContainText('surface_profile');
+    await expect(shown).toContainText('テスト併修率');
+  });
+
+  test('a link to /tep/#terms opens the glossary', async ({ page }) => {
+    await page.goto('/tep/#terms');
+    await expect(page.locator('details#terms')).toHaveAttribute('open', '');
   });
 
   test('the TEP page names the founder as the Article author', async ({ page }) => {
@@ -414,18 +437,28 @@ test.describe('TEP page and plain words (2026-10)', () => {
     await expect(page.locator('#about-grift a[href="/tep/"]')).toHaveCount(1);
   });
 
-  test('the top page lists observations in plain words without CLI key names', async ({ page }) => {
+  test('the top page lists observations in plain words', async ({ page }) => {
     await page.goto('/');
-    const product = page.locator('#product');
-    await expect(product).toContainText('テストも一緒に変えた割合（テスト併修率）');
-    for (const key of [
-      'surface_profile',
-      'change_rhythm',
-      'verification_profile',
-      'not_observed',
-      'report-v2',
-    ]) {
-      await expect(product).not.toContainText(key);
+    await expect(page.locator('#product')).toContainText(
+      'テストも一緒に変えた割合（テスト併修率）'
+    );
+  });
+
+  test('published pages other than /tep/ show no CLI key names', async ({ page, request }) => {
+    expect(keyNames.length).toBeGreaterThan(0);
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    const paths = [...sitemap.matchAll(/<loc>https?:\/\/[^/<]+(\/[^<]*)<\/loc>/g)]
+      .map((match) => match[1])
+      .filter((path) => path !== '/tep/');
+    expect(paths).toContain('/');
+    expect(paths).toContain('/faq/');
+    for (const path of paths) {
+      await page.goto(path);
+      // body の文字には、ページ本文と body の中の構造化データ（トップの SoftwareApplication など）が入る
+      const text = (await page.locator('body').textContent()) ?? '';
+      for (const name of keyNames) {
+        expect(text, `${path} shows ${name}`).not.toMatch(keyNamePattern(name));
+      }
     }
   });
 

@@ -4,14 +4,14 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
-const lastUpdated = '2026-03-12';
+const lastUpdated = '2026-10-25';
 const companyName = 'Cor株式会社（Cor.inc）';
 const contactUrl = corCta.griftTrial('grift-legal-terms');
 ---
 
 <MarketingLayout
   title={`利用規約 - ${siteConfig.name}`}
-  description={`${siteConfig.name} の利用条件、ベータ提供であること、料金、免責、禁止事項、準拠法および問い合わせ窓口を掲載しています。`}
+  description={`${siteConfig.name} の利用条件、テスト導入（PoC）がベータ提供であること、料金、観測結果の取扱い、免責、禁止事項、準拠法および問い合わせ窓口を掲載しています。`}
 >
   <BreadcrumbNav items={[{ label: '利用規約' }]} />
   <section class="py-section">
@@ -35,20 +35,26 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
 
         <h2>2. 本サービスの内容</h2>
         <p class="text-pretty">
-          本サービスは、AI 開発案件の要件整理、見積支援、提案支援、GitHub
-          実績分析、関連する業務支援機能を提供するベータ版サービスです。
+          本サービスは、エンジニアの git 履歴から確かめられる事実を取り出す OSS
+          のコマンドラインツール（Grift CLI、MIT
+          ライセンス）と、人材紹介会社・SES 企業向けのテスト導入（PoC）および関連する支援を提供します。
+        </p>
+        <p class="text-pretty">
+          Grift CLI は利用者の手元の PC で動作し、当社のサーバーへデータを自動で送信しません。Grift
+          CLI 自体の利用条件は、その OSS ライセンス（MIT ライセンス）に従います。
         </p>
         <p class="text-pretty">
           当社は、本サービスの内容、仕様、名称、URL、提供方法を、必要に応じて変更することがあります。
         </p>
 
-        <h2>3. ベータ版であること</h2>
+        <h2>3. テスト導入（PoC）がベータ版であること</h2>
         <p class="text-pretty">
-          本サービスはベータ版です。そのため、ユーザーは以下を理解したうえで利用するものとします。
+          本サービスのうち、テスト導入（PoC）および関連する支援はベータ版です。そのため、ユーザーは以下を理解したうえで利用するものとします。本条は
+          Grift CLI には適用せず、Grift CLI は OSS ライセンスに従います。
         </p>
         <ul>
           <li>機能の全部または一部が未完成である可能性</li>
-          <li>表示内容、生成内容、分析結果に誤りが含まれる可能性</li>
+          <li>表示内容、観測結果に誤りが含まれる可能性</li>
           <li>一部機能が予告なく変更、中断、終了される可能性</li>
           <li>価格、提供条件、利用制限がベータ期間中に変更される可能性</li>
         </ul>
@@ -67,12 +73,9 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
         </p>
 
         <h2>6. 料金および支払い</h2>
+        <p class="text-pretty">Grift CLI は、無償（MIT ライセンス）で提供します。</p>
         <p class="text-pretty">
-          本サービスの料金、支払方法、支払時期は、当社が別途定める料金または個別見積に従います。
-          Enterprise プランその他個別対応が必要な場合は、別途契約または見積条件を優先します。
-        </p>
-        <p class="text-pretty">
-          ベータ期間中は、当社が個別に案内する有料β、トライアル、見積監査、その他個別見積の条件を優先します。
+          テスト導入（PoC）および関連する支援の費用は、対象・件数に応じて当社が個別に見積もります。支払方法、支払時期は、個別の契約または見積条件に従います。
         </p>
 
         <h2>7. 禁止事項</h2>
@@ -99,19 +102,24 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
           ただし、当社は本サービス提供、改善、保守、サポートのために必要な範囲で利用できるものとします。
         </p>
 
-        <h2>9. 生成結果および分析結果</h2>
+        <h2>9. 観測結果の取扱い</h2>
         <p class="text-pretty">
-          本サービスが生成、提示、分析する見積、提案、要約、比較結果、価格レンジ、推奨事項等は、意思決定支援を目的とした参考情報です。
-          ユーザーは、最終的な見積、提案、契約判断、業務判断を自己の責任で行うものとします。
+          本サービスが出力する観測値、未観測の理由、案件側の宣言との並び等は、git
+          履歴の記録に基づく参考情報です。本サービスは、合成スコア・順位・合否・推奨を提示しません。
+          ユーザーは、推薦、面談、採用その他の業務判断を自己の責任で行うものとします。
         </p>
         <p class="text-pretty">
-          当社は、生成結果または分析結果の完全性、正確性、有用性、特定目的適合性を保証しません。
+          観測値を採用の合否や人を比較する単独の基準にする利用は、当社が公開する利用規範（norms）に反します。
+        </p>
+        <p class="text-pretty">
+          当社は、観測結果の完全性、正確性、有用性、特定目的適合性を保証しません。
         </p>
 
         <h2>10. 外部サービス</h2>
         <p class="text-pretty">
-          本サービスは、GitHub その他の外部サービスと連携する場合があります。
-          外部サービスの利用には、それぞれの提供事業者の利用条件が適用されます。
+          Grift CLI は、利用者が公開 Forge API からの取得（--fetch-public）、更新の確認（update
+          --check）、集計値の提出（contribute --open）を明示的に指定した場合に限り、GitHub
+          その他の外部サービスへ接続します。外部サービスの利用には、それぞれの提供事業者の利用条件が適用されます。
         </p>
         <p class="text-pretty">
           当社は、外部サービスの仕様変更、停止、障害等に起因する影響について責任を負いません。

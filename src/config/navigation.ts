@@ -22,6 +22,7 @@ export const navigation: Navigation = {
   header: {
     main: [
       { label: 'Griftとは', href: '/#about' },
+      { label: 'TEPとは', href: '/tep/' },
       { label: '3つの約束', href: '/#value' },
       { label: '使い方', href: '/#flow' },
       { label: '料金', href: '/pricing' },
@@ -45,6 +46,7 @@ export const navigation: Navigation = {
   footer: {
     product: [
       { label: 'トップ', href: '/' },
+      { label: 'TEPとは', href: '/tep/' },
       { label: '料金と提供状況', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
       { label: 'コラム', href: '/column/' },

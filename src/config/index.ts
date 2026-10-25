@@ -16,6 +16,7 @@ export * from './contact';
 export * from './columns';
 export * from './author';
 export * from './documents';
+export * from './tep';
 
 // Re-export types for convenience
 export type {

@@ -3,157 +3,84 @@
  * ProductShowcase - What Grift CLI observes
  *
  * @description
- * Lists the observation layers Grift CLI (TEP) reports from git history.
- * Wording follows the public metrics guide in Cor-Incorporated/grift-cli
- * (docs/metrics-guide.md). Do not add metrics here that the CLI does not emit.
+ * Lists what Grift CLI (TEP) counts from git history, in plain words for
+ * non-engineer readers. The items come from config/tep.ts, which /tep/ and
+ * llms.txt also read, so the wording stays the same on every page. CLI key
+ * names live only in that file. Do not add items the CLI does not emit.
  *
  * @example
  * ```astro
  * <ProductShowcase />
  * ```
  */
-import { griftCli } from '@/config';
-
-interface ObservationLayer {
-  /** 層の名前 */
-  layer: string;
-  /** その層が答える問い */
-  question: string;
-  /** 主な観測（CLI の英語名を併記） */
-  items: Array<{ name: string; detail: string }>;
-}
-
-const layers: ObservationLayer[] = [
-  {
-    layer: '帰属',
-    question: 'このコミットは、誰の・何の仕事か',
-    items: [
-      {
-        name: '帰属の区別（origin・11分類）',
-        detail:
-          '本人の独自コミット、他人の仕事、bot、生成・ベンダー成果物、fork元から引き継いだ履歴などを分けて数えます。',
-      },
-    ],
-  },
-  {
-    layer: '証拠',
-    question: '変更に検証が伴っているか',
-    items: [
-      {
-        name: 'テスト併修率（test co-change）',
-        detail: '本番コードの変更と同じコミットで、テストも変更している割合。',
-      },
-      {
-        name: '定着率（survival・オプション）',
-        detail: '書いた行が180日後も残っている割合。指定したときだけ計測します。',
-      },
-    ],
-  },
-  {
-    layer: '観測',
-    question: 'どんな傾向があるか（合否には使わない）',
-    items: [
-      {
-        name: '手戻り率（corrective rework）',
-        detail:
-          '直近に触ったファイルを fix / revert でやり直した割合。傾向の記録であり、バグ件数ではありません。',
-      },
-      {
-        name: '磨き直し（path retouch）',
-        detail: '同じファイルを短い期間に再び触った割合。',
-      },
-    ],
-  },
-  {
-    layer: '文脈',
-    question: 'どんなリポジトリでの仕事か',
-    items: [
-      {
-        name: 'リポジトリの文脈（context profile）',
-        detail:
-          '実働日数、関わった人数と最多作成者の占有率、レビュー（PR）経由の割合、言語構成など。分類であって序列ではありません。',
-      },
-    ],
-  },
-  {
-    layer: '作業領域と検証の形（report-v2）',
-    question: 'どの領域の変更を、どんな間隔と検証で出しているか',
-    items: [
-      {
-        name: '作業領域（surface_profile）',
-        detail:
-          'frontend / backend / data / platform / test / docs などの領域ごとに、変更したコミット数とファイル数を数えます。職種や能力の判定ではありません。',
-      },
-      {
-        name: '変更リズム（change_rhythm）',
-        detail: '直近180日の実働日数と、変更を提出した間隔。労働時間や意欲は測れません。',
-      },
-      {
-        name: '検証の形（verification_profile）',
-        detail:
-          'テストを触ったコミットの割合とテストの種類、fix にテストが伴った割合。いずれも分子と分母付きです。',
-      },
-    ],
-  },
-  {
-    layer: '案件側の宣言との並び',
-    question: '案件が求めることと、どこで重なるか',
-    items: [
-      {
-        name: '軸ごとの並び（grift project / grift align）',
-        detail:
-          '案件が求める領域・検証・リズムを案件側が grift project で宣言し、候補者の観測と grift align で軸ごとに並べます。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、総合点・順位・合否は計算しません。',
-      },
-      {
-        name: 'チーム単位の充足（grift align --team）',
-        detail: '要求を満たす人数だけを出します。個人の数値は出さず、3名未満では出しません。',
-      },
-    ],
-  },
-];
+import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups } from '@/config';
 ---
 
 <section class="landing-container landing-section">
   <div class="fade-in-section max-w-3xl space-y-4">
     <p class="section-kicker">観測すること</p>
     <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-      誰の仕事か。検証が伴っているか。どんな文脈か。
+      誰の仕事か。テストと一緒に変えているか。どんなリポジトリか。
     </h2>
     <p class="type-copy text-lg text-text-muted">
       Grift
-      CLIは、git履歴だけから次の観測を取り出します。どの数値にも分子と分母、計測の条件（定義の版・対象のコミット）が付き、母数が20未満のときは率を出さずに件数だけを示します。案件が求めることは、案件側が別に宣言し、観測と並べます。
+      CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が{
+        tepFacts.minCount
+      }件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。
     </p>
   </div>
 
   <div class="fade-in-section mt-10 surface-panel p-5 sm:p-6 lg:p-8">
     <div class="grid gap-4 lg:grid-cols-2">
       {
-        layers.map((layer) => (
+        tepObservationGroups.map((group) => (
           <div class="card-lift rounded-2xl border border-border bg-background p-5">
-            <p class="text-xs font-medium text-primary">{layer.layer}</p>
-            <p class="mt-1 text-lg font-semibold text-text">{layer.question}</p>
+            <p class="text-lg font-semibold text-text">{group.question}</p>
+            {group.note && <p class="mt-1 text-xs font-medium text-primary">{group.note}</p>}
             <dl class="mt-4 space-y-4">
-              {layer.items.map((item) => (
+              {group.observations.map((item) => (
                 <div>
-                  <dt class="text-sm font-semibold text-text">{item.name}</dt>
-                  <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.detail}</dd>
+                  <dt class="text-sm font-semibold text-text">{tepLabel(item)}</dt>
+                  <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.counts}</dd>
+                  <dd class="mt-1 text-xs leading-6 text-text-muted text-pretty">
+                    {item.cannotTell}
+                  </dd>
                 </div>
               ))}
             </dl>
           </div>
         ))
       }
+      <div class="card-lift rounded-2xl border border-border bg-background p-5">
+        <p class="text-lg font-semibold text-text">案件が求めることと、どこで重なるか</p>
+        <dl class="mt-4 space-y-4">
+          {
+            tepAlignmentTools.map((tool) => (
+              <div>
+                <dt class="text-sm font-semibold text-text">{tepLabel(tool)}</dt>
+                <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">
+                  {tool.description}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
     </div>
 
-    <p class="mt-4 text-center text-xs leading-6 text-text-muted">
-      観測できなかったものは「実績なし」ではなく、理由付きの「未観測（not_observed）」として出します。各指標の読み方は
+    <p class="mt-6 text-center text-sm leading-7 text-text-muted text-pretty">
+      数えられなかったものは「実績なし」ではなく、理由を付けて「未観測」と出します。CLIの出力での名前との対応は
+      <a href="/tep/#terms" class="font-semibold text-primary underline underline-offset-2"
+        >TEPとは（用語の対応表）</a
+      >
+      に、指標ごとの読み方は
       <a
         href={griftCli.metricsGuide}
         target="_blank"
         rel="noreferrer"
         class="text-primary underline underline-offset-2">metrics-guide</a
       >
-      で平易に解説しています。
+      にまとめています。
     </p>
   </div>
 </section>

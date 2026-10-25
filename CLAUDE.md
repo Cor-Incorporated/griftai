@@ -26,7 +26,7 @@ CI runs `npm run check` then `npm run build` on every PR and push. Both must pas
 **Stack**: Astro 5 (SSG) + Tailwind CSS v4 (via `@tailwindcss/vite`) + TypeScript (strict) + MDX
 
 **Published pages** (everything else is template scaffolding, not live):
-- Marketing: `/` `/pricing` `/faq` `/contact` (`/team-beta` and `/estimate-audit` were removed; `public/_redirects` sends them to `/` with 301)
+- Marketing: `/` `/tep` `/pricing` `/faq` `/contact` (`/team-beta` and `/estimate-audit` were removed; `public/_redirects` sends them to `/` with 301). `/tep` explains TEP (the method behind Grift) for non-engineer readers
 - Legal: `/privacy` `/terms`
 - Grift stories (fictional): `/column/<id>/` from `src/content/stories/*.md` (linked from the top page's 課題 cards; always shown as 架空の物語)
 - GMO SEO columns: `/column` + 10 keyword pages (`ai-estimate-automation`, `ai-tool-requirement-definition`, `automation-ai-develop-estimate`, `automation-tool-requirement`, `basis-estimate-automation`, `cost-ai-develop-estimate`, `create-estimate-automation`, `market-price-ai-develop`, `requirement-definition-ai`, `tool-upstream-process-ai`)
@@ -64,5 +64,6 @@ GitHub Actions (`.github/workflows/ci.yml`):
 - Pricing: Grift CLI is free (MIT); the agency trial is "個別案内". Do not publish plan prices until the official price is decided (ADR-0005).
 - Sitemap is filtered to an allowlist of published pages (configured in `astro.config.mjs`).
 - Grift CLI facts (version, release date, license, links) come from `griftCli` in `src/config/site.ts`; keep them in sync with PyPI / Cor-Incorporated/grift-cli.
+- Plain words for non-engineers: what Grift CLI counts, the numbers fixed by the CLI (`tepFacts`), and the glossary (plain wording ↔ site term ↔ CLI name) live in `src/config/tep.ts`, read by `/tep`, the top page's ProductShowcase, the FAQ, llms.txt and the structured data. CLI key names (snake_case keys and versioned output names such as `report-v2`; the rule is in `scripts/lib/cli-key-names.mjs`) go only in the `cli` / `cliNote` values of that file. English metric names and commands may still appear as the original term in parentheses. `npm run check:terms` (`scripts/check-plain-terms.mjs`) checks the source (pages, components, layouts, config including the rest of `tep.ts`, stories), and the e2e smoke test checks every page in the sitemap except `/tep/`.
 - Icons use `astro-icon` with `@iconify-json/lucide` and `@iconify-json/simple-icons`.
 - ESLint flat config (`eslint.config.mjs`): recommended + astro plugin + typescript-eslint + prettier.

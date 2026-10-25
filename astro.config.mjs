@@ -28,6 +28,7 @@ export default defineConfig({
       filter: (page) => {
         const allowedPaths = new Set([
           '/',
+          '/tep/',
           '/pricing/',
           '/faq/',
           '/privacy/',

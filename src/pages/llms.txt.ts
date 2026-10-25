@@ -1,6 +1,18 @@
 import type { APIRoute } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { contentAsOf, griftArticles, griftCli, siteConfig } from '@/config';
+import {
+  contentAsOf,
+  griftArticles,
+  griftCli,
+  siteConfig,
+  tepCliText,
+  tepComparisonSummary,
+  tepComparisons,
+  tepFacts,
+  tepLabel,
+  tepObservationGroups,
+  tepTerms,
+} from '@/config';
 
 /**
  * llms.txt — AI クローラ・LLM 向けサイト要約（https://llmstxt.org/ 準拠）
@@ -12,14 +24,20 @@ export const GET: APIRoute = async () => {
   const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
     (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
   );
+  // 観測と用語の対応は config/tep.ts から作る（/tep/ とトップの「観測すること」と同じ言葉）。
+  const observations = tepObservationGroups
+    .flatMap((group) => group.observations)
+    .map((item) => tepLabel(item))
+    .join('、');
   const body = `# Grift
 
 > ${siteConfig.description}
 
 Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開している、エンジニアのgit履歴から
-「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。手法の名前はTEP（Technical Evidence Pipeline）。
-計測にAI（LLM）を使わない決定論的な計測で、同じリポジトリ・同じ版なら誰が実行しても同じ数値になる。
-合成スコア・順位・合否・等級は出さず、数値には必ず分子と分母を付ける。
+「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。手法の名前はTEP（Technical Evidence Pipeline）で、
+何を見て、どう扱い、何をしないかは ${siteConfig.url}/tep/ にまとめている。
+計測にAI（LLM）を使わず、同じリポジトリ・同じ版なら誰が何度実行しても同じ数値になる（決定論的な計測）。
+1つにまとめた点数（合成スコア）・順位・合否・等級は出さず、数値には必ず「何件のうち何件か」（分子と分母）を付ける。
 キャッチコピーは「経歴は盛れる。証拠は盛れない。」。
 
 情報は${contentAsOf}時点のもの。
@@ -31,8 +49,8 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - 料金: CLIは無償。紹介会社さま・SES企業さまのテスト導入は対象・件数に応じて個別案内。正式版は2027年の提供開始を目指しており、価格は未定
 - データの扱い: 手元のPCだけで動き、当社へデータを自動で送る機能はない。ネットワークを使う操作は本人が明示したときだけ
 - 検算: grift verify で保存したレポートを再計算し、VERIFIED / MISMATCH / CANNOT_VERIFY を返す
-- 主な観測: 帰属の区別（本人・他人・bot・生成物・fork元など11分類）、テスト併修率（test co-change）、手戻り率（corrective rework・観測のみ）、磨き直し（path retouch）、定着率（survival・オプション）、リポジトリの文脈（実働日数・関与人数・レビュー経由の割合など）、作業領域と検証の形（report-v2 の surface_profile・change_rhythm・verification_profile。分子と分母付きで、職種や能力の判定ではない）
-- 案件側の宣言との並び: 案件が求める領域・検証・リズムを案件側が grift project で宣言し、grift align が候補者の観測と軸ごとに並べる。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、総合点・順位・合否は計算しない。grift align --team は要求を満たす人数だけを出し、3名未満では出さない
+- 主な観測: ${observations}。関わり方は本人の同意が記録されているときだけ出す。手戻り率と磨き直しは傾向の記録で合否に使わない。定着率は指定したときだけ出し、いまのコードの行が書かれてからの新しさを表す指数で、${tepFacts.survivalTauDays}日後に残った行の割合ではない。どれも「何件のうち何件か」付きで、職種や能力の判定ではない。CLIの出力での名前は下の「用語の対応」
+- 案件側の宣言との並び: 案件で求める作業の区分・テストの種類・変更のペースなどを案件側が項目ごとに書き出し（grift project）、grift align が候補者の記録と項目ごとに並べる。並びは${tepComparisonSummary}で、総合点・順位・合否・推薦は計算しない。grift align --team は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しない
 - 検証: 公開117リポジトリで指標を検証し、区別できた比較とできていない比較の両方を公開（社内測定・第三者監査なし）
 - 利用規範（norms・7条）: 不在を負に読まない／単独で足切りしない／申告を負に読まない／同意なき第三者プロファイリング禁止／監視への転用は非準拠／選択性の明示／重み付け・換算の禁止
 - 経緯: 2026年2月に受託開発向けのWeb見積アプリとして着手 → 8月に計測部分をCLIに切り出し → 9月に旧Webアプリを停止し、紹介会社・SESの営業支援へ方針転換。旧プラン（Team Beta / Paid Trial / Estimate Audit）は2026年10月に取り下げ
@@ -40,6 +58,7 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 ## 主要ページ
 
 - [トップ](${siteConfig.url}/): Griftとは・3つの約束・観測すること・検証の公開・推薦までの流れ・料金と提供状況
+- [TEPとは](${siteConfig.url}/tep/): TEPを作った理由・TEPが見るもの・数え方の決まり・しないこと・自己申告の診断との違い・案件側とエンジニア側の使い方・用語の対応表
 - [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年の提供開始を目指す
 - [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
 - [コラム一覧](${siteConfig.url}/column/): Griftのストーリー（架空の物語）と、受託開発の見積・要件定義・上流工程とAIに関する解説記事
@@ -55,19 +74,14 @@ ${stories.map((story) => `- [${story.data.title}](${siteConfig.url}/column/${sto
 
 ## 用語の対応（サイトの言葉とCLIの言葉）
 
-サイトの訳語と、CLI の出力・文書（metrics-guide）の語の対応。CLI 側の metrics-guide も同じ対応表を持つ。
+サイトの用語と、やさしい言い方と、CLI の出力・文書（metrics-guide）での名前の対応。${siteConfig.url}/tep/ の対応表と同じ。
+テスト併修率は metrics-guide では「テスト同期変更率」とも書く。
 
-| サイト | CLI |
-|---|---|
-| 検査値 | observed value（kind: observed の value と unit） |
-| テスト併修率 | test co-change（metrics-guide では「テスト同期変更率」） |
-| 手戻り率 | corrective rework |
-| 磨き直し | path retouch |
-| 定着率 | survival |
-| リポジトリの文脈 | context profile |
-| 作業領域・変更リズム・検証の形 | surface_profile・change_rhythm・verification_profile |
-| 帰属の区別 | origin（11分類） |
-| TEP | Technical Evidence Pipeline |
+| サイトの用語 | やさしい言い方 | CLI |
+|---|---|---|
+${tepTerms.map((term) => `| ${term.site} | ${term.plain} | ${tepCliText(term)} |`).join('\n')}
+
+並びの${tepComparisons.length}通り（grift align の comparison）: ${tepComparisons.map((item) => `${item.site}（${item.cli}）`).join('、')}
 
 ## 一次情報
 

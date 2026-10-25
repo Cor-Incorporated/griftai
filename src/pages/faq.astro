@@ -5,12 +5,19 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
-import { griftCli, siteConfig } from '@/config';
+import { griftCli, siteConfig, tepComparisonSummary, tepFacts } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const contactUrl = corCta.griftTrial('grift-faq');
 
-const faqSections = [
+interface FaqItem {
+  question: string;
+  answer: string;
+  /** 答えのあとに出す、くわしい説明へのリンク（構造化データには入れない） */
+  link?: { href: string; label: string };
+}
+
+const faqSections: Array<{ id: string; name: string; faqs: FaqItem[] }> = [
   {
     id: 'about-grift',
     name: 'Griftについて',
@@ -28,7 +35,8 @@ const faqSections = [
       {
         question: 'TEPとは何ですか？',
         answer:
-          'Griftが使っている手法の名前で、Technical Evidence Pipeline の略です。git履歴から、誰の仕事か（帰属）と、変更に検証が伴っているか（テストの併修など）を決定論的に取り出します。利用規範（norms）を守る使い方だけを「TEP準拠」と呼びます。',
+          'Griftが使っている方法の名前で、Technical Evidence Pipeline の略です。エンジニアのgit履歴から、誰の変更か、どの部分をどんなペースで変えたか、テストも一緒に変えたかといった事実を、誰が何度実行しても同じ結果になるように取り出します。点数や順位はつけません。利用規範（norms）を守る使い方だけを「TEP準拠」と呼びます。',
+        link: { href: '/tep/', label: 'TEPとは（考え方と使い方）' },
       },
       {
         question: '以前の「AI見積支援ツール Grift」とは違うものですか？',
@@ -44,17 +52,17 @@ const faqSections = [
       {
         question: 'AIでエンジニアを評価するのですか？',
         answer:
-          'いいえ。計測にAI（LLM）は使いません。合成スコア・順位・合否・等級も出しません。出すのは分子と分母の付いた検査値で、判断するのは人です。',
+          'いいえ。計測にAI（LLM）は使いません。1つにまとめた点数（合成スコア）・順位・合否・等級も出しません。出すのは「何件のうち何件か」が付いた値（検査値）で、判断するのは人です。',
       },
       {
         question: '何を観測しますか？',
-        answer:
-          '本人・他人・bot・生成物・fork元などを分ける帰属の区別、本番の変更にテストが伴っているか（テスト併修率）、fix・revertでのやり直し（手戻り率・観測のみ）、同じファイルの磨き直し、書いた行の定着率（オプション）、そして実働日数や関わった人数、レビュー経由の割合などリポジトリの文脈です。report-v2 では、どの領域（frontend / backend / data / platform / test / docs など）の変更が何件か、直近180日の変更提出の間隔、テストを触ったコミットの割合と種類も出します。いずれも分子と分母付きで、職種や能力の判定ではありません。',
+        answer: `git履歴から、誰の変更か（本人・ほかの人・bot・自動生成されたファイル・fork元から引き継いだ記録などの区別）、どの部分を変えたか（画面・サーバー側・データ・テスト・文書など${tepFacts.surfaceCount}の区分）、変更のペース（直近${tepFacts.rhythmWindowDays}日に変更を記録した日数と、変更の間隔）、テストも一緒に変えた割合とテストの種類、どんなリポジトリか（関わった人の数や取り込みの記録の割合など）を数えます。修正でのやり直しの割合も出しますが、傾向の記録として扱い、合否には使いません。指定したときだけ、いまのコードの新しさ（定着率）も出します。どの数値にも「何件のうち何件か」が付き、職種や能力を決めるものではありません。`,
+        link: { href: '/tep/#what', label: 'TEPが見るもの（それぞれで分からないこと）' },
       },
       {
         question: '案件で求められることと、どう照らし合わせますか？',
-        answer:
-          '案件が求める領域・検証・リズムを、案件側が grift project で宣言します。grift align は、その宣言と候補者の観測を軸ごとに並べます。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、総合点・順位・合否は計算しません。チーム単位（grift align --team）では、要求を満たす人数だけを出し、3名未満では出しません。',
+        answer: `案件で求める作業の区分・テストの種類・変更のペースなどを、案件側が項目ごとに書き出します（grift project）。grift align はその要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否は計算しません。「範囲外」は能力が足りないという意味ではなく、面談で聞くことを決める手がかりです。チームで見るとき（grift align --team）は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しません。`,
+        link: { href: '/tep/#use', label: '使い方と架空の例' },
       },
       {
         question: '同じリポジトリなら、本当に同じ結果になりますか？',
@@ -62,9 +70,8 @@ const faqSections = [
           'はい。同じリポジトリ・同じ版のGriftなら、誰が実行しても同じ数値になります。保存したレポートは grift verify で同じ条件のまま再計算し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。',
       },
       {
-        question: 'コミットが少ない人や、private の仕事が多い人は不利になりませんか？',
-        answer:
-          '観測できなかったものは「実績なし」ではなく、理由付きの「未観測」として出します。母数が20未満のときは率を出さずに件数だけを示します。git に写らない仕事や private な経歴を不利に読む使い方は、利用規範で禁止しています。',
+        question: 'コミットが少ない人や、非公開（private）の仕事が多い人は不利になりませんか？',
+        answer: `観測できなかったものは「実績なし」ではなく、理由付きの「未観測」として出します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。gitに写らない仕事や非公開の経歴を不利に読む使い方は、利用規範で禁止しています。`,
       },
       {
         question: '指標の信頼性はどう確かめていますか？',
@@ -83,7 +90,7 @@ const faqSections = [
           'Grift CLI は手元のPCだけで動き、当社へデータを自動で送る機能はありません。公開リポジトリの情報を取りに行くなど、ネットワークを使う操作は本人が明示したときだけです。',
       },
       {
-        question: 'private リポジトリでも使えますか？',
+        question: '非公開（private）のリポジトリでも使えますか？',
         answer:
           '使えます。手元で計測し、共有したい集計値だけを本人の意思で渡せます。コードそのものを相手に見せる必要はありません。',
       },
@@ -170,7 +177,16 @@ const allFaqItems = faqSections.flatMap((section) => section.faqs);
                       <Icon name="lucide:chevron-down" class="size-5" />
                     </span>
                   </summary>
-                  <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+                  <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">
+                    <p>{faq.answer}</p>
+                    {faq.link && (
+                      <p class="mt-3 text-sm">
+                        <a href={faq.link.href} class="font-semibold text-primary hover:underline">
+                          {faq.link.label} →
+                        </a>
+                      </p>
+                    )}
+                  </div>
                 </details>
               ))}
             </div>

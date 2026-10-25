@@ -1,0 +1,686 @@
+---
+/**
+ * TEP（Technical Evidence Pipeline）の説明 — Grift が使う方法を、非エンジニアの読み手にも分かる順で書く。
+ *
+ * 読み手の中心は紹介会社・SES の営業と案件の担当、そしてエンジニア本人。
+ * 数えるものの説明と用語の対応表は config/tep.ts から読む（トップの「観測すること」と llms.txt も同じ）。
+ * 「作った理由」は代表の一人称で、note「AI時代のプロジェクトをどう評価するのか」（2026-08-24）の事実だけを使う。
+ * 数（20件、180日など）は config/tep.ts の tepFacts から、記事とストーリーの題は config と content から読む。
+ */
+import { getEntry } from 'astro:content';
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import PageToc from '@/components/common/PageToc.astro';
+import NextStep from '@/components/common/NextStep.astro';
+import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import CliName from '@/components/common/CliName.astro';
+import {
+  company,
+  founder,
+  griftArticles,
+  griftCli,
+  tepAlignmentTool,
+  tepComparisons,
+  tepFacts,
+  tepLabel,
+  tepObservationGroups,
+  tepTerms,
+} from '@/config';
+import { corCta } from '@/lib/cor-cta';
+
+const salesCtaUrl = corCta.griftTrial('grift-tep');
+const finalCtaUrl = corCta.griftTrial('grift-tep-final');
+const noteArticle = griftArticles.find((article) => article.platform === 'note');
+const qiitaArticle = griftArticles.find((article) => article.platform === 'Qiita');
+const example = tepFacts.readmeExample;
+
+// 次に読むストーリー。題は content から読み、見つからなければ build を止める（slug の変更で 404 にしない）
+const storyReads = await Promise.all(
+  [
+    { id: 'story-ai-activity', detail: '誰の変更かを分けて数える場面です。' },
+    { id: 'story-score-cutoff', detail: '点数にすると消える条件の話です。' },
+  ].map(async ({ id, detail }) => {
+    const story = await getEntry('stories', id);
+    if (!story) throw new Error(`/tep/ links to a missing story: ${id}`);
+    return {
+      href: `/column/${story.id}/`,
+      label: story.data.title,
+      detail: `Griftのストーリー（架空の物語）。${detail}`,
+      external: false,
+    };
+  })
+);
+
+const tocItems = [
+  { id: 'why', label: '作った理由' },
+  { id: 'what', label: 'TEPが見るもの' },
+  { id: 'how', label: '数え方の決まり' },
+  { id: 'not', label: 'しないこと' },
+  { id: 'compare', label: '自己申告の診断との違い' },
+  { id: 'use', label: '使い方' },
+  { id: 'next', label: '次に読むもの' },
+];
+
+const rules = [
+  {
+    title: '数え方と件数を一緒に出す',
+    body: `どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかを付けます。Grift CLIのREADMEに載せている公開リポジトリ（${example.repo}）の例では、本番のコードを変えた${example.denominator}件のコミットのうち${example.numerator}件で、テストも一緒に変えていました。割合だけなら${example.ratio}ですが、TEPは「${example.denominator}件のうち${example.numerator}件」と読める形で残します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。`,
+  },
+  {
+    title: '見えないものは「見えない」と書く',
+    body: '記録がない、件数が少ない、テストの仕組みが見つからないなど、数えられなかったものは0にせず、理由を付けて「未観測」と出します。非公開の仕事や、育児・病気などでgitに写らない期間を、実績がないとは読みません。利用規範の第1条で決めています。',
+  },
+  {
+    title: '誰が何度実行しても同じ結果',
+    body: '計測にAI（LLM）を使わないので、同じリポジトリの同じ時点を同じ版のGriftで数えれば、誰が何度実行しても同じ数値になります。受け取った人は grift verify で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。保存したレポートを書き換えていれば、不一致として分かります。',
+  },
+  {
+    title: '手元で動き、外に送らない',
+    body: 'Grift CLIはエンジニアのPCの中だけで動き、当社へデータを自動で送る機能はありません。ネットワークを使うのは、公開リポジトリの情報を取りに行くなど、本人が明示したときだけです。共有するかどうか、どのリポジトリを出すかは本人が決めます。選んで出したことも、受け取る側に分かる形で残ります。',
+  },
+];
+
+const compareRows = [
+  {
+    aspect: '元にするもの',
+    selfReport: '質問への本人の回答',
+    tep: 'gitに残った変更の記録',
+  },
+  {
+    aspect: 'ごまかしやすさ',
+    selfReport: '答え方しだいで結果が変わり、見せたい自分に寄せて答えることもできる',
+    tep: '記録の量は増やせる（毎日小さな変更を記録すれば、変更を記録した日数は増える）。TEPは量を点数にせず、誰の変更かを分けて、件数と一緒に出す。レポートを書き換えれば、計算し直したときに食い違いが分かる',
+  },
+  {
+    aspect: 'ラベル',
+    selfReport: 'タイプの名前が付く',
+    tep: 'タイプや等級の名前は付けない。数えた値と件数だけを出す',
+  },
+  {
+    aspect: '案件と照らせるか',
+    selfReport: '結果は性格の傾向で、案件で求める作業とは物差しが違う',
+    tep: '案件が求める作業の区分・テストの種類・変更のペースと、項目ごとに並べられる',
+  },
+];
+
+// 架空の例。比べ方は grift-cli の alignment（v0.7.2）と同じだが、数値と項目は説明のためのもの。
+const exampleRows = [
+  {
+    item: 'サーバー側の変更',
+    required: '求める',
+    observed: '31件のうち12件',
+    comparison: '重なり',
+  },
+  {
+    item: `直近${tepFacts.rhythmWindowDays}日に変更を記録した日数`,
+    required: '20日以上',
+    observed: '14日',
+    comparison: '範囲外',
+  },
+  { item: '結合テスト', required: '求める', observed: '0件', comparison: '0件' },
+  {
+    item: 'レビューなどの記録（GitHubなどから書き出したもの）',
+    required: '求める',
+    observed: '渡されていない',
+    comparison: '未観測',
+  },
+  {
+    item: 'データの変更',
+    required: '書いていない',
+    observed: '31件のうち3件',
+    comparison: '要求なし',
+  },
+];
+
+// 案件側の手順のうち、道具の説明とコマンドは config/tep.ts の tepAlignmentTools（トップの「観測すること」と同じ文）を id で引く。
+const projectTool = tepAlignmentTool('project');
+const alignTool = tepAlignmentTool('align');
+const teamTool = tepAlignmentTool('team');
+const salesSteps = [
+  {
+    title: '候補者に実行してもらう',
+    body: '候補者本人に、手元でGrift CLIを実行してもらいます。共有するかどうか、どのリポジトリを出すかは本人が決めます。',
+  },
+  { title: `案件で求めることを書き出す（${projectTool.command}）`, body: projectTool.description },
+  { title: `候補者の記録と並べる（${alignTool.command}）`, body: alignTool.description },
+  {
+    title: '面談で聞くことを決める',
+    body: '「範囲外」や「0件」は、能力が足りないという意味ではありません。並びを見て、何があったのかを聞くきっかけにしてください。',
+  },
+  { title: `チームで見る（${teamTool.command}）`, body: teamTool.description },
+];
+
+const engineerSteps = [
+  `Python ${griftCli.pythonRequires}の環境で ${griftCli.installCommand} を実行し、リポジトリの中で grift report を実行します。変えた部分の区分や変更のペースまで見るときは grift repo を使います。`,
+  '出てきた数字が自分の経験と合っているかを確かめてください。数字だけでは誤解されそうなところや違和感があれば、GitHubのIssuesで教えてください。',
+  '共有するかどうか、どのリポジトリを出すかは自分で決められます。非公開のリポジトリでも、集計した値だけを渡せます。コードを相手に見せる必要はありません。',
+  '受け取った人は grift verify で計算し直せます。数えられなかったものは「未観測」と書かれ、非公開の仕事やgitに写らない期間を、実績がないとは読まない決まりです。',
+];
+
+const nextReads = [
+  {
+    href: griftCli.metricsGuide,
+    label: '指標の読み方（metrics-guide）',
+    detail: '数値ごとに、何が分かって何が分からないかを解説した文書です（GitHub）。',
+    external: true,
+  },
+  {
+    href: griftCli.norms,
+    label: '利用規範（norms）',
+    detail: 'TEPと呼んでよい使い方の条件を7条で定めています（GitHub）。',
+    external: true,
+  },
+  {
+    href: '/faq/',
+    label: 'よくある質問',
+    detail: '計測のしかた、データと同意、料金と始め方をまとめています。',
+    external: false,
+  },
+  ...storyReads,
+  ...(qiitaArticle
+    ? [
+        {
+          href: qiitaArticle.url,
+          label: `${qiitaArticle.title}（${qiitaArticle.platform}）`,
+          detail: `代表・${qiitaArticle.author}の技術の記事。何を数え、何を言えないかを書いています。`,
+          external: true,
+        },
+      ]
+    : []),
+];
+---
+
+<MarketingLayout
+  title="TEPとは"
+  titleTag="TEPとは｜git履歴から確かめられる事実を取り出す方法｜Grift"
+  ogTitle="TEPとは｜Grift"
+  description="TEP（Technical Evidence Pipeline）は、Griftが使っている方法の名前です。エンジニアのgit履歴から確かめられる事実を、誰が何度実行しても同じ結果になる形で取り出し、点数や順位はつけません。TEPが見るもの、数え方の決まり、しないこと、自己申告の診断との違い、紹介会社・SESの営業とエンジニアそれぞれの使い方をまとめています。"
+  type="article"
+  publishedDate={new Date('2026-10-26T00:00:00+09:00')}
+  tags={['Grift', 'TEP', 'git', '利用規範']}
+>
+  <BreadcrumbNav items={[{ label: 'TEPとは' }]} />
+
+  <header class="bg-background">
+    <div class="mx-auto max-w-4xl px-4 pb-10 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+      <p class="section-kicker">TEP（Technical Evidence Pipeline）</p>
+      <h1 class="mt-3 text-3xl font-bold text-balance text-text sm:text-5xl">
+        git履歴から、確かめられる事実を取り出す方法
+      </h1>
+      <div class="mt-6 space-y-3 text-lg leading-8 text-text-muted text-pretty">
+        <p>
+          TEPは、Griftが使っている方法の名前です。エンジニアのgit履歴から、確かめられる事実を取り出します。誰が何度実行しても、同じ結果になります。
+        </p>
+        <p>
+          点数や順位はつけず、案件で求められることと項目ごとに並べて、面談で聞くことを具体的にします。
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <PageToc items={tocItems} />
+
+  <div class="mx-auto max-w-4xl space-y-16 px-4 py-14 sm:px-6 md:space-y-20 md:py-20 lg:px-8">
+    <section id="why" class="scroll-mt-24" aria-labelledby="why-heading">
+      <h2 id="why-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        TEPを作った理由
+      </h2>
+      <figure class="mt-6 rounded-2xl border border-border bg-surface p-6 sm:p-8">
+        <figcaption class="flex items-center gap-4">
+          {/* 隣に氏名を出しているので代替テキストは空にする（読み上げの重複を避ける） */}
+          <img
+            src={founder.avatar}
+            alt=""
+            width="56"
+            height="56"
+            loading="lazy"
+            decoding="async"
+            class="h-14 w-14 shrink-0 rounded-full object-cover"
+          />
+          <span>
+            <span class="block font-semibold text-text">{founder.name}</span>
+            <span class="block text-sm text-text-muted">{company.name} {founder.jobTitle}</span>
+          </span>
+        </figcaption>
+        <div class="mt-6 space-y-4 leading-8 text-text-muted text-pretty">
+          <p>
+            2026年8月12日、僕のGitHubの草（contribution）は、1日で280件になりました。8月1日から23日までで2,907件です。GitHubの数え方ではコミットのほかに、Issueやプルリクエスト、レビューも含みます。
+          </p>
+          <p>
+            AIで量を増やせることは、もう十分に分かりました。でも、この280件で、僕の何が分かるのか。
+          </p>
+          <p>
+            何を作ったのか。本番のコードを変えたとき、テストも触ったのか。新しく立ち上げたのか、誰かが作ったものを保守したのか。一人で作ったのか、チームで触ったのか。そこまでは、草の濃さだけでは分かりません。
+          </p>
+          <p>
+            スキルシートの「Java
+            5年」も同じです。Javaに関わった期間は分かります。でも、その5年で何をしてきたのかは、数字だけでは分かりません。経歴書に書いてあることも、本人の申告のままでは確かめにくい。
+          </p>
+          <p>
+            期間も量も必要な事実です。ただ、それをそのまま技量に読み替えるのは違う。だから、git履歴から確かめられる事実だけを取り出す方法を作りました。それがTEPです。
+          </p>
+          <p>
+            健康診断の血圧に、高い・低いの優劣はありません。人によって、状況によって、求められる値が違うだけです。エンジニアの仕事の仕方も、案件によって求められるものが違います。点数で並べるのではなく、案件が求めることと、その人の記録を並べて見られるようにしたい。TEPはそのための方法です。
+          </p>
+        </div>
+        {
+          noteArticle && (
+            <p class="mt-6 text-sm">
+              <a
+                href={noteArticle.url}
+                target="_blank"
+                rel="noreferrer"
+                class="font-semibold text-primary hover:underline"
+              >
+                この話は、{noteArticle.platform}の「{noteArticle.title}」に詳しく書きました
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            </p>
+          )
+        }
+      </figure>
+    </section>
+
+    <section id="what" class="scroll-mt-24" aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        TEPが見るもの
+      </h2>
+      <div class="mt-4 space-y-3 leading-8 text-text-muted text-pretty">
+        <p>
+          TEPが読むのは、git履歴だけです。gitは、エンジニアがコードの変更を記録していく道具です。誰が・いつ・どのファイルを変えたかが変更1件ずつ残り、この1件をコミット、記録をまとめた置き場をリポジトリと呼びます。
+        </p>
+        <p>TEPはこの記録から、次のことを数えます。</p>
+      </div>
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        {
+          tepObservationGroups.map((group) => (
+            <article
+              id={`what-${group.id}`}
+              class="scroll-mt-24 rounded-2xl border border-border bg-surface p-5 sm:p-6"
+            >
+              <h3 class="text-lg font-semibold text-text">{group.question}</h3>
+              {group.note && <p class="mt-1 text-sm font-medium text-primary">{group.note}</p>}
+              <div class="mt-4 space-y-5">
+                {group.observations.map((item) => (
+                  <div>
+                    <p class="font-semibold text-text">{tepLabel(item)}</p>
+                    <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">{item.counts}</p>
+                    <p class="mt-2 text-xs font-semibold text-text">分からないこと</p>
+                    <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
+                      {item.cannotTell}
+                    </p>
+                    <p class="mt-2 text-xs text-text-muted">
+                      CLIの出力では <CliName cli={item.cli} note={item.cliNote} />
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <details
+        id="terms"
+        class="group mt-8 scroll-mt-24 rounded-2xl border border-border bg-background"
+      >
+        <summary
+          class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-semibold text-text [&::-webkit-details-marker]:hidden"
+        >
+          用語の対応表（このページの言い方・サイトの用語・CLIの出力での名前）
+          <span
+            class="shrink-0 text-text-muted transition-transform group-open:rotate-180"
+            aria-hidden="true">▾</span
+          >
+        </summary>
+        <div class="px-5 pb-5">
+          <p class="text-sm leading-7 text-text-muted text-pretty">
+            CLIの出力や文書を読むときの手がかりです。サイトのほかのページでは真ん中の列の用語を括弧に添えています。
+          </p>
+          <div
+            class="mt-4 hidden overflow-x-auto md:block"
+            role="region"
+            aria-label="用語の対応表"
+            tabindex="0"
+          >
+            <table class="w-full border-collapse text-left text-sm">
+              <caption class="sr-only"
+                >このページの言い方、サイトの用語、CLIの出力での名前の対応</caption
+              >
+              <thead>
+                <tr class="border-b-2 border-border">
+                  <th scope="col" class="py-3 pr-4 font-semibold text-text">このページの言い方</th>
+                  <th scope="col" class="py-3 pr-4 font-semibold text-text">サイトの用語</th>
+                  <th scope="col" class="py-3 font-semibold text-text">CLIの出力での名前</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  tepTerms.map((term) => (
+                    <tr class="border-b border-border align-top">
+                      <th scope="row" class="py-3 pr-4 font-normal text-text">
+                        {term.plain}
+                      </th>
+                      <td class="py-3 pr-4 text-text-muted">{term.site}</td>
+                      <td class="py-3 text-xs text-text-muted">
+                        <CliName cli={term.cli} note={term.cliNote} />
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <dl class="mt-4 divide-y divide-border md:hidden">
+            {
+              tepTerms.map((term) => (
+                <div class="py-3">
+                  <dt class="font-semibold text-text">{term.plain}</dt>
+                  <dd class="mt-1 text-sm text-text-muted">サイトの用語 {term.site}</dd>
+                  <dd class="mt-1 text-xs break-words text-text-muted">
+                    CLIの出力では <CliName cli={term.cli} note={term.cliNote} />
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </details>
+    </section>
+
+    <section id="how" class="scroll-mt-24" aria-labelledby="how-heading">
+      <h2 id="how-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        数え方の決まり
+      </h2>
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        {
+          rules.map((rule) => (
+            <article class="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+              <h3 class="text-lg font-semibold text-text">{rule.title}</h3>
+              <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{rule.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="not" class="scroll-mt-24" aria-labelledby="not-heading">
+      <h2 id="not-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        TEPがしないこと
+      </h2>
+      <div class="mt-4 space-y-4 leading-8 text-text-muted text-pretty">
+        <p>
+          TEPは、1つにまとめた点数（合成スコア）、人を並べた順位、合否、「この人を薦める」という推薦を出しません。違う観測を1つの数に丸めると、何をどの件数で数えたかが消えてしまうからです。案件の要求と並べるときも、総合点や推薦にはまとめません。判断するのは人です。
+        </p>
+        <p>
+          使い方の決まりもあります。数値だけで足切りする、記録がないことを実績がないと読む、本人の同意なく他人を測る、組織の人を常に比べる評価表に使う、といった使い方は、利用規範（norms・7条）でTEPと呼ばないことにしています。
+        </p>
+      </div>
+      <p class="mt-4 text-sm">
+        <a
+          href={griftCli.norms}
+          target="_blank"
+          rel="noreferrer"
+          class="font-semibold text-primary hover:underline"
+          >利用規範（norms）を読む<span aria-hidden="true"> ↗</span></a
+        >
+      </p>
+    </section>
+
+    <section id="compare" class="scroll-mt-24" aria-labelledby="compare-heading">
+      <h2 id="compare-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        自己申告の診断との違い
+      </h2>
+      <p class="mt-4 leading-8 text-text-muted text-pretty">
+        人に順位をつけない点は、MBTIのような自己申告の性格診断と同じです。違うのは、何を元にして、何を出すかです。
+      </p>
+      <div
+        class="mt-6 hidden overflow-x-auto md:block"
+        role="region"
+        aria-label="自己申告の性格診断とTEPの比較表"
+        tabindex="0"
+      >
+        <table class="w-full border-collapse text-left">
+          <caption class="sr-only">自己申告の性格診断とTEPの比較</caption>
+          <thead>
+            <tr class="border-b-2 border-border">
+              <th scope="col" class="w-36 py-4 pr-4 text-sm font-semibold text-text">観点</th>
+              <th scope="col" class="w-[34%] py-4 pr-4 text-sm font-semibold text-text-muted">
+                自己申告の性格診断（MBTIなど）
+              </th>
+              <th scope="col" class="py-4 text-sm font-semibold text-primary">TEP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              compareRows.map((row) => (
+                <tr class="border-b border-border align-top">
+                  <th
+                    scope="row"
+                    class="whitespace-nowrap py-4 pr-4 text-sm font-semibold text-text"
+                  >
+                    {row.aspect}
+                  </th>
+                  <td class="py-4 pr-4 text-sm leading-7 text-text-muted">{row.selfReport}</td>
+                  <td class="py-4 text-sm leading-7 text-text">{row.tep}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <ul class="mt-6 space-y-3 md:hidden">
+        {
+          compareRows.map((row) => (
+            <li class="rounded-2xl border border-border bg-surface p-4">
+              <p class="font-semibold text-text">{row.aspect}</p>
+              <p class="mt-3 text-xs font-semibold text-text-muted">
+                自己申告の性格診断（MBTIなど）
+              </p>
+              <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">{row.selfReport}</p>
+              <p class="mt-3 text-xs font-semibold text-primary">TEP</p>
+              <p class="mt-1 text-sm leading-7 text-text text-pretty">{row.tep}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-6 leading-8 text-text-muted text-pretty">
+        どちらが優れているという話ではありません。自己申告の診断は、本人が自分をどう捉えているかを知る手がかりになります。TEPは、受け取った側がgitに残った仕事の仕方を確かめるための方法です。目的が違う道具です。
+      </p>
+    </section>
+
+    <section id="use" class="scroll-mt-24" aria-labelledby="use-heading">
+      <h2 id="use-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        使い方
+      </h2>
+
+      <div
+        id="use-sales"
+        class="mt-8 scroll-mt-24 rounded-3xl border border-border bg-surface p-6 sm:p-8"
+      >
+        <h3 class="text-xl font-semibold text-balance text-text">
+          紹介会社・SESの営業の方、案件の担当の方へ
+        </h3>
+        <ol class="mt-5 list-decimal space-y-4 pl-5 marker:font-semibold marker:text-primary">
+          {
+            salesSteps.map((step) => (
+              <li class="pl-1">
+                <p class="font-semibold text-text">{step.title}</p>
+                <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">{step.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <dl class="mt-6 grid gap-3 sm:grid-cols-2">
+          {
+            tepComparisons.map((item) => (
+              <div class="rounded-2xl border border-border bg-background p-4">
+                <dt class="font-semibold text-text">{item.site}</dt>
+                <dd class="mt-1 text-sm leading-7 text-text-muted text-pretty">{item.meaning}</dd>
+                <dd class="mt-1 text-xs text-text-muted">
+                  CLIの出力では <code class="font-mono">{item.cli}</code>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <figure class="mt-8 rounded-2xl border border-primary/30 bg-background p-5">
+          <figcaption class="text-sm leading-7 text-text-muted">
+            <span class="font-semibold text-text">架空の例です。</span
+            >ある案件の要求と、候補者の記録を並べたときの見え方を示します。数値と項目は説明のためのもので、実在の人や案件ではありません。
+          </figcaption>
+          <div
+            class="mt-4 hidden overflow-x-auto md:block"
+            role="region"
+            aria-label="架空の例の表"
+            tabindex="0"
+          >
+            <table class="w-full border-collapse text-left text-sm">
+              <caption class="sr-only">架空の例: 案件の要求と候補者の記録の並び</caption>
+              <thead>
+                <tr class="border-b-2 border-border">
+                  <th scope="col" class="py-3 pr-4 font-semibold text-text">項目</th>
+                  <th scope="col" class="py-3 pr-4 font-semibold text-text">案件側の要求</th>
+                  <th scope="col" class="py-3 pr-4 font-semibold text-text">候補者の記録</th>
+                  <th scope="col" class="py-3 font-semibold text-primary">並び</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  exampleRows.map((row) => (
+                    <tr class="border-b border-border align-top">
+                      <th scope="row" class="py-3 pr-4 font-medium text-text">
+                        {row.item}
+                      </th>
+                      <td class="py-3 pr-4 text-text-muted">{row.required}</td>
+                      <td class="py-3 pr-4 text-text-muted">{row.observed}</td>
+                      <td class="py-3 font-semibold text-text">{row.comparison}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <ul class="mt-4 space-y-3 md:hidden">
+            {
+              exampleRows.map((row) => (
+                <li class="rounded-xl border border-border p-4">
+                  <p class="font-medium text-text">{row.item}</p>
+                  <dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+                    <dt class="text-text-muted">案件側の要求</dt>
+                    <dd class="text-text">{row.required}</dd>
+                    <dt class="text-text-muted">候補者の記録</dt>
+                    <dd class="text-text">{row.observed}</dd>
+                    <dt class="text-text-muted">並び</dt>
+                    <dd class="font-semibold text-text">{row.comparison}</dd>
+                  </dl>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-4 text-sm leading-7 text-text-muted text-pretty">
+            「範囲外」の項目からは「直近の半年は、どんな時期でしたか」と聞けます。結合テストが「0件」でも、別のリポジトリや非公開の仕事で書いていたのかもしれません。並びは答えではなく、聞くことを決める材料です。
+          </p>
+        </figure>
+
+        <p class="mt-6 text-sm leading-7 text-text-muted text-pretty">
+          いまはCLIでの操作です。営業向けの画面はテスト導入（PoC）に向けて準備を進めています。
+        </p>
+        <div class="mt-5">
+          <a
+            href={salesCtaUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="cta-primary w-full sm:w-auto"
+          >
+            自社でテストしてみる
+          </a>
+        </div>
+      </div>
+
+      <div
+        id="use-engineers"
+        class="mt-6 scroll-mt-24 rounded-3xl border border-border bg-surface p-6 sm:p-8"
+      >
+        <h3 class="text-xl font-semibold text-balance text-text">エンジニアの方へ</h3>
+        <ol
+          class="mt-5 list-decimal space-y-3 pl-5 text-sm leading-7 text-text-muted marker:font-semibold marker:text-primary"
+        >
+          {engineerSteps.map((step) => <li class="pl-1 text-pretty">{step}</li>)}
+        </ol>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a
+            href={griftCli.github}
+            target="_blank"
+            rel="noreferrer"
+            class="cta-secondary w-full sm:w-auto"
+          >
+            GitHubでGrift CLIを見る
+          </a>
+          <a
+            href={`${griftCli.github}/issues`}
+            target="_blank"
+            rel="noreferrer"
+            class="cta-secondary w-full sm:w-auto"
+          >
+            Issuesで違和感を伝える
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="next" class="scroll-mt-24" aria-labelledby="next-heading">
+      <h2 id="next-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
+        次に読むもの
+      </h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {
+          nextReads.map((read) => (
+            <li>
+              <a
+                href={read.href}
+                target={read.external ? '_blank' : undefined}
+                rel={read.external ? 'noreferrer' : undefined}
+                class="flex h-full flex-col gap-1 rounded-2xl border border-border bg-surface p-5 no-underline transition hover:border-primary/45"
+              >
+                <span class="font-semibold text-text">
+                  {read.label}
+                  {read.external && <span aria-hidden="true"> ↗</span>}
+                </span>
+                <span class="text-sm leading-7 text-text-muted text-pretty">{read.detail}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <ArticleAuthor heading="このページを書いた人" />
+
+    <DocumentDownload />
+  </div>
+
+  <NextStep
+    heading="自社の推薦業務で、確かめてみませんか。"
+    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
+    ctas={[
+      { label: '自社でテストしてみる', href: finalCtaUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+      { label: 'よくある質問を見る', href: '/faq/' },
+    ]}
+  />
+</MarketingLayout>
+
+<script>
+  // トップの「用語の対応表」リンク（/tep/#terms）から来たときは、折りたたみを開いて見せる
+  const openTermsFromHash = (): void => {
+    if (window.location.hash !== '#terms') return;
+    const terms = document.getElementById('terms');
+    if (terms instanceof HTMLDetailsElement) terms.open = true;
+  };
+  document.addEventListener('astro:page-load', openTermsFromHash);
+  window.addEventListener('hashchange', openTermsFromHash);
+</script>

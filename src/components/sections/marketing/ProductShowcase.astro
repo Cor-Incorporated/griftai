@@ -75,6 +75,41 @@ const layers: ObservationLayer[] = [
       },
     ],
   },
+  {
+    layer: '作業領域と検証の形（report-v2）',
+    question: 'どの領域の変更を、どんな間隔と検証で出しているか',
+    items: [
+      {
+        name: '作業領域（surface_profile）',
+        detail:
+          'frontend / backend / data / platform / test / docs などの領域ごとに、変更したコミット数とファイル数を数えます。職種や能力の判定ではありません。',
+      },
+      {
+        name: '変更リズム（change_rhythm）',
+        detail: '直近180日の実働日数と、変更を提出した間隔。労働時間や意欲は測れません。',
+      },
+      {
+        name: '検証の形（verification_profile）',
+        detail:
+          'テストを触ったコミットの割合とテストの種類、fix にテストが伴った割合。いずれも分子と分母付きです。',
+      },
+    ],
+  },
+  {
+    layer: '案件側の宣言との並び',
+    question: '案件が求めることと、どこで重なるか',
+    items: [
+      {
+        name: '軸ごとの並び（grift project / grift align）',
+        detail:
+          '案件が求める領域・検証・リズムを案件側が grift project で宣言し、候補者の観測と grift align で軸ごとに並べます。並びは重なり・範囲外・0件・未観測・要求なしの5通りで、総合点・順位・合否は計算しません。',
+      },
+      {
+        name: 'チーム単位の充足（grift align --team）',
+        detail: '要求を満たす人数だけを出します。個人の数値は出さず、3名未満では出しません。',
+      },
+    ],
+  },
 ];
 ---
 
@@ -86,7 +121,7 @@ const layers: ObservationLayer[] = [
     </h2>
     <p class="type-copy text-lg text-text-muted">
       Grift
-      CLIは、git履歴だけから次の観測を取り出します。どの数値にも分子と分母、計測の条件（定義の版・対象のコミット）が付き、母数が20未満のときは率を出さずに件数だけを示します。
+      CLIは、git履歴だけから次の観測を取り出します。どの数値にも分子と分母、計測の条件（定義の版・対象のコミット）が付き、母数が20未満のときは率を出さずに件数だけを示します。案件が求めることは、案件側が別に宣言し、観測と並べます。
     </p>
   </div>
 

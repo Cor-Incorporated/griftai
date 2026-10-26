@@ -1,5 +1,7 @@
 # Deployment
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 Build your site for production:
 
 ```bash

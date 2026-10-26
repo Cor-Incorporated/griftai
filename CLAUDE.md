@@ -12,14 +12,21 @@ Japanese-first Astro landing site for **Grift** (`griftai.org`). Built on the Vi
 npm run dev          # Start dev server
 npm run build        # Production build (outputs to dist/)
 npm run preview      # Preview production build locally
-npm run check        # Lint + format check + astro check (CI gate)
+npm run check        # Lint + format check + astro check + check:cta + check:metrics + check:terms (CI gate)
 npm run lint         # ESLint only
 npm run lint:fix     # ESLint with auto-fix
 npm run format       # Prettier write
 npm run format:check # Prettier check only
+npm run check:cta    # No hard-coded Cor contact URLs outside the CTA builder (scripts/check-cta-hardcode.mjs)
+npm run check:metrics # No unvalidated marketing metrics in public copy (scripts/check-forbidden-metrics.mjs)
+npm run check:terms  # Plain words for non-engineers (scripts/check-plain-terms.mjs, see Key Conventions)
+npm run test:unit    # Vitest
+npm run test:e2e     # Playwright smoke test (e2e/smoke.spec.ts); run after a build
+npm run test:e2e:a11y # Playwright accessibility test (e2e/a11y.spec.ts)
+npm run test         # test:unit + build + test:e2e
 ```
 
-CI runs `npm run check` then `npm run build` on every PR and push. Both must pass.
+CI runs `npm run check`, `npm run build` and the Playwright smoke test on every PR and push (see CI/CD). They must pass.
 
 ## Architecture
 
@@ -38,8 +45,9 @@ CI runs `npm run check` then `npm run build` on every PR and push. Both must pas
 - `src/lib/types.ts` — Shared TypeScript types for all config and data structures.
 - `src/layouts/` — `MarketingLayout` is the primary layout for public pages.
 - `src/components/sections/marketing/` — Landing page sections (Hero, CTA, Features, HowItWorks, etc.).
-- `src/content/` — Astro Content Collections (blog, docs, changelog, testimonials). Schema defined in `src/content.config.ts`.
-- `planning/blueprint-docs/` — Design docs: persona, positioning, content strategy, beta launch decisions, legal drafts.
+- `src/content/` — Astro Content Collections, schema in `src/content.config.ts`. Only `stories` is read by published pages; `blog`, `docs`, `changelog` and `testimonials` are Virex leftovers (issue #32).
+- `docs/adr/` — Decisions (index: `docs/adr/README.md`). ADR-0005 and ADR-0006 hold the current positioning and first view; ADR-0001 and ADR-0003 (Team Beta) are superseded.
+- `planning/blueprint-docs/` and `docs/lp-storytelling-research.md` — Historical (2026-03): written for the withdrawn AI-estimation web app and Grift Beta, including plan prices. Do not take copy, prices or features from them. `docs/01`–`09` describe the Virex template.
 
 **Path aliases** (tsconfig.json):
 - `@/*` → `src/*`
@@ -49,10 +57,14 @@ CI runs `npm run check` then `npm run build` on every PR and push. Both must pas
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/ci.yml`):
-- **quality** job: `npm run check` + `npm run build` on all PRs and pushes
-- **deploy** job: Cloudflare Pages via Wrangler, only on `main` push when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set
+GitHub Actions (`.github/workflows/ci.yml`), on every PR and on pushes to `main`, `feat/**`, `fix/**` and `chore/**`:
+- **quality** job: `npm run check` + `npm run build`
+- **e2e-smoke** job: Playwright smoke test against the built site (`npm run test:e2e`)
+- **a11y** job: Playwright accessibility test, non-blocking (`continue-on-error`)
+- **deploy_gate** + **deploy** jobs: Cloudflare Pages via Wrangler, only on a `main` push after quality and e2e-smoke pass, and only when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set
 - Node 20, project name: `griftai`
+
+Open PRs against `main`; merging to `main` deploys production.
 
 ## Key Conventions
 

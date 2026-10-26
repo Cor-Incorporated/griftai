@@ -1,5 +1,7 @@
 # LP ストーリーテリング & コンバージョン ベストプラクティス調査
 
+> **歴史資料（2026-03 の調査）**: Grift Beta の LP を前提にした調査です。いまの方針は [ADR-0005](adr/ADR-0005-grift-cli-pivot.md) と [ADR-0006](adr/ADR-0006-lp-first-view-and-measurement.md) にあります。
+
 > 調査日: 2026-03-12
 > 目的: Grift ランディングページ再設計のためのベンチマーク資料
 

@@ -16,7 +16,7 @@
 - 実装ガードとの対応: `src/lib/cor-cta.ts`（intent 生成）、`scripts/check-cta-hardcode.mjs`（ハードコード検査）、`scripts/check-forbidden-metrics.mjs` は正本 ADR の契約を機械的に担保する。
 
 ## 注意
-- Grift LP の CTA が使う intent は `grift-team-beta` / `grift-paid-trial` / `estimate-audit` のみ。新キー `contract-dev` は Grift LP からは使用しない（corsweb ADR-0014）。
+- Grift LP の CTA が使う intent は `grift-team-beta` だけ（ADR-0005 の決定 5。`grift-paid-trial` / `estimate-audit` は 2026-10-20 に送るのをやめた）。`contract-dev` は Grift LP からは使用しない（corsweb ADR-0014）。
 
 ## 影響
 - クロスリポジトリ契約の変更は corsweb 側 ADR の更新として行い、本リポジトリは参照リンクのみ追従する。

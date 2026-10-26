@@ -1,5 +1,7 @@
 # Configuration
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 All configuration is centralized in `src/config/`. Import from `@/config` to access settings.
 
 ## Configuration Files

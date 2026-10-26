@@ -9,7 +9,7 @@
  * ほかの場所にキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）と e2e が落ちる。
  * 英語の指標名（test co-change など）とコマンド名は、元の語として括弧や脚注に出してよい。
  *
- * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.8.0。tag v0.8.0 = commit 45f75ba のコードで確かめた）。
+ * 事実の出典は Cor-Incorporated/grift-cli（v0.9.0。tag v0.9.0 = commit 8d62f42 のコードで 2026-10-27 に確かめた）。
  * どの版で確かめたかは tepFactsConfirmedWith に書き、site.ts の griftCli.version と一致することを
  * tests/unit/tep-facts.test.ts が検査する。数は tepFacts にまとめた:
  * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で分ける）
@@ -21,7 +21,8 @@
  * - 関わり方: role_profile.py（同意の記録がある identity のときだけ出る）
  * - 案件との並び: docs/alignment-schema.md の comparison と complementarity.py の MIN_TEAM_SIZE
  * サイトの用語と CLI の語の対応は、CLI 側の docs/metrics-guide.md の対応表（0.8.0 から）にもある。
- * 平易な言い方は、CLI で設計中の「特性プロフィール」の言葉に合わせて、あとでそろえる前提（2026-10-26 時点）。
+ * 4 つの観点の平易な言い方とサイトの用語は、grift-cli 0.9.0 の Markdown の見出し（docs/metrics-guide.md の
+ * 「Markdown の観点の呼び名」）と同じ。0.9.0 で CLI 側がサイトの言い方にそろえた（grift-cli の CHANGELOG 0.9.0）。
  */
 
 /**
@@ -29,7 +30,7 @@
  * site.ts の griftCli.version を上げたら、tepFacts の数を新しい版で確かめ直してから、ここも上げる。
  * 2 つがずれると tests/unit/tep-facts.test.ts が両方の値を挙げて落ちる。
  */
-export const tepFactsConfirmedWith = '0.8.0';
+export const tepFactsConfirmedWith = '0.9.0';
 
 /** grift-cli のコードで決まっている数（確かめた版は tepFactsConfirmedWith）。本文に出す数はここから読む */
 export const tepFacts = {

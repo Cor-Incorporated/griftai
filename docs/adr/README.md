@@ -22,7 +22,7 @@
 | `grift-team-beta` | Grift の相談（2026-10 以降は CLI・紹介会社向けテスト導入、ADR-0005） | ✅ 使用 |
 | `grift-paid-trial` | Grift Paid Trial（取り下げ） | ❌ 使用しない（ADR-0005） |
 | `estimate-audit` | Estimate Audit（取り下げ） | ❌ 使用しない（ADR-0005） |
-| `contract-dev` | 受託開発の相談（Cloudia→Grift テナント自動ハンドオフ） | ❌ **使用しない**（ADR-0004） |
+| `contract-dev` | 受託開発の相談（Cor 側。人間が対応する。旧 Grift のテナントへの自動ハンドオフは構想ごと取り下げた: corsweb ADR-0014 の 2026-10-27 の改訂） | ❌ **使用しない**（ADR-0004） |
 | `confidential-ai-assessment` | 機密データAI活用診断（Cor 側） | ❌ |
 | `local-llm-poc` | ローカルLLM PoC（Cor 側） | ❌ |
 | `press-speaking-other` | 取材・登壇・その他 | ❌ |

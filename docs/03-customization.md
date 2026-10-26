@@ -1,5 +1,7 @@
 # Customization
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 ## Logo, Favicon & Open Graph Image
 
 Replace these files in `public/` with your own brand assets:

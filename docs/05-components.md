@@ -1,5 +1,7 @@
 # Components
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 All components include JSDoc documentation with usage examples. Check the source files for detailed prop documentation.
 
 ## Icon System

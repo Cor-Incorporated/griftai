@@ -1,5 +1,7 @@
 # Content Guide
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 Content is managed through Astro's Content Collections. All content lives in `src/content/` as Markdown or MDX files.
 
 ## Available Content Collections

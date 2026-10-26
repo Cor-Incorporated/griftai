@@ -279,7 +279,11 @@ const tocItems = [
   description="Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのCLIです。点数や順位はつけず、AI（LLM）を使わないので誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が推薦の理由を根拠とともに伝えるために使えます。"
   faqItems={faqPreview.map((item) => ({ question: item.q, answer: item.a }))}
 >
-  <section id="hero" class="section-animate relative bg-background">
+  {
+    /* 最初の画面は、スクリプトを待たずに HTML と CSS だけで出す（フェードインの対象にしない）。
+      フェードインはスクリプトの実行後に始まるため、回線が遅いとその間ヒーローが白く見える。 */
+  }
+  <section id="hero" class="relative bg-background">
     <div class="landing-container py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:gap-7">
         <p class="section-kicker">Grift CLI ・ OSS（MITライセンス）</p>

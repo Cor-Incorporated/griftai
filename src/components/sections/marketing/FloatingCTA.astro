@@ -78,6 +78,8 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
 </div>
 
 <script>
+  import { onPageReady } from '@/lib/page-ready';
+
   const initFloatingCta = (): void => {
     const floatingCta = document.getElementById('floating-cta') as HTMLElement | null;
     const closeButton = document.getElementById('floating-cta-close') as HTMLElement | null;
@@ -161,6 +163,6 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
     });
   };
 
-  // 初回 + ClientRouter のページ遷移後に再初期化
-  document.addEventListener('astro:page-load', initFloatingCta);
+  // 初回はすぐに、ClientRouter のページ遷移後は再初期化
+  onPageReady(initFloatingCta);
 </script>

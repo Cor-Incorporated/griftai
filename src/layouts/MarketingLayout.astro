@@ -83,12 +83,15 @@ const isHome = Astro.url.pathname === '/';
   <ScrollChrome />
 
   <script>
+    import { onPageReady } from '@/lib/page-ready';
+
     let revealOnScroll: (() => void) | null = null;
 
     const initScrollAnimations = (): void => {
       // View Transitions のページ遷移では前ページのリスナーを破棄してから再構築する
       if (revealOnScroll) {
         window.removeEventListener('scroll', revealOnScroll);
+        window.removeEventListener('resize', revealOnScroll);
         revealOnScroll = null;
       }
 
@@ -126,10 +129,12 @@ const isHome = Astro.url.pathname === '/';
         });
       };
       window.addEventListener('scroll', revealOnScroll, { passive: true });
+      // 画面の高さが変わったとき（向きの変更、アドレスバーの出入り、非表示で開かれたタブ）も判定し直す
+      window.addEventListener('resize', revealOnScroll, { passive: true });
       reveal();
     };
 
-    // 初回表示 + ClientRouter のページ遷移後の両方で発火させる
-    document.addEventListener('astro:page-load', initScrollAnimations);
+    // 初回表示ではすぐに、ClientRouter のページ遷移後は astro:page-load で実行する
+    onPageReady(initScrollAnimations);
   </script>
 </BaseLayout>

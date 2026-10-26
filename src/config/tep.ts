@@ -9,7 +9,9 @@
  * ほかの場所にキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）と e2e が落ちる。
  * 英語の指標名（test co-change など）とコマンド名は、元の語として括弧や脚注に出してよい。
  *
- * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.7.2。dev の main でも同じ）。数は tepFacts にまとめた:
+ * 事実の出典は Cor-Incorporated/grift-cli（公開中の v0.8.0。tag v0.8.0 = commit 45f75ba のコードで確かめた）。
+ * どの版で確かめたかは tepFactsConfirmedWith に書き、site.ts の griftCli.version と一致することを
+ * tests/unit/tep-facts.test.ts が検査する。数は tepFacts にまとめた:
  * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で分ける）
  * - 変更のペース: rhythm.py（間隔の中央値と 90 パーセンタイル、短い間隔と長い間隔の割合）
  * - テストの付け方: verification_profile.py
@@ -21,7 +23,14 @@
  * 平易な言い方は、CLI で設計中の「特性プロフィール」の言葉に合わせて、あとでそろえる前提（2026-10-26 時点）。
  */
 
-/** grift-cli のコードで決まっている数（v0.7.2 で確認）。本文に出す数はここから読む */
+/**
+ * tepFacts を grift-cli のどの版のコードで確かめたか。
+ * site.ts の griftCli.version を上げたら、tepFacts の数を新しい版で確かめ直してから、ここも上げる。
+ * 2 つがずれると tests/unit/tep-facts.test.ts が両方の値を挙げて落ちる。
+ */
+export const tepFactsConfirmedWith = '0.8.0';
+
+/** grift-cli のコードで決まっている数（確かめた版は tepFactsConfirmedWith）。本文に出す数はここから読む */
 export const tepFacts = {
   /** これより少ない件数では割合を出さない（MIN_POPULATION_FOR_RATES） */
   minCount: 20,
@@ -41,8 +50,13 @@ export const tepFacts = {
   survivalTauDays: 180,
   /** チームで集計する最少の人数（MIN_TEAM_SIZE） */
   minTeamSize: 3,
-  /** Grift CLI の README に載せている公開リポジトリ（click）の例 */
-  readmeExample: { repo: 'click', numerator: 73, denominator: 274, ratio: '0.2664' },
+  /**
+   * 「何件のうち何件か」の説明に使う架空の例。実在の人やリポジトリの値ではない。
+   * Grift CLI の README の例（架空の例「40 件のうち 12 件」）とそろえている。
+   * 以前は公開リポジトリ click の値（検証用に選んだ 1 人分）を載せていたが、実在の人の数値を
+   * 公開面に出さない方針（2026-10-25、README と同じ）に合わせて差し替えた。
+   */
+  cochangeExample: { numerator: 12, denominator: 40, ratio: '0.3' },
 } as const;
 
 /** TEP が数えるもの 1 つ */

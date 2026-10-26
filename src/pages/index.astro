@@ -27,7 +27,7 @@ const midCtaUrl = corCta.griftTrial('grift-lp-mid');
 const pricingCtaUrl = corCta.griftTrial('grift-lp-pricing-trial');
 const finalCtaUrl = corCta.griftTrial('grift-lp-final');
 
-const example = tepFacts.readmeExample;
+const example = tepFacts.cochangeExample;
 
 const asOfLabel = new Date(`${contentAsOf}T00:00:00+09:00`).toLocaleDateString('ja-JP', {
   timeZone: 'Asia/Tokyo',
@@ -359,15 +359,13 @@ const tocItems = [
 <span class="text-secondary">$</span> grift verify
 VERIFIED: all fields match recomputation under recorded provenance
 
-<span class="text-background/60"># 出力の一例（何件のうち何件かが必ず付く）</span>
+<span class="text-background/60"># 出力の一例（架空の値。何件のうち何件かが必ず付く）</span>
 test co-change: {example.ratio} ratio（{example.numerator} of {example.denominator}）</code></pre>
           </div>
           <figcaption
             class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
           >
-            出力の一例は、Grift CLI の README に載せている公開リポジトリ（{
-              example.repo
-            }）の計測結果です。本番のコードを変えた{example.denominator}件のコミットのうち{
+            出力の一例は架空の値です。本番のコードを変えた{example.denominator}件のコミットのうち{
               example.numerator
             }件で、テストも一緒に変えていた、という意味です。コマンドの詳細は
             <a

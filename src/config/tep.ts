@@ -16,7 +16,8 @@
  * - 変更のペース: rhythm.py（間隔の中央値と 90 パーセンタイル、短い間隔と長い間隔の割合）
  * - テストの付け方: verification_profile.py
  * - いまのコードの新しさ: survival.py（いまの行の経過日数に exp(-日数/180) の重みを付けた平均）。
- *   180 日後に残った行の割合ではない。サイトの用語「定着率」と中身が食い違うので、呼び名は見直しを待っている
+ *   180 日後に残った行の割合ではない。サイトの用語は 2026-10-26 に「定着率」から「コードの新しさ」へ改めた
+ *   （「定着」とは逆向きに読めるため。grift-cli 0.9.0 の metrics-guide と同じ語で、英語は Code recency）
  * - 関わり方: role_profile.py（同意の記録がある identity のときだけ出る）
  * - 案件との並び: docs/alignment-schema.md の comparison と complementarity.py の MIN_TEAM_SIZE
  * サイトの用語と CLI の語の対応は、CLI 側の docs/metrics-guide.md の対応表（0.8.0 から）にもある。
@@ -210,8 +211,7 @@ export const tepObservationGroups: readonly TepObservationGroup[] = [
     note: '計測を指定したときだけ出します。',
     observations: [
       {
-        plain: 'いまのコードの新しさ',
-        site: '定着率',
+        plain: 'コードの新しさ',
         counts: `いまのコードに残っている行が、書かれてからどれくらい経っているかを、${tepFacts.survivalTauDays}日を目安に重みを付けて平均した値です。1に近いほど、最近書かれた行が多いことを表します。`,
         cannotTell: `${tepFacts.survivalTauDays}日後に残った行の割合や、コードの品質ではありません。リポジトリ全体の値で、一人ひとりの値ではありません。`,
         cli: 'survival',

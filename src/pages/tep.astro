@@ -33,7 +33,7 @@ const salesCtaUrl = corCta.griftTrial('grift-tep');
 const finalCtaUrl = corCta.griftTrial('grift-tep-final');
 const noteArticle = griftArticles.find((article) => article.platform === 'note');
 const qiitaArticle = griftArticles.find((article) => article.platform === 'Qiita');
-const example = tepFacts.readmeExample;
+const example = tepFacts.cochangeExample;
 
 // 次に読むストーリー。題は content から読み、見つからなければ build を止める（slug の変更で 404 にしない）
 const storyReads = await Promise.all(
@@ -65,7 +65,7 @@ const tocItems = [
 const rules = [
   {
     title: '数え方と件数を一緒に出す',
-    body: `どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかを付けます。Grift CLIのREADMEに載せている公開リポジトリ（${example.repo}）の例では、本番のコードを変えた${example.denominator}件のコミットのうち${example.numerator}件で、テストも一緒に変えていました。割合だけなら${example.ratio}ですが、TEPは「${example.denominator}件のうち${example.numerator}件」と読める形で残します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。`,
+    body: `どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかを付けます。たとえば（架空の例）、本番のコードを変えた${example.denominator}件のコミットのうち${example.numerator}件で、テストも一緒に変えていたとします。割合だけなら${example.ratio}ですが、TEPは「${example.denominator}件のうち${example.numerator}件」と読める形で残します。数えた件数が${tepFacts.minCount}件に満たないときは、割合を出さずに件数だけを示します。`,
   },
   {
     title: '見えないものは「見えない」と書く',

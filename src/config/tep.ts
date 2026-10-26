@@ -50,8 +50,13 @@ export const tepFacts = {
   survivalTauDays: 180,
   /** チームで集計する最少の人数（MIN_TEAM_SIZE） */
   minTeamSize: 3,
-  /** Grift CLI の README に載せている公開リポジトリ（click）の例 */
-  readmeExample: { repo: 'click', numerator: 73, denominator: 274, ratio: '0.2664' },
+  /**
+   * 「何件のうち何件か」の説明に使う架空の例。実在の人やリポジトリの値ではない。
+   * Grift CLI の README の例（架空の例「40 件のうち 12 件」）とそろえている。
+   * 以前は公開リポジトリ click の値（検証用に選んだ 1 人分）を載せていたが、実在の人の数値を
+   * 公開面に出さない方針（2026-10-25、README と同じ）に合わせて差し替えた。
+   */
+  cochangeExample: { numerator: 12, denominator: 40, ratio: '0.3' },
 } as const;
 
 /** TEP が数えるもの 1 つ */

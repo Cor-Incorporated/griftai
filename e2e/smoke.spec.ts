@@ -470,3 +470,35 @@ test.describe('TEP page and plain words (2026-10)', () => {
     expect(sitemap).toContain('/tep/</loc>');
   });
 });
+
+test.describe('First view for agency sales (2026-10-26)', () => {
+  test('the first view names the reader and offers the trial and the deck', async ({ page }) => {
+    // 広告や直接アクセスで来た人は、最初の画面だけを見て残るかどうかを決める
+    await page.goto('/');
+    const viewportHeight = page.viewportSize()?.height ?? 0;
+    const hero = page.locator('#hero');
+    await expect(hero.locator('.section-kicker').first()).toHaveText(
+      '人材紹介会社・SESの営業の方へ'
+    );
+    for (const locator of [
+      hero.locator('a[href*="intent=grift-team-beta"]'),
+      hero.locator('a[href="/downloads/grift-cli-overview.pdf"]'),
+    ]) {
+      await expect(locator).toBeVisible();
+      const box = await locator.boundingBox();
+      expect(box, 'CTA is rendered').not.toBeNull();
+      expect((box?.y ?? Infinity) + (box?.height ?? 0)).toBeLessThanOrEqual(viewportHeight);
+    }
+  });
+
+  test('the CLI usage example sits under the observations, not in the hero', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#hero #product-demo')).toHaveCount(0);
+    await expect(page.locator('#product #product-demo')).toHaveCount(1);
+  });
+
+  test('the page ends with one closing CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('a[href*="source=grift-lp-final"]')).toHaveCount(1);
+  });
+});

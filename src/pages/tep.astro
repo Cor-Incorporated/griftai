@@ -2,7 +2,7 @@
 /**
  * TEP（Technical Evidence Pipeline）の説明 — Grift が使う方法を、非エンジニアの読み手にも分かる順で書く。
  *
- * 読み手の中心は紹介会社・SES の営業と案件の担当、そしてエンジニア本人。
+ * 読み手の中心は紹介会社・SES の営業と案件の担当、自社開発企業の採用担当、そしてエンジニア本人。
  * 数えるものの説明と用語の対応表は config/tep.ts から読む（トップの「観測すること」と llms.txt も同じ）。
  * 「作った理由」は代表の一人称で、note「AI時代のプロジェクトをどう評価するのか」（2026-08-24）の事実だけを使う。
  * 数（20件、180日など）は config/tep.ts の tepFacts から、記事とストーリーの題は config と content から読む。
@@ -664,8 +664,8 @@ const nextReads = [
   </div>
 
   <NextStep
-    heading="自社の推薦業務で、確かめてみませんか。"
-    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
+    heading="自社の推薦や採用の業務で、確かめてみませんか。"
+    lead="紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
     ctas={[
       { label: '自社でテストしてみる', href: finalCtaUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },

@@ -15,7 +15,7 @@ export const name = import.meta.env.SITE_NAME || 'Grift';
 /** Site description for SEO and meta tags */
 export const description =
   import.meta.env.SITE_DESCRIPTION ||
-  'Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が、推薦の理由を根拠とともに伝えるために使えます。';
+  'Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が推薦の理由を根拠とともに伝えるときや、自社開発企業の採用担当が、候補者本人が共有した記録から、どんな仕事をしてきたかを確かめるときに使えます。';
 
 /** Production URL of your site (used for sitemap, RSS, canonical URLs) */
 export const url = import.meta.env.SITE_URL || 'https://griftai.org';

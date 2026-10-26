@@ -56,6 +56,7 @@ export const navigation: Navigation = {
     ],
     solutions: [
       { label: '紹介会社・SESの営業の方へ', href: '/#for-sales' },
+      { label: '自社開発企業の採用担当の方へ', href: '/#for-hiring' },
       { label: 'エンジニアの方へ', href: '/#for-engineers' },
       { label: '推薦までの流れ', href: '/#flow' },
       { label: '検証の公開', href: '/#proof' },

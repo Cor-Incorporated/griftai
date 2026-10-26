@@ -31,12 +31,12 @@ const offerings = [
     primary: false,
   },
   {
-    name: '紹介会社さま向けのテスト導入（PoC）',
-    target: '人材紹介会社・SES企業',
+    name: 'テスト導入（PoC）',
+    target: '人材紹介会社・SES企業・自社開発企業',
     price: '個別にご案内',
     priceNote: '対象・件数に応じて',
     description:
-      '候補者本人が共有した記録をもとに、推薦の理由を根拠とともに伝える流れを、実際の推薦業務で試していただく取り組みです。',
+      '候補者本人が共有した記録をもとに、推薦の理由を根拠とともに伝える流れや、候補者がどんな仕事をしてきたかを確かめる流れを、実際の業務で試していただく取り組みです。',
     features: [
       'テストの範囲（対象の職種・件数・期間）を一緒に決めます',
       '営業向けの画面はテスト導入に向けて準備中です',
@@ -53,7 +53,7 @@ const pricingFaqs = [
   {
     question: '料金はいくらですか？',
     answer:
-      'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版の価格は、決まってからこのページでお知らせします。',
+      'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版の価格は、決まってからこのページでお知らせします。',
   },
   {
     question: '正式版はいつ提供されますか？',
@@ -68,7 +68,7 @@ const pricingFaqs = [
   {
     question: 'エンジニア本人に費用はかかりますか？',
     answer:
-      'かかりません。Grift CLI は無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さまからいただく想定です。',
+      'かかりません。Grift CLI は無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さま・自社開発企業さまからいただく想定です。',
   },
 ];
 
@@ -89,16 +89,16 @@ const trialSteps = [
 ---
 
 <MarketingLayout
-  title={`料金と提供状況 — Grift CLI は無償、紹介会社さま向けのテスト導入は個別案内 | ${siteConfig.name}`}
+  title={`料金と提供状況 — Grift CLI は無償、テスト導入（PoC）は個別案内 | ${siteConfig.name}`}
   titleTag="料金と提供状況｜Grift"
   ogTitle="Griftの料金と提供状況｜Grift"
-  description="Grift CLI は無償（MITライセンス）のOSSです。人材紹介会社・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しています。"
+  description="Grift CLI は無償（MITライセンス）のOSSです。人材紹介会社・SES企業・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しています。"
   faqItems={pricingFaqs}
 >
   <BreadcrumbNav items={[{ label: '料金と提供状況' }]} />
   <PageHeader
     title="料金と提供状況"
-    subtitle="Grift CLI は無償。紹介会社さま・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内します。"
+    subtitle="Grift CLI は無償。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内します。"
   />
 
   {/* AIO/回答エンジン向け: 料金の要点を自己完結の dl で先出しする */}
@@ -121,7 +121,9 @@ const trialSteps = [
           }
           <div class="rounded-2xl border border-border bg-background p-4">
             <dt class="text-sm font-semibold text-text">正式版</dt>
-            <dd class="mt-1 text-xs text-text-muted">紹介会社さま・SES企業さま</dd>
+            <dd class="mt-1 text-xs text-text-muted">
+              紹介会社さま・SES企業さま・自社開発企業さま
+            </dd>
             <dd class="mt-2 text-base font-bold text-primary">2027年の提供開始を目指しています</dd>
           </div>
         </dl>

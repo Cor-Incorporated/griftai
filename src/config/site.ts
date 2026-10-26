@@ -47,8 +47,8 @@ export const griftCli = {
   metricsGuide: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/metrics-guide.md',
   packageName: 'grift-cli',
   installCommand: 'pipx install grift-cli',
-  version: '0.8.0',
-  releasedOn: '2026-10-26',
+  version: '0.9.0',
+  releasedOn: '2026-10-27',
   license: 'MIT',
   pythonRequires: '3.11以上',
 } as const;

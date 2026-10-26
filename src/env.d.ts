@@ -16,3 +16,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  /** GA4 のイベントの列。BaseLayout.astro がどのホストでも用意し、本番のホストでだけ送る */
+  dataLayer: unknown[];
+  gtag?: (...args: unknown[]) => void;
+  /** Microsoft Clarity。本番のホストでだけ読み込む */
+  clarity?: (...args: unknown[]) => void;
+}

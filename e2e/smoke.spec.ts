@@ -470,3 +470,71 @@ test.describe('TEP page and plain words (2026-10)', () => {
     expect(sitemap).toContain('/tep/</loc>');
   });
 });
+
+test.describe('Analytics: tags only on the production host, events for CTAs and the deck', () => {
+  const tagHosts = /googletagmanager\.com|google-analytics\.com|clarity\.ms/;
+
+  test('localhost loads neither GA4 nor Clarity', async ({ page }) => {
+    // 手元の開発・CI の e2e・プレビューで開いたページを、本番のプロパティに送らない
+    const tagRequests: string[] = [];
+    page.on('request', (request) => {
+      if (tagHosts.test(request.url())) tagRequests.push(request.url());
+    });
+    await page.goto('/');
+    await page.waitForLoadState('load');
+    expect(tagRequests).toEqual([]);
+    expect(await page.evaluate(() => Array.isArray(window.dataLayer))).toBe(true);
+  });
+
+  test('the production host loads GA4 and Clarity', async ({ page, baseURL }) => {
+    // ホスト名が griftai.org のときだけタグを読み込むことを、手元のビルドを griftai.org として返して確かめる
+    const tagRequests: string[] = [];
+    await page.route(tagHosts, async (route) => {
+      tagRequests.push(route.request().url());
+      await route.fulfill({ status: 200, contentType: 'text/javascript', body: '' });
+    });
+    await page.route('https://griftai.org/**', async (route) => {
+      const local = route
+        .request()
+        .url()
+        .replace('https://griftai.org/', baseURL ?? '/');
+      await route.fulfill({ response: await route.fetch({ url: local }) });
+    });
+    await page.goto('https://griftai.org/');
+    await expect
+      .poll(() => tagRequests.some((url) => url.includes('gtag/js?id=G-3E8328E5V6')))
+      .toBe(true);
+    await expect.poll(() => tagRequests.some((url) => url.includes('clarity.ms/tag/'))).toBe(true);
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+  });
+
+  test('clicks on the hero CTA and the deck are pushed as events', async ({ page }) => {
+    await page.goto('/');
+    // 外部の問い合わせ画面を開かず、ダウンロードもしない（記録だけを確かめる）
+    await page.evaluate(() => {
+      document.addEventListener('click', (event) => event.preventDefault());
+    });
+    await page.locator('#hero a[href*="intent=grift-team-beta"]').click();
+    await page.locator('#hero a[href$=".pdf"]').click();
+
+    const events = await page.evaluate(() =>
+      (window.dataLayer as unknown[])
+        .map((entry) => Array.from(entry as ArrayLike<unknown>))
+        .filter((args) => args[0] === 'event')
+    );
+    expect(events).toContainEqual([
+      'event',
+      'cta_click',
+      expect.objectContaining({
+        cta_source: 'grift-lp-hero',
+        cta_intent: 'grift-team-beta',
+        cta_method: 'chat',
+      }),
+    ]);
+    expect(events).toContainEqual([
+      'event',
+      'deck_download',
+      expect.objectContaining({ file_name: 'grift-cli-overview.pdf', placement: 'hero' }),
+    ]);
+  });
+});

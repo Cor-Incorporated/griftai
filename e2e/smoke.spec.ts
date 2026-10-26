@@ -24,6 +24,32 @@ test.describe('Landing page smoke tests', () => {
     await expect(heading).not.toBeEmpty();
   });
 
+  test('the first view does not wait for images and third-party scripts', async ({
+    browser,
+    isMobile,
+    viewport,
+  }) => {
+    // 回線が遅いと、画像と外部スクリプト（GA4・Clarity）の読み込みが終わるまで window の load が来ない。
+    // 2026-09-16〜10 月は、初回の表示処理が load を待っていたため、その間ヒーローが白いままで、
+    // スマホのメニューも開かなかった。ここでは読み込みを終わらせずに、最初の画面が出ることを確かめる。
+    const context = await browser.newContext({ viewport, isMobile, hasTouch: isMobile });
+    const page = await context.newPage();
+    await page.route(/\.(?:jpe?g|png|avif|webp|svg)(?:\?|$)/, () => {});
+    await page.route(/googletagmanager\.com|clarity\.ms|cloudflareinsights\.com/, () => {});
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
+    await expect(page.locator('#hero')).toHaveCSS('opacity', '1', { timeout: 3000 });
+    await expect(page.locator('#hero h1')).toBeVisible();
+
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu')).toBeVisible({ timeout: 3000 });
+    }
+    expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
+    await context.close();
+  });
+
   test('all major sections become visible after scroll animations', async ({ page }) => {
     const sectionIds = [
       '#problem',

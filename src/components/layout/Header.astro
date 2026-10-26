@@ -21,15 +21,23 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
     aria-label="Main navigation"
   >
     <a href="/" class="flex items-center gap-3 text-text">
+      {
+        /* 表示は 40px なので、3 倍の 120px 版を使う。元の 1024px 版（合わせて約 1.9MB）は
+          どの幅でも 2 枚とも読み込まれ、window の load を遅らせていた。 */
+      }
       <img
-        src="/grift-mark.jpg"
+        src="/grift-mark-120.jpg"
         alt={`${siteConfig.name} アイコン`}
+        width="40"
+        height="40"
         class="size-10 rounded-sm sm:hidden"
         loading="eager"
       />
       <img
-        src="/grift-wordmark.jpg"
+        src="/grift-wordmark-120.jpg"
         alt={`${siteConfig.name} ロゴ`}
+        width="40"
+        height="40"
         class="hidden h-10 w-auto rounded-sm sm:block"
         loading="eager"
       />
@@ -177,6 +185,8 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 }
 
 <script>
+  import { onPageReady } from '@/lib/page-ready';
+
   function initHeader() {
     const header = document.getElementById('site-header');
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -249,8 +259,8 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
     escapeBound = true;
   }
 
-  // 初回 + ClientRouter のページ遷移後に再バインド（DOM は差し替わるため毎回実行）
-  document.addEventListener('astro:page-load', () => {
+  // 初回はすぐに、ClientRouter のページ遷移後は再バインド（DOM は差し替わるため毎回実行）
+  onPageReady(() => {
     initHeader();
     bindEscapeOnce();
   });

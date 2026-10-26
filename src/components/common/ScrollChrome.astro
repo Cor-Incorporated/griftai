@@ -13,6 +13,8 @@
 <div class="scroll-progress" aria-hidden="true"></div>
 
 <script>
+  import { onPageReady } from '@/lib/page-ready';
+
   let chromeBound = false;
 
   function updateScrollChrome() {
@@ -45,5 +47,5 @@
     chromeBound = true;
   }
 
-  document.addEventListener('astro:page-load', initScrollChrome);
+  onPageReady(initScrollChrome);
 </script>

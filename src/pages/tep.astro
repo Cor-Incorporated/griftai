@@ -675,12 +675,14 @@ const nextReads = [
 </MarketingLayout>
 
 <script>
+  import { onPageReady } from '@/lib/page-ready';
+
   // トップの「用語の対応表」リンク（/tep/#terms）から来たときは、折りたたみを開いて見せる
   const openTermsFromHash = (): void => {
     if (window.location.hash !== '#terms') return;
     const terms = document.getElementById('terms');
     if (terms instanceof HTMLDetailsElement) terms.open = true;
   };
-  document.addEventListener('astro:page-load', openTermsFromHash);
+  onPageReady(openTermsFromHash);
   window.addEventListener('hashchange', openTermsFromHash);
 </script>

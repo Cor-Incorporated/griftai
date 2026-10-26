@@ -63,6 +63,12 @@ const pains = [
     story: '/column/story-recommendation-reason/',
   },
   {
+    who: '自社開発企業の採用担当',
+    title: '書類と面接だけでは、候補者の仕事が見えない',
+    body: '経歴書に技術名と年数は並んでいても、どんな変更をどう確かめながら進めてきたのかは、面接で聞いても「はい」で終わりがちです。',
+    story: '/column/story-inhouse-hiring-interview/',
+  },
+  {
     who: 'エンジニア本人',
     title: '「Java 5年」では中身が伝わらない',
     body: '年数や担当工程だけでは、どんな変更をどう確かめながら進めてきたのかという仕事の仕方が、伝わりにくいままです。',
@@ -163,7 +169,17 @@ const audiences = [
       '経歴書と面談だけでは、推薦の理由が抽象的になりがちです。企業から「この方の強みは？」と聞かれても、具体的な材料をなかなか示せません。',
     support:
       '候補者本人が共有した記録から、案件との接点と面談で聞くことを整理し、推薦の理由を具体的にします。',
-    next: 'いま、紹介会社さま・SES企業さまのテスト導入（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
+    next: 'いま、紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）のご相談を受け付けています。費用は対象・件数に応じて個別にご案内します。',
+  },
+  {
+    id: 'for-hiring',
+    label: '自社開発企業の採用担当の方へ',
+    title: '候補者がどんな仕事をしてきたかを、面談の前に。',
+    situation:
+      '経歴書と面接だけでは、候補者がどんな変更を、どう確かめながら進めてきたのかが見えにくいものです。',
+    support:
+      '候補者本人が共有した記録から、面談で聞くことを具体にします。点数・順位・合否は出しません。',
+    next: 'いま、自社開発企業さまのテスト導入（PoC）のご相談も受け付けています。費用は対象・件数に応じて個別にご案内します。',
   },
   {
     id: 'for-engineers',
@@ -187,8 +203,8 @@ const pricingCards = [
     primary: false,
   },
   {
-    name: '紹介会社さま向けのテスト導入（PoC）',
-    target: '人材紹介会社・SES企業',
+    name: 'テスト導入（PoC）',
+    target: '人材紹介会社・SES企業・自社開発企業',
     price: '個別にご案内',
     description:
       '対象・件数に応じて、テストの範囲と費用を個別にご案内します。営業向けの画面は、テスト導入に向けて準備を進めています。',
@@ -198,7 +214,7 @@ const pricingCards = [
   },
   {
     name: '正式版',
-    target: '紹介会社さま・SES企業さま',
+    target: '紹介会社さま・SES企業さま・自社開発企業さま',
     price: '2027年の提供開始を目指しています',
     description:
       'テスト導入の結果をふまえて、2027年の提供開始を目指しています。価格は正式に決まってからお知らせします。',
@@ -211,7 +227,7 @@ const pricingCards = [
 const faqPreview = [
   {
     q: 'Griftとは何ですか？',
-    a: 'エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのCLIツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が、推薦の理由を根拠とともに伝えるために使えます。',
+    a: 'エンジニアのgit履歴から「確かめられる事実」を取り出すOSSのCLIツールです。点数や順位はつけず、誰が実行しても同じ結果になり、受け取った側が検算できます。人材紹介会社・SESの営業が推薦の理由を根拠とともに伝えるときや、自社開発企業の採用担当が、候補者本人が共有した記録から、どんな仕事をしてきたかを確かめるときに使えます。',
   },
   {
     q: 'AIでエンジニアを評価するツールですか？',
@@ -219,7 +235,7 @@ const faqPreview = [
   },
   {
     q: '料金はいくらですか？',
-    a: 'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
+    a: 'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。',
   },
 ];
 
@@ -235,7 +251,7 @@ const griftFacts: Array<{ term: string; detail: string; link?: { href: string; l
     {
       term: '誰のためか',
       detail:
-        '人材紹介会社・SESの営業（推薦の根拠づくり）と、エンジニア本人（経歴書に検算できる事実を添える）',
+        '人材紹介会社・SESの営業（推薦の根拠づくり）、自社開発企業の採用担当（候補者本人が共有した記録から、どんな仕事をしてきたかを確かめる）、エンジニア本人（経歴書に検算できる事実を添える）',
     },
     {
       term: '計測のしかた',
@@ -252,7 +268,7 @@ const griftFacts: Array<{ term: string; detail: string; link?: { href: string; l
     },
     {
       term: '料金',
-      detail: 'CLIは無償。紹介会社さまのテスト導入は個別にご案内。正式版は2027年の提供開始を目指す',
+      detail: 'CLIは無償。テスト導入（PoC）は個別にご案内。正式版は2027年の提供開始を目指す',
     },
   ];
 
@@ -286,10 +302,10 @@ const tocItems = [
     <div class="landing-container py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:gap-7">
         {
-          /* 最初の画面で「誰のための、何をするものか」が分かるように、読み手（紹介会社・SES の営業）を
+          /* 最初の画面で「誰のための、何をするものか」が分かるように、読み手（紹介会社・SES の営業と、自社開発企業の採用担当）を
             先に書く。広告や直接アクセスで来た人は、ここだけを見て残るかどうかを決める（ADR-0006）。 */
         }
-        <p class="section-kicker">人材紹介会社・SESの営業の方へ</p>
+        <p class="section-kicker">エンジニアの紹介や採用に携わる方へ</p>
         <h1
           class="type-heading text-[clamp(2.25rem,7vw,5.75rem)] font-semibold leading-[1.05] text-text"
         >
@@ -298,7 +314,7 @@ const tocItems = [
         </h1>
         <div class="type-copy max-w-3xl space-y-3 text-lg text-text-muted sm:text-xl">
           <p>
-            Griftは、エンジニアのgit履歴（コードを変えた記録）から、推薦の根拠になる「確かめられる事実」を取り出すツールです。点数や順位はつけません。
+            Griftは、エンジニアのgit履歴（コードを変えた記録）から、推薦や面談の材料になる「確かめられる事実」を取り出すツールです。点数や順位はつけません。
           </p>
           <p>誰が実行しても同じ結果になり、受け取った側が検算できます。</p>
         </div>
@@ -359,7 +375,7 @@ const tocItems = [
               推薦する人にも、推薦される人にも。
             </h2>
             <p class="mt-4 type-copy text-sm text-text-muted">
-              Griftを使うのは、候補者を企業へ推薦する営業の方と、自分の仕事を確かめられる形で示したいエンジニアの方です。
+              Griftを使うのは、候補者を企業へ推薦する営業の方、候補者本人が共有した記録から、どんな仕事をしてきたかを確かめたい自社開発企業の採用担当の方、そして自分の仕事を確かめられる形で示したいエンジニアの方です。
             </p>
           </div>
           <div class="grid gap-3 sm:grid-cols-2">
@@ -446,10 +462,10 @@ const tocItems = [
         経歴書と面談だけでは、伝わらないことがある。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
-        推薦する側も、推薦される側も、「確かめられる材料」が足りないまま話を進めています。
+        推薦する側も、採用する側も、推薦される側も、「確かめられる材料」が足りないまま話を進めています。
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
       {
         pains.map((item) => (
           <StoryCard
@@ -475,7 +491,7 @@ const tocItems = [
       rel="noreferrer"
       class="font-medium text-secondary hover:underline"
     >
-      → 紹介会社さま・SES企業さまのテスト導入はこちら
+      → テスト導入（PoC）のご相談はこちら
     </a>
   </div>
 
@@ -719,14 +735,14 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
     <div class="fade-in-section max-w-3xl space-y-4">
       <p class="text-sm font-semibold text-primary">使う人ごとに</p>
       <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-        推薦する営業と、推薦されるエンジニアのために。
+        推薦する営業、採用する企業、そしてエンジニアのために。
       </h2>
       <p class="text-lg leading-8 text-text-muted text-pretty">
         エンジニア本人は CLI
-        を無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さまからいただく想定です。
+        を無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さま・自社開発企業さまからいただく想定です。
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2">
+    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
       {
         audiences.map((item) => (
           <article
@@ -762,7 +778,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
       <div class="fade-in-section max-w-3xl space-y-4">
         <p class="text-sm font-semibold text-primary">料金と提供状況</p>
         <h2 class="text-3xl font-semibold text-balance text-text sm:text-4xl">
-          CLIは無償。紹介会社さまのテスト導入は個別にご案内します。
+          CLIは無償。テスト導入（PoC）は個別にご案内します。
         </h2>
         <p class="text-lg leading-8 text-text-muted text-pretty">
           いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式な価格は、決まってからこのページでお知らせします。
@@ -864,7 +880,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
             推薦の理由を、確かめられる事実とともに。
           </h2>
           <p class="text-lg leading-8 text-text-muted text-pretty">
-            紹介会社さま・SES企業さまのテスト導入（PoC）のご相談を受け付けています。エンジニアの方は、GitHubからすぐに試せます。
+            紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）のご相談を受け付けています。エンジニアの方は、GitHubからすぐに試せます。
           </p>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">

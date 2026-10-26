@@ -164,14 +164,14 @@ test.describe('Landing page smoke tests', () => {
   });
 });
 
-test.describe('First view for agency sales (2026-10-26)', () => {
+test.describe('First view for agency sales and in-house hiring teams (2026-10-26)', () => {
   test('the first view names the reader and offers the trial and the deck', async ({ page }) => {
     // 広告や直接アクセスで来た人は、最初の画面だけを見て残るかどうかを決める
     await page.goto('/');
     const viewportHeight = page.viewportSize()?.height ?? 0;
     const hero = page.locator('#hero');
     await expect(hero.locator('.section-kicker').first()).toHaveText(
-      '人材紹介会社・SESの営業の方へ'
+      'エンジニアの紹介や採用に携わる方へ'
     );
     for (const locator of [
       hero.locator('a[href*="intent=grift-team-beta"]'),
@@ -305,6 +305,7 @@ test.describe('Grift CLI positioning (2026-10)', () => {
 test.describe('Grift stories (fictional) and card links', () => {
   const storyPaths = [
     '/column/story-recommendation-reason/',
+    '/column/story-inhouse-hiring-interview/',
     '/column/story-java-5-years/',
     '/column/story-ai-activity/',
     '/column/story-score-cutoff/',

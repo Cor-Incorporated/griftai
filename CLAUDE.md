@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Japanese-first Astro landing site for **Grift** (`griftai.org`). Built on the Virex template, stripped down to a focused marketing site for Cor.inc's Grift: an OSS CLI (`grift-cli`, MIT) that extracts verifiable facts from engineers' git history (no LLM, no scores), plus a trial (PoC) for recruiting/SES agencies. Positioning since 2026-10: ADR-0005 (the former AI-estimation web app and Team Beta plans were withdrawn). Content and copy target the Japanese market.
+Japanese-first Astro landing site for **Grift** (`griftai.org`). Built on the Virex template, stripped down to a focused marketing site for Cor.inc's Grift: an OSS CLI (`grift-cli`, MIT) that extracts verifiable facts from engineers' git history (no LLM, no scores), plus a trial (PoC) for recruiting/SES agencies and in-house hiring teams at companies that build their own software (ADR-0005 revision 2026-10-26). Positioning since 2026-10: ADR-0005 (the former AI-estimation web app and Team Beta plans were withdrawn). Content and copy target the Japanese market.
 
 ## Commands
 

@@ -15,12 +15,12 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
 
 <MarketingLayout
   title={`お問い合わせ - ${siteConfig.name}`}
-  description="Grift のテスト導入（PoC）の相談・お問い合わせ窓口。人材紹介会社・SES企業さまからのご相談を、Cor.株式会社のAI受付と電話窓口でお受けします。"
+  description="Grift のテスト導入（PoC）の相談・お問い合わせ窓口。人材紹介会社・SES企業・自社開発企業さまからのご相談を、Cor.株式会社のAI受付と電話窓口でお受けします。"
 >
   <BreadcrumbNav items={[{ label: 'お問い合わせ' }]} />
   <PageHeader
     title="お問い合わせ"
-    subtitle="紹介会社さま・SES企業さまのテスト導入（PoC）のご相談、Grift CLI に関するお問い合わせはこちらからご連絡ください。"
+    subtitle="紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）のご相談、Grift CLI に関するお問い合わせはこちらからご連絡ください。"
   />
 
   <section class="bg-background py-section">
@@ -32,8 +32,8 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
             Grift の相談は Cor.株式会社のAI受付へ。
           </h2>
           <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            紹介会社さま・SES企業さまのテスト導入（PoC）、費用の確認、Grift CLI
-            の使い方に関するご相談はAI受付で受け付けています。推薦業務の流れと、相談したい内容が分かるとスムーズです。
+            紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）、費用の確認、Grift CLI
+            の使い方に関するご相談はAI受付で受け付けています。推薦や採用の流れと、相談したい内容が分かるとスムーズです。
           </p>
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -63,7 +63,7 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
           <ul class="mt-6 space-y-4 text-text-muted">
             <li class="flex gap-3">
               <Icon name="lucide:check" class="mt-1 size-5 text-primary" />
-              <span>会社の種類: 人材紹介会社、SES企業、そのほか</span>
+              <span>会社の種類: 人材紹介会社、SES企業、自社開発企業、そのほか</span>
             </li>
             <li class="flex gap-3">
               <Icon name="lucide:check" class="mt-1 size-5 text-primary" />

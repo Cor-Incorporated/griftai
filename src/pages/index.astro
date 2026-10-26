@@ -7,7 +7,6 @@ import FloatingCTA from '@/components/sections/marketing/FloatingCTA.astro';
 import ServiceMessageSection from '@/components/sections/marketing/ServiceMessageSection.astro';
 import ReadingSection from '@/components/sections/marketing/ReadingSection.astro';
 import PageToc from '@/components/common/PageToc.astro';
-import NextStep from '@/components/common/NextStep.astro';
 import Fukuoka100Emblem from '@/components/common/Fukuoka100Emblem.astro';
 import StructuredData from '@/components/common/StructuredData.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
@@ -286,7 +285,11 @@ const tocItems = [
   <section id="hero" class="relative bg-background">
     <div class="landing-container py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:gap-7">
-        <p class="section-kicker">Grift CLI ・ OSS（MITライセンス）</p>
+        {
+          /* 最初の画面で「誰のための、何をするものか」が分かるように、読み手（紹介会社・SES の営業）を
+            先に書く。広告や直接アクセスで来た人は、ここだけを見て残るかどうかを決める（ADR-0006）。 */
+        }
+        <p class="section-kicker">人材紹介会社・SESの営業の方へ</p>
         <h1
           class="type-heading text-[clamp(2.25rem,7vw,5.75rem)] font-semibold leading-[1.05] text-text"
         >
@@ -295,10 +298,14 @@ const tocItems = [
         </h1>
         <div class="type-copy max-w-3xl space-y-3 text-lg text-text-muted sm:text-xl">
           <p>
-            Griftは、エンジニアのgit履歴から「確かめられる事実」を取り出すツールです。点数や順位はつけません。
+            Griftは、エンジニアのgit履歴（コードを変えた記録）から、推薦の根拠になる「確かめられる事実」を取り出すツールです。点数や順位はつけません。
           </p>
           <p>誰が実行しても同じ結果になり、受け取った側が検算できます。</p>
         </div>
+        {
+          /* 問い合わせより気軽な次の一歩として、紹介資料を申し込みなしでダウンロードできるようにする（2026-10-20 GMO 定例）。
+            営業の方が選びやすいよう、ボタンにして問い合わせの隣に置く。エンジニア向けの GitHub は文字のリンクにする。 */
+        }
         <div class="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
           <a
             href={heroPrimaryUrl}
@@ -308,24 +315,20 @@ const tocItems = [
           >
             自社でテストしてみる
           </a>
-          <a
-            href={griftCli.github}
-            target="_blank"
-            rel="noreferrer"
-            class="cta-secondary w-full sm:w-auto"
-          >
-            GitHubでGrift CLIを見る
+          <a href={griftCliDeck.href} download class="cta-secondary w-full sm:w-auto">
+            資料をダウンロード（{griftCliDeck.format}・{griftCliDeck.pages}ページ）
           </a>
         </div>
-        {
-          /* 問い合わせより気軽な次の一歩として、紹介資料を申し込みなしでダウンロードできるようにする（2026-10-20 GMO 定例） */
-        }
+        <p class="max-w-2xl text-sm leading-7 text-text-muted text-pretty">
+          テストの範囲と費用は、対象・件数に応じて個別にご案内します。お申し込みはCor.株式会社のAI受付で受け付けています。
+        </p>
         <a
-          href={griftCliDeck.href}
-          download
+          href={griftCli.github}
+          target="_blank"
+          rel="noreferrer"
           class="text-sm font-semibold text-primary underline-offset-4 hover:underline"
         >
-          まずは資料で確かめる（{griftCliDeck.format}・{griftCliDeck.pages}ページ）
+          GitHubでGrift CLIを見る（エンジニアの方）
         </a>
         <ul class="grid w-full gap-3 text-left text-sm text-text-muted sm:grid-cols-3">
           {
@@ -344,53 +347,22 @@ const tocItems = [
         <Fukuoka100Emblem imgClass="h-14 w-auto sm:h-20" />
       </div>
 
-      <div class="mt-8 grid gap-6 sm:mt-10 lg:mt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
-        <figure
-          id="product-demo"
-          class="surface-panel min-w-0 overflow-hidden p-0"
-          aria-label="Grift CLI の使い方の例"
-        >
-          <div class="bg-text p-4 sm:p-6">
-            <pre
-              class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール（Python 3.11以上）</span>
-<span class="text-secondary">$</span> {griftCli.installCommand}
-
-<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
-<span class="text-secondary">$</span> cd your-repo
-<span class="text-secondary">$</span> grift report
-
-<span class="text-background/60"># 同じ条件で再計算し、書き換えや食い違いを検出</span>
-<span class="text-secondary">$</span> grift verify
-VERIFIED: all fields match recomputation under recorded provenance
-
-<span class="text-background/60"># 出力の一例（架空の値。何件のうち何件かが必ず付く）</span>
-test co-change: {example.ratio} ratio（{example.numerator} of {example.denominator}）</code></pre>
+      {
+        /* 読み手ごとの入口。コマンドの例（#product-demo）は、営業の方が最初に見る場所から外し、
+          「観測すること」の下に移した。 */
+      }
+      <aside class="mt-8 surface-card p-5 sm:mt-10 sm:p-6 lg:mt-12 lg:p-8">
+        <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <p class="section-kicker">あなたに合う読み方</p>
+            <h2 class="mt-3 type-heading text-2xl font-semibold text-text">
+              推薦する人にも、推薦される人にも。
+            </h2>
+            <p class="mt-4 type-copy text-sm text-text-muted">
+              Griftを使うのは、候補者を企業へ推薦する営業の方と、自分の仕事を確かめられる形で示したいエンジニアの方です。
+            </p>
           </div>
-          <figcaption
-            class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
-          >
-            出力の一例は架空の値です。本番のコードを変えた{example.denominator}件のコミットのうち{
-              example.numerator
-            }件で、テストも一緒に変えていた、という意味です。コマンドの詳細は
-            <a
-              href={griftCli.github}
-              target="_blank"
-              rel="noreferrer"
-              class="text-primary underline underline-offset-2">GitHub</a
-            >
-            をご覧ください。
-          </figcaption>
-        </figure>
-
-        <aside class="surface-card p-5 sm:p-6 lg:p-8">
-          <p class="section-kicker">あなたに合う読み方</p>
-          <h2 class="mt-3 type-heading text-2xl font-semibold text-text">
-            推薦する人にも、推薦される人にも。
-          </h2>
-          <p class="mt-4 type-copy text-sm text-text-muted">
-            Griftを使うのは、候補者を企業へ推薦する営業の方と、自分の仕事を確かめられる形で示したいエンジニアの方です。
-          </p>
-          <div class="mt-6 grid gap-3">
+          <div class="grid gap-3 sm:grid-cols-2">
             {
               audiences.map((audience) => (
                 <a
@@ -405,14 +377,11 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
               ))
             }
           </div>
-          <a
-            href="/faq/"
-            class="mt-5 inline-flex text-sm font-semibold text-primary hover:underline"
-          >
-            よくある質問を読む →
-          </a>
-        </aside>
-      </div>
+        </div>
+        <a href="/faq/" class="mt-5 inline-flex text-sm font-semibold text-primary hover:underline">
+          よくある質問を読む →
+        </a>
+      </aside>
     </div>
     {/* 下にコンテンツが続くことを示すスクロールヒント（装飾・読み上げ対象外） */}
     <div
@@ -613,6 +582,44 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
 
   <div id="product" class="section-animate">
     <ProductShowcase />
+    <div class="landing-container pb-16 md:pb-24">
+      <figure
+        id="product-demo"
+        class="surface-panel min-w-0 overflow-hidden p-0"
+        aria-label="Grift CLI の使い方の例"
+      >
+        <div class="bg-text p-4 sm:p-6">
+          <pre
+            class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール（Python 3.11以上）</span>
+<span class="text-secondary">$</span> {griftCli.installCommand}
+
+<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
+<span class="text-secondary">$</span> cd your-repo
+<span class="text-secondary">$</span> grift report
+
+<span class="text-background/60"># 同じ条件で再計算し、書き換えや食い違いを検出</span>
+<span class="text-secondary">$</span> grift verify
+VERIFIED: all fields match recomputation under recorded provenance
+
+<span class="text-background/60"># 出力の一例（架空の値。何件のうち何件かが必ず付く）</span>
+test co-change: {example.ratio} ratio（{example.numerator} of {example.denominator}）</code></pre>
+        </div>
+        <figcaption
+          class="border-t border-border px-4 py-3 text-xs leading-6 text-text-muted sm:px-6"
+        >
+          出力の一例は架空の値です。本番のコードを変えた{example.denominator}件のコミットのうち{
+            example.numerator
+          }件で、テストも一緒に変えていた、という意味です。コマンドの詳細は
+          <a
+            href={griftCli.github}
+            target="_blank"
+            rel="noreferrer"
+            class="text-primary underline underline-offset-2">GitHub</a
+          >
+          をご覧ください。
+        </figcaption>
+      </figure>
+    </div>
   </div>
 
   <section
@@ -911,16 +918,10 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
     </div>
   </section>
 
-  <NextStep
-    heading="自社でテストしてみるか、まず手元で試すか。次の一歩を選んでください。"
-    lead="テストのお申し込みはCor.株式会社のAI受付で受け付けています。CLIはGitHubとPyPIで公開しています。"
-    ctas={[
-      { label: '自社でテストしてみる', href: finalCtaUrl, primary: true, isExternal: true },
-      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
-      { label: 'よくある質問を見る', href: '/faq/' },
-    ]}
-  />
-
+  {
+    /* 最後の CTA（#cta）と同じ 3 つのボタンを並べていた「次の一歩」は、重なるので置かない。
+      ほかのページは NextStep で終わる。 */
+  }
   {/* 推薦までの流れを HowTo 構造化データとして出力（検索/AI 回答での手順理解用） */}
   <StructuredData
     type="howto"

@@ -61,7 +61,8 @@ GitHub Actions (`.github/workflows/ci.yml`), on every PR and on pushes to `main`
 - **quality** job: `npm run check` + `npm run build`
 - **e2e-smoke** job: Playwright smoke test against the built site (`npm run test:e2e`)
 - **a11y** job: Playwright accessibility test, non-blocking (`continue-on-error`)
-- **deploy_gate** + **deploy** jobs: Cloudflare Pages via Wrangler, only on a `main` push after quality and e2e-smoke pass, and only when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set
+- **deploy_gate** + **deploy** jobs: Cloudflare Pages via Wrangler, only on a `main` push after quality and e2e-smoke pass, and only when the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set. They are not set, so the deploy job is skipped (checked 2026-10-27, run 40422259042)
+- Production and PR previews are actually deployed by the Cloudflare Pages Git integration (project `griftai`; the "Cloudflare Pages" check on each commit and PR), not by this workflow
 - Node 20, project name: `griftai`
 
 Open PRs against `main`; merging to `main` deploys production.

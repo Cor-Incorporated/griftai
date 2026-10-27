@@ -272,7 +272,7 @@ export const tepComparisonSummary = `${tepComparisons.map((item) => item.site).j
  * - grift align の面談の問いも同じ条件（subject.actor_consent）。並びの表はいつも出る
  */
 export const tepReportOpening = {
-  body: 'grift actor・grift project・grift align のレポートの先頭には、記録から見える仕事の進め方を短い文で書きます。変えた部分の区分、変更のペース、テストの付け方、関わり方について、件数と期間を添えて書き、続けて、この記録では見えないことと、面談で確かめたいことを問いの形で並べます。文は公開した決定表で数字から選び、AIは使いません。',
+  body: 'grift actor・grift project・grift align のレポートの先頭には、記録から見える仕事の進め方を短い文で書きます。変えた部分の区分、変更のペース、テストの付け方、関わり方について、件数と期間を添えて書き、続けて、この記録では見えないことを書き、面談で確かめたいことを問いの形で並べます。文は公開した決定表で数字から選び、AIは使いません。',
   consent:
     '人についての文と問いは、本人が名乗ったIDに同意の記録があるときだけ出します。それ以外は、出していない理由を1文で書きます。複数の人をまとめて出す一覧には、文を出しません。',
   alignQuestions:

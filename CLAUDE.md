@@ -26,7 +26,7 @@ npm run test:e2e:a11y # Playwright accessibility test (e2e/a11y.spec.ts)
 npm run test         # test:unit + build + test:e2e
 ```
 
-CI runs `npm run check`, `npm run test:unit`, `npm run build` and the Playwright smoke test on every PR and push (see CI/CD). They must pass.
+CI runs `npm run check`, `npm run test:unit`, `npm run build` and the Playwright smoke test on every PR and on pushes to `main`, `feat/**`, `fix/**` and `chore/**` (see CI/CD). They must pass.
 
 ## Architecture
 

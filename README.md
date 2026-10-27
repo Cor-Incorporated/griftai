@@ -33,7 +33,7 @@ npm run test:e2e   # build の後に。Playwright の smoke test
 
 `.github/workflows/ci.yml` が、PR と、`main`・`feat/**`・`fix/**`・`chore/**` への push で動きます。
 
-- `npm run check` と `npm run build`（quality）
+- `npm run check`・`npm run test:unit`・`npm run build`（quality）
 - Playwright の smoke test（e2e-smoke）
 - アクセシビリティの検査（a11y。失敗しても止めない）
 

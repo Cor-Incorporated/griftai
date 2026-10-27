@@ -69,8 +69,11 @@ export const griftArticles = [
   },
 ] as const;
 
-/** LP に載せている情報の基準日。内容を更新したら合わせて更新する。 */
-export const contentAsOf = '2026-10-26';
+/**
+ * LP に載せている情報の基準日。内容を更新したら合わせて更新する。
+ * griftCli.releasedOn より前にしない（tests/unit/content-as-of.test.ts が検査する）。
+ */
+export const contentAsOf = '2026-10-27';
 
 /** Legal configuration for privacy policy and terms pages */
 export const legal: LegalConfig = {

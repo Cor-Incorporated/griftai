@@ -260,6 +260,25 @@ export const tepComparisons: readonly TepComparison[] = [
 /** 並びの言い方（例: 重なり・範囲外・0件・未観測・要求なしの5通り）。FAQ・トップの流れ・llms.txt も使う */
 export const tepComparisonSummary = `${tepComparisons.map((item) => item.site).join('・')}の${tepComparisons.length}通り`;
 
+/**
+ * レポートの先頭に出る文と問い（grift-cli 0.9.0 から）。/tep/ の数え方の決まり、FAQ、llms.txt、
+ * 案件側の道具（tepAlignmentTools の align）が読む。
+ * 出典: grift-cli の docs/trait-profile.md（文と問いの決定表）と CHANGELOG 0.9.0。
+ * - 文と問いは grift actor・grift project・grift align の Markdown にだけ出て、JSON には入らない
+ * - 人についての文と問いは、本人が名乗った identity（attribution_state = claimed）に同意の記録
+ *   （consent = recorded-explicit-consent）があるときだけ出る。それ以外は出していない理由を 1 文で書く。
+ *   CLI が確かめるのは記録で、同意そのものではない（上の「関わり方」と同じ）
+ * - --all・--top の一覧には文も理由も出ない
+ * - grift align の面談の問いも同じ条件（subject.actor_consent）。並びの表はいつも出る
+ */
+export const tepReportOpening = {
+  body: 'grift actor・grift project・grift align のレポートの先頭には、記録から見える仕事の進め方を短い文で書きます。変えた部分の区分、変更のペース、テストの付け方、関わり方について、件数と期間を添えて書き、続けて、この記録では見えないことと、面談で確かめたいことを問いの形で並べます。文は公開した決定表で数字から選び、AIは使いません。',
+  consent:
+    '人についての文と問いは、本人が名乗ったIDに同意の記録があるときだけ出します。それ以外は、出していない理由を1文で書きます。複数の人をまとめて出す一覧には、文を出しません。',
+  alignQuestions:
+    '本人が名乗ったIDに同意の記録があるときだけ、面談で確かめたいことを問いの形で添えます。',
+} as const;
+
 /** 案件の要求と記録を並べるときの道具 */
 export interface TepAlignmentTool {
   /** 手順と結びつけるための id */
@@ -288,7 +307,7 @@ export const tepAlignmentTools: readonly TepAlignmentTool[] = [
     id: 'align',
     plain: '項目ごとの並び',
     site: '軸ごとの並び',
-    description: `案件側の要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否・推薦は計算しません。`,
+    description: `案件側の要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否・推薦は計算しません。${tepReportOpening.alignQuestions}`,
     command: 'grift align',
     cli: 'grift align',
     cliNote: 'alignment-v1',

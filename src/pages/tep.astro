@@ -25,6 +25,7 @@ import {
   tepFacts,
   tepLabel,
   tepObservationGroups,
+  tepReportOpening,
   tepTerms,
 } from '@/config';
 import { corCta } from '@/lib/cor-cta';
@@ -76,6 +77,10 @@ const rules = [
     body: '計測にAI（LLM）を使わないので、同じリポジトリの同じ時点を同じ版のGriftで数えれば、誰が何度実行しても同じ数値になります。受け取った人は grift verify で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。保存したレポートを書き換えていれば、不一致として分かります。',
   },
   {
+    title: '文にするときも、数字から決まった表で選ぶ',
+    body: `${tepReportOpening.body}${tepReportOpening.consent}`,
+  },
+  {
     title: '手元で動き、外に送らない',
     body: 'Grift CLIはエンジニアのPCの中だけで動き、当社へデータを自動で送る機能はありません。ネットワークを使うのは、公開リポジトリの情報を取りに行くなど、本人が明示したときだけです。共有するかどうか、どのリポジトリを出すかは本人が決めます。選んで出したことも、受け取る側に分かる形で残ります。',
   },
@@ -95,7 +100,7 @@ const compareRows = [
   {
     aspect: 'ラベル',
     selfReport: 'タイプの名前が付く',
-    tep: 'タイプや等級の名前は付けない。数えた値と件数だけを出す',
+    tep: 'タイプや等級の名前は付けない。数えた値と件数を出し、文にするときも、その数から決まった表で選ぶ',
   },
   {
     aspect: '案件と照らせるか',
@@ -152,7 +157,7 @@ const salesSteps = [
 ];
 
 const engineerSteps = [
-  `Python ${griftCli.pythonRequires}の環境で ${griftCli.installCommand} を実行し、リポジトリの中で grift report を実行します。変えた部分の区分や変更のペースまで見るときは grift repo を使います。`,
+  `Python ${griftCli.pythonRequires}の環境で ${griftCli.installCommand} を実行し、リポジトリの中で grift report を実行します。変えた部分の区分や変更のペースまで見るときは grift repo を使います。自分で名乗ったIDに同意を記録して grift actor を実行すると、レポートの先頭に、記録から見える仕事の進め方の文と、面談で確かめたいことの問いが並びます。`,
   '出てきた数字が自分の経験と合っているかを確かめてください。数字だけでは誤解されそうなところや違和感があれば、GitHubのIssuesで教えてください。',
   '共有するかどうか、どのリポジトリを出すかは自分で決められます。非公開のリポジトリでも、集計した値だけを渡せます。コードを相手に見せる必要はありません。',
   '受け取った人は grift verify で計算し直せます。数えられなかったものは「未観測」と書かれ、非公開の仕事やgitに写らない期間を、実績がないとは読まない決まりです。',

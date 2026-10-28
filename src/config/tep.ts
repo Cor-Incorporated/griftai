@@ -260,6 +260,31 @@ export const tepComparisons: readonly TepComparison[] = [
 /** 並びの言い方（例: 重なり・範囲外・0件・未観測・要求なしの5通り）。FAQ・トップの流れ・llms.txt も使う */
 export const tepComparisonSummary = `${tepComparisons.map((item) => item.site).join('・')}の${tepComparisons.length}通り`;
 
+/**
+ * レポートの先頭に出る文と問い（grift-cli 0.9.0 から）。/tep/ の数え方の決まり、FAQ、
+ * 案件側の道具（tepAlignmentTools の align）が読む。llms.txt は常体で同じ中身を書いているので、ここを直したら
+ * src/pages/llms.txt.ts の「レポートの先頭の文と問い」の行も直す。
+ * 出典: grift-cli v0.9.0 の docs/trait-profile.md（文と問いの決定表）、README、src/tep_core/trait_sections.py・
+ * trait_alignment.py。
+ * - 4 つの観点の文・見えないこと・面談の問いがそろうのは grift actor だけ。grift project は案件のリポジトリの
+ *   進め方の文と見えないことを書き、人ごとの数字・関わり方・問いは出さない（person=False）。grift align は
+ *   並びの表に問いを添え、進め方の文は出さない
+ * - 文と問いは Markdown にだけ出て、JSON には入らない。Markdown は検算の対象外（LIMIT_NOTES の verify）
+ * - 人についての文と問いは、本人が名乗った identity（attribution_state = claimed）に同意の記録
+ *   （consent = recorded-explicit-consent）があるときだけ出る。それ以外は出していない理由を 1 文で書く。
+ *   CLI が確かめるのは記録で、同意そのものではない（上の「関わり方」と同じ）
+ * - --all・--top の一覧には文も理由も出ない
+ * - grift align の面談の問いも同じ条件（subject.actor_consent）。並びの表はふつう出るが、actor の記録が
+ *   浅い clone のときは表も問いも出さない
+ */
+export const tepReportOpening = {
+  body: 'grift actor のレポートの先頭には、記録から見える仕事の進め方を短い文で書きます。変えた部分の区分、変更のペース、テストの付け方、関わり方について、件数と期間を添えて書き、続けて、この記録では見えないことを書き、面談で確かめたいことを問いの形で並べます。grift project は案件のリポジトリの進め方を同じ決まりで書き、人ごとの数字と関わり方は出しません。grift align は要求と記録の並びに、面談で確かめたいことを問いの形で添えます。文と問いは公開した決定表で数字から選び、AIは使いません。検算に使うデータ（JSON）には入れないので、grift verify で確かめられるのは、文の元になった数字のほうです。',
+  consent:
+    '人についての文と問いは、本人が名乗ったIDに同意の記録があるときだけ出します。それ以外は、出していない理由を1文で書きます。複数の人をまとめて出す一覧には、文を出しません。',
+  alignQuestions:
+    '本人が名乗ったIDに同意の記録があるときだけ、面談で確かめたいことを問いの形で添えます。',
+} as const;
+
 /** 案件の要求と記録を並べるときの道具 */
 export interface TepAlignmentTool {
   /** 手順と結びつけるための id */
@@ -288,7 +313,7 @@ export const tepAlignmentTools: readonly TepAlignmentTool[] = [
     id: 'align',
     plain: '項目ごとの並び',
     site: '軸ごとの並び',
-    description: `案件側の要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否・推薦は計算しません。`,
+    description: `案件側の要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否・推薦は計算しません。${tepReportOpening.alignQuestions}`,
     command: 'grift align',
     cli: 'grift align',
     cliNote: 'alignment-v1',

@@ -5,7 +5,7 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
-import { griftCli, siteConfig, tepComparisonSummary, tepFacts } from '@/config';
+import { griftCli, siteConfig, tepComparisonSummary, tepFacts, tepReportOpening } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
 const contactUrl = corCta.griftTrial('grift-faq');
@@ -60,8 +60,13 @@ const faqSections: Array<{ id: string; name: string; faqs: FaqItem[] }> = [
         link: { href: '/tep/#what', label: 'TEPが見るもの（それぞれで分からないこと）' },
       },
       {
+        question: 'レポートには、どんな文が出ますか？',
+        answer: `${tepReportOpening.body}${tepReportOpening.consent}`,
+        link: { href: '/tep/#how', label: 'TEPの数え方の決まり' },
+      },
+      {
         question: '案件で求められることと、どう照らし合わせますか？',
-        answer: `案件で求める作業の区分・テストの種類・変更のペースなどを、案件側が項目ごとに書き出します（grift project）。grift align はその要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否は計算しません。「範囲外」は能力が足りないという意味ではなく、面談で聞くことを決める手がかりです。チームで見るとき（grift align --team）は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しません。`,
+        answer: `案件で求める作業の区分・テストの種類・変更のペースなどを、案件側が項目ごとに書き出します（grift project）。grift align はその要求と候補者の記録を項目ごとに並べ、${tepComparisonSummary}で示します。総合点・順位・合否は計算しません。${tepReportOpening.alignQuestions}「範囲外」は能力が足りないという意味ではなく、面談で聞くことを決める手がかりです。チームで見るとき（grift align --team）は要求を満たす人数だけを出し、${tepFacts.minTeamSize}人未満のチームでは集計しません。`,
         link: { href: '/tep/#use', label: '使い方と架空の例' },
       },
       {

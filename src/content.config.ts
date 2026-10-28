@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
+import { articleFrontmatterSchema, newsFrontmatterSchema } from './config/cms-schema';
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -68,4 +69,15 @@ const stories = defineCollection({
   }),
 });
 
-export const collections = { blog, docs, changelog, testimonials, stories };
+// 記事とお知らせ。CMS（Sveltia）が編集する。下書き（isDraft）は各ページで除く。
+const articles = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
+  schema: articleFrontmatterSchema,
+});
+
+const news = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
+  schema: newsFrontmatterSchema,
+});
+
+export const collections = { blog, docs, changelog, testimonials, stories, articles, news };

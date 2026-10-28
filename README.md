@@ -9,6 +9,7 @@ Grift はエンジニアの git 履歴から確かめられる事実を取り出
 - `/`、`/tep/`、`/pricing/`、`/faq/`、`/contact/`
 - `/privacy/`、`/terms/`
 - `/column/`（コラム 10 本と、架空の物語）
+- `/articles/`、`/news/`（CMS で編集する記事とお知らせ。下書きは出さない）
 - `/robots.txt`、`/llms.txt`、`/sitemap-index.xml`
 
 ページの一覧と書き方の決まりは [CLAUDE.md](CLAUDE.md) にあります。相談の入口は cor-jp.com の AI 受付（Cloudia）で、このサイトにはフォームを置いていません。
@@ -28,6 +29,18 @@ npm run test:unit
 npm run build
 npm run test:e2e   # build の後に。Playwright の smoke test
 ```
+
+## 記事とお知らせの編集
+
+編集画面は Sveltia CMS です。cor-jp.com と同じく、本文は Git の Markdown のままです。手順と、まだ無いもの（OAuth App、認証 Worker のデプロイ、管理画面の公開ホスト）は [docs/cms.md](docs/cms.md) にあります。
+
+手元でファイルを追加・更新・削除するとき:
+
+```bash
+npm run cms:dev
+```
+
+Chromium で http://localhost:5174/ を開き、「ローカルリポジトリで作業」からこのリポジトリのルートを選びます。Firefox と Safari ではこの操作はできません。
 
 ## CI と公開
 

@@ -7,6 +7,11 @@ node_modules/
 package-lock.json
 *.md
 
+# 上流 sveltia/sveltia-cms-auth のファイル。整形すると blob SHA が変わる。
+workers/sveltia-cms-auth/src/index.js
+workers/sveltia-cms-auth/LICENSE.txt
+cms/dist/
+
 # GMO 納品コンテンツ（自動生成 HTML を貼り付けたもの。Prettier の Astro パーサーが AST 不整合を出すため除外）
 src/pages/column.astro
 src/pages/ai-estimate-automation.astro

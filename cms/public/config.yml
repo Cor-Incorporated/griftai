@@ -1,0 +1,226 @@
+# Sveltia CMS の設定（ADR-0007）。項目の正本は src/config/cms-contract.ts。
+# scripts/check-cms.mjs が、このファイルと契約・認証 Worker・公開スキーマのずれを止める。
+# 本番の管理画面ホストと認証 Worker の URL は未設定。backend.base_url は手元の wrangler dev。
+# Netlify の認証ホストは書かない。
+
+backend:
+  name: github
+  repo: Cor-Incorporated/griftai
+  branch: main
+  base_url: http://127.0.0.1:8787
+  auth_methods: [oauth]
+  auth_scope: public_repo
+  squash_merges: false
+  commit_messages:
+    create: 'docs(cms): {{slug}} を追加'
+    update: 'docs(cms): {{slug}} を更新'
+    delete: 'docs(cms): {{slug}} を削除'
+    uploadMedia: 'docs(cms): 画像 {{path}} を追加'
+    deleteMedia: 'docs(cms): 画像 {{path}} を削除'
+
+# 下書き = PR、レビュー = PR のラベル、公開 = PR の merge（base は上の branch）。
+# 手元の「ローカルリポジトリで作業」はファイルへ直接書く。公開サイトは isDraft でも隠す。
+publish_mode: editorial_workflow
+
+app_title: Grift コンテンツ管理
+logo:
+  src: /logo.svg
+site_url: https://griftai.org
+
+media_folder: public/images/cms
+public_folder: /images/cms
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      transformations:
+        jpeg: { format: webp, quality: 85, width: 1600, height: 1600 }
+        png: { format: webp, quality: 85, width: 1600, height: 1600 }
+        heic: { format: webp, quality: 85, width: 1600, height: 1600 }
+  stock_assets: false
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+output:
+  omit_empty_optional_fields: true
+  yaml:
+    quote: none
+
+collections:
+  - name: articles
+    label: 記事
+    label_singular: 記事
+    description: 日本語の記事を編集します。下書き（isDraft）は公開サイトに出ません。
+    folder: src/content/articles
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    # 翻訳ファイルは無いので、CMS から削除できる（cor-jp.com は翻訳の孤立を避けるため削除を止めている）。
+    delete: true
+    slug:
+      editable: [create]
+      hint: 記事の URL の末尾になります。英小文字・数字・ハイフンだけ。作成後は変更できません。
+      pattern:
+        [
+          '^[a-z0-9]+(?:-[a-z0-9]+)*$',
+          '英小文字・数字・ハイフンだけで入力してください（例: git-history-facts）',
+        ]
+    aliases_field: false
+    preview_path: /articles/{{slug}}/
+    sortable_fields:
+      fields: [pubDate, title]
+      default:
+        field: pubDate
+        direction: descending
+    fields:
+      - name: title
+        label: タイトル
+        widget: string
+      - name: description
+        label: 概要
+        widget: text
+      - name: summary
+        label: 記事の要点
+        widget: text
+        required: false
+      - name: pubDate
+        label: 公開日
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        default: '{{now}}'
+      - name: updatedDate
+        label: 更新日
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        required: false
+      - name: author
+        label: 著者
+        widget: string
+        required: false
+        default: 寺田 康佑
+      - name: category
+        label: カテゴリ
+        widget: select
+        options:
+          - { label: プロダクト, value: product }
+          - { label: 使い方, value: practice }
+          - { label: ノート, value: note }
+      - name: tags
+        label: タグ
+        widget: list
+        required: false
+      - name: image
+        label: アイキャッチ画像
+        widget: object
+        required: false
+        fields:
+          - name: url
+            label: 画像
+            widget: image
+            accept: image/avif,image/webp,image/jpeg,image/png,image/heic
+          - name: alt
+            label: 代替テキスト
+            widget: string
+      - name: featured
+        label: 注目に表示
+        widget: boolean
+        required: false
+        default: false
+      - name: isDraft
+        label: 下書き
+        widget: hidden
+        required: false
+        default: false
+      - name: body
+        label: 本文
+        widget: markdown
+        modes: [raw, rich_text]
+
+  - name: news
+    label: お知らせ
+    label_singular: お知らせ
+    description: 日本語のお知らせを編集します。カテゴリの id は cor-jp.com の news と同じです。
+    folder: src/content/news
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    delete: true
+    slug:
+      editable: [create]
+      hint: お知らせの URL の末尾になります。英小文字・数字・ハイフンだけ。作成後は変更できません。
+      pattern:
+        [
+          '^[a-z0-9]+(?:-[a-z0-9]+)*$',
+          '英小文字・数字・ハイフンだけで入力してください（例: git-history-facts）',
+        ]
+    aliases_field: false
+    preview_path: /news/{{slug}}/
+    sortable_fields:
+      fields: [publishedAt, title]
+      default:
+        field: publishedAt
+        direction: descending
+    fields:
+      - name: title
+        label: タイトル
+        widget: string
+      - name: description
+        label: 概要
+        widget: text
+      - name: publishedAt
+        label: 公開日
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        default: '{{now}}'
+      - name: updatedAt
+        label: 更新日
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        required: false
+      - name: author
+        label: 著者
+        widget: string
+        required: false
+        default: 寺田 康佑
+      - name: category
+        label: カテゴリ
+        widget: select
+        options:
+          - { label: お知らせ, value: info }
+          - { label: メディア, value: media }
+          - { label: アップデート, value: update }
+          - { label: イベント, value: event }
+          - { label: 受賞, value: award }
+          - { label: プレスリリース, value: press }
+      - name: tags
+        label: タグ
+        widget: list
+        required: false
+      - name: externalUrl
+        label: 掲載元のURL
+        widget: string
+        required: false
+      - name: source
+        label: 掲載元の名前
+        widget: string
+        required: false
+      - name: featured
+        label: 注目に表示
+        widget: boolean
+        required: false
+        default: false
+      - name: isDraft
+        label: 下書き
+        widget: hidden
+        required: false
+        default: false
+      - name: body
+        label: 本文
+        widget: markdown
+        modes: [raw, rich_text]

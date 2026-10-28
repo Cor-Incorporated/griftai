@@ -162,8 +162,17 @@ const skipAutoBreadcrumbPaths = new Set([
   '/tool-upstream-process-ai/',
 ]);
 // /column/<id>/（Grift のストーリー）もページ側で3階層の breadcrumb を出す。
+const pathname = Astro.url.pathname;
+const isCmsPublicPath =
+  pathname === '/articles' ||
+  pathname.startsWith('/articles/') ||
+  pathname === '/news' ||
+  pathname.startsWith('/news/');
 const shouldEmitAutoBreadcrumb =
-  !skipAutoBreadcrumbPaths.has(Astro.url.pathname) && !Astro.url.pathname.startsWith('/column/');
+  !skipAutoBreadcrumbPaths.has(pathname) &&
+  !pathname.startsWith('/column/') &&
+  // 記事とお知らせはページ側で一覧を挟む階層を出す。
+  !isCmsPublicPath;
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',

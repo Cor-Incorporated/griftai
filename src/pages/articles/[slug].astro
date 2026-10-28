@@ -1,0 +1,87 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import NextStep from '@/components/common/NextStep.astro';
+import { griftCli, siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
+import { articleCategoryLabel, formatCmsDate, isPublicCmsEntry } from '@/lib/cms-content';
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('articles')).filter((entry: CollectionEntry<'articles'>) =>
+    isPublicCmsEntry(entry)
+  );
+  return articles.map((article: CollectionEntry<'articles'>) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const pageUrl = `${siteConfig.url}/articles/${article.id}/`;
+const contactUrl = corCta.griftTrial(`grift-article-${article.id}`);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  '@id': `${pageUrl}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'トップ', item: `${siteConfig.url}/` },
+    { '@type': 'ListItem', position: 2, name: '記事', item: `${siteConfig.url}/articles/` },
+    { '@type': 'ListItem', position: 3, name: article.data.title, item: pageUrl },
+  ],
+};
+---
+
+<MarketingLayout
+  title={article.data.title}
+  description={article.data.description}
+  type="article"
+  publishedDate={article.data.pubDate}
+  modifiedDate={article.data.updatedDate}
+  tags={article.data.tags}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <BreadcrumbNav items={[{ label: '記事', href: '/articles/' }, { label: article.data.title }]} />
+  <article class="pb-section">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <header class="mt-8 space-y-4">
+        <p class="text-sm font-semibold text-primary">
+          {articleCategoryLabel(article.data.category)}・{formatCmsDate(article.data.pubDate)}
+        </p>
+        <h1 class="text-3xl font-bold text-balance text-text sm:text-4xl">{article.data.title}</h1>
+        {
+          article.data.summary && (
+            <p class="text-lg leading-8 text-text-muted text-pretty">{article.data.summary}</p>
+          )
+        }
+      </header>
+      <div
+        class="prose prose-lg mt-10 max-w-none dark:prose-invert prose-headings:text-text prose-a:text-primary"
+      >
+        <Content />
+      </div>
+      <div class="mt-14">
+        <ArticleAuthor />
+      </div>
+      <div class="mt-14">
+        <DocumentDownload />
+      </div>
+    </div>
+  </article>
+  <NextStep
+    heading="自社の推薦業務で、確かめてみませんか。"
+    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
+    ctas={[
+      { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+    ]}
+  />
+</MarketingLayout>

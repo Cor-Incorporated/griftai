@@ -9,7 +9,7 @@
  * ほかの場所にキー名を書くと `npm run check:terms`（scripts/check-plain-terms.mjs）と e2e が落ちる。
  * 英語の指標名（test co-change など）とコマンド名は、元の語として括弧や脚注に出してよい。
  *
- * 事実の出典は Cor-Incorporated/grift-cli（v0.9.0。tag v0.9.0 = commit 8d62f42 のコードで 2026-10-27 に確かめた）。
+ * 事実の出典は Cor-Incorporated/grift-cli（v0.9.1。tag v0.9.1 = commit a9b468d のコードで 2026-10-28 に確かめた）。
  * どの版で確かめたかは tepFactsConfirmedWith に書き、site.ts の griftCli.version と一致することを
  * tests/unit/tep-facts.test.ts が検査する。数は tepFacts にまとめた:
  * - 変えた部分: src/tep_core/v2_constants.py の SURFACES と path_surface.py（ファイルの場所と拡張子で分ける）
@@ -30,7 +30,7 @@
  * site.ts の griftCli.version を上げたら、tepFacts の数を新しい版で確かめ直してから、ここも上げる。
  * 2 つがずれると tests/unit/tep-facts.test.ts が両方の値を挙げて落ちる。
  */
-export const tepFactsConfirmedWith = '0.9.0';
+export const tepFactsConfirmedWith = '0.9.1';
 
 /** grift-cli のコードで決まっている数（確かめた版は tepFactsConfirmedWith）。本文に出す数はここから読む */
 export const tepFacts = {

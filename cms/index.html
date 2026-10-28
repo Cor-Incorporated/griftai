@@ -1,0 +1,20 @@
+<!doctype html>
+<!--
+  Sveltia CMS の管理画面（ADR-0007）。
+  公開サイト（griftai.org）とは別オリジンで配信する。CMS は GitHub のトークンを
+  localStorage に置くため、公開サイトと同じオリジンには置かない。
+  ヘッダーは cms/public/_headers。ビルドは npm run build:cms（出力は cms/dist）。
+-->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="same-origin" />
+    <title>Grift コンテンツ管理</title>
+    <link rel="cms-config-url" href="/config.yml" type="application/yaml" />
+  </head>
+  <body>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

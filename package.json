@@ -28,7 +28,10 @@
     "check:cta": "node scripts/check-cta-hardcode.mjs",
     "check:metrics": "node scripts/check-forbidden-metrics.mjs",
     "check:terms": "node scripts/check-plain-terms.mjs",
-    "check": "npm run lint && npm run format:check && astro check && npm run check:cta && npm run check:metrics && npm run check:terms",
+    "check:cms": "node scripts/check-cms.mjs",
+    "cms:dev": "vite --config cms/vite.config.mjs",
+    "build:cms": "vite build --config cms/vite.config.mjs",
+    "check": "npm run lint && npm run format:check && astro check && npm run check:cta && npm run check:metrics && npm run check:terms && npm run check:cms",
     "test:unit": "vitest run",
     "test:e2e": "playwright test e2e/smoke.spec.ts",
     "test:e2e:a11y": "playwright test e2e/a11y.spec.ts",
@@ -51,6 +54,7 @@
     "@astrojs/check": "^0.9.6",
     "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.58.2",
+    "@sveltia/cms": "^0.221.7",
     "@tailwindcss/vite": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
@@ -62,6 +66,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "yaml": "^2.9.1"
   }
 }

@@ -13,6 +13,8 @@ const SCAN_ROOTS = [
   join(ROOT, 'src/components'),
   join(ROOT, 'src/config'),
   join(ROOT, 'src/content/stories'),
+  join(ROOT, 'src/content/articles'),
+  join(ROOT, 'src/content/news'),
 ];
 const EXTENSIONS = new Set(['.astro', '.ts', '.tsx', '.js', '.mjs', '.md', '.mdx']);
 

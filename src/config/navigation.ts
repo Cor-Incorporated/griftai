@@ -50,6 +50,8 @@ export const navigation: Navigation = {
       { label: '料金と提供状況', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
       { label: 'コラム', href: '/column/' },
+      { label: '記事', href: '/articles/' },
+      { label: 'お知らせ', href: '/news/' },
       { label: 'GitHub（grift-cli）', href: griftCli.github },
       { label: 'PyPI（grift-cli）', href: griftCli.pypi },
       { label: 'お問い合わせ', href: corCta.griftTrial('grift-nav-footer-product') },

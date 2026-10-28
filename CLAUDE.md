@@ -34,6 +34,7 @@ CI runs `npm run check`, `npm run test:unit`, `npm run build` and the Playwright
 
 **Published pages** (everything else is template scaffolding, not live):
 - Marketing: `/` `/tep` `/pricing` `/faq` `/contact` (`/team-beta` and `/estimate-audit` were removed; `public/_redirects` sends them to `/` with 301). `/tep` explains TEP (the method behind Grift) for non-engineer readers
+- Articles and news (Sveltia CMS, ADR-0007): `/articles` `/articles/<slug>` `/news` `/news/<slug>` from `src/content/articles` and `src/content/news`. Drafts (`isDraft: true`) are not published. The admin UI is `cms/` on a separate origin and is not deployed yet (`docs/cms.md`)
 - Legal: `/privacy` `/terms`
 - Grift stories (fictional): `/column/<id>/` from `src/content/stories/*.md` (linked from the top page's 課題 cards; always shown as 架空の物語)
 - GMO SEO columns: `/column` + 10 keyword pages (`ai-estimate-automation`, `ai-tool-requirement-definition`, `automation-ai-develop-estimate`, `automation-tool-requirement`, `basis-estimate-automation`, `cost-ai-develop-estimate`, `create-estimate-automation`, `market-price-ai-develop`, `requirement-definition-ai`, `tool-upstream-process-ai`)
@@ -41,7 +42,8 @@ CI runs `npm run check`, `npm run test:unit`, `npm run build` and the Playwright
 - Error pages: `403` `404` `500`
 
 **Key directories**:
-- `src/config/` — Centralized site config (site metadata, navigation, features, contact, content strings). Import from `@/config`.
+- `src/config/` — Centralized site config (site metadata, navigation, features, contact, content strings). Import from `@/config`. Article and news CMS fields: `cms-contract.ts` (source) and `cms-schema.ts` (Zod).
+- `cms/` — Sveltia CMS admin (separate Vite build, not served from griftai.org). `workers/sveltia-cms-auth/` — GitHub OAuth broker. See `docs/cms.md` and ADR-0007.
 - `src/lib/types.ts` — Shared TypeScript types for all config and data structures.
 - `src/layouts/` — `MarketingLayout` is the primary layout for public pages.
 - `src/components/sections/marketing/` — Landing page sections (Hero, CTA, Features, HowItWorks, etc.).

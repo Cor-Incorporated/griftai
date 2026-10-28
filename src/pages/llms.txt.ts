@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { isPublicCmsEntry } from '@/lib/cms-content';
 import {
   contentAsOf,
   griftArticles,
@@ -21,6 +22,18 @@ import {
  * 主要ページ・製品情報・連絡先を Markdown 形式で提供する。
  */
 export const GET: APIRoute = async () => {
+  const articles = (await getCollection('articles'))
+    .filter((entry: CollectionEntry<'articles'>) => isPublicCmsEntry(entry))
+    .sort(
+      (a: CollectionEntry<'articles'>, b: CollectionEntry<'articles'>) =>
+        b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+    );
+  const news = (await getCollection('news'))
+    .filter((entry: CollectionEntry<'news'>) => isPublicCmsEntry(entry))
+    .sort(
+      (a: CollectionEntry<'news'>, b: CollectionEntry<'news'>) =>
+        b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+    );
   const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
     (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
   );
@@ -63,9 +76,19 @@ Grift（Grift CLI）はCor.株式会社（福岡市）が開発・公開して�
 - [料金と提供状況](${siteConfig.url}/pricing/): CLIは無償、テスト導入は個別案内、正式版は2027年の提供開始を目指す
 - [FAQ](${siteConfig.url}/faq/): 計測のしかた・データと同意・料金と始め方
 - [コラム一覧](${siteConfig.url}/column/): Griftのストーリー（架空の物語）と、受託開発の見積・要件定義・上流工程とAIに関する解説記事
+- [記事](${siteConfig.url}/articles/): Griftについての記事。下書きは出していない
+- [お知らせ](${siteConfig.url}/news/): GriftとCor.株式会社からのお知らせ。下書きは出していない
 - [お問い合わせ](${siteConfig.url}/contact/): Cor.株式会社のAI受付・電話窓口
 - [プライバシーポリシー](${siteConfig.url}/privacy/)
 - [利用規約](${siteConfig.url}/terms/)
+
+## 記事
+
+${articles.map((article: CollectionEntry<'articles'>) => `- [${article.data.title}](${siteConfig.url}/articles/${article.id}/): ${article.data.description}`).join('\n')}
+
+## お知らせ
+
+${news.map((entry: CollectionEntry<'news'>) => `- [${entry.data.title}](${siteConfig.url}/news/${entry.id}/): ${entry.data.description}`).join('\n')}
 
 ## Griftのストーリー（架空の物語）
 

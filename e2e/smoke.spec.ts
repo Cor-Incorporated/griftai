@@ -521,6 +521,33 @@ test.describe('TEP page and plain words (2026-10)', () => {
     }
   });
 
+  test('articles and news show published entries and hide drafts', async ({ page }) => {
+    await page.goto('/articles/');
+    await expect(page.getByRole('heading', { level: 1, name: '記事' })).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /gitの履歴から確かめられる事実を取り出す/ })
+    ).toBeVisible();
+    await expect(page.getByText('下書きの記事です')).toHaveCount(0);
+    await expect(page.getByText('この下書きは公開ページに出ません。')).toHaveCount(0);
+
+    const draftArticle = await page.goto('/articles/draft-article/');
+    expect(draftArticle?.status()).toBe(404);
+
+    await page.goto('/news/');
+    await expect(page.getByRole('heading', { level: 1, name: 'お知らせ' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Grift CLIを公開しています/ })).toBeVisible();
+    await expect(page.getByText('下書きのお知らせです')).toHaveCount(0);
+
+    const draftNews = await page.goto('/news/draft-news/');
+    expect(draftNews?.status()).toBe(404);
+
+    await page.goto('/articles/git-history-facts/');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      'gitの履歴から確かめられる事実を取り出す'
+    );
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+  });
+
   test('llms.txt and the sitemap list the TEP page', async ({ request }) => {
     const llms = await (await request.get('/llms.txt')).text();
     expect(llms).toContain('/tep/');

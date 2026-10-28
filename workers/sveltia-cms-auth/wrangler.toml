@@ -1,0 +1,20 @@
+# Sveltia CMS Authenticator。CMS の「GitHub にログイン」を仲介する Worker。
+# src/index.js と LICENSE.txt は上流 sveltia/sveltia-cms-auth のまま（ADR-0007）。
+# account_id は書かない。デプロイする人の Cloudflare アカウントで wrangler が決める。
+name = "grift-sveltia-cms-auth"
+main = "src/index.js"
+compatibility_date = "2023-03-24"
+
+workers_dev = true
+preview_urls = false
+
+[vars]
+# トークンを渡してよい CMS のホスト名（完全一致、カンマ区切り）。
+# 空にしない。空だと上流の Worker はどのオリジンにもトークンを渡す。
+# * を使わない。プレビュー用のホスト（-- を含む）も入れない。
+# いまは手元の管理画面だけ。本番ホストが決まったら、この値と cms/public/config.yml の base_url を一緒に変える。
+ALLOWED_DOMAINS = "localhost,127.0.0.1"
+
+# secret（値はここに書かない）。`npx wrangler secret put <NAME>` で登録する。
+#   GITHUB_CLIENT_ID
+#   GITHUB_CLIENT_SECRET

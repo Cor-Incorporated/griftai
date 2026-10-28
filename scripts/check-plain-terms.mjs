@@ -22,6 +22,8 @@ const SCAN_ROOTS = [
   'src/layouts',
   'src/config',
   'src/content/stories',
+  'src/content/articles',
+  'src/content/news',
 ];
 const EXTENSIONS = ['.astro', '.ts', '.tsx', '.js', '.mjs', '.md', '.mdx'];
 // `cli` / `cliNote` の文字列の値（' と " のどちらでも読む）

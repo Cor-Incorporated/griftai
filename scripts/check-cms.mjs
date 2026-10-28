@@ -9,7 +9,29 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
-import {
+import ts from 'typescript';
+
+// Node 20 は .ts を直接読み込めないため、既存の TypeScript で型だけを除く。
+// 変換結果はメモリ上で使い、契約ファイルや生成ファイルは書き換えない。
+const contract = ts.transpileModule(
+  readFileSync(new URL('../src/config/cms-contract.ts', import.meta.url), 'utf8'),
+  {
+    fileName: 'cms-contract.ts',
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    reportDiagnostics: true,
+  }
+);
+const syntaxErrors = (contract.diagnostics ?? []).filter(
+  ({ category }) => category === ts.DiagnosticCategory.Error
+);
+if (syntaxErrors.length > 0) {
+  for (const error of syntaxErrors) {
+    console.error(ts.flattenDiagnosticMessageText(error.messageText, '\n'));
+  }
+  process.exit(1);
+}
+
+const {
   articleFields,
   authWorker,
   cmsBackend,
@@ -20,7 +42,9 @@ import {
   cmsSite,
   cmsSlug,
   newsFields,
-} from '../src/config/cms-contract.ts';
+} = await import(
+  `data:text/javascript;base64,${Buffer.from(contract.outputText).toString('base64')}`
+);
 
 const ROOT = process.cwd();
 const failures = [];

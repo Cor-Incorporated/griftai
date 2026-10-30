@@ -13,10 +13,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const scripts = path.join(root, '.claude/skills/cor-voice-gate/scripts');
 
 function python(args: string[]) {
-  return spawnSync('python3', ['-I', ...args], {
+  return spawnSync('python3', ['-I', '-B', ...args], {
     cwd: root,
     encoding: 'utf8',
-    env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' },
+    timeout: TIMEOUT_MS,
   });
 }
 

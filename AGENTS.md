@@ -67,7 +67,7 @@ GitHub Actions (`.github/workflows/ci.yml`), on every PR and on pushes to `main`
 - Production and PR previews are actually deployed by the Cloudflare Pages Git integration (project `griftai`; the "Cloudflare Pages" check on each commit and PR), not by this workflow
 - Node 20, project name: `griftai`
 
-Open PRs against `main`; merging to `main` deploys production.
+Open PRs against `develop`. `main` is production and changes only through a release PR from `develop` to `main` (title `release: YYYY-MM-DD develop → main`) that a human merges after CI passes; merging to `main` deploys production. CI runs on pull requests and on pushes to `main`, `feat/**`, `fix/**` and `chore/**`, so a push to `develop` itself does not start a run; the release PR does (decided 2026-10-30, see PR #102).
 
 ## Key Conventions
 

@@ -50,7 +50,7 @@ Chromium で http://localhost:5174/ を開き、「ローカルリポジトリ�
 - Playwright の smoke test（e2e-smoke）
 - アクセシビリティの検査（a11y。失敗しても止めない）
 
-本番への公開は、Cloudflare Pages の Git 連携（project `griftai`）が行います。コミットと PR に付く「Cloudflare Pages」のチェックがそれで、PR ごとのプレビューも同じ連携で作られます。PR は `main` に向けて出してください（`main` に入ると本番に出ます）。
+本番への公開は、Cloudflare Pages の Git 連携（project `griftai`）が行います。コミットと PR に付く「Cloudflare Pages」のチェックがそれで、PR ごとのプレビューも同じ連携で作られます。PR は `develop` に向けて出してください。`main` は本番で、develop → main の release PR（題は `release: YYYY-MM-DD develop → main`）を人が merge したときだけ変わります。`main` に入ると本番に出ます（2026-10-30 の代表の判断、#102）。
 
 `ci.yml` にも公開のジョブ（deploy_gate と deploy）がありますが、`CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` が設定されているときだけ動きます。2026-10-27 時点では設定されておらず、毎回飛ばされています。
 

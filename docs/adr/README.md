@@ -32,5 +32,5 @@
 
 ## 運用
 
-- ADR は `docs/adr/ADR-00xx-*.md` を Docs PR で追加・改訂する（`main` 向け。main に入ると本番に出る）。
+- ADR は `docs/adr/ADR-00xx-*.md` を Docs PR で追加・改訂する（`develop` 向け。develop → main の release PR で `main` に入ると本番に出る）。
 - クロスリポジトリ契約の変更は corsweb 側で行い、本リポは参照リンクを追従する。

@@ -1,0 +1,36 @@
+---
+interface Item {
+  href: string;
+  title: string;
+  description: string;
+  meta: string;
+}
+
+interface Props {
+  items: Item[];
+  empty: string;
+}
+
+const { items, empty } = Astro.props;
+---
+
+{
+  items.length === 0 ? (
+    <p class="text-base leading-7 text-text-muted">{empty}</p>
+  ) : (
+    <ul class="grid gap-4">
+      {items.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="block rounded-2xl border border-border bg-surface p-5 no-underline transition hover:border-primary/45"
+          >
+            <p class="text-sm text-text-muted">{item.meta}</p>
+            <h2 class="mt-2 text-xl font-semibold text-text">{item.title}</h2>
+            <p class="mt-2 text-base leading-7 text-text-muted text-pretty">{item.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

@@ -11,6 +11,7 @@
 
 import type { Navigation } from '../lib/types';
 import { corCta, getCorUrl } from '../lib/cor-cta';
+import { griftArticles, griftCli } from './site';
 
 export const navigation: Navigation = {
   /**
@@ -20,17 +21,19 @@ export const navigation: Navigation = {
    */
   header: {
     main: [
-      { label: 'できること', href: '/#value' },
-      { label: '対象チーム', href: '/#scenarios' },
+      { label: 'Griftとは', href: '/#about' },
+      { label: 'TEPとは', href: '/tep/' },
+      { label: '3つの約束', href: '/#value' },
+      { label: '使い方', href: '/#flow' },
       { label: '料金', href: '/pricing' },
-      { label: 'Team Beta', href: '/team-beta' },
-      { label: 'Estimate Audit', href: '/estimate-audit' },
       { label: 'FAQ', href: '/faq' },
+      { label: 'コラム', href: '/column/' },
+      { label: 'GitHub', href: griftCli.github },
     ],
     cta: [
       {
-        label: 'Team Betaに相談',
-        href: corCta.teamBeta('grift-nav-header'),
+        label: 'テストしてみる',
+        href: corCta.griftTrial('grift-nav-header'),
         variant: 'primary',
       },
     ],
@@ -43,29 +46,37 @@ export const navigation: Navigation = {
   footer: {
     product: [
       { label: 'トップ', href: '/' },
-      { label: 'Team Beta', href: '/team-beta' },
-      { label: 'Estimate Audit', href: '/estimate-audit' },
-      { label: '料金', href: '/pricing' },
+      { label: 'TEPとは', href: '/tep/' },
+      { label: '料金と提供状況', href: '/pricing' },
       { label: 'FAQ', href: '/faq' },
       { label: 'コラム', href: '/column/' },
-      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-product') },
+      { label: '記事', href: '/articles/' },
+      { label: 'お知らせ', href: '/news/' },
+      { label: 'GitHub（grift-cli）', href: griftCli.github },
+      { label: 'PyPI（grift-cli）', href: griftCli.pypi },
+      { label: 'お問い合わせ', href: corCta.griftTrial('grift-nav-footer-product') },
     ],
     solutions: [
-      { label: '見積根拠の整理', href: '/#proof' },
-      { label: 'チーム共有', href: '/#value' },
-      { label: 'Estimate Audit', href: '/estimate-audit' },
-      { label: '導入の流れ', href: '/#flow' },
+      { label: '紹介会社・SESの営業の方へ', href: '/#for-sales' },
+      { label: '自社開発企業の採用担当の方へ', href: '/#for-hiring' },
+      { label: 'エンジニアの方へ', href: '/#for-engineers' },
+      { label: '推薦までの流れ', href: '/#flow' },
+      { label: '検証の公開', href: '/#proof' },
     ],
     resources: [
-      { label: 'Team Beta', href: '/team-beta' },
-      { label: '提供条件', href: '/pricing' },
+      { label: '利用規範（norms）', href: griftCli.norms },
+      { label: '指標の読み方', href: griftCli.metricsGuide },
+      ...griftArticles.map((article) => ({
+        label: `Griftの思想（${article.platform}）`,
+        href: article.url,
+      })),
       { label: '利用規約', href: '/terms' },
       { label: 'プライバシー', href: '/privacy' },
     ],
     company: [
       { label: 'Cor.株式会社', href: getCorUrl('/') },
-      { label: '会社情報', href: getCorUrl('/about/') },
-      { label: 'お問い合わせ', href: corCta.teamBeta('grift-nav-footer-company') },
+      { label: '会社概要', href: getCorUrl('/company/') },
+      { label: 'お問い合わせ', href: corCta.griftTrial('grift-nav-footer-company') },
       { label: 'GitHub', href: 'https://github.com/Cor-Incorporated' },
     ],
     legal: [

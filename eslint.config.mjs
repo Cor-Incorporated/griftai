@@ -35,6 +35,16 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.astro/', '.worktrees/', '.claude/', '.opencode/'],
+    ignores: [
+      'dist/',
+      'cms/dist/',
+      'node_modules/',
+      '.astro/',
+      '.worktrees/',
+      '.claude/',
+      '.opencode/',
+      // 上流 sveltia/sveltia-cms-auth のまま置く。lint のために書き換えない。
+      'workers/',
+    ],
   },
 ];

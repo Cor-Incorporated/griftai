@@ -1,5 +1,7 @@
 # Dashboard
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 The Virex theme includes a comprehensive dashboard layout system that provides authenticated page layouts with sidebar navigation, reusable components, and example pages. This feature differentiates the theme from competitors by offering more than just marketing pages - it provides a complete foundation for building SaaS application interfaces.
 
 ## Introduction

@@ -18,13 +18,13 @@ export const announcement: AnnouncementConfig = {
   id: 'grift-beta-2026',
 
   /** Announcement text */
-  text: 'Grift Team Beta — 見積根拠をチーム資産にするAI見積支援',
+  text: 'Grift｜経歴は盛れる。証拠は盛れない。テスト導入（PoC）を受付中',
 
   /** Optional link URL */
-  href: corCta.teamBeta('grift-announcement'),
+  href: corCta.griftTrial('grift-announcement'),
 
   /** Optional link text */
-  linkText: 'Team Betaについて相談する',
+  linkText: '自社でテストしてみる',
 
   /** Visual style: 'primary' | 'secondary' | 'gradient' */
   variant: 'secondary',
@@ -38,7 +38,7 @@ export const content: ContentStrings = {
   newsletter: {
     title: 'Griftの最新情報を受け取る',
     description:
-      '新機能のリリース、ベータ版の改善情報、AI見積に関するノウハウをお届けします。配信は月1〜2回程度です。',
+      'Grift CLI のリリース情報や、推薦の根拠づくりに関するお知らせをお届けします。配信は月1〜2回程度です。',
     placeholder: 'メールアドレスを入力',
     buttonText: '登録する',
     successMessage: '登録ありがとうございます。次回の配信をお待ちください。',

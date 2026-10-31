@@ -1,5 +1,7 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import SEO from '@components/common/SEO.astro';
+import { analytics } from '@/config';
 import '../styles/global.css';
 
 interface Props {
@@ -9,6 +11,7 @@ interface Props {
   type?: 'website' | 'article';
   titleTag?: string;
   ogTitle?: string;
+  ogDescription?: string;
   // Article-specific props for JSON-LD
   publishedDate?: Date;
   modifiedDate?: Date;
@@ -23,6 +26,7 @@ const {
   type = 'website',
   titleTag,
   ogTitle,
+  ogDescription,
   publishedDate,
   modifiedDate,
   author,
@@ -45,39 +49,54 @@ const {
       type={type}
       titleTag={titleTag}
       ogTitle={ogTitle}
+      ogDescription={ogDescription}
       publishedDate={publishedDate}
       modifiedDate={modifiedDate}
       author={author}
       tags={tags}
     />
     <meta name="google-site-verification" content="OttHDtQkiKDUNOCtDrvci_9l4_DpgbUc65j8UDtS5mA" />
+    <ClientRouter />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
-    <!-- Google Analytics -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-3E8328E5V6"></script>
-    <script is:inline>
+    {
+      /* Google Analytics（GA4）と Microsoft Clarity。イベントの列（dataLayer）はどのホストでも用意し、
+        タグを読み込んで送るのは本番のホストだけ（config/analytics.ts）。 */
+    }
+    <script
+      is:inline
+      define:vars={{
+        ga4Id: analytics.ga4MeasurementId,
+        clarityId: analytics.clarityProjectId,
+        productionHosts: analytics.productionHosts,
+      }}
+    >
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
+      window.gtag = function () {
         window.dataLayer.push(arguments);
+      };
+      if (productionHosts.includes(window.location.hostname)) {
+        const gtagScript = document.createElement('script');
+        gtagScript.async = true;
+        gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
+        document.head.appendChild(gtagScript);
+        window.gtag('js', new Date());
+        window.gtag('config', ga4Id);
+
+        (function (c, l, a, r, i, t, y) {
+          c[a] =
+            c[a] ||
+            function () {
+              (c[a].q = c[a].q || []).push(arguments);
+            };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+        })(window, document, 'clarity', 'script', clarityId);
       }
-      gtag('js', new Date());
-      gtag('config', 'G-3E8328E5V6');
-    </script>
-    <!-- Microsoft Clarity -->
-    <script is:inline>
-      (function (c, l, a, r, i, t, y) {
-        c[a] =
-          c[a] ||
-          function () {
-            (c[a].q = c[a].q || []).push(arguments);
-          };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = 'https://www.clarity.ms/tag/' + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-      })(window, document, 'clarity', 'script', 'wk1nad97m0');
     </script>
   </head>
   <body class="min-h-screen bg-background text-text antialiased">
@@ -89,5 +108,39 @@ const {
       メインコンテンツへ移動
     </a>
     <slot />
+
+    <script>
+      import { describeTrackedClick } from '@/lib/analytics-events';
+      import { getCorBaseUrl } from '@/lib/cor-cta';
+
+      // 問い合わせへの CTA と資料のダウンロードのクリックを、GA4 と Clarity のイベントにする。
+      // document は ClientRouter のページ遷移で差し替わらないので、リスナーは一度だけ付ける。
+      const placementOf = (link: Element): string => {
+        const section = link.closest('section[id]');
+        if (section) return section.id;
+        if (link.closest('header')) return 'header';
+        if (link.closest('footer')) return 'footer';
+        return 'page';
+      };
+
+      const trackClick = (event: MouseEvent): void => {
+        // auxclick は中ボタン（新しいタブで開く）だけを数え、右クリックは数えない
+        if (event.type === 'auxclick' && event.button !== 1) return;
+        const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+        if (!(link instanceof HTMLAnchorElement)) return;
+        const tracked = describeTrackedClick({
+          href: link.href,
+          placement: placementOf(link),
+          siteOrigin: window.location.origin,
+          corOrigin: getCorBaseUrl(),
+        });
+        if (!tracked) return;
+        window.gtag?.('event', tracked.name, tracked.params);
+        window.clarity?.('event', tracked.name);
+      };
+
+      document.addEventListener('click', trackClick, { capture: true });
+      document.addEventListener('auxclick', trackClick, { capture: true });
+    </script>
   </body>
 </html>

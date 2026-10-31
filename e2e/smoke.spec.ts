@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import { cliKeyNames, keyNamePattern } from '../scripts/lib/cli-key-names.mjs';
+import { tepComparisons, tepTerms } from '../src/config/tep';
 
 test.describe('Landing page smoke tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -20,6 +22,32 @@ test.describe('Landing page smoke tests', () => {
     const heading = hero.locator('h1');
     await expect(heading).toBeVisible();
     await expect(heading).not.toBeEmpty();
+  });
+
+  test('the first view does not wait for images and third-party scripts', async ({
+    browser,
+    isMobile,
+    viewport,
+  }) => {
+    // 回線が遅いと、画像と外部スクリプト（GA4・Clarity）の読み込みが終わるまで window の load が来ない。
+    // 2026-09-16〜10 月は、初回の表示処理が load を待っていたため、その間ヒーローが白いままで、
+    // スマホのメニューも開かなかった。ここでは読み込みを終わらせずに、最初の画面が出ることを確かめる。
+    const context = await browser.newContext({ viewport, isMobile, hasTouch: isMobile });
+    const page = await context.newPage();
+    await page.route(/\.(?:jpe?g|png|avif|webp|svg)(?:\?|$)/, () => {});
+    await page.route(/googletagmanager\.com|clarity\.ms|cloudflareinsights\.com/, () => {});
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
+    await expect(page.locator('#hero')).toHaveCSS('opacity', '1', { timeout: 3000 });
+    await expect(page.locator('#hero h1')).toBeVisible();
+
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu')).toBeVisible({ timeout: 3000 });
+    }
+    expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
+    await context.close();
   });
 
   test('all major sections become visible after scroll animations', async ({ page }) => {
@@ -83,7 +111,8 @@ test.describe('Landing page smoke tests', () => {
     await expect(intentCtas.first()).toBeVisible();
 
     const href = await intentCtas.first().getAttribute('href');
-    expect(href).toMatch(/intent=grift-team-beta|intent=grift-paid-trial|intent=estimate-audit/);
+    // 2026-10 以降、LP が送る intent は grift-team-beta（Grift のテスト導入・CLI の相談）だけ。
+    expect(href).toMatch(/intent=grift-team-beta/);
     expect(href).toContain('source=');
     expect(href).toContain('utm_source=grift');
   });
@@ -135,12 +164,43 @@ test.describe('Landing page smoke tests', () => {
   });
 });
 
+test.describe('First view for agency sales and in-house hiring teams (2026-10-26)', () => {
+  test('the first view names the reader and offers the trial and the deck', async ({ page }) => {
+    // 広告や直接アクセスで来た人は、最初の画面だけを見て残るかどうかを決める
+    await page.goto('/');
+    const viewportHeight = page.viewportSize()?.height ?? 0;
+    const hero = page.locator('#hero');
+    await expect(hero.locator('.section-kicker').first()).toHaveText(
+      'エンジニアの紹介や採用に携わる方へ'
+    );
+    for (const locator of [
+      hero.locator('a[href*="intent=grift-team-beta"]'),
+      hero.locator('a[href="/downloads/grift-cli-overview.pdf"]'),
+    ]) {
+      await expect(locator).toBeVisible();
+      const box = await locator.boundingBox();
+      expect(box, 'CTA is rendered').not.toBeNull();
+      expect((box?.y ?? Infinity) + (box?.height ?? 0)).toBeLessThanOrEqual(viewportHeight);
+    }
+  });
+
+  test('the CLI usage example sits under the observations, not in the hero', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#hero #product-demo')).toHaveCount(0);
+    await expect(page.locator('#product #product-demo')).toHaveCount(1);
+  });
+
+  test('the page ends with one closing CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('a[href*="source=grift-lp-final"]')).toHaveCount(1);
+  });
+});
+
 test.describe('Key pages load correctly', () => {
   const pages = [
     { path: '/', titlePattern: /Grift/ },
+    { path: '/tep/', titlePattern: /TEP/ },
     { path: '/pricing/', titlePattern: /料金|Grift/ },
-    { path: '/team-beta/', titlePattern: /Team Beta|Grift/ },
-    { path: '/estimate-audit/', titlePattern: /Estimate Audit|Grift/ },
     { path: '/faq/', titlePattern: /質問|FAQ|Grift/ },
     { path: '/contact/', titlePattern: /相談|お問い合わせ|Grift/ },
   ];
@@ -167,37 +227,400 @@ test.describe('Key pages load correctly', () => {
   });
 });
 
-test.describe('Phase 2 product pages', () => {
-  test('team-beta page CTA uses grift-team-beta intent', async ({ page }) => {
-    await page.goto('/team-beta/');
-    const cta = page
-      .locator('main a[href*="intent=grift-team-beta"], a[href*="intent=grift-team-beta"]:visible')
-      .first();
-    await expect(cta).toBeVisible();
-    // Nav link is desktop-only; assert presence in DOM
-    await expect(page.locator('#site-header a[href="/team-beta"]')).toHaveCount(1);
+test.describe('Grift CLI positioning (2026-10)', () => {
+  test('home shows the CLI usage example and links to the public repository', async ({ page }) => {
+    await page.goto('/');
+    const demo = page.locator('#product-demo');
+    await expect(demo).toBeVisible();
+    await expect(demo).toContainText('pipx install grift-cli');
+    await expect(demo).toContainText('grift verify');
+
+    const github = page.locator('#hero a[href="https://github.com/Cor-Incorporated/grift-cli"]');
+    await expect(github.first()).toBeVisible();
   });
 
-  test('estimate-audit page CTA uses estimate-audit intent', async ({ page }) => {
-    await page.goto('/estimate-audit/');
-    const cta = page
-      .locator('main a[href*="intent=estimate-audit"], a[href*="intent=estimate-audit"]:visible')
-      .first();
-    await expect(cta).toBeVisible();
+  test('home no longer offers the withdrawn plans or contract-dev CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByText('Team Beta')).toHaveCount(0);
+    await expect(page.getByText('Estimate Audit')).toHaveCount(0);
+    await expect(page.getByText('プライベートベータ')).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=grift-paid-trial"]')).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=estimate-audit"]')).toHaveCount(0);
+    await expect(page.locator('a[href*="intent=contract-dev"]')).toHaveCount(0);
+    await expect(page.locator('a[href="/team-beta/"], a[href="/estimate-audit/"]')).toHaveCount(0);
   });
 
-  test('home shows product screenshot without private-alpha copy or contract-dev CTA', async ({
+  test('agency CTA reads 自社でテストしてみる, not 試行', async ({ page }) => {
+    for (const path of ['/', '/tep/', '/pricing/', '/faq/', '/contact/']) {
+      await page.goto(path);
+      await expect(page.getByText(/試行/)).toHaveCount(0);
+    }
+    await page.goto('/');
+    const heroCta = page.locator('#hero a[href*="intent=grift-team-beta"]');
+    await expect(heroCta).toHaveText('自社でテストしてみる');
+  });
+
+  test('home links to the articles on Grift philosophy', async ({ page }) => {
+    await page.goto('/');
+    for (const url of [
+      'https://qiita.com/terisuke/items/c6bb68b3af0db3d43bb1',
+      'https://note.com/cor_instrument/n/nd58ba0955317',
+    ]) {
+      await expect(page.locator(`#value a[href="${url}"]`)).toBeVisible();
+      await expect(page.locator(`footer a[href="${url}"]`)).toHaveCount(1);
+    }
+  });
+
+  test('the reading section leads to the articles and columns before pricing', async ({ page }) => {
+    await page.goto('/');
+    const reading = page.locator('#reading');
+    await expect(reading.locator('a[href^="https://qiita.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href^="https://note.com/"]')).toHaveCount(1);
+    await expect(reading.locator('a[href="/column/"]')).toHaveCount(1);
+    const readingTop = (await reading.boundingBox())?.y ?? Infinity;
+    const pricingTop = (await page.locator('#pricing').boundingBox())?.y ?? -Infinity;
+    expect(readingTop).toBeLessThan(pricingTop);
+  });
+
+  test('header links to the columns', async ({ page, isMobile }) => {
+    await page.goto('/');
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu a[href="/column/"]')).toBeVisible();
+    } else {
+      await expect(page.locator('#site-header a[href="/column/"]')).toBeVisible();
+    }
+  });
+
+  test('tablet width uses the menu button instead of squeezing the header links', async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 820, height: 1000 });
     await page.goto('/');
-    await expect(page.locator('#product-demo')).toBeVisible();
-    await expect(page.locator('#product-demo img')).toHaveAttribute(
-      'alt',
-      /インテークワークスペース/
+    await expect(page.locator('#mobile-menu-button')).toBeVisible();
+    await expect(page.locator('#site-header a[href="/column/"]')).toBeHidden();
+  });
+});
+
+test.describe('Grift stories (fictional) and card links', () => {
+  const storyPaths = [
+    '/column/story-recommendation-reason/',
+    '/column/story-inhouse-hiring-interview/',
+    '/column/story-java-5-years/',
+    '/column/story-ai-activity/',
+    '/column/story-score-cutoff/',
+  ];
+
+  test('each problem card on the top page links to its story', async ({ page }) => {
+    await page.goto('/');
+    const hrefs = await page
+      .locator('#problem a')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+    expect(hrefs).toEqual(storyPaths);
+  });
+
+  test('story pages say they are fiction and link back to the columns', async ({ page }) => {
+    for (const path of storyPaths) {
+      await page.goto(path);
+      await expect(page.locator('h1')).toBeVisible();
+      await expect(
+        page.getByText('この記事は、よくある場面をもとにした架空の物語です。')
+      ).toBeVisible();
+      await expect(page.locator('article a[href="/column/"]').first()).toBeVisible();
+    }
+  });
+
+  test('the column index lists the stories', async ({ page }) => {
+    await page.goto('/column/');
+    for (const path of storyPaths) {
+      await expect(page.locator(`#story-heading ~ ul a[href="${path}"]`)).toHaveCount(1);
+    }
+  });
+
+  test('the sitemap includes the stories', async ({ request }) => {
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    for (const path of storyPaths) {
+      expect(sitemap).toContain(`${path}</loc>`);
+    }
+  });
+
+  test('pricing and company cards respond to a click anywhere on the card', async ({ page }) => {
+    // カードの説明文のあたり（中央）を押しても、リンクに当たることを確かめる。
+    const cards = [
+      { path: '/', selector: '#pricing article' },
+      { path: '/pricing/', selector: 'article:has(a[href*="intent=grift-team-beta"])' },
+      { path: '/', selector: '#social-proof li:has(a[href*="madeinlocal.jp"])' },
+      { path: '/', selector: '#social-proof li:has(a[href*="engineer-cafe-navigator"])' },
+    ];
+    for (const { path, selector } of cards) {
+      await page.goto(path);
+      const card = page.locator(selector).first();
+      await card.scrollIntoViewIfNeeded();
+      const hitsLink = await card.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        const hit = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2
+        );
+        return Boolean(hit?.closest('a[href]'));
+      });
+      expect(hitsLink, `${path} ${selector}`).toBe(true);
+    }
+  });
+});
+
+test.describe('Article author, key points and the downloadable deck (2026-10)', () => {
+  const columnPaths = ['/ai-estimate-automation/', '/requirement-definition-ai/'];
+  const deckHref = '/downloads/grift-cli-overview.pdf';
+
+  test('the deck PDF is served', async ({ request }) => {
+    const response = await request.get(deckHref);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('pdf');
+  });
+
+  test('the top page offers the deck from the hero and the final CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator(`#hero a[href="${deckHref}"]`)).toBeVisible();
+    await expect(
+      page.locator(`#cta [data-testid="document-download"] a[href="${deckHref}"]`)
+    ).toHaveCount(1);
+  });
+
+  test('pricing, faq, contact and the TEP page end with the deck download', async ({ page }) => {
+    for (const path of ['/pricing/', '/faq/', '/contact/', '/tep/']) {
+      await page.goto(path);
+      await expect(
+        page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+      ).toHaveCount(1);
+    }
+  });
+
+  test('columns show key points, the author and the deck', async ({ page }) => {
+    for (const path of columnPaths) {
+      await page.goto(path);
+      await expect(page.getByTestId('key-points')).toContainText('この記事でわかること');
+      const author = page.getByTestId('article-author');
+      await expect(author).toContainText('寺田 康佑');
+      await expect(author).toContainText('Cor.株式会社');
+      await expect(author.locator('a[href="https://note.com/cor_instrument"]')).toHaveCount(1);
+      await expect(
+        page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+      ).toHaveCount(1);
+    }
+  });
+
+  test('stories show the author and the deck', async ({ page }) => {
+    await page.goto('/column/story-java-5-years/');
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+    await expect(
+      page.locator(`[data-testid="document-download"] a[href="${deckHref}"]`)
+    ).toHaveCount(1);
+  });
+
+  test('the article author is the founder Person shared with cor-jp.com', async ({ page }) => {
+    await page.goto('/column/story-java-5-years/');
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((nodes) => nodes.map((node) => JSON.parse(node.textContent ?? '{}')));
+    const article = blocks.find((block) => block['@type'] === 'Article');
+    expect(article?.author?.['@id']).toBe('https://cor-jp.com/#person-kousuke-terada');
+    expect(article?.publisher).toEqual({ '@id': 'https://griftai.org/#organization' });
+    const person = blocks.find((block) => block['@type'] === 'Person');
+    expect(person?.sameAs).toContain('https://note.com/cor_instrument');
+  });
+});
+
+test.describe('TEP page and plain words (2026-10)', () => {
+  // 本文に出さない CLI のキー名。ソースの検査（scripts/check-plain-terms.mjs）と同じ規則で、config/tep.ts の値から作る
+  const keyNames = cliKeyNames(
+    [...tepTerms, ...tepComparisons].flatMap((item) => [
+      item.cli,
+      ...('cliNote' in item && item.cliNote ? [item.cliNote] : []),
+    ])
+  );
+
+  test('the TEP page follows the reader-first outline in order', async ({ page }) => {
+    const response = await page.goto('/tep/');
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('h1')).toHaveText('git履歴から、確かめられる事実を取り出す方法');
+    const ids = await page
+      .locator('main section[id]')
+      .evaluateAll((sections) => sections.map((section) => section.id));
+    expect(ids).toEqual(['why', 'what', 'how', 'not', 'compare', 'use', 'next']);
+    // 架空の例は、架空であることを先に書く
+    await expect(page.locator('#use figure figcaption')).toContainText('架空の例です。');
+  });
+
+  test('the glossary is folded and shows CLI names in the layout for each width', async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto('/tep/');
+    const terms = page.locator('details#terms');
+    await expect(terms).not.toHaveAttribute('open', /.*/);
+    await terms.locator('summary').click();
+    // スマホでは表の代わりに積んだ一覧を見せる。見えている方に CLI の名前とサイトの用語がある
+    const shown = isMobile ? terms.locator('dl') : terms.locator('table');
+    await expect(shown).toBeVisible();
+    await expect(shown).toContainText('surface_profile');
+    await expect(shown).toContainText('テスト併修率');
+  });
+
+  test('a link to /tep/#terms opens the glossary', async ({ page }) => {
+    await page.goto('/tep/#terms');
+    await expect(page.locator('details#terms')).toHaveAttribute('open', '');
+  });
+
+  test('the TEP page names the founder as the Article author', async ({ page }) => {
+    await page.goto('/tep/');
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((nodes) => nodes.map((node) => JSON.parse(node.textContent ?? '{}')));
+    const article = blocks.find((block) => block['@type'] === 'Article');
+    expect(article?.author?.['@id']).toBe('https://cor-jp.com/#person-kousuke-terada');
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+  });
+
+  test('the top page and the FAQ link to the TEP page', async ({ page, isMobile }) => {
+    await page.goto('/');
+    await expect(page.locator('#about a[href="/tep/"]')).toHaveCount(1);
+    await expect(page.locator('#product a[href="/tep/#terms"]')).toHaveCount(1);
+    if (isMobile) {
+      await page.locator('#mobile-menu-button').click();
+      await expect(page.locator('#mobile-menu a[href="/tep/"]')).toBeVisible();
+    } else {
+      await expect(page.locator('#site-header a[href="/tep/"]')).toBeVisible();
+    }
+    await page.goto('/faq/');
+    await expect(page.locator('#about-grift a[href="/tep/"]')).toHaveCount(1);
+  });
+
+  test('the top page lists observations in plain words', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#product')).toContainText(
+      'テストも一緒に変えた割合（テスト併修率）'
     );
-    await expect(page.getByText('プロダクト画面プレースホルダ')).toHaveCount(0);
-    await expect(page.getByText('プライベートベータ')).toHaveCount(0);
-    const contractDev = page.locator('a[href*="intent=contract-dev"]');
-    await expect(contractDev).toHaveCount(0);
+  });
+
+  test('published pages other than /tep/ show no CLI key names', async ({ page, request }) => {
+    expect(keyNames.length).toBeGreaterThan(0);
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    const paths = [...sitemap.matchAll(/<loc>https?:\/\/[^/<]+(\/[^<]*)<\/loc>/g)]
+      .map((match) => match[1])
+      .filter((path) => path !== '/tep/');
+    expect(paths).toContain('/');
+    expect(paths).toContain('/faq/');
+    for (const path of paths) {
+      await page.goto(path);
+      // body の文字には、ページ本文と body の中の構造化データ（トップの SoftwareApplication など）が入る
+      const text = (await page.locator('body').textContent()) ?? '';
+      for (const name of keyNames) {
+        expect(text, `${path} shows ${name}`).not.toMatch(keyNamePattern(name));
+      }
+    }
+  });
+
+  test('articles and news show published entries and hide drafts', async ({ page }) => {
+    await page.goto('/articles/');
+    await expect(page.getByRole('heading', { level: 1, name: '記事' })).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /gitの履歴から確かめられる事実を取り出す/ })
+    ).toBeVisible();
+    await expect(page.getByText('下書きの記事です')).toHaveCount(0);
+    await expect(page.getByText('この下書きは公開ページに出ません。')).toHaveCount(0);
+
+    const draftArticle = await page.goto('/articles/draft-article/');
+    expect(draftArticle?.status()).toBe(404);
+
+    await page.goto('/news/');
+    await expect(page.getByRole('heading', { level: 1, name: 'お知らせ' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Grift CLIを公開しています/ })).toBeVisible();
+    await expect(page.getByText('下書きのお知らせです')).toHaveCount(0);
+
+    const draftNews = await page.goto('/news/draft-news/');
+    expect(draftNews?.status()).toBe(404);
+
+    await page.goto('/articles/git-history-facts/');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      'gitの履歴から確かめられる事実を取り出す'
+    );
+    await expect(page.getByTestId('article-author')).toContainText('寺田 康佑');
+  });
+
+  test('llms.txt and the sitemap list the TEP page', async ({ request }) => {
+    const llms = await (await request.get('/llms.txt')).text();
+    expect(llms).toContain('/tep/');
+    expect(llms).toContain('| テスト併修率 | テストも一緒に変えた割合 | test co-change |');
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    expect(sitemap).toContain('/tep/</loc>');
+  });
+});
+
+test.describe('Analytics: tags only on the production host, events for CTAs and the deck', () => {
+  const tagHosts = /googletagmanager\.com|google-analytics\.com|clarity\.ms/;
+
+  test('localhost loads neither GA4 nor Clarity', async ({ page }) => {
+    // 手元の開発・CI の e2e・プレビューで開いたページを、本番のプロパティに送らない
+    const tagRequests: string[] = [];
+    page.on('request', (request) => {
+      if (tagHosts.test(request.url())) tagRequests.push(request.url());
+    });
+    await page.goto('/');
+    await page.waitForLoadState('load');
+    expect(tagRequests).toEqual([]);
+    expect(await page.evaluate(() => Array.isArray(window.dataLayer))).toBe(true);
+  });
+
+  test('the production host loads GA4 and Clarity', async ({ page, baseURL }) => {
+    // ホスト名が griftai.org のときだけタグを読み込むことを、手元のビルドを griftai.org として返して確かめる
+    const tagRequests: string[] = [];
+    await page.route(tagHosts, async (route) => {
+      tagRequests.push(route.request().url());
+      await route.fulfill({ status: 200, contentType: 'text/javascript', body: '' });
+    });
+    await page.route('https://griftai.org/**', async (route) => {
+      const local = route
+        .request()
+        .url()
+        .replace('https://griftai.org/', baseURL ?? '/');
+      await route.fulfill({ response: await route.fetch({ url: local }) });
+    });
+    await page.goto('https://griftai.org/');
+    await expect
+      .poll(() => tagRequests.some((url) => url.includes('gtag/js?id=G-3E8328E5V6')))
+      .toBe(true);
+    await expect.poll(() => tagRequests.some((url) => url.includes('clarity.ms/tag/'))).toBe(true);
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+  });
+
+  test('clicks on the hero CTA and the deck are pushed as events', async ({ page }) => {
+    await page.goto('/');
+    // 外部の問い合わせ画面を開かず、ダウンロードもしない（記録だけを確かめる）
+    await page.evaluate(() => {
+      document.addEventListener('click', (event) => event.preventDefault());
+    });
+    await page.locator('#hero a[href*="intent=grift-team-beta"]').click();
+    await page.locator('#hero a[href$=".pdf"]').click();
+
+    const events = await page.evaluate(() =>
+      (window.dataLayer as unknown[])
+        .map((entry) => Array.from(entry as ArrayLike<unknown>))
+        .filter((args) => args[0] === 'event')
+    );
+    expect(events).toContainEqual([
+      'event',
+      'cta_click',
+      expect.objectContaining({
+        cta_source: 'grift-lp-hero',
+        cta_intent: 'grift-team-beta',
+        cta_method: 'chat',
+      }),
+    ]);
+    expect(events).toContainEqual([
+      'event',
+      'deck_download',
+      expect.objectContaining({ file_name: 'grift-cli-overview.pdf', placement: 'hero' }),
+    ]);
   });
 });

@@ -5,7 +5,12 @@
  * these helpers so intent / source / UTM and PUBLIC_COR_BASE_URL stay consistent.
  */
 
-/** Product-intent values shared with corsweb / Cloudia */
+/**
+ * Product-intent values shared with corsweb / Cloudia (corsweb ADR-0014 が正本)。
+ * 値は機械キーの契約なので、提供内容が変わってもここでは改名しない。
+ * 2026-10 の方針転換後、Grift LP は `grift-team-beta` を「Grift（CLI・テスト導入）の相談」
+ * として使う。`grift-paid-trial` / `estimate-audit` は旧プラン用で、LP からはもう送らない。
+ */
 export type CorIntent = 'grift-team-beta' | 'grift-paid-trial' | 'estimate-audit';
 
 export interface BuildCorContactUrlOptions {
@@ -61,9 +66,7 @@ export function buildCorContactUrl(options: BuildCorContactUrlOptions): string {
   return url.toString();
 }
 
-/** Convenience aliases for the three Grift product intents */
+/** Grift の相談（CLI・テスト導入）へ送る CTA。intent キーは契約どおり `grift-team-beta`。 */
 export const corCta = {
-  teamBeta: (source: string) => buildCorContactUrl({ intent: 'grift-team-beta', source }),
-  paidTrial: (source: string) => buildCorContactUrl({ intent: 'grift-paid-trial', source }),
-  estimateAudit: (source: string) => buildCorContactUrl({ intent: 'estimate-audit', source }),
+  griftTrial: (source: string) => buildCorContactUrl({ intent: 'grift-team-beta', source }),
 } as const;

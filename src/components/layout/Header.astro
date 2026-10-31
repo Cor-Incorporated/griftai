@@ -21,15 +21,23 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
     aria-label="Main navigation"
   >
     <a href="/" class="flex items-center gap-3 text-text">
+      {
+        /* 表示は 40px なので、3 倍の 120px 版を使う。元の 1024px 版（合わせて約 1.9MB）は
+          どの幅でも 2 枚とも読み込まれ、window の load を遅らせていた。 */
+      }
       <img
-        src="/grift-mark.jpg"
+        src="/grift-mark-120.jpg"
         alt={`${siteConfig.name} アイコン`}
+        width="40"
+        height="40"
         class="size-10 rounded-sm sm:hidden"
         loading="eager"
       />
       <img
-        src="/grift-wordmark.jpg"
+        src="/grift-wordmark-120.jpg"
         alt={`${siteConfig.name} ロゴ`}
+        width="40"
+        height="40"
         class="hidden h-10 w-auto rounded-sm sm:block"
         loading="eager"
       />
@@ -37,13 +45,13 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 
     {
       mainNavItems.length > 0 && (
-        <div class="hidden items-center gap-6 md:flex">
+        <div class="hidden items-center gap-1 lg:flex xl:gap-2">
           {mainNavItems.map((item) => (
             <a
               href={item.href}
               target={item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
-              class="rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
+              class="whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none"
             >
               {item.label}
             </a>
@@ -52,7 +60,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
       )
     }
 
-    <div class="hidden items-center gap-4 md:flex">
+    <div class="hidden items-center gap-4 lg:flex">
       {
         ghostCTAs.map((cta) => (
           <a
@@ -71,7 +79,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             href={primaryCTA.href}
             target="_blank"
             rel="noreferrer"
-            class="cta-primary px-5 py-2 text-sm"
+            class="cta-primary whitespace-nowrap px-5 py-2 text-sm"
           >
             {primaryCTA.label}
           </a>
@@ -79,7 +87,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
       }
     </div>
 
-    <div class="flex items-center gap-3 md:hidden">
+    <div class="flex items-center gap-3 lg:hidden">
       {
         !hasMobileMenu && primaryCTA && (
           <a
@@ -88,8 +96,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
             rel="noreferrer"
             class="cta-primary px-4 py-2 text-xs sm:text-sm"
           >
-            <span class="sm:hidden">Team Beta</span>
-            <span class="hidden sm:inline">{primaryCTA.label}</span>
+            {primaryCTA.label}
           </a>
         )
       }
@@ -126,7 +133,7 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
   hasMobileMenu && (
     <div
       id="mobile-menu"
-      class="fixed inset-0 z-40 hidden md:hidden"
+      class="fixed inset-0 z-40 hidden lg:hidden"
       role="dialog"
       aria-modal="true"
       aria-label="モバイルナビゲーション"
@@ -178,39 +185,43 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 }
 
 <script>
-  const header = document.getElementById('site-header');
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const mobileMenuPanel = document.getElementById('mobile-menu-panel');
-  const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-  const menuIconOpen = document.getElementById('menu-icon-open');
-  const menuIconClose = document.getElementById('menu-icon-close');
+  import { onPageReady } from '@/lib/page-ready';
 
-  function updateMenuPosition() {
-    if (header && mobileMenuPanel) {
-      const headerRect = header.getBoundingClientRect();
-      mobileMenuPanel.style.top = `${headerRect.bottom}px`;
+  function initHeader() {
+    const header = document.getElementById('site-header');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const menuIconOpen = document.getElementById('menu-icon-open');
+    const menuIconClose = document.getElementById('menu-icon-close');
+
+    if (!mobileMenuButton || !mobileMenu || !mobileMenuPanel || !mobileMenuBackdrop) return;
+
+    function updateMenuPosition() {
+      if (header && mobileMenuPanel) {
+        const headerRect = header.getBoundingClientRect();
+        mobileMenuPanel.style.top = `${headerRect.bottom}px`;
+      }
     }
-  }
 
-  function openMobileMenu() {
-    updateMenuPosition();
-    mobileMenu?.classList.remove('hidden');
-    mobileMenuButton?.setAttribute('aria-expanded', 'true');
-    menuIconOpen?.classList.add('hidden');
-    menuIconClose?.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
+    function openMobileMenu() {
+      updateMenuPosition();
+      mobileMenu?.classList.remove('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'true');
+      menuIconOpen?.classList.add('hidden');
+      menuIconClose?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
 
-  function closeMobileMenu() {
-    mobileMenu?.classList.add('hidden');
-    mobileMenuButton?.setAttribute('aria-expanded', 'false');
-    menuIconOpen?.classList.remove('hidden');
-    menuIconClose?.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
+    function closeMobileMenu() {
+      mobileMenu?.classList.add('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'false');
+      menuIconOpen?.classList.remove('hidden');
+      menuIconClose?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
 
-  if (mobileMenuButton && mobileMenu && mobileMenuPanel && mobileMenuBackdrop) {
     mobileMenuButton.addEventListener('click', () => {
       const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
       if (isExpanded) {
@@ -222,15 +233,35 @@ const hasMobileMenu = mainNavItems.length > 0 || ghostCTAs.length > 0;
 
     mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-        closeMobileMenu();
-        mobileMenuButton.focus();
-      }
-    });
-
     mobileMenu.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMobileMenu);
     });
   }
+
+  // Escape は document リスナーなので、ページ遷移ごとの多重バインドを防ぐため一度だけ
+  let escapeBound = false;
+  function bindEscapeOnce() {
+    if (escapeBound) return;
+    document.addEventListener('keydown', (e) => {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIconOpen = document.getElementById('menu-icon-open');
+      const menuIconClose = document.getElementById('menu-icon-close');
+      if (e.key === 'Escape' && mobileMenuButton?.getAttribute('aria-expanded') === 'true') {
+        mobileMenu?.classList.add('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'false');
+        menuIconOpen?.classList.remove('hidden');
+        menuIconClose?.classList.add('hidden');
+        document.body.style.overflow = '';
+        mobileMenuButton.focus();
+      }
+    });
+    escapeBound = true;
+  }
+
+  // 初回はすぐに、ClientRouter のページ遷移後は再バインド（DOM は差し替わるため毎回実行）
+  onPageReady(() => {
+    initHeader();
+    bindEscapeOnce();
+  });
 </script>

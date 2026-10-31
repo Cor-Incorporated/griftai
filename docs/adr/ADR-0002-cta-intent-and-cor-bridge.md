@@ -2,6 +2,8 @@
 
 ## ステータス: Accepted (2026-07-10)
 
+2026-10-20 の ADR-0005（決定 5）で、LP が送る intent は `grift-team-beta` だけになった（意味は「Grift（CLI・テスト導入）の相談」）。下の「intent 付き URL」の表にある Paid Trial と Estimate Audit は、取り下げる前の記録として残す。環境変数と Preview の決定は今も有効。
+
 ## 背景
 - 変更前はほぼすべての CTA が `https://cor-jp.com/contact/` 固定で、Team Beta / Paid Trial / Estimate Audit の文脈が失われていた（監査 P0）。
 - Preview Grift → Preview Cor を通し検証できない。

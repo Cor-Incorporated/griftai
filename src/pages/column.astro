@@ -1,11 +1,17 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import StoryCard from '@/components/common/StoryCard.astro';
 import '@/styles/gmo-columns.css';
 import { siteConfig } from '@/config';
 
+const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
+  (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
+);
+
 const title = 'AIを活用した要件定義・自動化ツール、AI開発に関するコラム一覧';
 const description =
-  'AIを活用した要件定義・自動化ツールやAI開発ならCor株式会社へ。GitHub実績と市場相場データを照合し、開発見積もりに説明できる根拠を自動で作成。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。';
+  'AIを活用した要件定義・自動化ツールやAI開発のご相談ならCor.株式会社へ。福岡のAI実装会社として、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走します。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。';
 ---
 
 <MarketingLayout title={title} description={description}>
@@ -38,6 +44,31 @@ const description =
               <h2>AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧</h2>
               <!-- メインバナーキャッチコピーここまで -->
             </div>
+
+            <!-- Grift のストーリー（架空の物語）ここから -->
+            <section class="not-prose u-mt50" aria-labelledby="story-heading">
+              <h2 id="story-heading" class="text-2xl font-semibold text-text">
+                Griftのストーリー（架空の物語）
+              </h2>
+              <p class="mt-3 text-base leading-7 text-text-muted">
+                推薦する営業と、推薦されるエンジニアの「よくある場面」を、架空の物語にしました。登場する人物・会社は実在しません。
+              </p>
+              <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+                {
+                  stories.map((story) => (
+                    <li>
+                      <StoryCard
+                        href={`/column/${story.id}/`}
+                        who={story.data.who}
+                        title={story.data.title}
+                        body={story.data.lead}
+                      />
+                    </li>
+                  ))
+                }
+              </ul>
+            </section>
+            <!-- Grift のストーリー（架空の物語）ここまで -->
 
             <!-- コンテンツ一覧ここから -->
             <section class="u-mt50 c-linkblock">
@@ -91,11 +122,11 @@ const description =
 
             <!-- NAP情報ここから -->
             <section class="u-mt50 c-nap">
-              <h3 class="u-mb20">AIを活用した要件定義・自動化ツールならCor株式会社</h3>
+              <h3 class="u-mb20">AIを活用した要件定義・自動化のご相談はCor.株式会社へ</h3>
               <table class="c-table">
                 <tr>
                   <th class="u-p20">会社名</th>
-                  <td class="u-p20">Cor株式会社（Cor.inc）</td>
+                  <td class="u-p20">Cor.株式会社（Cor.inc）</td>
                 </tr>
                 <tr>
                   <th class="u-p20">所在地</th>
@@ -130,11 +161,11 @@ const description =
           "@type": "CollectionPage",
           "@id": "${siteConfig.url}/column/",
           "name": "AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧",
-          "description": "AIを活用した要件定義・自動化ツールやAI開発ならCor株式会社へ。GitHub実績と市場相場データを照合し、開発見積もりに説明できる根拠を自動で作成。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。",
+          "description": "AIを活用した要件定義・自動化ツールやAI開発のご相談ならCor.株式会社へ。福岡のAI実装会社として、課題の整理・要件定義・見積もりから設計・実装・運用まで一気通貫で伴走します。上流工程の効率化や費用についてもお気軽にご相談ください。コラム一覧です。",
           "image": "${siteConfig.url}/images/columns/head-mv-00.jpg",
           "publisher": {
             "@type": "Organization",
-            "name": "Cor株式会社",
+            "name": "Cor.株式会社",
             "logo": {
               "@type": "ImageObject",
               "url": "${siteConfig.url}/grift-wordmark.jpg"

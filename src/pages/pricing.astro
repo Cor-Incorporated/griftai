@@ -1,91 +1,51 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import PageHeader from '@sections/content/PageHeader.astro';
+import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import NextStep from '@/components/common/NextStep.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
-import { siteConfig } from '@/config';
+import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
-const contactUrl = corCta.teamBeta('grift-pricing');
+const contactUrl = corCta.griftTrial('grift-pricing');
 
-const betaPlans = [
+// 旧プラン（Team Beta / Paid Trial / Estimate Audit）は 2026-10 に取り下げた。
+// 正式版の価格は決まるまで載せない（金額を出すときは「予定」と分かる表現にする）。
+const offerings = [
   {
-    name: 'Grift Team Beta',
-    price: '月額5万円を基本に個別案内',
-    target: '2〜10人の受託チーム',
+    name: 'Grift CLI',
+    target: 'エンジニア本人・どなたでも',
+    price: '無償',
+    priceNote: 'MITライセンスのOSS',
     description:
-      'チーム内で、担当者に依存しすぎない見積プロセスを作るためのプランです。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。',
-    cta: 'Team Betaについて相談する',
-    href: corCta.teamBeta('grift-pricing-team-beta'),
-    detailHref: '/team-beta/',
-    detailLabel: 'Team Beta の詳細',
+      'git履歴から確かめられる事実を取り出すコマンドラインツールです。手元のPCだけで動き、当社へデータを自動で送る機能はありません。',
     features: [
-      'チームワークスペース',
-      '案件前提の整理',
-      '参考見積レポート',
-      'GitHub実績の参照',
-      'レビュー履歴管理',
+      `${griftCli.installCommand} でインストール（Python ${griftCli.pythonRequires}）`,
+      'AI（LLM）を使わず、誰が実行しても同じ結果になる計測',
+      'grift verify による再計算での検算',
+      '指標の定義・検証結果・利用規範を公開',
     ],
+    cta: 'GitHubでGrift CLIを見る',
+    href: griftCli.github,
+    primary: false,
   },
   {
-    name: 'Grift Paid Trial',
-    price: '3ヶ月15万円を基本に個別案内',
-    target: '小規模受託チーム',
+    name: 'テスト導入（PoC）',
+    target: '人材紹介会社・SES企業・自社開発企業',
+    price: '個別にご案内',
+    priceNote: '対象・件数に応じて',
     description:
-      'まずは実際のプロジェクトで、見積根拠の整理とナレッジ蓄積を試してみたいチーム向けのトライアルプランです。利用範囲・サポート内容に応じて個別にご案内します。',
-    cta: '有料トライアルを相談する',
-    href: corCta.paidTrial('grift-pricing-paid-trial'),
-    detailHref: '/pricing/',
-    detailLabel: 'このページの案内',
+      '候補者本人が共有した記録をもとに、推薦の理由を根拠とともに伝える流れや、候補者がどんな仕事をしてきたかを確かめる流れを、実際の業務で試していただく取り組みです。',
     features: [
-      '実案件での利用検証',
-      '月1回ヒアリング',
-      '改善フィードバック',
-      '見積根拠メモ',
-      'ナレッジ蓄積支援',
+      'テストの範囲（対象の職種・件数・期間）を一緒に決めます',
+      '営業向けの画面はテスト導入に向けて準備中です',
+      '候補者の同意と共有の手順を含めて設計します',
+      '費用は範囲が決まってから個別にお見積りします',
     ],
-  },
-  {
-    name: 'Grift Estimate Audit',
-    price: '100万円を基本に個別見積',
-    target: '発注企業',
-    description:
-      '提出された見積もりの妥当性を検討するための判断材料として、AIと実装者の視点で、見積の前提・技術リスク・工数妥当性を整理します。',
-    cta: 'Estimate Auditについて相談する',
-    href: corCta.estimateAudit('grift-pricing-estimate-audit'),
-    detailHref: '/estimate-audit/',
-    detailLabel: 'Estimate Audit の詳細',
-    features: [
-      '見積前提の整理',
-      '技術リスク確認',
-      '工数妥当性の検討',
-      '相見積もり前の質問整理',
-      '稟議前の判断材料化',
-    ],
-  },
-];
-
-const plannedFeatures = [
-  'マルチプロバイダ市場調査（複数AIソースによる相場の参考比較）',
-  'Go/No-Goスコアリング（提案前の判断材料整理）',
-  'Linear / GitHub連携（承認済み見積からタスク候補を整理）',
-  'チーム共有と権限管理',
-];
-
-const selectionGuides = [
-  {
-    condition: '継続的に見積を作る受託チーム',
-    recommendation: 'Grift Team Beta',
-    body: '月額5万円を基本に、チームワークスペース、案件見積、レポート出力、GitHub実績の参照、履歴管理を検証します。',
-  },
-  {
-    condition: 'まず3ヶ月だけ試したい小規模チーム',
-    recommendation: 'Grift Paid Trial',
-    body: '3ヶ月15万円を基本に、Team Betaの利用検証、月1回ヒアリング、改善フィードバック込みでご案内します。',
-  },
-  {
-    condition: '発注側として見積の前提を見たい',
-    recommendation: 'Grift Estimate Audit',
-    body: '100万円を基本に、提出された見積の前提、技術リスク、工数妥当性を検討する材料を整理します。',
+    cta: '自社でテストしてみる',
+    href: contactUrl,
+    primary: true,
   },
 ];
 
@@ -93,69 +53,108 @@ const pricingFaqs = [
   {
     question: '料金はいくらですか？',
     answer:
-      'Grift Team Betaは月額5万円を基本に個別案内しています。Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に、利用範囲・チーム規模・サポート内容に応じてご案内します。',
+      'Grift CLI は無償（MITライセンス）です。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版の価格は、決まってからこのページでお知らせします。',
   },
   {
-    question: 'AIが見積金額を決めるのですか？',
+    question: '正式版はいつ提供されますか？',
     answer:
-      'いいえ。Griftは参考見積と見積根拠を整理するAI見積支援ツールです。最終的な見積金額の決定は人間が行います。',
+      'テスト導入の結果をふまえて、2027年の提供開始を目指しています。時期と価格が決まりしだいお知らせします。',
   },
   {
-    question: '正式版の料金はどうなりますか？',
+    question: '以前案内していた Team Beta・Paid Trial・Estimate Audit はどうなりましたか？',
     answer:
-      '正式版の料金体系は、ベータ版での利用状況、支払い意思、フィードバックを踏まえて見直す可能性があります。',
+      '2026年10月に取り下げました。Griftは方針を変え、見積支援のWebアプリに代えて、git履歴から確かめられる事実を取り出すCLIと、紹介会社さま向けの推薦支援に取り組んでいます。以前のプランについてのお問い合わせも、AI受付でお受けします。',
   },
   {
-    question: '契約前に相談できますか？',
+    question: 'エンジニア本人に費用はかかりますか？',
     answer:
-      'もちろんです。現在ベータ版として提供範囲を検証中のため、まずはチームの課題や状況をヒアリングし、自分たちの案件で使えるかどうかのご相談から承っております。',
+      'かかりません。Grift CLI は無償で使えます。収益は、テスト導入と正式版をご利用いただく紹介会社さま・SES企業さま・自社開発企業さまからいただく想定です。',
   },
 ];
 
-const onboardingSteps = [
+const trialSteps = [
   {
     title: 'お問い合わせ',
-    body: '現在の見積プロセスや課題をお聞かせください',
+    body: '推薦業務の流れと、いま困っていることをお聞かせください。',
   },
   {
-    title: 'ベータ提供条件のご案内',
-    body: '利用イメージに合うか確認し、提供範囲と条件をご案内します',
+    title: 'テストの範囲を決める',
+    body: '対象の職種・件数・期間と、候補者の同意の取り方を一緒に決め、費用をご案内します。',
   },
   {
-    title: '利用開始',
-    body: '実際の案件で見積根拠の整理をお試しください',
+    title: '推薦業務で試す',
+    body: '候補者本人が手元で実行した結果をもとに、推薦の理由を根拠とともに伝える流れを試します。',
   },
 ];
 ---
 
 <MarketingLayout
-  title={`料金プラン — 受託開発チームのAI見積支援 | ${siteConfig.name}`}
-  titleTag="料金プラン｜Grift Team Beta"
-  ogTitle="Grift Team Betaの料金｜Grift"
-  description="Griftは受託開発チームの見積根拠を整理するAI見積支援ツールです。Team Betaは月額5万円、Paid Trialは3ヶ月15万円、Estimate Auditは100万円を基本に個別案内しています。"
+  title={`料金と提供状況 — Grift CLI は無償、テスト導入（PoC）は個別案内 | ${siteConfig.name}`}
+  titleTag="料金と提供状況｜Grift"
+  ogTitle="Griftの料金と提供状況｜Grift"
+  description="Grift CLI は無償（MITライセンス）のOSSです。人材紹介会社・SES企業・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内しています。正式版は2027年の提供開始を目指しています。"
   faqItems={pricingFaqs}
 >
+  <BreadcrumbNav items={[{ label: '料金と提供状況' }]} />
   <PageHeader
-    title="Team Beta / Pricing"
-    subtitle="見積根拠を、チームの資産にするための有料β。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。"
+    title="料金と提供状況"
+    subtitle="Grift CLI は無償。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内します。"
   />
+
+  {/* AIO/回答エンジン向け: 料金の要点を自己完結の dl で先出しする */}
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="rounded-3xl border border-border bg-surface p-6 sm:p-8">
+        <h2 class="text-xl font-bold text-text">料金の要点</h2>
+        <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">
+          いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。
+        </p>
+        <dl class="mt-6 grid gap-4 sm:grid-cols-3">
+          {
+            offerings.map((item) => (
+              <div class="rounded-2xl border border-border bg-background p-4">
+                <dt class="text-sm font-semibold text-text">{item.name}</dt>
+                <dd class="mt-1 text-xs text-text-muted">{item.target}</dd>
+                <dd class="mt-2 text-base font-bold text-primary">{item.price}</dd>
+              </div>
+            ))
+          }
+          <div class="rounded-2xl border border-border bg-background p-4">
+            <dt class="text-sm font-semibold text-text">正式版</dt>
+            <dd class="mt-1 text-xs text-text-muted">
+              紹介会社さま・SES企業さま・自社開発企業さま
+            </dd>
+            <dd class="mt-2 text-base font-bold text-primary">2027年の提供開始を目指しています</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-background py-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-5 lg:grid-cols-3">
+      <div class="grid gap-5 lg:grid-cols-2">
         {
-          betaPlans.map((plan) => (
-            <article class="flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
-              <p class="text-lg font-semibold text-text">{plan.name}</p>
-              <p class="mt-2 text-sm font-semibold text-primary">{plan.target}</p>
-              <p class="mt-5 min-h-28 text-pretty text-sm leading-7 text-text-muted">
-                {plan.description}
+          offerings.map((item) => (
+            <article class="card-lift relative flex h-full flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
+              <p class="text-lg font-semibold text-text">
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {item.name}
+                </a>
               </p>
+              <p class="mt-2 text-sm font-semibold text-primary">{item.target}</p>
+              <p class="mt-5 text-pretty text-sm leading-7 text-text-muted">{item.description}</p>
               <div class="mt-6">
-                <p class="text-3xl font-bold tabular-nums text-text">{plan.price}</p>
+                <p class="text-3xl font-bold text-text">{item.price}</p>
+                <p class="mt-1 text-sm text-text-muted">{item.priceNote}</p>
               </div>
               <ul class="mt-7 flex-1 space-y-3 text-sm text-text-muted">
-                {plan.features.map((feature) => (
+                {item.features.map((feature) => (
                   <li class="flex gap-3">
                     <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-primary" />
                     <span>{feature}</span>
@@ -164,18 +163,15 @@ const onboardingSteps = [
               </ul>
               <div class="mt-8 flex flex-col gap-2">
                 <a
-                  href={plan.href}
+                  href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  class="cta-primary w-full text-sm"
+                  class:list={[
+                    item.primary ? 'cta-primary' : 'cta-secondary',
+                    'relative z-10 w-full text-sm',
+                  ]}
                 >
-                  {plan.cta}
-                </a>
-                <a
-                  href={plan.detailHref}
-                  class="text-center text-sm font-medium text-primary hover:underline"
-                >
-                  {plan.detailLabel}
+                  {item.cta}
                 </a>
               </div>
             </article>
@@ -183,54 +179,8 @@ const onboardingSteps = [
         }
       </div>
       <p class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty">
-        いずれもベータ版として検証中の提供条件です。利用範囲・チーム規模・サポート内容に応じて個別にご案内します。
+        以前ご案内していた Team Beta・Paid Trial・Estimate Audit は、2026年10月に取り下げました。
       </p>
-    </div>
-  </section>
-
-  <section class="bg-surface py-section">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-primary">開発ロードマップ（予定）</p>
-        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          正式リリースに向けた機能開発予定
-        </h2>
-        <p class="mt-4 text-lg leading-8 text-text-muted text-pretty">
-          以下の機能は開発ロードマップに含まれています。ベータ利用者のフィードバックをもとに、優先度を決定しています。
-        </p>
-      </div>
-      <div class="mt-8 grid gap-4 sm:grid-cols-2">
-        {
-          plannedFeatures.map((feature) => (
-            <div class="flex gap-3 rounded-2xl border border-border bg-background p-5">
-              <Icon name="lucide:sparkles" class="mt-0.5 size-5 shrink-0 text-primary" />
-              <p class="text-sm leading-7 text-text-muted text-pretty">{feature}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-background py-section">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-primary">ご案内</p>
-        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          どのような方に合っているか
-        </h2>
-      </div>
-      <div class="mt-10 grid gap-6 lg:grid-cols-3">
-        {
-          selectionGuides.map((guide) => (
-            <article class="rounded-2xl border border-border bg-surface p-6">
-              <p class="text-sm font-semibold text-primary">{guide.condition}</p>
-              <h3 class="mt-2 text-xl font-semibold text-text">{guide.recommendation}</h3>
-              <p class="mt-3 text-pretty leading-7 text-text-muted">{guide.body}</p>
-            </article>
-          ))
-        }
-      </div>
     </div>
   </section>
 
@@ -260,13 +210,13 @@ const onboardingSteps = [
   <section class="bg-surface py-section">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
       <div class="rounded-3xl border border-border bg-background p-8 sm:p-10">
-        <p class="text-sm font-semibold text-primary">導入フロー</p>
+        <p class="text-sm font-semibold text-primary">テスト導入の進め方</p>
         <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          お問い合わせから利用開始まで、3ステップで進みます。
+          お問い合わせからテストまで、3ステップで進みます。
         </h2>
         <ol class="mt-8 grid gap-4 lg:grid-cols-3">
           {
-            onboardingSteps.map((step, index) => (
+            trialSteps.map((step, index) => (
               <li class="rounded-2xl border border-border bg-surface p-5">
                 <p class="text-sm font-semibold text-primary">STEP {index + 1}</p>
                 <h3 class="mt-2 text-lg font-semibold text-text">{step.title}</h3>
@@ -279,24 +229,19 @@ const onboardingSteps = [
     </div>
   </section>
 
-  <section class="bg-background py-section">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div
-        class="rounded-3xl border border-border bg-surface p-8 sm:p-10 lg:flex lg:items-end lg:justify-between lg:gap-8"
-      >
-        <div class="max-w-2xl">
-          <p class="text-sm font-semibold text-primary">次の一歩</p>
-          <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-            自分たちの案件で使えるか、まずはご相談ください。
-          </h2>
-          <p class="mt-4 text-pretty text-lg leading-8 text-text-muted">
-            実際の案件内容をお聞かせいただければ、どのようにお使いいただけるかを個別にご案内します。
-          </p>
-        </div>
-        <a href={contactUrl} target="_blank" rel="noreferrer" class="cta-primary mt-8 lg:mt-0">
-          Team Betaについて相談する
-        </a>
-      </div>
+  <section class="bg-background pb-section">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <DocumentDownload />
     </div>
   </section>
+
+  <NextStep
+    heading="推薦業務で使えるか、自社でテストしてみませんか。"
+    lead="推薦の流れをお聞かせいただければ、テストの範囲と費用を個別にご案内します。"
+    ctas={[
+      { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+      { label: 'よくある質問を見る', href: '/faq/' },
+    ]}
+  />
 </MarketingLayout>

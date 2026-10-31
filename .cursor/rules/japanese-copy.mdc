@@ -1,0 +1,17 @@
+---
+description: ページ、コンポーネント、config の文字列、ストーリー、llms.txt の日本語は yomiyasu と cor-voice に従う
+globs: src/pages/**,src/components/**,src/layouts/**,src/config/**,src/content/stories/**
+alwaysApply: false
+---
+
+# 日本語の文章
+
+ページ、コンポーネント、レイアウト、config の文字列、ストーリー、`src/pages/llms.txt.ts` の日本語を書くときと直すときは、次の 2 つのファイルを読んで従う。規則の本文はこのファイルに写さない。
+
+- `.claude/skills/yomiyasu/SKILL.md`
+- `.claude/skills/cor-voice/SKILL.md`
+
+検査は次のコマンドを通す。
+
+- `python3 -I .claude/skills/yomiyasu/scripts/yomiyasu_check.py` の `run` と `verify`
+- `npm run check`

@@ -26,7 +26,7 @@ interface Props {
 }
 
 const { heroSelector = '#hero' } = Astro.props;
-const contactUrl = corCta.teamBeta('grift-lp-floating');
+const contactUrl = corCta.griftTrial('grift-lp-floating');
 ---
 
 <div
@@ -40,7 +40,7 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
     style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
   >
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
-      <p class="hidden text-sm text-text-muted sm:block">Grift Team Beta</p>
+      <p class="hidden text-sm text-text-muted sm:block">Grift ・ テスト導入（PoC）を受付中</p>
       <div class="flex flex-1 items-center gap-3 sm:flex-none">
         <a
           href={contactUrl}
@@ -49,7 +49,7 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
           tabindex="-1"
           class="cta-primary flex-1 px-5 py-2.5 text-sm sm:flex-none"
         >
-          ベータについて相談する
+          自社でテストしてみる
         </a>
         <button
           type="button"
@@ -78,6 +78,8 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
 </div>
 
 <script>
+  import { onPageReady } from '@/lib/page-ready';
+
   const initFloatingCta = (): void => {
     const floatingCta = document.getElementById('floating-cta') as HTMLElement | null;
     const closeButton = document.getElementById('floating-cta-close') as HTMLElement | null;
@@ -87,7 +89,7 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
 
     const heroSelector = floatingCta.dataset.heroSelector ?? '#hero';
     const heroSection = document.querySelector(heroSelector);
-    const suppressSections = document.querySelectorAll('#cta, #column-promo, footer');
+    const suppressSections = document.querySelectorAll('#cta, #reading, footer');
 
     if (!heroSection) return;
 
@@ -161,9 +163,6 @@ const contactUrl = corCta.teamBeta('grift-lp-floating');
     });
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFloatingCta);
-  } else {
-    initFloatingCta();
-  }
+  // 初回はすぐに、ClientRouter のページ遷移後は再初期化
+  onPageReady(initFloatingCta);
 </script>

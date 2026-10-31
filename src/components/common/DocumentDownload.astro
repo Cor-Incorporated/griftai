@@ -1,0 +1,59 @@
+---
+/**
+ * DocumentDownload — Grift CLI の紹介資料（PDF）を、申し込みなしでダウンロードする案内。
+ *
+ * 2026-10-20 の GMO 定例で、問い合わせより心理的な負担の小さい「資料のダウンロード」を
+ * 次の一歩にすることを決めた。資料の情報は config/documents.ts。
+ */
+import { griftCliDeck } from '@/config';
+
+interface Props {
+  heading?: string;
+  lead?: string;
+  /** 見出しのレベル（置く場所の見出し構造に合わせる） */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const {
+  heading = 'まずは資料で、Griftの中身を確かめる',
+  lead = 'Grift CLIが何を取り出し、何を出さないかを、20ページの資料にまとめています。申し込みなしでダウンロードできます。',
+  headingLevel = 'h2',
+} = Astro.props;
+const Heading = headingLevel;
+const fileName = griftCliDeck.href.split('/').pop();
+---
+
+<section
+  class="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8"
+  aria-labelledby="document-download-heading"
+  data-testid="document-download"
+>
+  <p class="text-sm font-semibold text-primary">資料ダウンロード</p>
+  <Heading
+    id="document-download-heading"
+    class="mt-2 text-xl font-semibold text-balance text-text sm:text-2xl"
+  >
+    {heading}
+  </Heading>
+  <p class="mt-3 leading-7 text-text-muted text-pretty">{lead}</p>
+  <ul class="mt-4 grid gap-1 text-sm text-text-muted sm:grid-cols-2">
+    {
+      griftCliDeck.contents.map((item) => (
+        <li class="flex gap-2">
+          <span aria-hidden="true" class="text-primary">
+            ・
+          </span>
+          {item}
+        </li>
+      ))
+    }
+  </ul>
+  <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <a href={griftCliDeck.href} download={fileName} class="cta-primary w-full sm:w-auto">
+      {griftCliDeck.title}をダウンロード（{griftCliDeck.format}・{griftCliDeck.pages}ページ・{
+        griftCliDeck.sizeLabel
+      }）
+    </a>
+  </div>
+  <p class="mt-3 text-xs leading-6 text-text-muted">{griftCliDeck.note}</p>
+</section>

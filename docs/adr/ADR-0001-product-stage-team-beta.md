@@ -1,6 +1,6 @@
 # ADR-0001 製品ステージを Team Beta / Paid Trial / Estimate Audit とする
 
-## ステータス: Accepted (2026-07-10)
+## ステータス: Superseded by [ADR-0005](./ADR-0005-grift-cli-pivot.md) (2026-10-20)（旧: Accepted 2026-07-10）
 
 ## 背景
 - 旧 LP はプライベートアルファ・無料試用・フリーランス中心のコピーが残っていた。

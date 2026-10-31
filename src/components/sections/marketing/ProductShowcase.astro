@@ -1,149 +1,86 @@
 ---
 /**
- * ProductShowcase - Product output visualization
+ * ProductShowcase - What Grift CLI observes
  *
  * @description
- * Shows what the user actually gets from Grift: a reference estimate report
- * that compares project assumptions, internal records, and market evidence.
+ * Lists what Grift CLI (TEP) counts from git history, in plain words for
+ * non-engineer readers. The items come from config/tep.ts, which /tep/ and
+ * llms.txt also read, so the wording stays the same on every page. CLI key
+ * names live only in that file. Do not add items the CLI does not emit.
  *
  * @example
  * ```astro
  * <ProductShowcase />
  * ```
  */
-
-interface ReportRow {
-  /** Label for the metric */
-  label: string;
-  /** Value to display */
-  value: string;
-  /** Optional color variant */
-  variant?: 'market' | 'proposal' | 'delta' | 'default';
-}
-
-const reportRows: ReportRow[] = [
-  { label: '案件前提', value: 'EC刷新', variant: 'default' },
-  { label: '自社実績', value: '4.0人月', variant: 'proposal' },
-  { label: '市場相場', value: '参考 480万', variant: 'market' },
-  { label: '参考見積', value: '参考 420万', variant: 'delta' },
-];
-
-const summaryItems = [
-  {
-    label: '案件前提',
-    value: '相談内容、対象機能、前提条件、不確実な要素を整理します。',
-  },
-  {
-    label: '自社実績',
-    value: 'GitHub実績や過去の開発傾向を参考材料として扱います。',
-  },
-  {
-    label: '市場相場',
-    value: '外部情報や類似案件を比較し、価格帯を検討するための参考情報として整理します。',
-  },
-  {
-    label: 'レビュー方針',
-    value: 'Griftの出力は参考情報として扱い、最終判断は人間が行います。',
-  },
-];
-
-const variantStyles = {
-  market: 'text-info',
-  proposal: 'text-success',
-  delta: 'text-primary',
-  default: 'text-text',
-};
+import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups } from '@/config';
 ---
 
 <section class="landing-container landing-section">
   <div class="fade-in-section max-w-3xl space-y-4">
-    <p class="section-kicker">機能</p>
+    <p class="section-kicker">観測すること</p>
     <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-      AIが参考見積と根拠を整理し、人間の判断を支援
+      誰の仕事か。テストと一緒に変えているか。どんなリポジトリか。
     </h2>
     <p class="type-copy text-lg text-text-muted">
-      GitHub実績や市場相場、類似案件、技術リスクなどをAIが整理。提案前の判断材料を提示します。
+      Grift
+      CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が{
+        tepFacts.minCount
+      }件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。
     </p>
   </div>
 
   <div class="fade-in-section mt-10 surface-panel p-5 sm:p-6 lg:p-8">
-    {/* Report header */}
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p class="text-xs font-medium text-text-muted">参考見積レポートの出力イメージ</p>
-        <p class="mt-1 text-lg font-semibold text-text">案件前提 / 自社実績 / 市場相場</p>
-      </div>
-      <span
-        class="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
-      >
-        人間レビュー前提
-      </span>
-    </div>
-
-    <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-      {/* Price comparison card */}
-      <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-sm font-semibold text-text">3つの根拠比較</p>
-        <div class="mt-4 space-y-4">
-          {
-            reportRows.map((row) => (
-              <div class="flex items-baseline justify-between gap-4">
-                <span class="text-sm text-text-muted">{row.label}</span>
-                <span
-                  class:list={[
-                    'text-right font-bold tabular-nums',
-                    row.variant === 'delta' ? 'text-base' : 'text-2xl',
-                    variantStyles[row.variant ?? 'default'],
-                  ]}
-                >
-                  {row.value}
-                </span>
-              </div>
-            ))
-          }
-        </div>
-
-        {/* Visual bar comparison */}
-        <div class="mt-6 space-y-3">
-          <div>
-            <div class="flex items-center justify-between text-xs text-text-muted">
-              <span>市場相場</span>
-              <span>参考 480万</span>
-            </div>
-            <div class="mt-1 h-3 w-full rounded-full bg-info/20">
-              <div class="bar-pulse h-3 rounded-full bg-info" style="width: 100%"></div>
-            </div>
+    <div class="grid gap-4 lg:grid-cols-2">
+      {
+        tepObservationGroups.map((group) => (
+          <div class="card-lift rounded-2xl border border-border bg-background p-5">
+            <p class="text-lg font-semibold text-text">{group.question}</p>
+            {group.note && <p class="mt-1 text-xs font-medium text-primary">{group.note}</p>}
+            <dl class="mt-4 space-y-4">
+              {group.observations.map((item) => (
+                <div>
+                  <dt class="text-sm font-semibold text-text">{tepLabel(item)}</dt>
+                  <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.counts}</dd>
+                  <dd class="mt-1 text-xs leading-6 text-text-muted text-pretty">
+                    {item.cannotTell}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <div>
-            <div class="flex items-center justify-between text-xs text-text-muted">
-              <span>参考見積</span>
-              <span>参考 420万</span>
-            </div>
-            <div class="mt-1 h-3 w-full rounded-full bg-success/20">
-              <div class="bar-pulse h-3 rounded-full bg-success" style="width: 87.5%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Summary card */}
+        ))
+      }
       <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-sm font-semibold text-text">根拠サマリー</p>
-        <div class="mt-4 space-y-4">
+        <p class="text-lg font-semibold text-text">案件が求めることと、どこで重なるか</p>
+        <dl class="mt-4 space-y-4">
           {
-            summaryItems.map((item) => (
+            tepAlignmentTools.map((tool) => (
               <div>
-                <p class="text-xs font-medium text-primary">{item.label}</p>
-                <p class="mt-1 text-sm leading-6 text-text-muted text-pretty">{item.value}</p>
+                <dt class="text-sm font-semibold text-text">{tepLabel(tool)}</dt>
+                <dd class="mt-1 text-sm leading-6 text-text-muted text-pretty">
+                  {tool.description}
+                </dd>
               </div>
             ))
           }
-        </div>
+        </dl>
       </div>
     </div>
 
-    <p class="mt-4 text-center text-xs text-text-muted">
-      ※サンプルデータです。ベータ版の出力は案件内容・連携データ・提供範囲に応じて変わります。最終的な見積金額の決定は人間が行うことを前提としています。
+    <p class="mt-6 text-center text-sm leading-7 text-text-muted text-pretty">
+      数えられなかったものは「実績なし」ではなく、理由を付けて「未観測」と出します。CLIの出力での名前との対応は
+      <a href="/tep/#terms" class="font-semibold text-primary underline underline-offset-2"
+        >TEPとは（用語の対応表）</a
+      >
+      に、指標ごとの読み方は
+      <a
+        href={griftCli.metricsGuide}
+        target="_blank"
+        rel="noreferrer"
+        class="text-primary underline underline-offset-2">metrics-guide</a
+      >
+      にまとめています。
     </p>
   </div>
 </section>

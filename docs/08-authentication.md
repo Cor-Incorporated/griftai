@@ -1,5 +1,7 @@
 # Authentication Pages
 
+> **Virex テンプレートの説明です。** griftai.org では使っていない機能（ダッシュボード・認証・ブログなど）も含みます。このサイトの構成は [CLAUDE.md](../CLAUDE.md) を見てください。
+
 This theme includes pre-built Login and Register pages with form validation, social authentication buttons, and demo mode support.
 
 ## Available Pages

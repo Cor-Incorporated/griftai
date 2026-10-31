@@ -1,5 +1,7 @@
 # Content Strategy
 
+> **歴史資料（2026-03 時点）**: AI 見積もりの Web アプリと Grift Beta を前提にした設計で、料金やプランも含めて 2026-10-20 の [ADR-0005](../../docs/adr/ADR-0005-grift-cli-pivot.md) で取り下げました。いまの方針は ADR-0005 と [ADR-0006](../../docs/adr/ADR-0006-lp-first-view-and-measurement.md) にあります。
+
 ## 1. コンテンツ戦略の前提
 
 この LP で一番やってはいけないのは、機能紹介の羅列にすること。  

@@ -1,56 +1,53 @@
 ---
-import { siteConfig } from '@/config';
+import { griftCli, siteConfig, tepLabel, tepObservationGroups } from '@/config';
 
 interface Props {
-  type: 'software' | 'faq' | 'organization';
+  type: 'software' | 'faq' | 'organization' | 'howto';
   faqItems?: Array<{ question: string; answer: string }>;
+  /** HowTo schema 用。name=見出し、text=手順説明 */
+  howtoName?: string;
+  howtoDescription?: string;
+  howtoSteps?: Array<{ name: string; text: string }>;
 }
 
-const { type, faqItems = [] } = Astro.props;
+const { type, faqItems = [], howtoName, howtoDescription, howtoSteps = [] } = Astro.props;
+
+const ORG_ID = `${siteConfig.url}/#organization`;
+const SOFTWARE_ID = `${siteConfig.url}/#software`;
 
 const softwareApplicationSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
+  '@id': SOFTWARE_ID,
   name: 'Grift',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
+  alternateName: ['Grift CLI', griftCli.packageName],
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: `Python ${griftCli.pythonRequires}`,
+  softwareVersion: griftCli.version,
+  url: siteConfig.url,
+  downloadUrl: griftCli.pypi,
+  installUrl: griftCli.github,
+  sameAs: [griftCli.github, griftCli.pypi],
+  license: 'https://opensource.org/licenses/MIT',
+  isAccessibleForFree: true,
   description:
-    '受託開発チームが参考見積と見積根拠を整理し、人間レビュー前提の見積プロセスを作るAI見積支援ツールです。',
+    'エンジニアのgit履歴から「確かめられる事実（検査値）」を取り出すOSSのコマンドラインツール。計測にAI（LLM）を使わず、同じリポジトリ・同じ版なら誰が実行しても同じ数値になる。点数・順位・合否は出さない。',
+  // 観測の名前は config/tep.ts から作る（/tep/・トップの「観測すること」・llms.txt と同じ言葉）
+  featureList: [
+    ...tepObservationGroups.flatMap((group) => group.observations).map((item) => tepLabel(item)),
+    '数値ごとの「何件のうち何件か」と計測条件の併記',
+    'grift verify による再計算での検算（VERIFIED / MISMATCH / CANNOT_VERIFY）',
+    '手元のPCだけで動作し、当社への自動送信なし',
+  ],
   offers: {
-    '@type': 'OfferCatalog',
-    name: 'Grift Team Beta Pricing',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        name: 'Grift Team Beta',
-        price: '50000',
-        priceCurrency: 'JPY',
-        description: '月額5万円を基本に個別案内',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-      {
-        '@type': 'Offer',
-        name: 'Grift Paid Trial',
-        price: '150000',
-        priceCurrency: 'JPY',
-        description: '3ヶ月15万円を基本に個別案内',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-      {
-        '@type': 'Offer',
-        name: 'Grift Estimate Audit',
-        price: '1000000',
-        priceCurrency: 'JPY',
-        description: '100万円を基本に個別見積',
-        availability: 'https://schema.org/LimitedAvailability',
-      },
-    ],
+    '@type': 'Offer',
+    name: 'Grift CLI（MITライセンス）',
+    price: '0',
+    priceCurrency: 'JPY',
+    url: griftCli.pypi,
+    availability: 'https://schema.org/InStock',
   },
-  provider: {
-    '@type': 'Organization',
-    name: 'Cor.株式会社',
-    url: 'https://cor-jp.com',
-  },
+  provider: { '@id': ORG_ID },
 };
 
 const faqPageSchema =
@@ -69,13 +66,32 @@ const faqPageSchema =
       }
     : null;
 
+const howToSchema =
+  howtoSteps.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: howtoName,
+        description: howtoDescription,
+        step: howtoSteps.map((step, index) => ({
+          '@type': 'HowToStep',
+          position: index + 1,
+          name: step.name,
+          text: step.text,
+        })),
+      }
+    : null;
+
+// 後方互換用。通常は SEO.astro が @id 付きの詳細版を全ページに出力するため
+// こちらは MarketingLayout からは呼ばれない。
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: 'Cor.株式会社',
   url: 'https://cor-jp.com',
-  logo: `${siteConfig.url}/logo.svg`,
-  sameAs: [],
+  logo: `${siteConfig.url}/grift-wordmark.jpg`,
+  sameAs: [siteConfig.social.github, siteConfig.social.twitter].filter(Boolean),
 };
 ---
 
@@ -91,6 +107,11 @@ const organizationSchema = {
 {
   type === 'faq' && faqPageSchema && (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
+  )
+}
+{
+  type === 'howto' && howToSchema && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   )
 }
 {

@@ -1,5 +1,7 @@
 # Astro SPA Requirements
 
+> **歴史資料（2026-03 時点）**: AI 見積もりの Web アプリと Grift Beta を前提にした設計で、料金やプランも含めて 2026-10-20 の [ADR-0005](../../docs/adr/ADR-0005-grift-cli-pivot.md) で取り下げました。いまの方針は ADR-0005 と [ADR-0006](../../docs/adr/ADR-0006-lp-first-view-and-measurement.md) にあります。
+
 ## 1. 目的
 
 Astro ベースの LP を 1 ページ SPA として設計し、Grift の価値を以下の順で理解させる。

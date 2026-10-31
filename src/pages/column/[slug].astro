@@ -1,0 +1,178 @@
+---
+/**
+ * Grift のストーリー（架空の物語）— src/content/stories/*.md を /column/<id>/ に出す。
+ *
+ * トップの「課題」カードから1本ずつリンクする。架空の物語であることは、
+ * 本文の前に必ず表示する（実在の事例・利用者の声と誤解させない）。
+ */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import NextStep from '@/components/common/NextStep.astro';
+import StoryCard from '@/components/common/StoryCard.astro';
+import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
+import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import { griftArticles, griftCli, siteConfig } from '@/config';
+import { corCta } from '@/lib/cor-cta';
+
+export async function getStaticPaths() {
+  const stories = await getCollection('stories');
+  return stories.map((story: CollectionEntry<'stories'>) => ({
+    params: { slug: story.id },
+    props: { story },
+  }));
+}
+
+interface Props {
+  story: CollectionEntry<'stories'>;
+}
+
+const { story } = Astro.props;
+const { Content } = await render(story);
+const otherStories: CollectionEntry<'stories'>[] = (await getCollection('stories'))
+  .filter((other: CollectionEntry<'stories'>) => other.id !== story.id)
+  .sort(
+    (a: CollectionEntry<'stories'>, b: CollectionEntry<'stories'>) => a.data.order - b.data.order
+  );
+
+const pageUrl = `${siteConfig.url}/column/${story.id}/`;
+const contactUrl = corCta.griftTrial(`grift-story-${story.id}`);
+
+// SEO.astro の自動 breadcrumb（2階層）は /column/ 配下では出さず、ここで3階層を出す。
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  '@id': `${pageUrl}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'トップ', item: `${siteConfig.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'コラム一覧', item: `${siteConfig.url}/column/` },
+    { '@type': 'ListItem', position: 3, name: story.data.title, item: pageUrl },
+  ],
+};
+---
+
+<MarketingLayout
+  title={story.data.title}
+  titleTag={`${story.data.title}（架空の物語）｜Grift`}
+  description={story.data.description}
+  type="article"
+  publishedDate={story.data.publishedDate}
+  tags={['Grift', 'ストーリー', story.data.who]}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <article class="py-section">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <nav aria-label="パンくずリスト" class="text-sm text-text-muted">
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <li><a href="/" class="hover:text-primary hover:underline">トップ</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/column/" class="hover:text-primary hover:underline">コラム一覧</a></li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page" class="text-text">{story.data.title}</li>
+        </ol>
+      </nav>
+
+      <header class="mt-8 space-y-4">
+        <p class="text-sm font-semibold text-primary">
+          Griftのストーリー（架空の物語）・{story.data.who}
+        </p>
+        <h1 class="text-3xl font-bold text-balance text-text sm:text-4xl">{story.data.title}</h1>
+        <p class="text-lg leading-8 text-text-muted text-pretty">{story.data.lead}</p>
+      </header>
+
+      <aside
+        class="mt-8 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-sm leading-7 text-text-muted"
+        aria-label="この記事について"
+      >
+        <p class="font-semibold text-text">この記事は、よくある場面をもとにした架空の物語です。</p>
+        <p class="mt-1">
+          登場する人物・会社は実在しません。物語の中の数値は、説明のための例です。Griftの機能の説明は、公開中のGrift
+          CLI（v{griftCli.version}）に基づいています。
+        </p>
+      </aside>
+
+      <div
+        class="prose prose-lg mt-10 max-w-none dark:prose-invert prose-headings:text-text prose-a:text-primary"
+      >
+        <Content />
+      </div>
+
+      <div class="mt-14">
+        <ArticleAuthor heading="この物語を書いた人" />
+      </div>
+
+      <section class="mt-14 rounded-2xl border border-border bg-surface p-6">
+        <h2 class="text-lg font-semibold text-text">この物語の背景にある課題</h2>
+        <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">
+          {story.data.who}：{story.data.problem}
+        </p>
+        <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+          <li>
+            <a
+              href="/#problem"
+              class="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-background p-4 text-sm font-semibold text-text no-underline transition hover:border-primary/45 hover:text-primary"
+            >
+              Griftが向き合う課題を見る <span aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/#value"
+              class="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-background p-4 text-sm font-semibold text-text no-underline transition hover:border-primary/45 hover:text-primary"
+            >
+              Griftの3つの約束を見る <span aria-hidden="true">→</span>
+            </a>
+          </li>
+          {
+            griftArticles.map((article) => (
+              <li>
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-background p-4 text-sm font-semibold text-text no-underline transition hover:border-primary/45 hover:text-primary"
+                >
+                  Griftの思想を{article.platform}で読む <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="mt-14">
+        <h2 class="text-2xl font-semibold text-text">ほかのストーリー</h2>
+        <ul class="mt-6 grid gap-4 md:grid-cols-3">
+          {
+            otherStories.map((other) => (
+              <li>
+                <StoryCard
+                  href={`/column/${other.id}/`}
+                  who={other.data.who}
+                  title={other.data.title}
+                />
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-6 text-sm">
+          <a href="/column/" class="font-semibold text-primary hover:underline"
+            >コラム一覧を見る →</a
+          >
+        </p>
+      </section>
+
+      <div class="mt-14">
+        <DocumentDownload />
+      </div>
+    </div>
+  </article>
+
+  <NextStep
+    heading="自社の推薦業務で、確かめてみませんか。"
+    lead="紹介会社さま・SES企業さまのテスト導入（PoC）は、Cor.株式会社のAI受付で承っています。エンジニアの方は、GitHubからすぐに試せます。"
+    ctas={[
+      { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
+      { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
+    ]}
+  />
+</MarketingLayout>

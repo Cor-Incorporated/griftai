@@ -29,6 +29,49 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check cor-voice copy matches corsweb2024 develop
+        run: |
+          set -euo pipefail
+
+          upstream="$(mktemp -d)"
+          diff_output="$(mktemp)"
+          trap 'rm -rf "$upstream" "$diff_output"' EXIT
+
+          git clone --depth 1 --filter=blob:none --sparse \
+            --branch develop \
+            https://github.com/Cor-Incorporated/corsweb2024.git \
+            "$upstream"
+          git -C "$upstream" sparse-checkout set .claude/skills/cor-voice
+
+          set +e
+          diff -ru "$upstream/.claude/skills/cor-voice" .claude/skills/cor-voice > "$diff_output"
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            echo "cor-voice copy matches Cor-Incorporated/corsweb2024 develop."
+            exit 0
+          fi
+
+          if [ "$status" -ne 1 ]; then
+            echo "::error::diff failed with exit code $status"
+            cat "$diff_output"
+            exit 1
+          fi
+
+          echo "::error::cor-voice copy differs from Cor-Incorporated/corsweb2024 develop."
+          cat "$diff_output"
+          {
+            echo "### cor-voice copy differs from corsweb2024 develop"
+            echo
+            echo "corsweb2024 is the source of truth. Sync \`.claude/skills/cor-voice/\` from its \`develop\` branch."
+            echo
+            echo '```diff'
+            cat "$diff_output"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

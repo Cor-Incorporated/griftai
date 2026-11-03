@@ -61,6 +61,7 @@ CI runs `npm run check`, `npm run test:unit`, `npm run build` and the Playwright
 
 GitHub Actions (`.github/workflows/ci.yml`), on every PR and on pushes to `main`, `feat/**`, `fix/**` and `chore/**`:
 - **quality** job: `npm run check` + `npm run test:unit` + `npm run build`
+- **cor-voice sync**: the `quality` job also clones `Cor-Incorporated/corsweb2024` (`develop`) and fails when `.claude/skills/cor-voice/` differs, printing the differing files and diff (corsweb2024 is the source of truth)
 - **e2e-smoke** job: Playwright smoke test against the built site (`npm run test:e2e`)
 - **a11y** job: Playwright accessibility test, non-blocking (`continue-on-error`)
 - **deploy_gate** + **deploy** jobs: Cloudflare Pages via Wrangler, only on a `main` push after quality and e2e-smoke pass, and only when the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set. They are not set, so the deploy job is skipped (checked 2026-10-27, run 40422259042)

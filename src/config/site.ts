@@ -83,5 +83,5 @@ export const contentAsOf = '2026-10-28';
 export const legal: LegalConfig = {
   privacyEmail: corCta.griftTrial('grift-legal-privacy'),
   legalEmail: corCta.griftTrial('grift-legal-terms'),
-  lastUpdated: '2026-10-20',
+  lastUpdated: '2026-11-07',
 };

@@ -559,6 +559,33 @@ test.describe('TEP page and plain words (2026-10)', () => {
 
 test.describe('Analytics: tags only on the production host, events for CTAs and the deck', () => {
   const tagHosts = /googletagmanager\.com|google-analytics\.com|clarity\.ms/;
+  // GA4 と Clarity の ID はコードに無く、ビルドの環境変数（PUBLIC_GA4_ID / PUBLIC_CLARITY_ID）にある。
+  // このテストを動かす側にも、ビルドしたときと同じ値を渡す（CI は e2e-smoke ジョブがダミーの ID で作り直して渡す。
+  // 手元: PUBLIC_GA4_ID=G-… PUBLIC_CLARITY_ID=… npm run build してから同じ値で npm run test:e2e）。
+  // ID が無いビルドでは「ID あり」の検査を飛ばし、「ID なし」の検査（本番のホストでも何も出ない）を動かす。
+  const ga4Id = process.env.PUBLIC_GA4_ID ?? '';
+  const clarityId = process.env.PUBLIC_CLARITY_ID ?? '';
+  const hasIds = ga4Id !== '' && clarityId !== '';
+
+  // 手元のビルドを https://griftai.org/ として返す（ホスト名が本番のときの振る舞いを確かめるため）
+  async function serveLocalBuildAsProductionHost(
+    page: import('@playwright/test').Page,
+    baseURL: string | undefined
+  ): Promise<string[]> {
+    const tagRequests: string[] = [];
+    await page.route(tagHosts, async (route) => {
+      tagRequests.push(route.request().url());
+      await route.fulfill({ status: 200, contentType: 'text/javascript', body: '' });
+    });
+    await page.route('https://griftai.org/**', async (route) => {
+      const local = route
+        .request()
+        .url()
+        .replace('https://griftai.org/', baseURL ?? '/');
+      await route.fulfill({ response: await route.fetch({ url: local }) });
+    });
+    return tagRequests;
+  }
 
   test('localhost loads neither GA4 nor Clarity', async ({ page }) => {
     // 手元の開発・CI の e2e・プレビューで開いたページを、本番のプロパティに送らない
@@ -572,25 +599,42 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     expect(await page.evaluate(() => Array.isArray(window.dataLayer))).toBe(true);
   });
 
-  test('the production host loads GA4 and Clarity', async ({ page, baseURL }) => {
-    // ホスト名が griftai.org のときだけタグを読み込むことを、手元のビルドを griftai.org として返して確かめる
-    const tagRequests: string[] = [];
-    await page.route(tagHosts, async (route) => {
-      tagRequests.push(route.request().url());
-      await route.fulfill({ status: 200, contentType: 'text/javascript', body: '' });
-    });
-    await page.route('https://griftai.org/**', async (route) => {
-      const local = route
-        .request()
-        .url()
-        .replace('https://griftai.org/', baseURL ?? '/');
-      await route.fulfill({ response: await route.fetch({ url: local }) });
-    });
+  test('IDs configured: the production host loads GA4 and Clarity with those IDs', async ({
+    page,
+    baseURL,
+  }) => {
+    if (process.env.REQUIRE_ANALYTICS_IDS === '1') {
+      // CI で ID を渡すはずの実行。渡っていないときに skip すると、検査が動かないまま緑になる
+      expect(
+        { ga4Id, clarityId },
+        'REQUIRE_ANALYTICS_IDS=1 なのに PUBLIC_GA4_ID / PUBLIC_CLARITY_ID がテストに渡っていない'
+      ).toEqual({ ga4Id: expect.stringMatching(/^G-/), clarityId: expect.stringMatching(/./) });
+    } else {
+      test.skip(!hasIds, 'PUBLIC_GA4_ID と PUBLIC_CLARITY_ID を付けてビルドしたときだけ動かす');
+    }
+    const tagRequests = await serveLocalBuildAsProductionHost(page, baseURL);
     await page.goto('https://griftai.org/');
     await expect
-      .poll(() => tagRequests.some((url) => url.includes('gtag/js?id=G-3E8328E5V6')))
+      .poll(() => tagRequests.some((url) => url.includes(`gtag/js?id=${ga4Id}`)))
       .toBe(true);
-    await expect.poll(() => tagRequests.some((url) => url.includes('clarity.ms/tag/'))).toBe(true);
+    await expect
+      .poll(() => tagRequests.some((url) => url.includes(`clarity.ms/tag/${clarityId}`)))
+      .toBe(true);
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+  });
+
+  test('IDs not configured: even the production host loads neither GA4 nor Clarity', async ({
+    page,
+    baseURL,
+  }) => {
+    test.skip(ga4Id !== '' || clarityId !== '', 'ID を付けずにビルドしたときだけ動かす');
+    const tagRequests = await serveLocalBuildAsProductionHost(page, baseURL);
+    await page.goto('https://griftai.org/');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(500);
+    expect(tagRequests).toEqual([]);
+    // 空の ID でタグを組み立てていない（gtag/js?id= や clarity.ms/tag/ の URL を作らない）
+    expect(await page.evaluate(() => Array.isArray(window.dataLayer))).toBe(true);
     await page.unrouteAll({ behavior: 'ignoreErrors' });
   });
 

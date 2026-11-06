@@ -2,7 +2,12 @@
 
 実行する人: 寺田康佑。対象は cor-jp.com と griftai.org の 2 サイトです。
 
-この手順書は、corsweb（Cor-Incorporated/corsweb2024）と griftai（Cor-Incorporated/griftai）の `docs/analytics/runbook.md` に同じ文面で置いてあります。コードの変更は 2 つの PR に入っています。この手順書の作業は、PR の merge とは別に、寺田さんの手で進めます。
+この手順書は、corsweb（Cor-Incorporated/corsweb2024）と griftai（Cor-Incorporated/griftai）の `docs/analytics/runbook.md` に同じ文面で置いてあります。コードの変更は 2 つの PR に入っています。corsweb は PR 497、griftai は PR 108 です。
+
+誰が手を動かすか:
+
+- ブラウザの作業（2・3・4 節と 5-2 節）は、寺田さんの手が要ります。GA4、Clarity、Cloudflare にサインインして行います。
+- `gh` と `curl` のコマンドは、寺田さんが打っても、寺田さんの Yes（PR ごと）のあとにエージェントが打っても、同じ文面で動きます。merge と本番への反映は、PR ごとの寺田さんの Yes が先です。
 
 ## 0. 何がどう変わるか（現在値 → 設定値）
 
@@ -31,15 +36,17 @@
 - 作成: https://support.google.com/analytics/answer/9304153
 - 測定 ID: https://support.google.com/analytics/answer/12270356
 
-1. https://analytics.google.com/ を開き、Cor. が管理する Google アカウントでサインインします。
+1. https://analytics.google.com/ を開き、Cor. が管理する Google アカウントでサインインします。サインインしたアカウントのメールアドレスを控えます（4 節で同じアカウントを使います）。
 2. Admin から Create、Property の順に進みます。プロパティ名は `cor-jp.com`。タイムゾーンは日本、通貨は日本円にします。
 3. Web のデータストリームを作ります。URL は `cor-jp.com`、ストリーム名は `cor-jp.com` です。
 4. 測定 ID を取ります。Admin の Data collection and modification から Data streams を開き、Web のタブで作ったストリームを開くと、`G-` で始まる値があります。
-5. 取った値が、サイトが受け付ける形かを確かめます。出力が 1 行返れば合っています。
+5. 取った値が、サイトが受け付ける形かを確かめます。出力が 1 行返れば合っています。5-1 節の登録コマンドも、同じ形の検査を通った値だけを登録します。
 
 ```bash
 echo '<この節の 4 で取った値>' | grep -E '^G-[A-Z0-9]+$'
 ```
+
+6. ページを移ったときの閲覧を数える設定を確かめます。サイトはページの移動をブラウザの履歴の操作で行います。2 ページ目以降の閲覧は、GA4 の拡張計測にある「ブラウザの履歴イベントに基づくページの変更」が有効なときだけ数えられます。既定で有効のはずですが、この設定の画面の文言は未確認です。
 
 サイトは、この形に合わない値を出しません。出さないときは何も表示せず、計測だけが止まります。
 
@@ -49,7 +56,7 @@ echo '<この節の 4 で取った値>' | grep -E '^G-[A-Z0-9]+$'
 
 - https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-setup
 
-1. https://clarity.microsoft.com/ を開きます。本日 `Cor.` を作ったのと同じアカウントでサインインします。
+1. https://clarity.microsoft.com/ を開きます。プロジェクト `Cor.`（Project ID `z97a0rwaoh`。cor-jp.com の本番が使っているもの）を開けるアカウントでサインインします。
 2. New project を選びます。Name は `griftai.org`、Website は `https://griftai.org` です。Add new project で作ります。
 3. Project ID を取ります。Settings の Overview を開くと Project ID があります。
 4. 取った値が、サイトが受け付ける形かを確かめます。出力が 1 行返れば合っています。
@@ -88,12 +95,18 @@ gh variable list -R Cor-Incorporated/corsweb2024
 
 今の出力は `CMS_DEPLOY_ENABLED	true	…` の 1 行だけです。`PUBLIC_GA4_ID` の行があれば、すでに設定済みなので、次の設定は上書きになります。
 
+次のコマンドは、測定 ID を聞き、サイトが受け付ける形のときだけ登録します（形が違えば何も登録しません）。聞かれたら、2 節で取った測定 ID を貼ります。
+
 ```bash
-gh variable set PUBLIC_GA4_ID -R Cor-Incorporated/corsweb2024 --body '<2 節で取った測定 ID>'
-gh variable list -R Cor-Incorporated/corsweb2024 | grep '^PUBLIC_GA4_ID'
+printf '測定 ID: '; read -r id
+if printf '%s' "$id" | grep -qE '^G-[A-Z0-9]+$'; then gh variable set PUBLIC_GA4_ID -R Cor-Incorporated/corsweb2024 --body "$id"; else echo "形式が違うので登録しません: $id"; fi
 ```
 
-2 行目の出力の値が、2 節で取った測定 ID と一致していれば登録できています。
+登録したら、読み戻します。出力の値が、2 節で取った測定 ID と一致していれば登録できています。
+
+```bash
+gh variable list -R Cor-Incorporated/corsweb2024 | grep '^PUBLIC_GA4_ID'
+```
 
 ### 5-2　griftai.org の GA4 と Clarity（6-2 節より先）
 
@@ -111,25 +124,56 @@ gh variable list -R Cor-Incorporated/corsweb2024 | grep '^PUBLIC_GA4_ID'
 
 ### 6-1　cor-jp.com
 
-1. GA4 を足す PR（corsweb2024 の `feat/ga4-analytics-20261106`）を develop に merge します。Yes のあとに、レビュー記録の `Reviewed-Head` で固定します。
+1. GA4 を足す PR 497（`feat/ga4-analytics-20261106`）を develop に merge します。merge は、寺田さんの Yes と、PR のコメントにあるレビュー記録の `Reviewed-Head` が先です。`--match-head-commit` に渡すのは、PR の今の head ではなく `Reviewed-Head` の sha です。
 
 ```bash
-gh pr view <PR 番号> -R Cor-Incorporated/corsweb2024 --json headRefOid -q .headRefOid
-gh pr merge <PR 番号> -R Cor-Incorporated/corsweb2024 --merge --match-head-commit <Reviewed-Head の sha>
-gh pr view <PR 番号> -R Cor-Incorporated/corsweb2024 --json state,mergeCommit
+gh pr view 497 -R Cor-Incorporated/corsweb2024 --json comments -q '[.comments[].body | capture("Reviewed-Head: (?<sha>[0-9a-f]{40})").sha] | last'
+gh pr view 497 -R Cor-Incorporated/corsweb2024 --json headRefOid -q .headRefOid
 ```
 
-2. develop から main へ release PR を作り、同じ要領で merge します。head は develop です。承認は寺田さん以外の 1 人が要ります。
-3. main への push で `deploy.yml` が走り、variable の値がビルドに渡ります。run を確かめます。`conclusion` が `success` なら終わっています。
+1 行目が `Reviewed-Head` の sha です（空行ならレビュー記録がないので merge しません）。2 行目が今の head です。2 つが同じなら、次で merge します。
 
 ```bash
-gh run list -R Cor-Incorporated/corsweb2024 --workflow deploy.yml --branch main --limit 1 --json databaseId,conclusion,headSha,createdAt
+gh pr merge 497 -R Cor-Incorporated/corsweb2024 --merge --match-head-commit <1 行目の sha>
+gh pr view 497 -R Cor-Incorporated/corsweb2024 --json state,mergeCommit
+```
+
+2. develop から main へ release PR を作ります。head は develop です（別の branch は `guard` で落ちます）。本文に、作った時点の develop の sha を書きます。
+
+```bash
+gh pr create -R Cor-Incorporated/corsweb2024 --base main --head develop --title "release: $(date +%F) develop → main" --body "head: $(gh api repos/Cor-Incorporated/corsweb2024/commits/develop -q .sha)"
+gh pr list -R Cor-Incorporated/corsweb2024 --base main --head develop --json number,headRefOid
+```
+
+3. main は承認 1 件が必須です。承認は寺田さん以外の人が行います。直近のリリース PR（483、489、491）は、いずれも `cloudia-Cor` が承認しました。必須の check（`build_and_deploy`、`Chromium visual text audit`、`guard`、`h5-admission`、`verify`）がすべて通ってから、2. の `headRefOid` を `--match-head-commit` に渡して merge します。
+
+```bash
+gh pr merge <release PR の番号> -R Cor-Incorporated/corsweb2024 --merge --match-head-commit <release PR の headRefOid>
+```
+
+4. main への push で `deploy.yml` が走り、variable の値がビルドに渡ります。merge commit の run を探し、終わるまで待ちます。`conclusion` が `success` なら終わっています。
+
+```bash
+sha=$(gh pr view <release PR の番号> -R Cor-Incorporated/corsweb2024 --json mergeCommit -q .mergeCommit.oid)
+gh run list -R Cor-Incorporated/corsweb2024 --workflow deploy.yml --commit "$sha" --event push --json databaseId,status,conclusion
+gh run watch <databaseId> -R Cor-Incorporated/corsweb2024 --exit-status
 ```
 
 ### 6-2　griftai.org（5-2 節のあと）
 
-1. 直書きを env に変える PR（griftai の `fix/analytics-ids-env-20261106`）を develop に merge します。
-2. develop から main へ release PR（題名は `release: YYYY-MM-DD develop → main`）を作り、merge します。main への merge で Cloudflare Pages が本番をビルドします。
+1. 直書きを env に変える PR 108（`fix/analytics-ids-env-20261106`）を develop に merge します。6-1 の 1. と同じく、`Reviewed-Head` を読み、今の head と同じことを確かめてから merge します。
+
+```bash
+gh pr view 108 -R Cor-Incorporated/griftai --json comments -q '[.comments[].body | capture("Reviewed-Head: (?<sha>[0-9a-f]{40})").sha] | last'
+gh pr view 108 -R Cor-Incorporated/griftai --json headRefOid -q .headRefOid
+gh pr merge 108 -R Cor-Incorporated/griftai --merge --match-head-commit <1 行目の sha>
+```
+
+2. develop から main へ release PR を作り、CI が通ってから merge します。main への merge で Cloudflare Pages が本番をビルドします。
+
+```bash
+gh pr create -R Cor-Incorporated/griftai --base main --head develop --title "release: $(date +%F) develop → main" --body "head: $(gh api repos/Cor-Incorporated/griftai/commits/develop -q .sha)"
+```
 3. 本番のビルドが成功したかは、main の最新コミットの check で見ます。名前が `Cloudflare Pages` の check が `success` になれば終わっています。同じコミットに `Deploy to Cloudflare Pages` という check もありますが、こちらは GitHub Actions の job で、今は `skipped` です（Cloudflare の secret が未設定のため）。見るのは前者だけです。
 
 ```bash
@@ -196,7 +240,7 @@ gh variable list -R Cor-Incorporated/corsweb2024 --json name,value -q '.[] | sel
 
 ## 9. 元に戻す
 
-- cor-jp.com の GA4 を止める: variable を消します。次の main への push から、タグが出なくなります。
+- cor-jp.com の GA4 を止める: variable を消します。タグが消えるのは、次の main への push でビルドし直したあとです。すぐには止まりません。
 
 ```bash
 gh variable delete PUBLIC_GA4_ID -R Cor-Incorporated/corsweb2024

@@ -62,7 +62,8 @@ const {
     </script>
     {
       /* Google Analytics（GA4）と Microsoft Clarity。イベントの列（dataLayer）はどのホストでも用意し、
-        タグを読み込んで送るのは本番のホストだけ（config/analytics.ts）。 */
+        タグを読み込んで送るのは本番のホストだけ（config/analytics.ts）。ID は環境変数から読み、
+        未設定ならその計測のタグは出さない。 */
     }
     <script
       is:inline
@@ -77,25 +78,30 @@ const {
         window.dataLayer.push(arguments);
       };
       if (productionHosts.includes(window.location.hostname)) {
-        const gtagScript = document.createElement('script');
-        gtagScript.async = true;
-        gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
-        document.head.appendChild(gtagScript);
-        window.gtag('js', new Date());
-        window.gtag('config', ga4Id);
+        if (ga4Id) {
+          const gtagScript = document.createElement('script');
+          gtagScript.async = true;
+          gtagScript.src =
+            'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
+          document.head.appendChild(gtagScript);
+          window.gtag('js', new Date());
+          window.gtag('config', ga4Id);
+        }
 
-        (function (c, l, a, r, i, t, y) {
-          c[a] =
-            c[a] ||
-            function () {
-              (c[a].q = c[a].q || []).push(arguments);
-            };
-          t = l.createElement(r);
-          t.async = 1;
-          t.src = 'https://www.clarity.ms/tag/' + i;
-          y = l.getElementsByTagName(r)[0];
-          y.parentNode.insertBefore(t, y);
-        })(window, document, 'clarity', 'script', clarityId);
+        if (clarityId) {
+          (function (c, l, a, r, i, t, y) {
+            c[a] =
+              c[a] ||
+              function () {
+                (c[a].q = c[a].q || []).push(arguments);
+              };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = 'https://www.clarity.ms/tag/' + encodeURIComponent(i);
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+          })(window, document, 'clarity', 'script', clarityId);
+        }
       }
     </script>
   </head>

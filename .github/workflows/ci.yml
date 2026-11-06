@@ -129,6 +129,23 @@ jobs:
       - name: Run smoke tests
         run: npm run test:e2e
 
+      # GA4 と Clarity の ID はビルドの環境変数から読むので、上の dist（ID なし）では「ID あり」の検査が動かない。
+      # ダミーの ID で作り直して、同じ検査の「ID あり」側を動かす。この dist は deploy に渡さない
+      # （deploy が使うのは quality ジョブの site-dist）。ダミーの値は本物のプロパティ / プロジェクトではない。
+      - name: Rebuild with dummy analytics IDs
+        env:
+          PUBLIC_GA4_ID: G-CITEST0001
+          PUBLIC_CLARITY_ID: citest0001
+        run: npm run build
+
+      # REQUIRE_ANALYTICS_IDS=1: ID がテストに渡っていないときは skip ではなく失敗にする（検査が動かないまま緑になるのを防ぐ）
+      - name: Run analytics smoke tests with the dummy IDs
+        env:
+          PUBLIC_GA4_ID: G-CITEST0001
+          PUBLIC_CLARITY_ID: citest0001
+          REQUIRE_ANALYTICS_IDS: '1'
+        run: npm run test:e2e -- --grep "Analytics"
+
       - name: Upload test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -221,6 +238,15 @@ jobs:
         with:
           name: site-dist
           path: dist
+
+      # GA4 と Clarity の ID はビルド時の環境変数から読む。quality ジョブは ID なしでビルドするので、
+      # この dist をそのまま出すと、本番から計測が黙って消える。ID が入っていなければここで止める
+      # （この経路を有効にするときは、quality のビルドに ID を渡す）。
+      - name: Require analytics IDs in the dist to deploy
+        run: |
+          grep -qE 'const ga4Id = "G-[A-Z0-9]+"' dist/index.html \
+            && grep -qE 'const clarityId = "[A-Za-z0-9]+"' dist/index.html \
+            || { echo "::error::dist/index.html has no GA4 / Clarity ID. Pass PUBLIC_GA4_ID and PUBLIC_CLARITY_ID to the quality build before deploying from GitHub Actions."; exit 1; }
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

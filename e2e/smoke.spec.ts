@@ -610,7 +610,10 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
         'REQUIRE_ANALYTICS_IDS=1 なのに PUBLIC_GA4_ID / PUBLIC_CLARITY_ID がテストに渡っていない'
       ).toEqual({ ga4Id: expect.stringMatching(/^G-/), clarityId: expect.stringMatching(/./) });
     } else {
-      test.skip(!hasIds, 'PUBLIC_GA4_ID と PUBLIC_CLARITY_ID を付けてビルドしたときだけ動かす');
+      test.skip(
+        !hasIds,
+        'PUBLIC_GA4_ID と PUBLIC_CLARITY_ID の両方を付けてビルドしたときだけ動かす（片方だけのときは「ID なし」も動かない）'
+      );
     }
     const tagRequests = await serveLocalBuildAsProductionHost(page, baseURL);
     await page.goto('https://griftai.org/');
@@ -620,6 +623,11 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     await expect
       .poll(() => tagRequests.some((url) => url.includes(`clarity.ms/tag/${clarityId}`)))
       .toBe(true);
+    // タグを読み込むだけでは page_view は送られない。gtag('config', ID) が呼ばれていること
+    const dataLayerEntries = await page.evaluate(() =>
+      (window.dataLayer as unknown[]).map((entry) => Array.from(entry as ArrayLike<unknown>))
+    );
+    expect(dataLayerEntries).toContainEqual(['config', ga4Id]);
     await page.unrouteAll({ behavior: 'ignoreErrors' });
   });
 
@@ -627,13 +635,17 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     page,
     baseURL,
   }) => {
-    test.skip(ga4Id !== '' || clarityId !== '', 'ID を付けずにビルドしたときだけ動かす');
+    test.skip(
+      ga4Id !== '' || clarityId !== '',
+      'ID を付けずにビルドしたときだけ動かす（片方だけのときは「ID あり」も動かない）'
+    );
     const tagRequests = await serveLocalBuildAsProductionHost(page, baseURL);
     await page.goto('https://griftai.org/');
     await page.waitForLoadState('load');
-    await page.waitForTimeout(500);
+    // 空の ID でタグを組み立てていない（gtag/js?id= や clarity.ms/tag/ の URL を作らない）。
+    // タグは head の inline script が同期に読み込むので、load の時点でリクエストは出ている
     expect(tagRequests).toEqual([]);
-    // 空の ID でタグを組み立てていない（gtag/js?id= や clarity.ms/tag/ の URL を作らない）
+    // ID が無くても、イベントの列（dataLayer）は用意する
     expect(await page.evaluate(() => Array.isArray(window.dataLayer))).toBe(true);
     await page.unrouteAll({ behavior: 'ignoreErrors' });
   });

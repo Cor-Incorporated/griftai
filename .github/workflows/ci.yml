@@ -239,6 +239,15 @@ jobs:
           name: site-dist
           path: dist
 
+      # GA4 と Clarity の ID はビルド時の環境変数から読む。quality ジョブは ID なしでビルドするので、
+      # この dist をそのまま出すと、本番から計測が黙って消える。ID が入っていなければここで止める
+      # （この経路を有効にするときは、quality のビルドに ID を渡す）。
+      - name: Require analytics IDs in the dist to deploy
+        run: |
+          grep -qE 'const ga4Id = "G-[A-Z0-9]+"' dist/index.html \
+            && grep -qE 'const clarityId = "[A-Za-z0-9]+"' dist/index.html \
+            || { echo "::error::dist/index.html has no GA4 / Clarity ID. Pass PUBLIC_GA4_ID and PUBLIC_CLARITY_ID to the quality build before deploying from GitHub Actions."; exit 1; }
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

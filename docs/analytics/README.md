@@ -13,7 +13,7 @@ ID はコードに書きません。ビルド時の環境変数から読みま�
 
 - 本番は Cloudflare Pages の Git 連携がビルドします（`CLAUDE.md` の「CI/CD」、2026-10-27 の確認）。環境変数は GitHub ではなく、Pages のプロジェクト `griftai` の **Production** に置きます。
 - この repo の GitHub には secret も variable もありません（2026-11-06 に `gh secret list` と `gh variable list` で確認、どちらも 0 件）。
-- `.github/workflows/ci.yml` の `deploy` job（GitHub Actions から Pages へ出す経路）は、Cloudflare の secret が未設定なので `skipped` です。その経路が将来有効になっても、使うのは `quality` ジョブの dist です。この dist は ID なしでビルドします。
+- `.github/workflows/ci.yml` の `deploy` job（GitHub Actions から Pages へ出す経路）は、Cloudflare の secret が未設定なので `skipped` です。その経路が将来有効になっても、使うのは `quality` ジョブの dist で、この dist は ID なしでビルドします。そのまま出すと、本番から計測が黙って消えます。そこで `deploy` job は、dist に GA4 と Clarity の ID が入っていなければ失敗させます（「Require analytics IDs in the dist to deploy」）。この経路を有効にするときは、`quality` のビルドに `PUBLIC_GA4_ID` と `PUBLIC_CLARITY_ID` を渡します。
 
 ## タグを出す条件
 

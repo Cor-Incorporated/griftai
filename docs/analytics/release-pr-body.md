@@ -28,7 +28,7 @@ develop を main（本番）に出す release PR です。この PR は自分で
 H5-guard: yes
 H5-NEGATIVE: この release の workflow の変更は、#107 と #108 の ci.yml。#108 は、修正前のコードに新しい e2e を当てると、ID なしでも旧 ID のタグを読み込み 2 件が FAILED、deploy の検査の式は ID あり = 終了コード 0、空 = 1、片方だけ = 1 を実測。#107 は、cor-voice の写しに 1 行足した commit 720f57f の CI が failure（run 41624719690）、戻した commit cd7282f が success（run 41624834281）。どちらも各 PR の本文に記録
 H5-LEDGER: #108 は経路なし。block 権限を持つ guard ではない（タグの ID を環境変数にする変更と、CI の e2e の段取り）。#107 は、検査が GitHub Actions の quality job で動き、発火の記録は GitHub の run と check に残る。runner に guard-ledger.jsonl はないので、この記録への配線はしない。数え方は #107 の本文の H5-LEDGER
-H5-RETIRE: #108 は、ci.yml のダミー ID で作り直す 2 ステップを、GA4 と Clarity の ID をビルド時の環境変数で読む作りをやめた時点で削除する（測定は grep -c "dummy analytics IDs" .github/workflows/ci.yml が 0）。#107 は、cor-voice の写しの一致を別の必須チェックが見るようになったとき、または corsweb2024 の develop を cor-voice の基準にしなくなったときに、その step を消す
+H5-RETIRE: #108 は、ci.yml のダミー ID で作り直す 2 ステップを、GA4 と Clarity の ID をビルド時の環境変数で読む作りをやめた時点で削除する（測定は grep -c "dummy analytics IDs" .github/workflows/ci.yml が 0）。#107 は、cor-voice の写しの一致を別の必須チェックが見るようになったとき、または corsweb2024 の develop を cor-voice の基準にしなくなったときに、その step を消す。90 日間、その step の failure が 0 件なら、検査の要否を見直す issue を立てる
 H5-SUBTRACTION: N/A
 H5-PAIR: #107 は griftai の .claude/skills/cor-voice/ ↔ corsweb2024 の develop の同じパス; mutation=1 行を足した commit 720f57f で failure、戻した commit cd7282f で success（#107 の本文に記録）。#108 は pair の変更なし
 H5-E2E: #108 は npm run build（ID なし）と npm run test:e2e、続けて PUBLIC_GA4_ID=G-CITEST0001 PUBLIC_CLARITY_ID=citest0001 REQUIRE_ANALYTICS_IDS=1 でビルドし直して npm run test:e2e -- --grep "Analytics"。#107 は npm run check、npm run test:unit、npm run build

@@ -1,7 +1,7 @@
 ---
-// 【ドラフト・要法務確認】2026-10 の方針転換（ADR-0005）に合わせた改訂案。
-// 顧問弁護士の確認が済むまで main へマージしない。確認してほしい点と、公開前に事実確認が
-// 必要な点は planning/blueprint-docs/08-legal-revision-2026-10-review.md にまとめている。
+// 2026-10 の方針転換（ADR-0005）に合わせた改訂案。顧問弁護士の確認（2026-11-06）を反映した。
+// 公開の前に残っている点（旧 Web アプリの情報の事実確認、再説明を依頼した点）と、公開日に合わせて
+// 直す箇所（siteConfig.legal.lastUpdated）は planning/blueprint-docs/08-legal-revision-2026-10-review.md にある。
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { griftCli, siteConfig } from '@/config';
@@ -41,7 +41,8 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
             }）
           </li>
           <li>
-            「テスト導入」: 人材紹介会社・SES 企業さま向けに当社が個別にご案内する Grift のテスト導入（PoC）
+            「テスト導入」: 人材紹介会社・SES 企業さま向けに当社が個別にご案内する Grift
+            のテスト導入（PoC）
           </li>
           <li>「個別契約」: テスト導入その他について、当社と相手方との間で個別に締結する契約</li>
         </ul>
@@ -57,8 +58,8 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
         <ul>
           <li>Grift CLI: オープンソースソフトウェアとして無償で公開しています（第 4 項）。</li>
           <li>
-            テスト導入: 紹介会社さま・SES 企業さまごとに個別にご案内し、個別契約に基づいて実施します（第 5
-            項）。
+            テスト導入: 紹介会社さま・SES
+            企業さまごとに個別にご案内し、個別契約に基づいて実施します（第 5 項）。
           </li>
         </ul>
         <p class="text-pretty">
@@ -108,7 +109,9 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
           <li>
             本サイトに掲載しているテスト導入や料金の説明はご案内であり、契約の申込みまたは承諾ではありません。
           </li>
-          <li>テスト導入に関して個別契約の定めが本規約と異なる場合は、個別契約の定めが優先します。</li>
+          <li>
+            テスト導入に関して個別契約の定めが本規約と異なる場合は、個別契約の定めが優先します。
+          </li>
         </ul>
 
         <h2>6. 本サイトの掲載情報</h2>
@@ -161,10 +164,7 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
 
         <h2>11. 免責</h2>
         <p class="text-pretty">
-          当社は、本サイトの利用に関して利用者に生じた損害について、当社の故意または重大な過失による場合を除き、責任を負いません。
-        </p>
-        <p class="text-pretty">
-          ただし、本サイトの利用に関する利用者と当社との間の契約が消費者契約法に定める消費者契約に当たる場合、前段は適用しません。この場合でも、当社の過失（重大な過失を除きます）による損害については、利用者に現実に生じた通常かつ直接の損害の範囲で賠償します。
+          当社は、本サイトの利用に関して利用者に生じた損害について、当社の故意または重大な過失による場合に限り、利用者に現実に生じた通常かつ直接の損害を賠償します。
         </p>
         <p class="text-pretty">
           Grift CLI の利用に関する責任は {griftCli.license}
@@ -205,10 +205,23 @@ const contactUrl = corCta.griftTrial('grift-legal-terms');
           </li>
         </ul>
 
+        <h2>附則</h2>
+        <ol>
+          <li>本規約は、{lastUpdated} から適用します。</li>
+          <li>
+            本規約の適用前に、改定前の利用規約（2026-03-12 制定）に基づいて当社が提供していた Grift
+            の Web
+            アプリケーション（ベータ版）の利用に関して生じた事項については、改定前の利用規約の定めによります。
+          </li>
+          <li>
+            本規約の適用前に当社と締結した個別契約がある場合、その個別契約の対象となる事項については、その個別契約の定めによります。
+          </li>
+        </ol>
+
         <p class="text-pretty">
           2026-03-12 制定
           <br />
-          2026-10-20 改定（Grift の提供形態の変更に伴う全面改定）
+          {lastUpdated} 改定（Grift の提供形態の変更に伴う全面改定）
         </p>
       </div>
     </div>

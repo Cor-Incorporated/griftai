@@ -1,7 +1,7 @@
 ---
-// 【ドラフト・要法務確認】2026-10 の方針転換（ADR-0005）に合わせた改訂案。
-// 顧問弁護士の確認が済むまで main へマージしない。確認してほしい点と、公開前に事実確認が
-// 必要な点は planning/blueprint-docs/08-legal-revision-2026-10-review.md にまとめている。
+// 2026-10 の方針転換（ADR-0005）に合わせた改訂案。顧問弁護士の確認（2026-11-06）を反映した。
+// 公開の前に残っている点（旧 Web アプリの情報の事実確認、再説明を依頼した点）と、公開日に合わせて
+// 直す箇所（siteConfig.legal.lastUpdated）は planning/blueprint-docs/08-legal-revision-2026-10-review.md にある。
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { griftCli, siteConfig } from '@/config';
@@ -10,6 +10,7 @@ import { corCta, getCorUrl } from '@/lib/cor-cta';
 const lastUpdated = siteConfig.legal.lastUpdated;
 const companyName = 'Cor.株式会社';
 const representative = '代表取締役 寺田 康佑';
+const privacyManager = 'ISMS管理責任者 寺田 凪沙';
 const address = '〒810-0001 福岡県福岡市中央区天神2丁目3-10 天神パインクレスト719号';
 const phone = siteConfig.contact.phone;
 const contactUrl = corCta.griftTrial('grift-legal-privacy');
@@ -61,13 +62,15 @@ const analyticsLinks = [
           {' '}
           <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
           {' '}
-          に定めています。本ポリシーは本サイトと Grift に固有の事項を定めるもので、本ポリシーに定めのない事項は同方針によります。
+          に定めています。本ポリシーは本サイトと Grift に固有の事項を定めるもので、本ポリシーに定めのない事項は同方針によります。本ポリシーと同方針の定めが異なる場合は、本サイトと
+          Grift に関する事項について、本ポリシーの定めが優先して適用されます。
         </p>
 
         <h2>1. 事業者情報</h2>
         <ul>
           <li>事業者名: {companyName}</li>
           <li>代表者: {representative}</li>
+          <li>個人情報保護管理者: {privacyManager}</li>
           <li>所在地: {address}</li>
           <li>
             電話番号:
@@ -140,6 +143,10 @@ const analyticsLinks = [
           <li>Grift に関する重要なお知らせ</li>
           <li>法令または契約に基づく対応</li>
         </ul>
+        <p class="text-pretty">
+          当社は、本ポリシーの対象となる情報を、AI
+          のモデルの学習に利用しません。テスト導入で取り扱う情報についても、個別契約で定めた場合を除き、学習に利用しません。
+        </p>
 
         <h2>5. Cookie 等とアクセス解析ツール</h2>
         <p class="text-pretty">
@@ -240,8 +247,10 @@ const analyticsLinks = [
 
         <h2>8. 紹介会社さま向けテスト導入（PoC）における情報の取扱い</h2>
         <p class="text-pretty">
-          テスト導入は、紹介会社さま・SES 企業さまごとに個別にご案内し、個別契約を結んだうえで実施します。
+          テスト導入は、紹介会社さま・SES
+          企業さまごとに個別にご案内し、個別契約を結んだうえで実施します。
           テスト導入の中で当社が候補者さま等の個人情報や計測結果を取り扱う場合は、取り扱う情報の範囲、利用目的、保管期間、返却・削除の方法、ご本人の同意の取り方などを個別契約で定めます。
+          その取扱いが委託に当たるか第三者提供に当たるかは、個別契約で定める当社の取扱いの範囲によって異なります。第三者提供に当たる場合は、当社がご本人の同意を取得します。
         </p>
         <p class="text-pretty">
           テスト導入は、候補者さまご本人が Grift CLI
@@ -287,8 +296,23 @@ const analyticsLinks = [
           本サイトのアクセス解析ツール、配信基盤、お問い合わせ対応の基盤には米国の事業者のサービスが含まれ、情報が米国を含む国外で取り扱われることがあります。
           当社は、個人情報保護法第 28 条その他の法令に従い、これらの情報を適切に取り扱います。
         </p>
+        <p>
+          当社が外国にある第三者に個人データを提供する場合の、法令に定める情報は次のとおりです。
+        </p>
+        <ul>
+          <li>移転先の国の名称: 米国</li>
+          <li>
+            米国の個人情報の保護に関する制度:
+            個人情報保護委員会が公表している、外国の個人情報の保護に関する制度の情報（米国）をご覧ください。
+          </li>
+          <li>
+            移転先が講じる個人情報の保護のための措置:
+            各事業者が公表しているプライバシーポリシーと、データの取扱いに関する条項に定める措置（第
+            5 項に掲げる各事業者のページを含みます）
+          </li>
+        </ul>
         <p class="text-pretty">
-          移転先の国の名称、その国の個人情報の保護に関する制度、移転先が講じる措置に関する情報は、ご本人の求めに応じて法令の定めるところにより提供します。
+          AI 受付で取り扱う情報の外国での取扱いは、当社の個人情報保護方針に定めています。
         </p>
 
         <h2>12. 安全管理措置</h2>
@@ -338,7 +362,7 @@ const analyticsLinks = [
         <p class="text-pretty">
           2026-03-12 制定
           <br />
-          2026-10-20 改定（Grift の提供形態の変更に伴う全面改定）
+          {lastUpdated} 改定（Grift の提供形態の変更に伴う全面改定）
         </p>
       </div>
     </div>

@@ -75,9 +75,14 @@ export const griftArticles = [
  */
 export const contentAsOf = '2026-10-28';
 
-/** Legal configuration for privacy policy and terms pages */
+/**
+ * Legal configuration for privacy policy and terms pages.
+ * lastUpdated は /privacy・/terms の「最終更新日」と、利用規約の附則 1 の適用日の出典。
+ * 2026-10 の改訂（顧問弁護士の確認を反映。planning/blueprint-docs/08-legal-revision-2026-10-review.md）の
+ * 公開予定日を入れている。公開がずれたら、本番に出す日に合わせて直す。
+ */
 export const legal: LegalConfig = {
   privacyEmail: corCta.griftTrial('grift-legal-privacy'),
   legalEmail: corCta.griftTrial('grift-legal-terms'),
-  lastUpdated: '2026-03-12',
+  lastUpdated: '2026-11-07',
 };

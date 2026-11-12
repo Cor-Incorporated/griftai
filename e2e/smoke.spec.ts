@@ -11,6 +11,27 @@ test.describe('Landing page smoke tests', () => {
     await expect(page).toHaveTitle(/Grift/);
   });
 
+  test('company ISMS certification includes its scope and registration details', async ({
+    page,
+  }) => {
+    const security = page.locator('li').filter({
+      has: page.getByText('情報セキュリティ', { exact: true }),
+    });
+    await security.scrollIntoViewIfNeeded();
+    await expect(security).toBeVisible();
+    await expect(security).toContainText('Cor.株式会社は2026年11月に');
+    await expect(security).toContainText('ISO/IEC 27001:2022（ISMS）認証を取得しました');
+    await expect(security).toContainText('対象範囲は「ソフトウエアの受託開発および運用」です');
+    await expect(security).toContainText('SGSジャパン（SGS）');
+    await expect(security).toContainText('JP26/00000364');
+    await expect(security).toContainText('2026年11月7日〜2029年11月7日');
+    await expect(security).not.toContainText(/Grift|スマートグラス|全社|万全|完全/);
+    await expect(security.locator('img, svg')).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText(
+      /見込ん|第2段階審査を終え|整備中|取得予定|取得に向けて|万全|完全/
+    );
+  });
+
   test('hero section is visible with content', async ({ page }) => {
     const hero = page.locator('#hero');
     await expect(hero).toBeVisible();

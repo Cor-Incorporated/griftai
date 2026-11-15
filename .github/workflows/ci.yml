@@ -100,7 +100,8 @@ jobs:
   e2e-smoke:
     name: E2E Smoke Tests
     needs: quality
-    runs-on: ubuntu-latest
+    # Playwright 1.58 は ubuntu 26.04 の Chromium を入れられない。ubuntu-latest が 26.04 になったので、24.04 に固定する
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
 
@@ -157,7 +158,8 @@ jobs:
   e2e-a11y:
     name: A11y Tests (non-blocking)
     needs: quality
-    runs-on: ubuntu-latest
+    # 同上（Playwright を入れる job は 24.04 に固定する）
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     continue-on-error: true

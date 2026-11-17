@@ -1,4 +1,7 @@
 ---
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
+
 /**
  * AgitationSection - PAS framework "Agitation" section
  *
@@ -41,13 +44,17 @@ const points: AgitationPoint[] = [
 
 <section class="grain-bg border-y border-border bg-text">
   <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="fade-in-section max-w-3xl space-y-4">
+    <div class="fade-in-section max-w-[40em] space-y-4">
       <p class="text-sm font-semibold text-secondary">背景</p>
-      <h2 class="text-3xl font-semibold leading-[1.18] text-background sm:text-4xl">
-        量は誰でも作れる。だから、残るものを測る。
-      </h2>
+      <LbHeading
+        as="h2"
+        class="text-3xl font-semibold leading-[1.18] text-background sm:text-4xl"
+        text="量は誰でも作れる。だから、残るものを測る。"
+      />
       <p class="text-lg leading-8 text-background/60 text-pretty">
-        活動量の指標は、AI時代に根拠としての力を失いつつあります。Griftは、誰の仕事かと、変更にテストが伴っているかを、git履歴だけから取り出します。
+        <LbText
+          >活動量の指標は、AI時代に根拠としての力を失いつつあります。Griftは、誰の仕事かと、変更にテストが伴っているかを、git履歴だけから取り出します。</LbText
+        >
       </p>
     </div>
 
@@ -58,7 +65,9 @@ const points: AgitationPoint[] = [
             <div class="mb-4 flex size-14 items-center justify-center rounded-full border border-secondary/40 bg-secondary/15 text-2xl font-bold tabular-nums text-secondary">
               {point.step}
             </div>
-            <p class="text-base leading-7 text-background/80 text-pretty">{point.text}</p>
+            <p class="text-base leading-7 text-background/80 text-pretty">
+              <LbText>{point.text}</LbText>
+            </p>
           </article>
         ))
       }

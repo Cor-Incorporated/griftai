@@ -902,6 +902,8 @@ const READING_ROUTES = [
   '/faq/',
   '/column/',
   '/column/story-ai-activity/',
+  '/column/story-java-5-years/',
+  '/column/story-recommendation-reason/',
   '/articles/',
   '/articles/git-history-facts/',
   '/news/',
@@ -1029,6 +1031,81 @@ test.describe('reading column rollout (terms, privacy, faq, column, articles, ne
       });
       expect(issues, `${route}: 幅 390`).toEqual([]);
     }
+  });
+
+  // 印の CSS が効いていることを、計算値で見る。.lb-sentence を display: inline にすると落ちる
+  test('reading routes keep the computed styles of line-break marks', async ({ page }) => {
+    const failures: string[] = [];
+    for (const route of [...READING_ROUTES, ...LP_ROUTES]) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const displayOf = (element: Element | null): string =>
+          element ? window.getComputedStyle(element).display : '(要素が無い)';
+
+        const sentence = document.querySelector('main .lb-sentence');
+        if (!sentence) failures.push('.lb-sentence が 1 つも無い');
+        else if (displayOf(sentence) !== 'block') {
+          failures.push(`.lb-sentence の display が ${displayOf(sentence)}（block のはず）`);
+        }
+
+        const clause = document.querySelector('main .lb-clause');
+        if (!clause) failures.push('.lb-clause が 1 つも無い');
+        else if (displayOf(clause) !== 'inline-block') {
+          failures.push(`.lb-clause の display が ${displayOf(clause)}（inline-block のはず）`);
+        }
+
+        const headings = Array.from(document.querySelectorAll('main .lb-heading'));
+        if (headings.length === 0) failures.push('.lb-heading が 1 つも無い');
+        for (const heading of headings) {
+          const style = window.getComputedStyle(heading);
+          const textWrap =
+            style.getPropertyValue('text-wrap') || style.getPropertyValue('text-wrap-mode');
+          if (textWrap.trim() === 'balance') {
+            failures.push(
+              `.lb-heading の text-wrap が balance: ${(heading.textContent ?? '').slice(0, 30)}`
+            );
+          }
+        }
+        return failures;
+      });
+      failures.push(...issues.map((issue) => `${route}: ${issue}`));
+    }
+    expect(failures, '印の CSS の計算値が決まりどおりでない').toEqual([]);
+  });
+
+  // 全部の .lb-sentence で、開きの括弧と閉じの括弧の数が同じ。揃わない文は page と文の頭 30 字を出す
+  test('reading routes keep bracket pairs balanced inside sentences', async ({ page }) => {
+    const pairs = [
+      ['（', '）'],
+      ['「', '」'],
+      ['『', '』'],
+      ['(', ')'],
+    ];
+    const failures: string[] = [];
+    for (const route of [...READING_ROUTES, ...LP_ROUTES]) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate((bracketPairs: string[][]) => {
+        const failures: string[] = [];
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          const text = sentence.textContent ?? '';
+          for (const [open, close] of bracketPairs) {
+            const opens = text.split(open).length - 1;
+            const closes = text.split(close).length - 1;
+            if (opens !== closes) {
+              failures.push(
+                `括弧 ${open}${close} が ${opens} 個 / ${closes} 個: ${text.slice(0, 30)}`
+              );
+            }
+          }
+        }
+        return failures;
+      }, pairs);
+      failures.push(...issues.map((issue) => `${route}: ${issue}`));
+    }
+    expect(failures, '括弧の対が揃わない文がある').toEqual([]);
   });
 });
 

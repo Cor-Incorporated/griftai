@@ -248,10 +248,19 @@ blockquote {
   text-wrap: pretty;
 }
 
-/* 塊を持つ題は、字数を等分する折り方（.type-heading・.text-balance の text-wrap: balance）を止める。
-   .type-heading・.text-balance より後に置いてあり、同じ字の重みで後勝ちする。 */
-.lb-heading {
+/* 塊を持つ題は、字数を等分する折り方（.type-heading・.type-action・.text-balance の text-wrap: balance）を止める。
+   要素の型と class を重ねて書き、出る順番に頼らず効かせる。 */
+h1.lb-heading,
+h2.lb-heading,
+h3.lb-heading,
+.type-heading.lb-heading {
   text-wrap: wrap;
+}
+
+/* 段落の中の <br> は残す。直前で文が終わっている時（.lb-sentence の直後）は、
+   <br> の改行と文の block の改行で行が 2 つ空かないよう、<br> を消す。 */
+.lb-sentence + br {
+  display: none;
 }
 
 .landing-container {

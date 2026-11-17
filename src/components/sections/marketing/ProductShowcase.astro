@@ -1,4 +1,7 @@
 ---
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
+
 /**
  * ProductShowcase - What Grift CLI observes
  *
@@ -17,16 +20,20 @@ import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups }
 ---
 
 <section class="landing-container landing-section">
-  <div class="fade-in-section max-w-3xl space-y-4">
+  <div class="fade-in-section max-w-[40em] space-y-4">
     <p class="section-kicker">観測すること</p>
-    <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-      誰の仕事か。テストと一緒に変えているか。どんなリポジトリか。
-    </h2>
+    <LbHeading
+      as="h2"
+      class="type-heading text-3xl font-semibold text-text sm:text-4xl"
+      text="誰の仕事か。テストと一緒に変えているか。どんなリポジトリか。"
+    />
     <p class="type-copy text-lg text-text-muted">
-      Grift
-      CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が{
-        tepFacts.minCount
-      }件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。
+      <LbText
+        >Grift
+        CLIが読むのは、git履歴（誰が・いつ・どのファイルを変えたかの記録）だけです。どの数値にも「何件のうち何件か」と、数え方の版、どの時点の記録を数えたかが付きます。数えた件数が{
+          tepFacts.minCount
+        }件に満たないときは、割合を出さずに件数だけを示します。案件で求めることは案件側が別に書き出し、記録と並べます。</LbText
+      >
     </p>
   </div>
 
@@ -35,7 +42,9 @@ import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups }
       {
         tepObservationGroups.map((group) => (
           <div class="card-lift rounded-2xl border border-border bg-background p-5">
-            <p class="text-lg font-semibold text-text">{group.question}</p>
+            <p class="text-lg font-semibold text-text">
+              <LbText>{group.question}</LbText>
+            </p>
             {group.note && <p class="mt-1 text-xs font-medium text-primary">{group.note}</p>}
             <dl class="mt-4 space-y-4">
               {group.observations.map((item) => (
@@ -52,7 +61,9 @@ import { griftCli, tepAlignmentTools, tepFacts, tepLabel, tepObservationGroups }
         ))
       }
       <div class="card-lift rounded-2xl border border-border bg-background p-5">
-        <p class="text-lg font-semibold text-text">案件が求めることと、どこで重なるか</p>
+        <p class="text-lg font-semibold text-text">
+          <LbText>案件が求めることと、どこで重なるか</LbText>
+        </p>
         <dl class="mt-4 space-y-4">
           {
             tepAlignmentTools.map((tool) => (

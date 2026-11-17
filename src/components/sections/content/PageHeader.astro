@@ -1,4 +1,6 @@
 ---
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 /**
  * PageHeader - Reusable page header section with title and subtitle
  *
@@ -38,6 +40,8 @@ interface Props {
   maxWidth?: 'sm' | 'md' | 'lg' | 'full';
   /** Section background style */
   background?: 'default' | 'muted' | 'accent';
+  /** Column width: 'reading' は読み物の列（48rem）に揃える。既定は今のまま */
+  width?: 'default' | 'reading';
 }
 
 const {
@@ -47,6 +51,7 @@ const {
   size = 'default',
   maxWidth = 'lg',
   background = 'default',
+  width = 'default',
 } = Astro.props;
 
 const bgClass = {
@@ -68,15 +73,31 @@ const maxWidthClass = {
 }[maxWidth];
 
 const containerClass = align === 'center' ? `${maxWidthClass} mx-auto` : maxWidthClass;
+
+const reading = width === 'reading';
 ---
 
 <section class:list={['py-section', bgClass]}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class:list={[containerClass, alignClass]}>
-      <h1 class:list={['font-bold text-balance text-text leading-[1.15]', titleSizeClass]}>
-        {title}
-      </h1>
-      {subtitle && <p class="mt-6 text-pretty text-lg leading-8 text-text-muted">{subtitle}</p>}
+  <div
+    class:list={[
+      reading
+        ? 'max-w-reading mx-auto px-4 sm:px-6 lg:px-8'
+        : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8',
+    ]}
+  >
+    <div class:list={[reading ? '' : containerClass, alignClass]}>
+      <LbHeading
+        as="h1"
+        class={`font-bold text-balance text-text leading-[1.15] ${titleSizeClass}`}
+        text={title}
+      />
+      {
+        subtitle && (
+          <p class="mt-6 max-w-[40em] text-pretty text-lg leading-8 text-text-muted">
+            <LbText>{subtitle}</LbText>
+          </p>
+        )
+      }
       <slot />
     </div>
   </div>

@@ -15,6 +15,8 @@ import NextStep from '@/components/common/NextStep.astro';
 import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import CliName from '@/components/common/CliName.astro';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 import {
   company,
   founder,
@@ -205,28 +207,34 @@ const nextReads = [
   publishedDate={new Date('2026-10-26T00:00:00+09:00')}
   tags={['Grift', 'TEP', 'git', '利用規範']}
 >
-  <BreadcrumbNav items={[{ label: 'TEPとは' }]} />
+  <BreadcrumbNav items={[{ label: 'TEPとは' }]} width="reading" />
 
   <header class="bg-background">
-    <div class="mx-auto max-w-4xl px-4 pb-10 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+    <div class="mx-auto max-w-reading px-4 pb-10 pt-10 sm:px-6 sm:pt-14 lg:px-8">
       <p class="section-kicker">TEP（Technical Evidence Pipeline）</p>
-      <h1 class="mt-3 text-3xl font-bold text-balance text-text sm:text-5xl">
-        git履歴から、確かめられる事実を取り出す方法
-      </h1>
-      <div class="mt-6 space-y-3 text-lg leading-8 text-text-muted text-pretty">
+      <LbHeading
+        as="h1"
+        class="mt-3 text-3xl font-bold text-balance text-text sm:text-5xl"
+        text="git履歴から、確かめられる事実を取り出す方法"
+      />
+      <div class="mt-6 space-y-3 text-base leading-8 text-text-muted text-pretty sm:text-lg">
         <p>
-          TEPは、Griftが使っている方法の名前です。エンジニアのgit履歴から、確かめられる事実を取り出します。誰が何度実行しても、同じ結果になります。
+          <LbText
+            >TEPは、Griftが使っている方法の名前です。エンジニアのgit履歴から、確かめられる事実を取り出します。誰が何度実行しても、同じ結果になります。</LbText
+          >
         </p>
         <p>
-          点数や順位はつけず、案件で求められることと項目ごとに並べて、面談で聞くことを具体的にします。
+          <LbText
+            >点数や順位はつけず、案件で求められることと項目ごとに並べて、面談で聞くことを具体的にします。</LbText
+          >
         </p>
       </div>
     </div>
   </header>
 
-  <PageToc items={tocItems} />
+  <PageToc items={tocItems} width="reading" />
 
-  <div class="mx-auto max-w-4xl space-y-16 px-4 py-14 sm:px-6 md:space-y-20 md:py-20 lg:px-8">
+  <div class="mx-auto max-w-reading space-y-16 px-4 py-14 sm:px-6 md:space-y-20 md:py-20 lg:px-8">
     <section id="why" class="scroll-mt-24" aria-labelledby="why-heading">
       <h2 id="why-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
         TEPを作った理由
@@ -248,25 +256,37 @@ const nextReads = [
             <span class="block text-sm text-text-muted">{company.name} {founder.jobTitle}</span>
           </span>
         </figcaption>
-        <div class="mt-6 space-y-4 leading-8 text-text-muted text-pretty">
+        <div class="mt-6 space-y-4 text-base leading-8 text-text-muted text-pretty sm:text-lg">
           <p>
-            2026年8月12日、僕のGitHubの草（contribution）は、1日で280件になりました。8月1日から23日までで2,907件です。GitHubの数え方ではコミットのほかに、Issueやプルリクエスト、レビューも含みます。
+            <LbText
+              >2026年8月12日、僕のGitHubの草（contribution）は、1日で280件になりました。8月1日から23日までで2,907件です。GitHubの数え方ではコミットのほかに、Issueやプルリクエスト、レビューも含みます。</LbText
+            >
           </p>
           <p>
-            AIで量を増やせることは、もう十分に分かりました。でも、この280件で、僕の何が分かるのか。
+            <LbText
+              >AIで量を増やせることは、もう十分に分かりました。でも、この280件で、僕の何が分かるのか。</LbText
+            >
           </p>
           <p>
-            何を作ったのか。本番のコードを変えたとき、テストも触ったのか。新しく立ち上げたのか、誰かが作ったものを保守したのか。一人で作ったのか、チームで触ったのか。そこまでは、草の濃さだけでは分かりません。
+            <LbText
+              >何を作ったのか。本番のコードを変えたとき、テストも触ったのか。新しく立ち上げたのか、誰かが作ったものを保守したのか。一人で作ったのか、チームで触ったのか。そこまでは、草の濃さだけでは分かりません。</LbText
+            >
           </p>
           <p>
-            スキルシートの「Java
-            5年」も同じです。Javaに関わった期間は分かります。でも、その5年で何をしてきたのかは、数字だけでは分かりません。経歴書に書いてあることも、本人の申告のままでは確かめにくい。
+            <LbText
+              >スキルシートの「Java
+              5年」も同じです。Javaに関わった期間は分かります。でも、その5年で何をしてきたのかは、数字だけでは分かりません。経歴書に書いてあることも、本人の申告のままでは確かめにくい。</LbText
+            >
           </p>
           <p>
-            期間も量も必要な事実です。ただ、それをそのまま技量に読み替えるのは違う。だから、git履歴から確かめられる事実だけを取り出す方法を作りました。それがTEPです。
+            <LbText
+              >期間も量も必要な事実です。ただ、それをそのまま技量に読み替えるのは違う。だから、git履歴から確かめられる事実だけを取り出す方法を作りました。それがTEPです。</LbText
+            >
           </p>
           <p>
-            健康診断の血圧に、高い・低いの優劣はありません。人によって、状況によって、求められる値が違うだけです。エンジニアの仕事の仕方も、案件によって求められるものが違います。点数で並べるのではなく、案件が求めることと、その人の記録を並べて見られるようにしたい。TEPはそのための方法です。
+            <LbText
+              >健康診断の血圧に、高い・低いの優劣はありません。人によって、状況によって、求められる値が違うだけです。エンジニアの仕事の仕方も、案件によって求められるものが違います。点数で並べるのではなく、案件が求めることと、その人の記録を並べて見られるようにしたい。TEPはそのための方法です。</LbText
+            >
           </p>
         </div>
         {
@@ -288,14 +308,21 @@ const nextReads = [
     </section>
 
     <section id="what" class="scroll-mt-24" aria-labelledby="what-heading">
-      <h2 id="what-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        TEPが見るもの
-      </h2>
-      <div class="mt-4 space-y-3 leading-8 text-text-muted text-pretty">
+      <LbHeading
+        as="h2"
+        id="what-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="TEPが見るもの"
+      />
+      <div class="mt-4 space-y-3 text-base leading-8 text-text-muted text-pretty sm:text-lg">
         <p>
-          TEPが読むのは、git履歴だけです。gitは、エンジニアがコードの変更を記録していく道具です。誰が・いつ・どのファイルを変えたかが変更1件ずつ残り、この1件をコミット、記録をまとめた置き場をリポジトリと呼びます。
+          <LbText
+            >TEPが読むのは、git履歴だけです。gitは、エンジニアがコードの変更を記録していく道具です。誰が・いつ・どのファイルを変えたかが変更1件ずつ残り、この1件をコミット、記録をまとめた置き場をリポジトリと呼びます。</LbText
+          >
         </p>
-        <p>TEPはこの記録から、次のことを数えます。</p>
+        <p>
+          <LbText>TEPはこの記録から、次のことを数えます。</LbText>
+        </p>
       </div>
       <div class="mt-8 grid gap-4 md:grid-cols-2">
         {
@@ -304,19 +331,27 @@ const nextReads = [
               id={`what-${group.id}`}
               class="scroll-mt-24 rounded-2xl border border-border bg-surface p-5 sm:p-6"
             >
-              <h3 class="text-lg font-semibold text-text">{group.question}</h3>
+              <LbHeading as="h3" class="text-lg font-semibold text-text" text={group.question} />
               {group.note && <p class="mt-1 text-sm font-medium text-primary">{group.note}</p>}
               <div class="mt-4 space-y-5">
                 {group.observations.map((item) => (
                   <div>
-                    <p class="font-semibold text-text">{tepLabel(item)}</p>
-                    <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">{item.counts}</p>
-                    <p class="mt-2 text-xs font-semibold text-text">分からないこと</p>
+                    <p class="font-semibold text-text">
+                      <LbText>{tepLabel(item)}</LbText>
+                    </p>
                     <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
-                      {item.cannotTell}
+                      <LbText>{item.counts}</LbText>
+                    </p>
+                    <p class="mt-2 text-xs font-semibold text-text">
+                      <LbText>分からないこと</LbText>
+                    </p>
+                    <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">
+                      <LbText>{item.cannotTell}</LbText>
                     </p>
                     <p class="mt-2 text-xs text-text-muted">
-                      CLIの出力では <CliName cli={item.cli} note={item.cliNote} />
+                      <LbText>
+                        CLIの出力では <CliName cli={item.cli} note={item.cliNote} />
+                      </LbText>
                     </p>
                   </div>
                 ))}
@@ -395,15 +430,20 @@ const nextReads = [
     </section>
 
     <section id="how" class="scroll-mt-24" aria-labelledby="how-heading">
-      <h2 id="how-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        数え方の決まり
-      </h2>
+      <LbHeading
+        as="h2"
+        id="how-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="数え方の決まり"
+      />
       <div class="mt-8 grid gap-4 md:grid-cols-2">
         {
           rules.map((rule) => (
             <article class="rounded-2xl border border-border bg-surface p-5 sm:p-6">
-              <h3 class="text-lg font-semibold text-text">{rule.title}</h3>
-              <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">{rule.body}</p>
+              <LbHeading as="h3" class="text-lg font-semibold text-text" text={rule.title} />
+              <p class="mt-3 text-sm leading-7 text-text-muted text-pretty">
+                <LbText>{rule.body}</LbText>
+              </p>
             </article>
           ))
         }
@@ -411,15 +451,22 @@ const nextReads = [
     </section>
 
     <section id="not" class="scroll-mt-24" aria-labelledby="not-heading">
-      <h2 id="not-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        TEPがしないこと
-      </h2>
-      <div class="mt-4 space-y-4 leading-8 text-text-muted text-pretty">
+      <LbHeading
+        as="h2"
+        id="not-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="TEPがしないこと"
+      />
+      <div class="mt-4 space-y-4 text-base leading-8 text-text-muted text-pretty sm:text-lg">
         <p>
-          TEPは、1つにまとめた点数（合成スコア）、人を並べた順位、合否、「この人を薦める」という推薦を出しません。違う観測を1つの数に丸めると、何をどの件数で数えたかが消えてしまうからです。案件の要求と並べるときも、総合点や推薦にはまとめません。判断するのは人です。
+          <LbText
+            >TEPは、1つにまとめた点数（合成スコア）、人を並べた順位、合否、「この人を薦める」という推薦を出しません。違う観測を1つの数に丸めると、何をどの件数で数えたかが消えてしまうからです。案件の要求と並べるときも、総合点や推薦にはまとめません。判断するのは人です。</LbText
+          >
         </p>
         <p>
-          使い方の決まりもあります。数値だけで足切りする、記録がないことを実績がないと読む、本人の同意なく他人を測る、組織の人を常に比べる評価表に使う、といった使い方は、利用規範（norms・7条）でTEPと呼ばないことにしています。
+          <LbText
+            >使い方の決まりもあります。数値だけで足切りする、記録がないことを実績がないと読む、本人の同意なく他人を測る、組織の人を常に比べる評価表に使う、といった使い方は、利用規範（norms・7条）でTEPと呼ばないことにしています。</LbText
+          >
         </p>
       </div>
       <p class="mt-4 text-sm">
@@ -434,11 +481,16 @@ const nextReads = [
     </section>
 
     <section id="compare" class="scroll-mt-24" aria-labelledby="compare-heading">
-      <h2 id="compare-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        自己申告の診断との違い
-      </h2>
-      <p class="mt-4 leading-8 text-text-muted text-pretty">
-        人に順位をつけない点は、MBTIのような自己申告の性格診断と同じです。違うのは、何を元にして、何を出すかです。
+      <LbHeading
+        as="h2"
+        id="compare-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="自己申告の診断との違い"
+      />
+      <p class="mt-4 text-base leading-8 text-text-muted text-pretty sm:text-lg">
+        <LbText
+          >人に順位をつけない点は、MBTIのような自己申告の性格診断と同じです。違うのは、何を元にして、何を出すかです。</LbText
+        >
       </p>
       <div
         class="mt-6 hidden overflow-x-auto md:block"
@@ -490,29 +542,40 @@ const nextReads = [
           ))
         }
       </ul>
-      <p class="mt-6 leading-8 text-text-muted text-pretty">
-        どちらが優れているという話ではありません。自己申告の診断は、本人が自分をどう捉えているかを知る手がかりになります。TEPは、受け取った側がgitに残った仕事の仕方を確かめるための方法です。目的が違う道具です。
+      <p class="mt-6 text-base leading-8 text-text-muted text-pretty sm:text-lg">
+        <LbText
+          >どちらが優れているという話ではありません。自己申告の診断は、本人が自分をどう捉えているかを知る手がかりになります。TEPは、受け取った側がgitに残った仕事の仕方を確かめるための方法です。目的が違う道具です。</LbText
+        >
       </p>
     </section>
 
     <section id="use" class="scroll-mt-24" aria-labelledby="use-heading">
-      <h2 id="use-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        使い方
-      </h2>
+      <LbHeading
+        as="h2"
+        id="use-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="使い方"
+      />
 
       <div
         id="use-sales"
         class="mt-8 scroll-mt-24 rounded-3xl border border-border bg-surface p-6 sm:p-8"
       >
-        <h3 class="text-xl font-semibold text-balance text-text">
-          紹介会社・SESの営業の方、案件の担当の方へ
-        </h3>
+        <LbHeading
+          as="h3"
+          class="text-xl font-semibold text-balance text-text"
+          text="紹介会社・SESの営業の方、案件の担当の方へ"
+        />
         <ol class="mt-5 list-decimal space-y-4 pl-5 marker:font-semibold marker:text-primary">
           {
             salesSteps.map((step) => (
               <li class="pl-1">
-                <p class="font-semibold text-text">{step.title}</p>
-                <p class="mt-1 text-sm leading-7 text-text-muted text-pretty">{step.body}</p>
+                <p class="font-semibold text-text">
+                  <LbText>{step.title}</LbText>
+                </p>
+                <p class="mt-1 text-base leading-7 text-text-muted text-pretty sm:text-lg">
+                  <LbText>{step.body}</LbText>
+                </p>
               </li>
             ))
           }
@@ -591,8 +654,10 @@ const nextReads = [
           </p>
         </figure>
 
-        <p class="mt-6 text-sm leading-7 text-text-muted text-pretty">
-          いまはCLIでの操作です。営業向けの画面はテスト導入（PoC）に向けて準備を進めています。
+        <p class="mt-6 text-base leading-7 text-text-muted text-pretty sm:text-lg">
+          <LbText
+            >いまはCLIでの操作です。営業向けの画面はテスト導入（PoC）に向けて準備を進めています。</LbText
+          >
         </p>
         <div class="mt-5">
           <a
@@ -610,11 +675,21 @@ const nextReads = [
         id="use-engineers"
         class="mt-6 scroll-mt-24 rounded-3xl border border-border bg-surface p-6 sm:p-8"
       >
-        <h3 class="text-xl font-semibold text-balance text-text">エンジニアの方へ</h3>
+        <LbHeading
+          as="h3"
+          class="text-xl font-semibold text-balance text-text"
+          text="エンジニアの方へ"
+        />
         <ol
-          class="mt-5 list-decimal space-y-3 pl-5 text-sm leading-7 text-text-muted marker:font-semibold marker:text-primary"
+          class="mt-5 list-decimal space-y-3 pl-5 text-base leading-7 text-text-muted marker:font-semibold marker:text-primary sm:text-lg"
         >
-          {engineerSteps.map((step) => <li class="pl-1 text-pretty">{step}</li>)}
+          {
+            engineerSteps.map((step) => (
+              <li class="pl-1 text-pretty">
+                <LbText>{step}</LbText>
+              </li>
+            ))
+          }
         </ol>
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
           <a
@@ -638,9 +713,12 @@ const nextReads = [
     </section>
 
     <section id="next" class="scroll-mt-24" aria-labelledby="next-heading">
-      <h2 id="next-heading" class="text-2xl font-semibold text-balance text-text sm:text-3xl">
-        次に読むもの
-      </h2>
+      <LbHeading
+        as="h2"
+        id="next-heading"
+        class="text-2xl font-semibold text-balance text-text sm:text-3xl"
+        text="次に読むもの"
+      />
       <ul class="mt-6 grid gap-3 sm:grid-cols-2">
         {
           nextReads.map((read) => (
@@ -676,6 +754,8 @@ const nextReads = [
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
       { label: 'よくある質問を見る', href: '/faq/' },
     ]}
+    width="reading"
+    align="left"
   />
 </MarketingLayout>
 

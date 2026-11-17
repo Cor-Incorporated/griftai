@@ -1,4 +1,7 @@
 ---
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
+
 /**
  * SocialProofSection - Trust building section
  *
@@ -34,18 +37,26 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
       {/* Founder story */}
       <article class="card-lift rounded-2xl border border-border bg-background p-6">
         <p class="text-sm font-semibold text-primary">開発の背景</p>
-        <h3 class="mt-3 text-xl font-semibold text-balance text-text">
-          見積の根拠から、仕事の証拠へ。
-        </h3>
+        <LbHeading
+          as="h3"
+          class="mt-3 text-xl font-semibold text-balance text-text"
+          text="見積の根拠から、仕事の証拠へ。"
+        />
         <div class="mt-4 space-y-3">
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            Griftは2026年2月、受託開発の見積を支えるWebアプリとして始まりました。見積の根拠を探るうちに、いちばん確かな材料は、エンジニアが積み上げてきたgit履歴そのものだと気づきました。
+            <LbText
+              >Griftは2026年2月、受託開発の見積を支えるWebアプリとして始まりました。見積の根拠を探るうちに、いちばん確かな材料は、エンジニアが積み上げてきたgit履歴そのものだと気づきました。</LbText
+            >
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            8月にその計測の部分をコマンドラインツールとして切り出し、9月に旧Webアプリを止めて、人材紹介会社・SESの営業を支える方向へ舵を切りました。
+            <LbText
+              >8月にその計測の部分をコマンドラインツールとして切り出し、9月に旧Webアプリを止めて、人材紹介会社・SESの営業を支える方向へ舵を切りました。</LbText
+            >
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
-            生成AIで、経歴書も活動量もいくらでも整えられる時代です。それでも、確かめられる事実は盛れません。「経歴は盛れる。証拠は盛れない。」が、いまのGriftの起点です。
+            <LbText
+              >生成AIで、経歴書も活動量もいくらでも整えられる時代です。それでも、確かめられる事実は盛れません。「経歴は盛れる。証拠は盛れない。」が、いまのGriftの起点です。</LbText
+            >
           </p>
         </div>
         <div class="mt-6 flex items-center gap-4 rounded-xl border border-border bg-surface p-4">

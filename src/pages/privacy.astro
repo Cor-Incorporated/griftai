@@ -6,6 +6,8 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import { griftCli, siteConfig } from '@/config';
 import { corCta, getCorUrl } from '@/lib/cor-cta';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 
 const lastUpdated = siteConfig.legal.lastUpdated;
 const companyName = 'Cor.株式会社';
@@ -41,344 +43,458 @@ const analyticsLinks = [
   title={`プライバシーポリシー - ${siteConfig.name}`}
   description={`${siteConfig.name} の LP（griftai.org）における情報の取扱い方針。アクセス解析ツール、AI受付でのお問い合わせ、Grift CLI（OSS）と紹介会社さま向けテスト導入での情報の扱いを掲載しています。`}
 >
-  <BreadcrumbNav items={[{ label: 'プライバシーポリシー' }]} />
+  <BreadcrumbNav items={[{ label: 'プライバシーポリシー' }]} width="reading" />
   <section class="py-section">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-reading mx-auto px-4 sm:px-6 lg:px-8">
       <header class="mb-12">
-        <h1 class="text-4xl font-bold text-text text-balance">プライバシーポリシー</h1>
+        <LbHeading
+          as="h1"
+          class="text-4xl font-bold text-text text-balance"
+          text="プライバシーポリシー"
+        />
         <p class="mt-4 text-text-muted text-pretty">最終更新日: {lastUpdated}</p>
       </header>
 
       <div class="prose prose-lg max-w-none dark:prose-invert">
         <p class="text-pretty">
-          本プライバシーポリシー（以下「本ポリシー」）は、{
-            companyName
-          }（以下「当社」）が運営するウェブサイト griftai.org（以下「本サイト」）と、当社が提供する
-          Grift（オープンソースのコマンドラインツール「Grift CLI」と、人材紹介会社・SES
-          企業さま向けのテスト導入（PoC）をいいます。以下あわせて「Grift」）に関する情報の取扱いを定めるものです。
+          <LbText>
+            本プライバシーポリシー（以下「本ポリシー」）は、{
+              companyName
+            }（以下「当社」）が運営するウェブサイト
+            griftai.org（以下「本サイト」）と、当社が提供する
+            Grift（オープンソースのコマンドラインツール「Grift CLI」と、人材紹介会社・SES
+            企業さま向けのテスト導入（PoC）をいいます。以下あわせて「Grift」）に関する情報の取扱いを定めるものです。
+          </LbText>
         </p>
         <p class="text-pretty">
-          当社における個人情報の取扱いの全般は、当社の
-          {' '}
-          <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
-          {' '}
-          に定めています。本ポリシーは本サイトと Grift に固有の事項を定めるもので、本ポリシーに定めのない事項は同方針によります。本ポリシーと同方針の定めが異なる場合は、本サイトと
-          Grift に関する事項について、本ポリシーの定めが優先して適用されます。
+          <LbText>
+            当社における個人情報の取扱いの全般は、当社の
+            {' '}
+            <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
+            {' '}
+            に定めています。本ポリシーは本サイトと Grift に固有の事項を定めるもので、本ポリシーに定めのない事項は同方針によります。本ポリシーと同方針の定めが異なる場合は、本サイトと
+            Grift に関する事項について、本ポリシーの定めが優先して適用されます。
+          </LbText>
         </p>
 
-        <h2>1. 事業者情報</h2>
+        <LbHeading as="h2" text="1. 事業者情報" />
         <ul>
-          <li>事業者名: {companyName}</li>
-          <li>代表者: {representative}</li>
-          <li>個人情報保護管理者: {privacyManager}</li>
-          <li>所在地: {address}</li>
+          <li><LbText>事業者名: {companyName}</LbText></li>
+          <li><LbText>代表者: {representative}</LbText></li>
+          <li><LbText>個人情報保護管理者: {privacyManager}</LbText></li>
+          <li><LbText>所在地: {address}</LbText></li>
           <li>
-            電話番号:
-            {' '}
-            <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+            <LbText>
+              電話番号:
+              {' '}
+              <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+            </LbText>
           </li>
           <li>
-            お問い合わせ先:
+            <LbText>
+              お問い合わせ先:
+              {' '}
+              <a href={contactUrl} target="_blank" rel="noopener noreferrer">
+                {contactUrl}
+              </a>
+            </LbText>
+          </li>
+        </ul>
+        <p class="text-pretty">
+          <LbText>
+            上記情報は、当社のコーポレートサイトおよび特定商取引法に基づく表記を基に記載しています。
             {' '}
-            <a href={contactUrl} target="_blank" rel="noopener noreferrer">
-              {contactUrl}
+            <a href={legalNoticeUrl} target="_blank" rel="noopener noreferrer">
+              特定商取引法に基づく表記
             </a>
+            {' '}
+            も併せてご確認ください。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="2. 本ポリシーの適用範囲" />
+        <p><LbText>本ポリシーは、次の場面に適用されます。</LbText></p>
+        <ul>
+          <li><LbText>本サイトの閲覧</LbText></li>
+          <li>
+            <LbText>
+              本サイトから移動した先の、当社 AI 受付（チャット・電話）での Grift
+              に関するお問い合わせ
+            </LbText>
+          </li>
+          <li><LbText>紹介会社さま・SES 企業さまとのテスト導入（PoC）のご相談と実施</LbText></li>
+        </ul>
+        <p class="text-pretty">
+          <LbText>
+            Grift CLI は利用者の端末上で動作し、当社は Grift CLI
+            の利用を通じて情報を取得しません（第 7 項）。
+          </LbText>
+        </p>
+        <p class="text-pretty">
+          <LbText>
+            2026 年 2 月から 9 月まで提供していた Grift の Web
+            アプリケーション（ベータ版）で取得した情報は、法令により保存が必要なものを除き、提供の終了に伴い削除しました。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="3. 取得する情報" />
+        <p class="text-pretty">
+          <LbText>
+            本サイトには入力フォームがなく、本サイト上で氏名やメールアドレスなどを入力いただくことはありません。
+            当社は、本サイトと Grift に関して、次の情報を取得することがあります。
+          </LbText>
+        </p>
+        <ul>
+          <li>
+            <LbText>
+              本サイトの閲覧に伴う情報: IP
+              アドレス、ブラウザの種類、端末の情報、閲覧したページ、参照元、閲覧日時
+            </LbText>
+          </li>
+          <li>
+            <LbText>
+              Cookie
+              等の識別子と、ページ上の操作（クリック、スクロール、マウスの動きなど）に関する情報（第
+              5 項）
+            </LbText>
+          </li>
+          <li>
+            <LbText>
+              お問い合わせの際にご提供いただく情報:
+              会社名、氏名、部署・役職、連絡先、ご相談の内容（第 6 項）
+            </LbText>
+          </li>
+          <li>
+            <LbText
+              >テスト導入の検討・実施にあたり、個別契約に基づいてご提供いただく情報（第 8 項）</LbText
+            >
+          </li>
+          <li>
+            <LbText
+              >GitHub の Issue・Pull Request などで、利用者が自ら当社に提供した情報（第 7 項）</LbText
+            >
+          </li>
+        </ul>
+
+        <LbHeading as="h2" text="4. 利用目的" />
+        <p><LbText>当社は、取得した情報を次の目的で利用します。</LbText></p>
+        <ul>
+          <li><LbText>本サイトの運営、表示内容や導線の改善、利用状況の統計的な把握</LbText></li>
+          <li><LbText>障害の調査、不正アクセスの防止、セキュリティの確保</LbText></li>
+          <li><LbText>お問い合わせへの回答と、テスト導入（PoC）に関するご案内・ご提案</LbText></li>
+          <li><LbText>テスト導入に関する契約の締結と履行</LbText></li>
+          <li><LbText>Grift CLI の不具合の調査と改善の検討</LbText></li>
+          <li><LbText>Grift に関する重要なお知らせ</LbText></li>
+          <li><LbText>法令または契約に基づく対応</LbText></li>
+        </ul>
+        <p class="text-pretty">
+          <LbText>
+            当社は、本ポリシーの対象となる情報を、AI
+            のモデルの学習に利用しません。テスト導入で取り扱う情報についても、個別契約で定め、かつご本人の同意を得た場合を除き、学習に利用しません。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="5. Cookie 等とアクセス解析ツール" />
+        <p class="text-pretty">
+          <LbText>
+            本サイトでは、利用状況を把握して表示や導線を改善するため、次のアクセス解析ツールを利用しています。
+            これらのツールは、Cookie 等を使い、閲覧者の端末から各提供事業者へ情報を送信します。
+          </LbText>
+        </p>
+        <ul>
+          <li>
+            <LbText>
+              Google アナリティクス（提供: Google LLC／米国）:
+              閲覧したページ、参照元、滞在時間、ブラウザ・端末の情報、IP アドレス、Cookie
+              の識別子などが送信され、利用状況の統計的な把握に使います。
+            </LbText>
+          </li>
+          <li>
+            <LbText>
+              Microsoft Clarity（提供: Microsoft Corporation／米国）:
+              ページ上のクリック、スクロール、マウスの動きなどが記録され、ヒートマップとセッション再生による表示・導線の改善に使います。
+            </LbText>
           </li>
         </ul>
         <p class="text-pretty">
-          上記情報は、当社のコーポレートサイトおよび特定商取引法に基づく表記を基に記載しています。
-          {' '}
-          <a href={legalNoticeUrl} target="_blank" rel="noopener noreferrer">
-            特定商取引法に基づく表記
-          </a>
-          {' '}
-          も併せてご確認ください。
-        </p>
-
-        <h2>2. 本ポリシーの適用範囲</h2>
-        <p>本ポリシーは、次の場面に適用されます。</p>
-        <ul>
-          <li>本サイトの閲覧</li>
-          <li>
-            本サイトから移動した先の、当社 AI 受付（チャット・電話）での Grift に関するお問い合わせ
-          </li>
-          <li>紹介会社さま・SES 企業さまとのテスト導入（PoC）のご相談と実施</li>
-        </ul>
-        <p class="text-pretty">
-          Grift CLI は利用者の端末上で動作し、当社は Grift CLI の利用を通じて情報を取得しません（第
-          7 項）。
+          <LbText>
+            当社は、これらのツールで得た情報を、個人を特定する目的で使ったり、当社が保有する他の情報と照合したりしません。
+            送信された情報は各提供事業者のポリシーに従って取り扱われ、米国を含む国外で取り扱われることがあります（第
+            11 項）。
+          </LbText>
         </p>
         <p class="text-pretty">
-          2026 年 2 月から 9 月まで提供していた Grift の Web
-          アプリケーション（ベータ版）で取得した情報は、法令により保存が必要なものを除き、提供の終了に伴い削除しました。
-        </p>
-
-        <h2>3. 取得する情報</h2>
-        <p class="text-pretty">
-          本サイトには入力フォームがなく、本サイト上で氏名やメールアドレスなどを入力いただくことはありません。
-          当社は、本サイトと Grift に関して、次の情報を取得することがあります。
-        </p>
-        <ul>
-          <li>
-            本サイトの閲覧に伴う情報: IP
-            アドレス、ブラウザの種類、端末の情報、閲覧したページ、参照元、閲覧日時
-          </li>
-          <li>
+          <LbText>
             Cookie
-            等の識別子と、ページ上の操作（クリック、スクロール、マウスの動きなど）に関する情報（第 5
-            項）
-          </li>
-          <li>
-            お問い合わせの際にご提供いただく情報: 会社名、氏名、部署・役職、連絡先、ご相談の内容（第
-            6 項）
-          </li>
-          <li>テスト導入の検討・実施にあたり、個別契約に基づいてご提供いただく情報（第 8 項）</li>
-          <li>GitHub の Issue・Pull Request などで、利用者が自ら当社に提供した情報（第 7 項）</li>
-        </ul>
-
-        <h2>4. 利用目的</h2>
-        <p>当社は、取得した情報を次の目的で利用します。</p>
-        <ul>
-          <li>本サイトの運営、表示内容や導線の改善、利用状況の統計的な把握</li>
-          <li>障害の調査、不正アクセスの防止、セキュリティの確保</li>
-          <li>お問い合わせへの回答と、テスト導入（PoC）に関するご案内・ご提案</li>
-          <li>テスト導入に関する契約の締結と履行</li>
-          <li>Grift CLI の不具合の調査と改善の検討</li>
-          <li>Grift に関する重要なお知らせ</li>
-          <li>法令または契約に基づく対応</li>
-        </ul>
-        <p class="text-pretty">
-          当社は、本ポリシーの対象となる情報を、AI
-          のモデルの学習に利用しません。テスト導入で取り扱う情報についても、個別契約で定め、かつご本人の同意を得た場合を除き、学習に利用しません。
-        </p>
-
-        <h2>5. Cookie 等とアクセス解析ツール</h2>
-        <p class="text-pretty">
-          本サイトでは、利用状況を把握して表示や導線を改善するため、次のアクセス解析ツールを利用しています。
-          これらのツールは、Cookie 等を使い、閲覧者の端末から各提供事業者へ情報を送信します。
-        </p>
-        <ul>
-          <li>
-            Google アナリティクス（提供: Google LLC／米国）:
-            閲覧したページ、参照元、滞在時間、ブラウザ・端末の情報、IP アドレス、Cookie
-            の識別子などが送信され、利用状況の統計的な把握に使います。
-          </li>
-          <li>
-            Microsoft Clarity（提供: Microsoft Corporation／米国）:
-            ページ上のクリック、スクロール、マウスの動きなどが記録され、ヒートマップとセッション再生による表示・導線の改善に使います。
-          </li>
-        </ul>
-        <p class="text-pretty">
-          当社は、これらのツールで得た情報を、個人を特定する目的で使ったり、当社が保有する他の情報と照合したりしません。
-          送信された情報は各提供事業者のポリシーに従って取り扱われ、米国を含む国外で取り扱われることがあります（第
-          11 項）。
-        </p>
-        <p class="text-pretty">
-          Cookie
-          はブラウザの設定で拒否・削除できます。また、次のページで案内されている方法により、各ツールによる情報の取得を停止できます。
-          Cookie を無効にした場合でも、本サイトの閲覧に支障はありません。
+            はブラウザの設定で拒否・削除できます。また、次のページで案内されている方法により、各ツールによる情報の取得を停止できます。
+            Cookie を無効にした場合でも、本サイトの閲覧に支障はありません。
+          </LbText>
         </p>
         <ul>
           {
             analyticsLinks.map((link) => (
               <li>
-                <a href={link.href} target="_blank" rel="noopener noreferrer">
-                  {link.label}
-                </a>
+                <LbText>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </a>
+                </LbText>
               </li>
             ))
           }
         </ul>
 
-        <h2>6. お問い合わせ（AI 受付）での情報の取扱い</h2>
+        <LbHeading as="h2" text="6. お問い合わせ（AI 受付）での情報の取扱い" />
         <p class="text-pretty">
-          本サイトの「相談する」ボタンなどは、当社コーポレートサイト（cor-jp.com）の AI
-          受付へ移動します。移動の際は、ご相談の種類、移動元のページ上の位置、流入元を示す情報（intent、source、UTM
-          パラメータ）を URL
-          に付けて引き継ぎます。これらに、氏名など個人を識別する情報は含みません。
+          <LbText>
+            本サイトの「相談する」ボタンなどは、当社コーポレートサイト（cor-jp.com）の AI
+            受付へ移動します。移動の際は、ご相談の種類、移動元のページ上の位置、流入元を示す情報（intent、source、UTM
+            パラメータ）を URL
+            に付けて引き継ぎます。これらに、氏名など個人を識別する情報は含みません。
+          </LbText>
         </p>
         <p class="text-pretty">
-          AI 受付（チャット・電話）でご提供いただいた情報は、当社の
-          {' '}
-          <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
-          {' '}
-          に従って取り扱います。AI 受付は、ご相談への応答に外部事業者の生成 AI サービスを利用しています。
+          <LbText>
+            AI 受付（チャット・電話）でご提供いただいた情報は、当社の
+            {' '}
+            <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
+            {' '}
+            に従って取り扱います。AI 受付は、ご相談への応答に外部事業者の生成 AI サービスを利用しています。
+          </LbText>
         </p>
         <p class="text-pretty">
-          候補者さまの氏名・経歴などの個人情報や、機密性の高い情報は、AI
-          受付に入力しないでください。テスト導入に必要な情報は、個別契約を結んだうえで、取り決めた方法でお預かりします。
+          <LbText>
+            候補者さまの氏名・経歴などの個人情報や、機密性の高い情報は、AI
+            受付に入力しないでください。テスト導入に必要な情報は、個別契約を結んだうえで、取り決めた方法でお預かりします。
+          </LbText>
         </p>
 
-        <h2>7. Grift CLI に関する情報の取扱い</h2>
+        <LbHeading as="h2" text="7. Grift CLI に関する情報の取扱い" />
         <p class="text-pretty">
-          Grift CLI は、当社が
-          {' '}
-          <a href={griftCli.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-          {' '}
-          と
-          {' '}
-          <a href={griftCli.pypi} target="_blank" rel="noopener noreferrer">PyPI</a>
-          {' '}
-          で公開しているオープンソースソフトウェア（{griftCli.license} ライセンス）で、利用者の端末上で動作します。
+          <LbText>
+            Grift CLI は、当社が
+            {' '}
+            <a href={griftCli.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+            {' '}
+            と
+            {' '}
+            <a href={griftCli.pypi} target="_blank" rel="noopener noreferrer">PyPI</a>
+            {' '}
+            で公開しているオープンソースソフトウェア（{griftCli.license} ライセンス）で、利用者の端末上で動作します。
+          </LbText>
         </p>
         <ul>
           <li>
-            Grift CLI には、git
-            の履歴、リポジトリ、計測結果その他の情報を当社へ自動で送信する機能はありません。当社は、Grift
-            CLI の利用を通じて、利用者や計測の対象となった方の情報を取得しません。
+            <LbText>
+              Grift CLI には、git
+              の履歴、リポジトリ、計測結果その他の情報を当社へ自動で送信する機能はありません。当社は、Grift
+              CLI の利用を通じて、利用者や計測の対象となった方の情報を取得しません。
+            </LbText>
           </li>
           <li>
-            Grift CLI
-            がネットワークに接続するのは、公開リポジトリの情報の取得、更新の確認、計測結果の提出など、利用者が明示的に指定した操作の場合に限られます。接続先は
-            GitHub、GitLab、PyPI
-            などの第三者のサービスで、それぞれの事業者の規約とポリシーが適用されます。
+            <LbText>
+              Grift CLI
+              がネットワークに接続するのは、公開リポジトリの情報の取得、更新の確認、計測結果の提出など、利用者が明示的に指定した操作の場合に限られます。接続先は
+              GitHub、GitLab、PyPI
+              などの第三者のサービスで、それぞれの事業者の規約とポリシーが適用されます。
+            </LbText>
           </li>
           <li>
-            利用者が Issue、Pull
-            Request、お問い合わせなどで自ら当社に提供した情報（計測結果を含みます）は、第 4
-            項の目的の範囲で取り扱います。GitHub 上の Issue や Pull Request
-            は公開されることにご注意ください。
+            <LbText>
+              利用者が Issue、Pull
+              Request、お問い合わせなどで自ら当社に提供した情報（計測結果を含みます）は、第 4
+              項の目的の範囲で取り扱います。GitHub 上の Issue や Pull Request
+              は公開されることにご注意ください。
+            </LbText>
           </li>
           <li>
-            利用者が Grift CLI で他の方の git
-            履歴を計測・共有する場合は、ご本人の同意を得るなど、利用者の責任で法令に従って取り扱ってください。当社は、同意のない第三者の分析を
-            {' '}
-            <a href={griftCli.norms} target="_blank" rel="noopener noreferrer">利用規範</a>
-            {' '}
-            で「非準拠」としています。
+            <LbText>
+              利用者が Grift CLI で他の方の git
+              履歴を計測・共有する場合は、ご本人の同意を得るなど、利用者の責任で法令に従って取り扱ってください。当社は、同意のない第三者の分析を
+              {' '}
+              <a href={griftCli.norms} target="_blank" rel="noopener noreferrer">利用規範</a>
+              {' '}
+              で「非準拠」としています。
+            </LbText>
           </li>
         </ul>
 
-        <h2>8. 紹介会社さま向けテスト導入（PoC）における情報の取扱い</h2>
+        <LbHeading as="h2" text="8. 紹介会社さま向けテスト導入（PoC）における情報の取扱い" />
         <p class="text-pretty">
-          テスト導入は、紹介会社さま・SES
-          企業さまごとに個別にご案内し、個別契約を結んだうえで実施します。
-          テスト導入の中で当社が候補者さま等の個人情報や計測結果を取り扱う場合は、取り扱う情報の範囲、利用目的、保管期間、返却・削除の方法、ご本人の同意の取り方などを個別契約で定めます。
-          その取扱いが委託に当たるか第三者提供に当たるかは、個別契約で定める当社の取扱いの範囲によって異なります。第三者提供に当たる場合は、当社がご本人の同意を取得します。
+          <LbText>
+            テスト導入は、紹介会社さま・SES
+            企業さまごとに個別にご案内し、個別契約を結んだうえで実施します。
+            テスト導入の中で当社が候補者さま等の個人情報や計測結果を取り扱う場合は、取り扱う情報の範囲、利用目的、保管期間、返却・削除の方法、ご本人の同意の取り方などを個別契約で定めます。
+            その取扱いが委託に当たるか第三者提供に当たるかは、個別契約で定める当社の取扱いの範囲によって異なります。第三者提供に当たる場合は、当社がご本人の同意を取得します。
+          </LbText>
         </p>
         <p class="text-pretty">
-          テスト導入は、候補者さまご本人が Grift CLI
-          を実行し、共有する結果をご本人が選ぶ流れを前提にしています。
-          テスト導入に関して個別契約の定めが本ポリシーと異なる場合は、個別契約の定めが優先します。
+          <LbText>
+            テスト導入は、候補者さまご本人が Grift CLI
+            を実行し、共有する結果をご本人が選ぶ流れを前提にしています。
+            テスト導入に関して個別契約の定めが本ポリシーと異なる場合は、個別契約の定めが優先します。
+          </LbText>
         </p>
 
-        <h2>9. 第三者提供</h2>
+        <LbHeading as="h2" text="9. 第三者提供" />
         <p>
-          当社は、次の場合を除き、あらかじめご本人の同意を得ないで個人データを第三者に提供しません。
+          <LbText>
+            当社は、次の場合を除き、あらかじめご本人の同意を得ないで個人データを第三者に提供しません。
+          </LbText>
         </p>
         <ul>
-          <li>法令に基づく場合</li>
+          <li><LbText>法令に基づく場合</LbText></li>
           <li>
-            人の生命、身体または財産の保護のために必要がある場合で、ご本人の同意を得ることが困難なとき
+            <LbText>
+              人の生命、身体または財産の保護のために必要がある場合で、ご本人の同意を得ることが困難なとき
+            </LbText>
           </li>
           <li>
-            公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合で、ご本人の同意を得ることが困難なとき
+            <LbText>
+              公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合で、ご本人の同意を得ることが困難なとき
+            </LbText>
           </li>
           <li>
-            国の機関等が法令の定める事務を遂行することに協力する必要がある場合で、ご本人の同意を得ることによりその事務の遂行に支障を及ぼすおそれがあるとき
+            <LbText>
+              国の機関等が法令の定める事務を遂行することに協力する必要がある場合で、ご本人の同意を得ることによりその事務の遂行に支障を及ぼすおそれがあるとき
+            </LbText>
           </li>
         </ul>
         <p class="text-pretty">
-          なお、第 10 項の業務委託に伴う提供は、第三者提供には当たりません。
+          <LbText> なお、第 10 項の業務委託に伴う提供は、第三者提供には当たりません。 </LbText>
         </p>
 
-        <h2>10. 業務委託</h2>
+        <LbHeading as="h2" text="10. 業務委託" />
         <p class="text-pretty">
-          当社は、利用目的の達成に必要な範囲で、個人情報の取扱いの全部または一部を外部の事業者に委託することがあります。
-          主な委託先の種類は次のとおりです。
+          <LbText>
+            当社は、利用目的の達成に必要な範囲で、個人情報の取扱いの全部または一部を外部の事業者に委託することがあります。
+            主な委託先の種類は次のとおりです。
+          </LbText>
         </p>
         <ul>
-          <li>本サイトの配信基盤（Cloudflare, Inc.）</li>
-          <li>お問い合わせ対応の基盤（クラウドサービス、生成 AI サービス、メール送信サービス）</li>
-        </ul>
-        <p class="text-pretty">
-          委託にあたっては、委託先を適切に選定し、委託先に対して必要かつ適切な監督を行います。
-        </p>
-
-        <h2>11. 外国にある第三者への提供・外国での取扱い</h2>
-        <p class="text-pretty">
-          本サイトのアクセス解析ツール、配信基盤、お問い合わせ対応の基盤には米国の事業者のサービスが含まれ、情報が米国を含む国外で取り扱われることがあります。
-          当社は、個人情報保護法第 28 条その他の法令に従い、これらの情報を適切に取り扱います。
-        </p>
-        <p>
-          当社が外国にある第三者に個人データを提供する場合の、法令に定める情報は次のとおりです。
-        </p>
-        <ul>
+          <li><LbText>本サイトの配信基盤（Cloudflare, Inc.）</LbText></li>
           <li>
-            提供先の事業者の所在する国の名称:
-            米国（処理を行う設備は、米国以外の国にある場合があります）
-          </li>
-          <li>
-            米国の個人情報の保護に関する制度: 個人情報保護委員会が公表している
-            {' '}
-            <a
-              href="https://www.ppc.go.jp/personalinfo/legal/kaiseihogohou/#gaikoku"
-              target="_blank"
-              rel="noopener noreferrer"
+            <LbText
+              >お問い合わせ対応の基盤（クラウドサービス、生成 AI サービス、メール送信サービス）</LbText
             >
-              「外国における個人情報の保護に関する制度等の調査」
-            </a>
-            {' '}
-            のうち、米国の情報をご覧ください。
-          </li>
-          <li>
-            移転先が講じる個人情報の保護のための措置:
-            各事業者が公表しているプライバシーポリシーと、データの取扱いに関する条項に定める措置（第
-            5 項に掲げる各事業者のページを含みます）
           </li>
         </ul>
         <p class="text-pretty">
-          AI 受付で取り扱う情報の外国での取扱いは、当社の個人情報保護方針に定めています。
+          <LbText>
+            委託にあたっては、委託先を適切に選定し、委託先に対して必要かつ適切な監督を行います。
+          </LbText>
         </p>
 
-        <h2>12. 安全管理措置</h2>
+        <LbHeading as="h2" text="11. 外国にある第三者への提供・外国での取扱い" />
         <p class="text-pretty">
-          当社は、当社の情報セキュリティマネジメントシステムに基づき、取得した情報の漏えい、滅失、毀損、不正アクセス等を防止するための安全管理措置を講じます。
-          措置の内容と、漏えい等が発生した場合の対応は、当社の個人情報保護方針に定めています。
+          <LbText>
+            本サイトのアクセス解析ツール、配信基盤、お問い合わせ対応の基盤には米国の事業者のサービスが含まれ、情報が米国を含む国外で取り扱われることがあります。
+            当社は、個人情報保護法第 28 条その他の法令に従い、これらの情報を適切に取り扱います。
+          </LbText>
         </p>
-
-        <h2>13. 保有個人データの開示等の請求</h2>
-        <p class="text-pretty">
-          ご本人またはその代理人は、当社に対し、ご本人が識別される保有個人データについて、利用目的の通知、開示、内容の訂正・追加・削除、利用の停止・消去、第三者提供の停止を請求できます。
-          請求の窓口、本人確認の方法、手数料などの手続は、当社の
-          {' '}
-          <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
-          {' '}
-          の定めによります。
-        </p>
-
-        <h2>14. 本ポリシーの変更</h2>
-        <p class="text-pretty">
-          当社は、法令の改正、Grift
-          の提供内容の変更その他の事情に応じて、本ポリシーを変更することがあります。
-          変更後の本ポリシーは、本サイトに掲載した時点から効力を生じます。重要な変更は、本サイト上またはその他の適切な方法でお知らせします。
-        </p>
-
-        <h2>15. お問い合わせ窓口</h2>
-        <p class="text-pretty">
-          本ポリシーと、Grift
-          に関する情報の取扱いについてのお問い合わせは、以下の窓口からご連絡ください。開示等の請求は、第
-          13 項の手続によります。
+        <p>
+          <LbText>
+            当社が外国にある第三者に個人データを提供する場合の、法令に定める情報は次のとおりです。
+          </LbText>
         </p>
         <ul>
           <li>
-            お問い合わせ（AI 受付）:
-            {' '}
-            <a href={contactUrl} target="_blank" rel="noopener noreferrer">
-              {contactUrl}
-            </a>
+            <LbText>
+              提供先の事業者の所在する国の名称:
+              米国（処理を行う設備は、米国以外の国にある場合があります）
+            </LbText>
           </li>
           <li>
-            電話:
+            <LbText>
+              米国の個人情報の保護に関する制度: 個人情報保護委員会が公表している
+              {' '}
+              <a
+                href="https://www.ppc.go.jp/personalinfo/legal/kaiseihogohou/#gaikoku"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                「外国における個人情報の保護に関する制度等の調査」
+              </a>
+              {' '}
+              のうち、米国の情報をご覧ください。
+            </LbText>
+          </li>
+          <li>
+            <LbText>
+              移転先が講じる個人情報の保護のための措置:
+              各事業者が公表しているプライバシーポリシーと、データの取扱いに関する条項に定める措置（第
+              5 項に掲げる各事業者のページを含みます）
+            </LbText>
+          </li>
+        </ul>
+        <p class="text-pretty">
+          <LbText>
+            AI 受付で取り扱う情報の外国での取扱いは、当社の個人情報保護方針に定めています。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="12. 安全管理措置" />
+        <p class="text-pretty">
+          <LbText>
+            当社は、当社の情報セキュリティマネジメントシステムに基づき、取得した情報の漏えい、滅失、毀損、不正アクセス等を防止するための安全管理措置を講じます。
+            措置の内容と、漏えい等が発生した場合の対応は、当社の個人情報保護方針に定めています。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="13. 保有個人データの開示等の請求" />
+        <p class="text-pretty">
+          <LbText>
+            ご本人またはその代理人は、当社に対し、ご本人が識別される保有個人データについて、利用目的の通知、開示、内容の訂正・追加・削除、利用の停止・消去、第三者提供の停止を請求できます。
+            請求の窓口、本人確認の方法、手数料などの手続は、当社の
             {' '}
-            <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+            <a href={corPrivacyUrl} target="_blank" rel="noopener noreferrer">個人情報保護方針</a>
+            {' '}
+            の定めによります。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="14. 本ポリシーの変更" />
+        <p class="text-pretty">
+          <LbText>
+            当社は、法令の改正、Grift
+            の提供内容の変更その他の事情に応じて、本ポリシーを変更することがあります。
+            変更後の本ポリシーは、本サイトに掲載した時点から効力を生じます。重要な変更は、本サイト上またはその他の適切な方法でお知らせします。
+          </LbText>
+        </p>
+
+        <LbHeading as="h2" text="15. お問い合わせ窓口" />
+        <p class="text-pretty">
+          <LbText>
+            本ポリシーと、Grift
+            に関する情報の取扱いについてのお問い合わせは、以下の窓口からご連絡ください。開示等の請求は、第
+            13 項の手続によります。
+          </LbText>
+        </p>
+        <ul>
+          <li>
+            <LbText>
+              お問い合わせ（AI 受付）:
+              {' '}
+              <a href={contactUrl} target="_blank" rel="noopener noreferrer">
+                {contactUrl}
+              </a>
+            </LbText>
+          </li>
+          <li>
+            <LbText>
+              電話:
+              {' '}
+              <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+            </LbText>
           </li>
         </ul>
 
         <p class="text-pretty">
-          2026-03-12 制定
-          <br />
-          {lastUpdated} 改定（Grift の提供形態の変更に伴う全面改定）
+          <LbText>
+            2026-03-12 制定
+            <br />
+            {lastUpdated} 改定（Grift の提供形態の変更に伴う全面改定）
+          </LbText>
         </p>
       </div>
     </div>

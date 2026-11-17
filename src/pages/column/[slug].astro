@@ -11,6 +11,8 @@ import NextStep from '@/components/common/NextStep.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
 import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 import { griftArticles, griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
@@ -60,7 +62,7 @@ const breadcrumbSchema = {
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <article class="py-section">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-reading px-4 sm:px-6 lg:px-8">
       <nav aria-label="パンくずリスト" class="text-sm text-text-muted">
         <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
           <li><a href="/" class="hover:text-primary hover:underline">トップ</a></li>
@@ -75,18 +77,28 @@ const breadcrumbSchema = {
         <p class="text-sm font-semibold text-primary">
           Griftのストーリー（架空の物語）・{story.data.who}
         </p>
-        <h1 class="text-3xl font-bold text-balance text-text sm:text-4xl">{story.data.title}</h1>
-        <p class="text-lg leading-8 text-text-muted text-pretty">{story.data.lead}</p>
+        <LbHeading
+          as="h1"
+          class="text-3xl font-bold text-balance text-text sm:text-4xl"
+          text={story.data.title}
+        />
+        <p class="text-lg leading-8 text-text-muted text-pretty">
+          <LbText>{story.data.lead}</LbText>
+        </p>
       </header>
 
       <aside
         class="mt-8 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-sm leading-7 text-text-muted"
         aria-label="この記事について"
       >
-        <p class="font-semibold text-text">この記事は、よくある場面をもとにした架空の物語です。</p>
+        <p class="font-semibold text-text">
+          <LbText>この記事は、よくある場面をもとにした架空の物語です。</LbText>
+        </p>
         <p class="mt-1">
-          登場する人物・会社は実在しません。物語の中の数値は、説明のための例です。Griftの機能の説明は、公開中のGrift
-          CLI（v{griftCli.version}）に基づいています。
+          <LbText
+            >登場する人物・会社は実在しません。物語の中の数値は、説明のための例です。Griftの機能の説明は、公開中のGrift
+            CLI（v{griftCli.version}）に基づいています。</LbText
+          >
         </p>
       </aside>
 
@@ -101,9 +113,13 @@ const breadcrumbSchema = {
       </div>
 
       <section class="mt-14 rounded-2xl border border-border bg-surface p-6">
-        <h2 class="text-lg font-semibold text-text">この物語の背景にある課題</h2>
+        <LbHeading
+          as="h2"
+          class="text-lg font-semibold text-text"
+          text="この物語の背景にある課題"
+        />
         <p class="mt-2 text-sm leading-7 text-text-muted text-pretty">
-          {story.data.who}：{story.data.problem}
+          <LbText>{story.data.who}：{story.data.problem}</LbText>
         </p>
         <ul class="mt-4 grid gap-3 sm:grid-cols-2">
           <li>
@@ -140,8 +156,8 @@ const breadcrumbSchema = {
       </section>
 
       <section class="mt-14">
-        <h2 class="text-2xl font-semibold text-text">ほかのストーリー</h2>
-        <ul class="mt-6 grid gap-4 md:grid-cols-3">
+        <LbHeading as="h2" class="text-2xl font-semibold text-text" text="ほかのストーリー" />
+        <ul class="mt-6 grid gap-4 grid-cols-1">
           {
             otherStories.map((other) => (
               <li>
@@ -174,5 +190,7 @@ const breadcrumbSchema = {
       { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
     ]}
+    width="reading"
+    align="left"
   />
 </MarketingLayout>

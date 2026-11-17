@@ -688,6 +688,131 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
 const READING_COLUMN_MAX_PX = 768; // 48rem = 全角 40 字ぶん（18px のとき 720px 以下）
 const COLUMN_TOLERANCE_PX = 2;
 
+// font の違う環境（CI の Linux など）では、同じ字数でも英数字や等幅の字の幅が広い。
+// 字数で決めると、実際には箱に収まらない文を「1 行のはず」と誤って数える。
+// この関数を page.evaluate で仕込み、読み物と LP の試験で使い回す。
+type LineBreakProbe = {
+  lineCount: (element: Element) => number;
+  unwrappedWidth: (element: Element) => number;
+  contentWidth: (element: Element) => number;
+  sentenceFailures: () => string[];
+  judgedCount: () => number;
+};
+
+declare global {
+  interface Window {
+    __lineBreakProbe?: LineBreakProbe;
+  }
+}
+
+function installLineBreakProbe(): void {
+  // 行の数は、要素の高さを行の高さで割って数える。inline の code は、同じ行でも
+  // 上下の padding で Range の top が 9px ずれる事があり、top を 8px でまとめる数え方だと
+  // 1 行を 2 行と誤る。手で入れた <br> は折り返しではないので、その数だけ引く。
+  const lineCount = (element: Element): number => {
+    const manualBreaks = element.querySelectorAll('br').length;
+    const style = window.getComputedStyle(element);
+    const lineHeight = Number.parseFloat(style.lineHeight);
+    const height = element.getBoundingClientRect().height;
+    if (Number.isFinite(lineHeight) && lineHeight > 0 && height > 0) {
+      return Math.max(1, Math.round(height / lineHeight) - manualBreaks);
+    }
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const rects = Array.from(range.getClientRects()).filter(
+      (rect) => rect.width > 0 && rect.height > 0
+    );
+    const tops: number[] = [];
+    for (const rect of rects) {
+      if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
+    }
+    range.detach();
+    return Math.max(1, tops.length - manualBreaks);
+  };
+
+  // 折り返さない時の幅。複製を不可視・nowrap で親に置いて測り、終わったら必ず消す
+  // （元の要素の見た目は変えない）。手で入れた <br> は、折り返さない時の幅を測るため
+  // 空白に置き換える（<br> を残すと、複製の幅が長い方の行だけになる）。
+  const unwrappedWidth = (element: Element): number => {
+    const clone = element.cloneNode(true) as HTMLElement;
+    for (const br of Array.from(clone.querySelectorAll('br'))) br.replaceWith(' ');
+    clone.style.position = 'absolute';
+    clone.style.visibility = 'hidden';
+    clone.style.whiteSpace = 'nowrap';
+    clone.style.maxWidth = 'none';
+    clone.style.width = 'auto';
+    clone.style.display = 'inline-block';
+    element.parentElement?.appendChild(clone);
+    const width = clone.getBoundingClientRect().width;
+    clone.remove();
+    return width;
+  };
+
+  // 文を置く箱（親）の中身の幅。文字が流れるのは padding と border の内側だけなので、
+  // 親の矩形から左右の padding と border を引く。clientWidth は整数に丸めて返すので使わない
+  // （丸めた値と、折り返さない時の幅の小数が、境界でどちらにも転ぶ）。
+  const contentWidth = (element: Element): number => {
+    const parent = element.parentElement;
+    if (!parent) return document.documentElement.clientWidth;
+    const style = window.getComputedStyle(parent);
+    const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+    const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+    const borderLeft = Number.parseFloat(style.borderLeftWidth) || 0;
+    const borderRight = Number.parseFloat(style.borderRightWidth) || 0;
+    return (
+      parent.getBoundingClientRect().width - paddingLeft - paddingRight - borderLeft - borderRight
+    );
+  };
+
+  // 折り返さない時の幅が箱より 1px 以上小さい文だけを「1 行のはず」とし、2 行以上なら落とす。
+  // 箱との差が 1px 未満の文は、丸めでどちらにも転ぶので判定から外す（箱より広い文も、
+  // 折り返して当然なので同じく外す）。判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  const sentenceFailures = (): string[] => {
+    const failures: string[] = [];
+    let judged = 0;
+    const sentences = Array.from(document.querySelectorAll('.lb-sentence'));
+    if (sentences.length === 0) failures.push('.lb-sentence が 1 つも無い');
+    for (const sentence of sentences) {
+      const text = (sentence.textContent ?? '').replace(/\s+/g, '');
+      if (text.length === 0) continue;
+      const box = contentWidth(sentence);
+      const nowrapWidth = unwrappedWidth(sentence);
+      if (nowrapWidth > box - 1) continue;
+      judged += 1;
+      const lines = lineCount(sentence);
+      if (lines !== 1) {
+        const chars = Array.from(text).length;
+        failures.push(
+          `文が 1 行に収まらない（幅 ${nowrapWidth.toFixed(1)}px / 箱 ${box.toFixed(1)}px、${chars} 字）: ${text.slice(0, 40)}`
+        );
+      }
+    }
+    if (judged === 0)
+      failures.push('「1 行のはず」と判定した文が 0 個（幅の測り方が空振りしている）');
+    return failures;
+  };
+
+  // route ごとに「1 行のはず」と判定した文の数（報告用。合否は sentenceFailures が見る）。
+  const judgedCount = (): number => {
+    let judged = 0;
+    for (const sentence of Array.from(document.querySelectorAll('.lb-sentence'))) {
+      const text = (sentence.textContent ?? '').replace(/\s+/g, '');
+      if (text.length === 0) continue;
+      if (unwrappedWidth(sentence) > contentWidth(sentence) - 1) continue;
+      judged += 1;
+    }
+    return judged;
+  };
+
+  window.__lineBreakProbe = {
+    lineCount,
+    unwrappedWidth,
+    contentWidth,
+    sentenceFailures,
+    judgedCount,
+  };
+}
+
 interface ColumnBox {
   name: string;
   left: number;
@@ -767,36 +892,11 @@ test.describe('/tep/ reading column and line breaks', () => {
     for (const width of [1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/tep/');
+      await page.evaluate(installLineBreakProbe);
       const issues = await page.evaluate(() => {
         const failures: string[] = [];
-
-        const lineCount = (element: Element): number => {
-          const range = document.createRange();
-          range.selectNodeContents(element);
-          const rects = Array.from(range.getClientRects()).filter(
-            (rect) => rect.width > 0 && rect.height > 0
-          );
-          const tops: number[] = [];
-          for (const rect of rects) {
-            if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
-          }
-          range.detach();
-          return tops.length;
-        };
-
-        const unwrappedWidth = (element: Element): number => {
-          const clone = element.cloneNode(true) as HTMLElement;
-          clone.style.position = 'absolute';
-          clone.style.visibility = 'hidden';
-          clone.style.whiteSpace = 'nowrap';
-          clone.style.maxWidth = 'none';
-          clone.style.width = 'auto';
-          clone.style.display = 'inline-block';
-          element.parentElement?.appendChild(clone);
-          const box = clone.getBoundingClientRect().width;
-          clone.remove();
-          return box;
-        };
+        const probe = window.__lineBreakProbe;
+        if (!probe) return ['折り返しを測る関数が仕込まれていない'];
 
         const heading = document.querySelector('main h1');
         if (!heading) failures.push('h1 が無い');
@@ -808,34 +908,15 @@ test.describe('/tep/ reading column and line breaks', () => {
           );
         }
         for (const clause of h1Clauses) {
-          const parentBox = clause.parentElement
-            ? clause.parentElement.clientWidth
-            : document.documentElement.clientWidth;
-          if (unwrappedWidth(clause) > parentBox + 1) continue;
-          const lines = lineCount(clause);
+          const box = probe.contentWidth(clause);
+          if (probe.unwrappedWidth(clause) > box + 1) continue;
+          const lines = probe.lineCount(clause);
           if (lines !== 1) {
             failures.push(`h1 の塊が ${lines} 行に割れている: ${clause.textContent ?? ''}`);
           }
         }
 
-        const sentences = Array.from(document.querySelectorAll('main .lb-sentence'));
-        if (sentences.length === 0) failures.push('.lb-sentence が 1 つも無い');
-        for (const sentence of sentences) {
-          const paragraph = sentence.closest('p');
-          if (!paragraph) continue;
-          const style = window.getComputedStyle(paragraph);
-          const fontSize = Number.parseFloat(style.fontSize) || 16;
-          const box = paragraph.clientWidth;
-          const text = (sentence.textContent ?? '').replace(/\s+/g, '');
-          const chars = Array.from(text).length;
-          if (chars === 0) continue;
-          const columnChars = box / fontSize;
-          if (chars <= columnChars + 1e-6 && lineCount(sentence) !== 1) {
-            failures.push(
-              `文が 1 行に収まらない（${chars} 字 / 列 ${columnChars.toFixed(1)} 字）: ${text.slice(0, 40)}`
-            );
-          }
-        }
+        failures.push(...probe.sentenceFailures());
 
         for (const paragraph of Array.from(document.querySelectorAll('main p')).filter((p) =>
           p.querySelector('.lb-sentence')
@@ -981,6 +1062,26 @@ test.describe('reading column rollout (terms, privacy, faq, column, articles, ne
     }
   });
 
+  // 幅 1440 と 1920 で、折り返さない時の幅が箱に収まる文が 1 行かを見る。
+  // 判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  test('reading routes keep sentences on one line where they fit (line breaks)', async ({
+    page,
+  }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of READING_ROUTES) {
+        await page.goto(route);
+        await page.evaluate(installLineBreakProbe);
+        const issues = await page.evaluate(() => {
+          const probe = window.__lineBreakProbe;
+          if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+          return probe.sentenceFailures();
+        });
+        expect(issues, `${route}: 1 行に収まるはずの文 (width=${width})`).toEqual([]);
+      }
+    }
+  });
+
   test('reading routes mark sentences and keep boxes within 40em', async ({ page }) => {
     for (const route of READING_ROUTES) {
       await page.setViewportSize({ width: 1440, height: 900 });
@@ -999,7 +1100,6 @@ test.describe('reading column rollout (terms, privacy, faq, column, articles, ne
           );
         // 文の箱は 40em まで
         for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
-          const style = window.getComputedStyle(sentence);
           const width = sentence.getBoundingClientRect().width;
           // 全角 40 字（18px のとき 720px。docs/design/layout-rules.md の R2）まで
           if (width > 721)
@@ -1116,21 +1216,11 @@ test.describe('LP headings and sentence marks (top, pricing)', () => {
     for (const route of LP_ROUTES) {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(route);
+      await page.evaluate(installLineBreakProbe);
       const issues = await page.evaluate(() => {
         const failures: string[] = [];
-        const lineCount = (element: Element): number => {
-          const range = document.createRange();
-          range.selectNodeContents(element);
-          const rects = Array.from(range.getClientRects()).filter(
-            (rect) => rect.width > 0 && rect.height > 0
-          );
-          const tops: number[] = [];
-          for (const rect of rects) {
-            if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
-          }
-          range.detach();
-          return tops.length;
-        };
+        const probe = window.__lineBreakProbe;
+        if (!probe) return ['折り返しを測る関数が仕込まれていない'];
         if (document.querySelectorAll('main .lb-sentence').length === 0)
           failures.push('main に .lb-sentence が無い');
         // 読点を含む題（手で改行を入れた hero・資料の案内の共有部品は除く）
@@ -1148,31 +1238,11 @@ test.describe('LP headings and sentence marks (top, pricing)', () => {
             failures.push(
               `読点を含む題に塊が無い（${clauses.length} 個, 最低 ${minClauses}）: ${text.trim().slice(0, 24)}`
             );
-          const parentBox = heading.parentElement
-            ? heading.parentElement.clientWidth
-            : document.documentElement.clientWidth;
-          const unwrappedWidth = (element: Element): number => {
-            const clone = element.cloneNode(true) as HTMLElement;
-            clone.style.position = 'absolute';
-            clone.style.visibility = 'hidden';
-            clone.style.whiteSpace = 'nowrap';
-            clone.style.maxWidth = 'none';
-            clone.style.width = 'auto';
-            clone.style.display = 'inline-block';
-            element.parentElement?.appendChild(clone);
-            const box = clone.getBoundingClientRect().width;
-            clone.remove();
-            return box;
-          };
           for (const clause of clauses) {
-            // 列の字数より長い塊、および禁則処理で折れる余地がある塊は、塊の中で折り返すので 1 行断言の外
-            const slack = parentBox / 10;
-            if (
-              unwrappedWidth(clause) > parentBox + 1 ||
-              unwrappedWidth(clause) > parentBox - slack
-            )
-              continue;
-            const lines = lineCount(clause);
+            // 折り返さない時の幅が箱を超える塊は、塊の中で折り返して当然なので 1 行断言の外
+            const box = probe.contentWidth(clause);
+            if (probe.unwrappedWidth(clause) > box + 1) continue;
+            const lines = probe.lineCount(clause);
             if (lines !== 1)
               failures.push(
                 `題の塊が ${lines} 行: ${clause.textContent?.trim().slice(0, 24) ?? ''}`
@@ -1182,6 +1252,24 @@ test.describe('LP headings and sentence marks (top, pricing)', () => {
         return failures;
       });
       expect(issues, `${route}: 題の塊`).toEqual([]);
+    }
+  });
+
+  // 幅 1440 と 1920 で、折り返さない時の幅が箱に収まる文が 1 行かを見る。
+  // 判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  test('LP sentences stay on one line where they fit (line breaks)', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of LP_ROUTES) {
+        await page.goto(route);
+        await page.evaluate(installLineBreakProbe);
+        const issues = await page.evaluate(() => {
+          const probe = window.__lineBreakProbe;
+          if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+          return probe.sentenceFailures();
+        });
+        expect(issues, `${route}: 1 行に収まるはずの文 (width=${width})`).toEqual([]);
+      }
     }
   });
 
@@ -1201,4 +1289,68 @@ test.describe('LP headings and sentence marks (top, pricing)', () => {
       expect(issues, `${route}: 説明の箱`).toEqual([]);
     }
   });
+});
+
+// 読み物と LP の試験が回る page の全部で、page の中の link（href="#…"）の飛び先の id が
+// 同じ page に在るかを見る。# だけの link は飛び先を持たないので除く。
+const INTERNAL_LINK_ROUTES = ['/tep/', ...READING_ROUTES, ...LP_ROUTES];
+
+test('page-internal links point to an id on the same page', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const failures: string[] = [];
+
+  for (const route of INTERNAL_LINK_ROUTES) {
+    await page.goto(route);
+    const missing = await page.evaluate(() => {
+      const missing: string[] = [];
+      for (const link of Array.from(document.querySelectorAll('main a[href^="#"]'))) {
+        const href = link.getAttribute('href') ?? '';
+        if (href === '#') continue;
+        const id = decodeURIComponent(href.slice(1));
+        if (!id) continue;
+        if (document.getElementById(id)) continue;
+        missing.push(href);
+      }
+      return Array.from(new Set(missing));
+    });
+    failures.push(...missing.map((href) => `${route}: 飛び先の id が無い ${href}`));
+  }
+
+  expect(failures, 'page 内の link の飛び先が無い').toEqual([]);
+});
+
+// Markdown の記事の本文の箱（main .prose）の中の p に、文の印（.lb-sentence）が在るかを見る。
+// 題や lead の LbText の印で緑にならないよう、本文の container（main .prose）に絞る。
+// plugin を astro.config.mjs の rehypePlugins から外すと、本文の印だけが消えるので落ちる。
+const MARKDOWN_BODY_ROUTES = [
+  { route: '/articles/git-history-facts/', label: 'articles' },
+  { route: '/news/cli-published/', label: 'news' },
+  { route: '/column/story-ai-activity/', label: 'stories' },
+];
+
+test('markdown body paragraphs carry line-break marks', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const failures: string[] = [];
+
+  for (const { route, label } of MARKDOWN_BODY_ROUTES) {
+    await page.goto(route);
+    const result = await page.evaluate(() => {
+      const prose = document.querySelector('main .prose');
+      if (!prose) return { paragraphs: 0, marked: 0 };
+      const paragraphs = Array.from(prose.querySelectorAll('p'));
+      const marked = paragraphs.filter((paragraph) =>
+        paragraph.querySelector('.lb-sentence')
+      ).length;
+      return { paragraphs: paragraphs.length, marked };
+    });
+    if (result.paragraphs === 0) {
+      failures.push(`${label} ${route}: 本文の箱（main .prose）の中に p が無い`);
+    } else if (result.marked === 0) {
+      failures.push(
+        `${label} ${route}: 本文の p ${result.paragraphs} 個のどれにも .lb-sentence が無い`
+      );
+    }
+  }
+
+  expect(failures, 'markdown の本文に文の印が無い').toEqual([]);
 });

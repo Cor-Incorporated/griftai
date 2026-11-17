@@ -6,6 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
 import { siteConfig } from './src/config';
+import { rehypeLineBreaks } from './src/lib/rehype-line-breaks';
 import { publishedSlugs } from './scripts/lib/cms-publish.mjs';
 
 const siteUrl = process.env.SITE_URL || siteConfig.url;
@@ -65,5 +66,9 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+  },
+  // markdown の本文（articles・news・stories）に、文と塊の印を付ける（docs/design/layout-rules.md の R1）。
+  markdown: {
+    rehypePlugins: [rehypeLineBreaks],
   },
 });

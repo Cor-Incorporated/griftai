@@ -680,3 +680,213 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     ]);
   });
 });
+
+// ==========================================================================
+// 読み物の列と行の替わり方（配置と改行の決まり R1〜R3）。手本は /tep/。
+// ==========================================================================
+
+const READING_COLUMN_MAX_PX = 768; // 48rem = 全角 40 字ぶん（18px のとき 720px 以下）
+const COLUMN_TOLERANCE_PX = 2;
+
+interface ColumnBox {
+  name: string;
+  left: number;
+  right: number;
+  width: number;
+}
+
+test.describe('/tep/ reading column and line breaks', () => {
+  test('reading column boxes share one centered column on wide screens', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/tep/');
+      const result = await page.evaluate(() => {
+        const contentBox = (element: Element): ColumnBox => {
+          const style = window.getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+          const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+          return {
+            name: `${element.tagName.toLowerCase()}.${Array.from(element.classList)
+              .filter((className) => className.startsWith('max-w-'))
+              .join('.')}`,
+            left: rect.left + paddingLeft,
+            right: rect.right - paddingRight,
+            width: rect.width - paddingLeft - paddingRight,
+          };
+        };
+        const seen = new Set<Element>();
+        const boxes: ColumnBox[] = [];
+        for (const element of Array.from(document.querySelectorAll('main .mx-auto'))) {
+          if (seen.has(element)) continue;
+          seen.add(element);
+          const style = window.getComputedStyle(element);
+          if (style.display === 'none' || style.visibility === 'hidden') continue;
+          const box = contentBox(element);
+          if (box.width > 0) boxes.push(box);
+        }
+        return { boxes, center: document.documentElement.clientWidth / 2 };
+      });
+      const labels = result.boxes.map((box) => box.name).join(', ');
+      expect(
+        result.boxes.length,
+        `main の中に .mx-auto の箱がある (width=${width})`
+      ).toBeGreaterThan(0);
+      const first = result.boxes[0];
+      const misaligned = result.boxes.filter(
+        (box) =>
+          Math.abs(box.left - first.left) > COLUMN_TOLERANCE_PX ||
+          Math.abs(box.right - first.right) > COLUMN_TOLERANCE_PX
+      );
+      expect(
+        misaligned.map((box) => box.name),
+        `箱の左右の端がそろわない (width=${width}, boxes=${labels}): ${misaligned
+          .map((box) => `${box.name} left=${box.left.toFixed(1)} right=${box.right.toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+      const offCenter = result.boxes.filter(
+        (box) => Math.abs(box.left + box.width / 2 - result.center) > COLUMN_TOLERANCE_PX
+      );
+      expect(
+        offCenter.map((box) => box.name),
+        `箱が画面の中央にない (width=${width}, center=${result.center}): ${offCenter
+          .map((box) => `${box.name} center=${(box.left + box.width / 2).toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+      const tooWide = result.boxes.filter((box) => box.width > READING_COLUMN_MAX_PX + 0.5);
+      expect(
+        tooWide.map((box) => box.name),
+        `箱が ${READING_COLUMN_MAX_PX}px を超える (width=${width}): ${tooWide
+          .map((box) => `${box.name} width=${box.width.toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+    }
+  });
+
+  test('headings and sentences break at meaning boundaries on wide screens', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/tep/');
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+
+        const lineCount = (element: Element): number => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          const rects = Array.from(range.getClientRects()).filter(
+            (rect) => rect.width > 0 && rect.height > 0
+          );
+          const tops: number[] = [];
+          for (const rect of rects) {
+            if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
+          }
+          range.detach();
+          return tops.length;
+        };
+
+        const unwrappedWidth = (element: Element): number => {
+          const clone = element.cloneNode(true) as HTMLElement;
+          clone.style.position = 'absolute';
+          clone.style.visibility = 'hidden';
+          clone.style.whiteSpace = 'nowrap';
+          clone.style.maxWidth = 'none';
+          clone.style.width = 'auto';
+          clone.style.display = 'inline-block';
+          element.parentElement?.appendChild(clone);
+          const box = clone.getBoundingClientRect().width;
+          clone.remove();
+          return box;
+        };
+
+        const heading = document.querySelector('main h1');
+        if (!heading) failures.push('h1 が無い');
+
+        const h1Clauses = Array.from(document.querySelectorAll('main h1 .lb-clause'));
+        if (h1Clauses.length < 2) {
+          failures.push(
+            `h1 の塊が ${h1Clauses.length} 個（2 個以上のはず）: ${heading?.textContent?.trim() ?? ''}`
+          );
+        }
+        for (const clause of h1Clauses) {
+          const parentBox = clause.parentElement
+            ? clause.parentElement.clientWidth
+            : document.documentElement.clientWidth;
+          if (unwrappedWidth(clause) > parentBox + 1) continue;
+          const lines = lineCount(clause);
+          if (lines !== 1) {
+            failures.push(`h1 の塊が ${lines} 行に割れている: ${clause.textContent ?? ''}`);
+          }
+        }
+
+        const sentences = Array.from(document.querySelectorAll('main .lb-sentence'));
+        if (sentences.length === 0) failures.push('.lb-sentence が 1 つも無い');
+        for (const sentence of sentences) {
+          const paragraph = sentence.closest('p');
+          if (!paragraph) continue;
+          const style = window.getComputedStyle(paragraph);
+          const fontSize = Number.parseFloat(style.fontSize) || 16;
+          const box = paragraph.clientWidth;
+          const text = (sentence.textContent ?? '').replace(/\s+/g, '');
+          const chars = Array.from(text).length;
+          if (chars === 0) continue;
+          const columnChars = box / fontSize;
+          if (chars <= columnChars + 1e-6 && lineCount(sentence) !== 1) {
+            failures.push(
+              `文が 1 行に収まらない（${chars} 字 / 列 ${columnChars.toFixed(1)} 字）: ${text.slice(0, 40)}`
+            );
+          }
+        }
+
+        for (const paragraph of Array.from(document.querySelectorAll('main p')).filter((p) =>
+          p.querySelector('.lb-sentence')
+        )) {
+          const style = window.getComputedStyle(paragraph);
+          const fontSize = Number.parseFloat(style.fontSize) || 16;
+          const box = paragraph.clientWidth;
+          if (box > fontSize * 40 + 1) {
+            failures.push(
+              `本文の箱が全角 40 字を超える（${box.toFixed(1)}px / ${fontSize}px の ${(box / fontSize).toFixed(1)} 字）: ${(paragraph.textContent ?? '').slice(0, 30)}`
+            );
+          }
+        }
+
+        const inTables = document.querySelectorAll(
+          'main table .lb-sentence, main table .lb-clause'
+        );
+        if (inTables.length > 0) failures.push(`表の中に印がある（${inTables.length} 個）`);
+        const inCode = document.querySelectorAll('main pre .lb-sentence, main pre .lb-clause');
+        if (inCode.length > 0) failures.push(`code の中に印がある（${inCode.length} 個）`);
+
+        return failures;
+      });
+      expect(issues, `行の替わり方が決まりどおりでない (width=${width})`).toEqual([]);
+    }
+  });
+
+  test('reading column has no horizontal overflow on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/tep/');
+    const issues = await page.evaluate(() => {
+      const failures: string[] = [];
+      const root = document.documentElement;
+      const scrollWidth = Math.max(root.scrollWidth, document.body?.scrollWidth ?? 0);
+      if (scrollWidth > root.clientWidth + 2) {
+        failures.push(
+          `横 scroll が出る（scrollWidth=${scrollWidth} > clientWidth=${root.clientWidth}）`
+        );
+      }
+      const clauses = Array.from(document.querySelectorAll('.lb-clause'));
+      if (clauses.length === 0) failures.push('.lb-clause が 1 つも無い');
+      for (const clause of clauses) {
+        const box = clause.parentElement?.getBoundingClientRect();
+        const rect = clause.getBoundingClientRect();
+        if (!box) continue;
+        if (rect.left < box.left - 1 || rect.right > box.right + 1) {
+          failures.push(`塊が箱からはみ出す: ${(clause.textContent ?? '').slice(0, 30)}`);
+        }
+      }
+      return failures;
+    });
+    expect(issues, '幅 390 で読み物の列がはみ出る').toEqual([]);
+  });
+});

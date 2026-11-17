@@ -20,22 +20,40 @@ interface Props {
   heading: string;
   lead?: string;
   ctas: Cta[];
+  /** 幅。既定は今のまま（max-w-5xl = 64rem）。reading で読み物の列（48rem）に揃える */
+  width?: 'default' | 'reading';
+  /** card の中の揃え。既定は今のまま（中央）。left で左に揃える */
+  align?: 'center' | 'left';
 }
 
-const { heading, lead, ctas } = Astro.props;
+const { heading, lead, ctas, width = 'default', align = 'center' } = Astro.props;
+const alignLeft = align === 'left';
 ---
 
 <section class="bg-background py-section">
-  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  <div
+    class:list={[
+      'mx-auto px-4 sm:px-6 lg:px-8',
+      width === 'reading' ? 'max-w-reading' : 'max-w-5xl',
+    ]}
+  >
     <div
-      class="flex flex-col items-center gap-8 rounded-3xl border border-border bg-surface px-6 py-12 text-center sm:px-12 sm:py-16"
+      class:list={[
+        'flex flex-col gap-8 rounded-3xl border border-border bg-surface px-6 py-12 sm:px-12 sm:py-16',
+        alignLeft ? 'items-start text-left' : 'items-center text-center',
+      ]}
     >
       <div class="flex max-w-2xl flex-col gap-4">
         <p class="text-sm font-semibold text-primary">次の一歩</p>
         <h2 class="text-balance text-2xl font-bold text-text sm:text-3xl">{heading}</h2>
         {lead && <p class="text-pretty text-lg leading-8 text-text-muted">{lead}</p>}
       </div>
-      <div class="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center">
+      <div
+        class:list={[
+          'flex w-full flex-col gap-3 sm:w-auto sm:flex-row',
+          alignLeft ? 'items-start sm:justify-start' : 'items-center sm:justify-center',
+        ]}
+      >
         {
           ctas.map((cta) => (
             <a

@@ -890,3 +890,238 @@ test.describe('/tep/ reading column and line breaks', () => {
     expect(issues, '幅 390 で読み物の列がはみ出る').toEqual([]);
   });
 });
+
+// ==========================================================================
+// 配置と改行の決まりを、読み物と LP の残りの page に広げた時の確かめ。
+// 測り方は /tep/ の describe と同じ（箱の端・中央・幅、題と文の塊、幅 390）。
+// ==========================================================================
+
+const READING_ROUTES = [
+  '/terms/',
+  '/privacy/',
+  '/faq/',
+  '/column/',
+  '/column/story-ai-activity/',
+  '/articles/',
+  '/articles/git-history-facts/',
+  '/news/',
+  '/news/cli-published/',
+];
+
+const LP_ROUTES = ['/', '/pricing/'];
+
+test.describe('reading column rollout (terms, privacy, faq, column, articles, news)', () => {
+  test('reading routes share one centered column on wide screens', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      for (const width of [1440, 1920]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(route);
+        const result = await page.evaluate(() => {
+          const contentBox = (element: Element): ColumnBox => {
+            const style = window.getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+            const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+            return {
+              name: `${element.tagName.toLowerCase()}.${Array.from(element.classList)
+                .filter((className) => className.startsWith('max-w-'))
+                .join('.')}`,
+              left: rect.left + paddingLeft,
+              right: rect.right - paddingRight,
+              width: rect.width - paddingLeft - paddingRight,
+            };
+          };
+          const seen = new Set<Element>();
+          const boxes: ColumnBox[] = [];
+          for (const element of Array.from(document.querySelectorAll('main .mx-auto'))) {
+            if (seen.has(element)) continue;
+            seen.add(element);
+            const style = window.getComputedStyle(element);
+            if (style.display === 'none' || style.visibility === 'hidden') continue;
+            const box = contentBox(element);
+            if (box.width > 0) boxes.push(box);
+          }
+          return { boxes, center: document.documentElement.clientWidth / 2 };
+        });
+        expect(
+          result.boxes.length,
+          `${route}: main の中に .mx-auto の箱がある (width=${width})`
+        ).toBeGreaterThan(0);
+        const first = result.boxes[0];
+        const misaligned = result.boxes.filter(
+          (box) =>
+            Math.abs(box.left - first.left) > COLUMN_TOLERANCE_PX ||
+            Math.abs(box.right - first.right) > COLUMN_TOLERANCE_PX
+        );
+        expect(
+          misaligned.map((box) => box.name),
+          `${route}: 箱の左右の端がそろわない (width=${width}): ${misaligned
+            .map((box) => `${box.name} left=${box.left.toFixed(1)} right=${box.right.toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+        const offCenter = result.boxes.filter(
+          (box) => Math.abs(box.left + box.width / 2 - result.center) > COLUMN_TOLERANCE_PX
+        );
+        expect(
+          offCenter.map((box) => box.name),
+          `${route}: 箱が画面の中央にない (width=${width}): ${offCenter
+            .map((box) => `${box.name} center=${(box.left + box.width / 2).toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+        const tooWide = result.boxes.filter((box) => box.width > READING_COLUMN_MAX_PX + 0.5);
+        expect(
+          tooWide.map((box) => box.name),
+          `${route}: 箱が ${READING_COLUMN_MAX_PX}px を超える (width=${width}): ${tooWide
+            .map((box) => `${box.name} width=${box.width.toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+      }
+    }
+  });
+
+  test('reading routes mark sentences and keep boxes within 40em', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const result = await page.evaluate(() => {
+        const failures: string[] = [];
+        const sentenceCount = document.querySelectorAll('main .lb-sentence').length;
+        if (sentenceCount === 0) failures.push('main に .lb-sentence が 1 つも無い');
+        // 表・code・summary・dt の中に印を付けない
+        const markedInExcluded = document.querySelectorAll(
+          'main table .lb-sentence, main pre .lb-sentence, main code .lb-sentence, main summary .lb-sentence, main dt .lb-sentence'
+        );
+        if (markedInExcluded.length > 0)
+          failures.push(
+            `表・code・summary・dt の中に .lb-sentence が ${markedInExcluded.length} 個ある`
+          );
+        // 文の箱は 40em まで
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          const style = window.getComputedStyle(sentence);
+          const width = sentence.getBoundingClientRect().width;
+          // 全角 40 字（18px のとき 720px。docs/design/layout-rules.md の R2）まで
+          if (width > 721)
+            failures.push(`文の箱が 40 字を超える: ${width.toFixed(0)}px（上限 720px）`);
+        }
+        return failures;
+      });
+      expect(result, `${route}: 印と箱の幅`).toEqual([]);
+    }
+  });
+
+  test('reading routes do not overflow at 390px', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const clientWidth = document.documentElement.clientWidth;
+        if (document.documentElement.scrollWidth > clientWidth + 1)
+          failures.push(
+            `横の scroll が出る: scrollWidth=${document.documentElement.scrollWidth} clientWidth=${clientWidth}`
+          );
+        for (const clause of Array.from(document.querySelectorAll('main .lb-clause'))) {
+          const box = clause.getBoundingClientRect();
+          if (box.width > 0 && (box.left < -1 || box.right > clientWidth + 1))
+            failures.push(`塊が画面からはみ出る: ${clause.textContent?.slice(0, 20) ?? ''}`);
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 幅 390`).toEqual([]);
+    }
+  });
+});
+
+test.describe('LP headings and sentence marks (top, pricing)', () => {
+  test('LP headings with a comma split at the comma and keep one line per clause', async ({
+    page,
+  }) => {
+    for (const route of LP_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const lineCount = (element: Element): number => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          const rects = Array.from(range.getClientRects()).filter(
+            (rect) => rect.width > 0 && rect.height > 0
+          );
+          const tops: number[] = [];
+          for (const rect of rects) {
+            if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
+          }
+          range.detach();
+          return tops.length;
+        };
+        if (document.querySelectorAll('main .lb-sentence').length === 0)
+          failures.push('main に .lb-sentence が無い');
+        // 読点を含む題（手で改行を入れた hero・資料の案内の共有部品は除く）
+        for (const heading of Array.from(document.querySelectorAll('main h1, main h2, main h3'))) {
+          const text = heading.textContent ?? '';
+          if (!text.includes('、')) continue;
+          if (heading.querySelector('span.block')) continue; // 手動改行の題はそのまま
+          if (heading.querySelector('.whitespace-nowrap')) continue; // 折り返し防止を手で入れた題もそのまま
+          if (heading.closest('[data-testid="document-download"]')) continue; // 共有部品（GMO 納品枠でも使うため触らない）
+          const clauses = Array.from(heading.querySelectorAll('.lb-clause'));
+          // 「まずは、」のような 5 字以下の出だしは、次の塊と続けるのが決まり（R1）
+          const lead = text.split('、')[0] ?? '';
+          const minClauses = [...lead].length <= 5 ? 1 : 2;
+          if (clauses.length < minClauses)
+            failures.push(
+              `読点を含む題に塊が無い（${clauses.length} 個, 最低 ${minClauses}）: ${text.trim().slice(0, 24)}`
+            );
+          const parentBox = heading.parentElement
+            ? heading.parentElement.clientWidth
+            : document.documentElement.clientWidth;
+          const unwrappedWidth = (element: Element): number => {
+            const clone = element.cloneNode(true) as HTMLElement;
+            clone.style.position = 'absolute';
+            clone.style.visibility = 'hidden';
+            clone.style.whiteSpace = 'nowrap';
+            clone.style.maxWidth = 'none';
+            clone.style.width = 'auto';
+            clone.style.display = 'inline-block';
+            element.parentElement?.appendChild(clone);
+            const box = clone.getBoundingClientRect().width;
+            clone.remove();
+            return box;
+          };
+          for (const clause of clauses) {
+            // 列の字数より長い塊、および禁則処理で折れる余地がある塊は、塊の中で折り返すので 1 行断言の外
+            const slack = parentBox / 10;
+            if (
+              unwrappedWidth(clause) > parentBox + 1 ||
+              unwrappedWidth(clause) > parentBox - slack
+            )
+              continue;
+            const lines = lineCount(clause);
+            if (lines !== 1)
+              failures.push(
+                `題の塊が ${lines} 行: ${clause.textContent?.trim().slice(0, 24) ?? ''}`
+              );
+          }
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 題の塊`).toEqual([]);
+    }
+  });
+
+  test('LP description paragraphs stay within 40em', async ({ page }) => {
+    for (const route of LP_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          // 全角 40 字（18px のとき 720px）まで
+          const width = sentence.getBoundingClientRect().width;
+          if (width > 721) failures.push(`文の箱が 40 字を超える: ${width.toFixed(0)}px`);
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 説明の箱`).toEqual([]);
+    }
+  });
+});

@@ -32,6 +32,14 @@
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
+
+  /* 配置と改行の決まり（docs/design/layout-rules.md §4）。幅の値はこの 2 つだけ。
+     Tailwind 4 の max-w-* は --container-* の名前から生えるので、
+     max-w-content（80rem の rail）と max-w-reading（48rem の読み物の列）で使う。 */
+  --content-width: 80rem;
+  --reading-width: 48rem;
+  --container-content: var(--content-width);
+  --container-reading: var(--reading-width);
 }
 
 /* Dark mode overrides */
@@ -222,6 +230,28 @@ blockquote {
   overflow-wrap: anywhere;
   line-break: strict;
   text-wrap: balance;
+}
+
+/* ==========================================================================
+   行を替える印（lib/line-breaks.ts と LbText / LbHeading が付ける）
+   文は 1 行ずつ置き、塊の間だけで折る。塊が箱より長い時は、塊の中で折り返す
+   （word-break: auto-phrase は h1〜h3・p の今の定義が効く）。
+   ========================================================================== */
+
+.lb-sentence {
+  display: block;
+}
+
+.lb-clause {
+  display: inline-block;
+  max-width: 100%;
+  text-wrap: pretty;
+}
+
+/* 塊を持つ題は、字数を等分する折り方（.type-heading・.text-balance の text-wrap: balance）を止める。
+   .type-heading・.text-balance より後に置いてあり、同じ字の重みで後勝ちする。 */
+.lb-heading {
+  text-wrap: wrap;
 }
 
 .landing-container {

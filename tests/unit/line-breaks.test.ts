@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  groupClauses,
-  groupSentences,
-  splitClauses,
-  splitSentences,
-} from '../../src/lib/line-breaks';
+import { groupClauses, groupSentences, splitClauses, splitSentences } from '../../src/lib/line-breaks';
 
 describe('splitSentences', () => {
   it.each([
@@ -185,13 +180,9 @@ describe('括弧を含む文', () => {
     expect(splitSentences(text, 'ja').join('')).toBe(text);
     expect(splitClauses(text, 'ja').join('')).toBe(text);
     const sentences = groupSentences([{ text }], 'ja');
-    expect(
-      sentences
-        .map((sentence) =>
-          sentence.map((clause) => clause.map((part) => part.text).join('')).join('')
-        )
-        .join('')
-    ).toBe(text);
+    expect(sentences.map((sentence) => sentence.map((clause) => clause.map((part) => part.text).join('')).join('')).join('')).toBe(
+      text,
+    );
   });
 
   it('法務の文の最初の塊は、括弧を閉じた後の読点で切れる', () => {
@@ -200,8 +191,20 @@ describe('括弧を含む文', () => {
     const sentences = groupSentences([{ text }], 'ja');
     expect(sentences).toHaveLength(1);
     expect(sentences[0].map((clause) => clause.map((part) => part.text).join(''))[0]).toBe(
-      'Cor.株式会社（以下「当社」といいます。）は、'
+      'Cor.株式会社（以下「当社」といいます。）は、',
     );
+  });
+
+  // 閉じの無い開き括弧の後ろは、今は文の終わりまで行を替えない（深さが 0 に戻らないため）。
+  // 字を欠かさず、落ちず、後ろを勝手に切らない事だけを留める。
+  it('閉じの無い開き括弧の後ろは、文の終わりまで切らず、文字を欠かさない', () => {
+    const text = 'これは例です（未定です。次の文です。';
+    expect(splitSentences(text, 'ja')).toEqual([text]);
+    expect(splitClauses(text, 'ja')).toEqual([text]);
+    const sentences = groupSentences([{ text }], 'ja');
+    expect(sentences).toHaveLength(1);
+    expect(sentences[0]).toHaveLength(1);
+    expect(sentences[0][0].map((part) => part.text).join('')).toBe(text);
   });
 });
 
@@ -214,19 +217,14 @@ describe('groupSentences', () => {
     ];
     const sentences = groupSentences(parts, 'ja');
     expect(sentences).toHaveLength(2);
-    expect(
-      sentences.map((sentence) =>
-        sentence.map((clause) => clause.map((part) => part.text).join('')).join('')
-      )
-    ).toEqual(['必要な情報は電子カルテにある。', 'いつも使っている書式もある。']);
+    expect(sentences.map((sentence) => sentence.map((clause) => clause.map((part) => part.text).join('')).join(''))).toEqual([
+      '必要な情報は電子カルテにある。',
+      'いつも使っている書式もある。',
+    ]);
   });
 
   it('link の途中では切らない（区切りは link の終わりへ寄せる）', () => {
-    const parts = [
-      { text: 'これは、' },
-      { text: '長い、名前のリンク', href: '/x/' },
-      { text: 'です。' },
-    ];
+    const parts = [{ text: 'これは、' }, { text: '長い、名前のリンク', href: '/x/' }, { text: 'です。' }];
     const sentences = groupSentences(parts, 'ja');
     const clauses = sentences[0];
     expect(clauses.map((clause) => clause.map((part) => part.text).join(''))).toEqual([
@@ -246,10 +244,7 @@ describe('groupSentences', () => {
 
 describe('groupClauses', () => {
   it('題を塊に分ける', () => {
-    const clauses = groupClauses(
-      [{ text: '医療機関のAI導入を、記録の整理と書類づくりから。' }],
-      'ja'
-    );
+    const clauses = groupClauses([{ text: '医療機関のAI導入を、記録の整理と書類づくりから。' }], 'ja');
     expect(clauses.map((clause) => clause.map((part) => part.text).join(''))).toEqual([
       '医療機関のAI導入を、',
       '記録の整理と書類づくりから。',
@@ -267,10 +262,7 @@ describe('groupClauses', () => {
   });
 
   it('題は句点でも切る', () => {
-    const clauses = groupClauses(
-      [{ text: '工事日報の転記を減らす。元請ごとの書式に、今ある情報をつなぐ。' }],
-      'ja'
-    );
+    const clauses = groupClauses([{ text: '工事日報の転記を減らす。元請ごとの書式に、今ある情報をつなぐ。' }], 'ja');
     expect(clauses.map((clause) => clause.map((part) => part.text).join(''))).toEqual([
       '工事日報の転記を減らす。',
       '元請ごとの書式に、',

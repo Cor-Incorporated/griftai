@@ -962,13 +962,78 @@ test.describe('/tep/ reading column and line breaks', () => {
         const box = clause.parentElement?.getBoundingClientRect();
         const rect = clause.getBoundingClientRect();
         if (!box) continue;
-        if (rect.left < box.left - 1 || rect.right > box.right + 1) {
+        // 狭い画面で塊は inline になり、行の終わりの全角の閉じ括弧は親の箱の外へ数 px だけ
+        // はみ出してよい（日本語の行末のぶら下げ。横 scroll が出ない事は上の別の検査で見る）。
+        if (rect.left < box.left - 1 || rect.right > box.right + 4) {
           failures.push(`塊が箱からはみ出す: ${(clause.textContent ?? '').slice(0, 30)}`);
+        }
+      }
+      // 狭い画面（幅 390）では、文の中の塊は通常の折り方に戻り、題の塊は inline-block のまま
+      // （docs/design/layout-rules.md の R1 と「確かめ」の 5）。
+      const displayOf = (element: Element): string => window.getComputedStyle(element).display;
+      const bodyClauses = Array.from(document.querySelectorAll('.lb-sentence .lb-clause'));
+      if (bodyClauses.length === 0)
+        failures.push('文の中の塊（.lb-sentence .lb-clause）が 1 つも無い');
+      for (const clause of bodyClauses) {
+        if (displayOf(clause) !== 'inline') {
+          failures.push(
+            `文の中の塊の display が ${displayOf(clause)}（inline のはず）: ${(clause.textContent ?? '').slice(0, 30)}`
+          );
+          break;
+        }
+      }
+      const headingClauses = Array.from(document.querySelectorAll('.lb-heading .lb-clause'));
+      if (headingClauses.length === 0)
+        failures.push('題の塊（.lb-heading .lb-clause）が 1 つも無い');
+      for (const clause of headingClauses) {
+        if (displayOf(clause) !== 'inline-block') {
+          failures.push(
+            `題の塊の display が ${displayOf(clause)}（inline-block のはず）: ${(clause.textContent ?? '').slice(0, 30)}`
+          );
+          break;
         }
       }
       return failures;
     });
     expect(issues, '幅 390 で読み物の列がはみ出る').toEqual([]);
+  });
+
+  test('line-break marks keep their computed styles on wide screens', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/tep/');
+    const issues = await page.evaluate(() => {
+      const failures: string[] = [];
+      const displayOf = (element: Element | null): string =>
+        element ? window.getComputedStyle(element).display : '(要素が無い)';
+
+      const sentence = document.querySelector('.lb-sentence');
+      if (!sentence) failures.push('.lb-sentence が 1 つも無い');
+      else if (displayOf(sentence) !== 'block') {
+        failures.push(`.lb-sentence の display が ${displayOf(sentence)}（block のはず）`);
+      }
+
+      const clause = document.querySelector('.lb-clause');
+      if (!clause) failures.push('.lb-clause が 1 つも無い');
+      else if (displayOf(clause) !== 'inline-block') {
+        failures.push(`.lb-clause の display が ${displayOf(clause)}（inline-block のはず）`);
+      }
+
+      const headings = Array.from(document.querySelectorAll('.lb-heading'));
+      if (headings.length === 0) failures.push('.lb-heading が 1 つも無い');
+      for (const heading of headings) {
+        const style = window.getComputedStyle(heading);
+        const textWrap =
+          style.getPropertyValue('text-wrap') || style.getPropertyValue('text-wrap-mode');
+        if (textWrap.trim() === 'balance') {
+          failures.push(
+            `.lb-heading の text-wrap が balance: ${(heading.textContent ?? '').slice(0, 30)}`
+          );
+        }
+      }
+
+      return failures;
+    });
+    expect(issues, '行の替えの印の CSS が広い画面で効いていない').toEqual([]);
   });
 });
 

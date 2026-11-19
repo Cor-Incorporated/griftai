@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { cliKeyNames, keyNamePattern } from '../scripts/lib/cli-key-names.mjs';
 import { tepComparisons, tepTerms } from '../src/config/tep';
+import siteChrome from '../src/config/site-chrome.json' with { type: 'json' };
 
 test.describe('Landing page smoke tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -120,7 +121,9 @@ test.describe('Landing page smoke tests', () => {
   test('homepage contact CTAs use Cor AI reception', async ({ page }) => {
     const contactLinks = page.locator('a[href*="cor-jp.com/contact/"]');
     const hrefs = await contactLinks.evaluateAll((links) =>
-      links.map((link) => link.getAttribute('href') ?? '')
+      links
+        .filter((link) => !link.closest('nav[aria-label="サイト切替"]'))
+        .map((link) => link.getAttribute('href') ?? '')
     );
 
     expect(hrefs.length).toBeGreaterThan(0);
@@ -1418,4 +1421,128 @@ test('markdown body paragraphs carry line-break marks', async ({ page }) => {
   }
 
   expect(failures, 'markdown の本文に文の印が無い').toEqual([]);
+});
+
+test.describe('共通の header と下の帯', () => {
+  test('1280px: header は 64px で、戻る link と CTA が 1 段に並ぶ', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+
+    const header = page.locator('#site-header');
+    await expect(header).toHaveCSS('position', 'sticky');
+    const headerBox = await header.boundingBox();
+    expect(headerBox).not.toBeNull();
+    expect(Math.round(headerBox!.height)).toBe(64);
+
+    const back = header.getByRole('link', { name: 'Cor. のサイトへ' });
+    await expect(back).toBeVisible();
+    expect(await back.getAttribute('href')).toBe(
+      siteChrome.sites.find((site) => site.id === 'cor')?.href
+    );
+    const backBox = await back.boundingBox();
+    expect(backBox).not.toBeNull();
+    expect(backBox!.height).toBeGreaterThanOrEqual(44);
+
+    await expect(header.getByRole('link', { name: 'テストしてみる' })).toBeVisible();
+  });
+
+  test('390px: header は 56px で、menu の先頭に戻る link が在る', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const header = page.locator('#site-header');
+    const headerBox = await header.boundingBox();
+    expect(headerBox).not.toBeNull();
+    expect(Math.round(headerBox!.height)).toBe(56);
+
+    const menuButton = page.locator('#mobile-menu-button');
+    await expect(menuButton).toBeVisible();
+    const buttonBox = await menuButton.boundingBox();
+    expect(buttonBox).not.toBeNull();
+    expect(Math.round(buttonBox!.width)).toBe(44);
+    expect(Math.round(buttonBox!.height)).toBe(44);
+
+    await menuButton.click();
+    const panel = page.locator('#mobile-menu-panel');
+    await expect(panel).toBeVisible();
+
+    const panelBox = await panel.boundingBox();
+    expect(panelBox).not.toBeNull();
+    expect(panelBox!.y).toBeGreaterThanOrEqual(headerBox!.y + headerBox!.height - 1);
+
+    const firstLink = panel.locator('a').first();
+    expect(await firstLink.getAttribute('href')).toBe(
+      siteChrome.sites.find((site) => site.id === 'cor')?.href
+    );
+    const firstBox = await firstLink.boundingBox();
+    expect(firstBox).not.toBeNull();
+    expect(firstBox!.height).toBeGreaterThanOrEqual(44);
+  });
+
+  test('下の帯: 共通リンクとサイト切替が 3 本ずつで、利用規約を置かない', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+
+    const common = page.locator('footer nav[aria-label="共通リンク"]');
+    const sites = page.locator('footer nav[aria-label="サイト切替"]');
+    await expect(common.locator('a')).toHaveCount(3);
+    await expect(sites.locator('a')).toHaveCount(3);
+
+    const current = sites.locator('a[aria-current="page"]');
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveText('Grift');
+
+    const links = page.locator(
+      'footer nav[aria-label="共通リンク"] a, footer nav[aria-label="サイト切替"] a'
+    );
+    const rels = await links.evaluateAll((items) =>
+      items.map((item) => item.getAttribute('rel') ?? '')
+    );
+    for (const rel of rels) {
+      expect(rel).toContain('noopener');
+    }
+
+    await expect(links.filter({ hasText: '利用規約' })).toHaveCount(0);
+
+    // 旧い下の行（© … と legalLinks の行）が戻ると、© の行が 2 つになる。
+    const copyrightMarks = await page.evaluate(
+      () => (document.body.innerText.match(/©/g) ?? []).length
+    );
+    expect(copyrightMarks).toBe(1);
+    await expect(
+      page.locator('footer').getByRole('link', { name: 'プライバシーポリシー', exact: true })
+    ).toHaveCount(0);
+  });
+
+  test('URL の持ち主は site-chrome.json だけ', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+
+    const back = page.locator('#site-header').getByRole('link', { name: 'Cor. のサイトへ' });
+    expect(await back.getAttribute('href')).toBe(
+      siteChrome.sites.find((site) => site.id === 'cor')?.href
+    );
+
+    const commonHrefs = await page
+      .locator('footer nav[aria-label="共通リンク"] a')
+      .evaluateAll((items) => items.map((item) => item.getAttribute('href')));
+    expect(commonHrefs).toEqual(siteChrome.commonLinks.map((link) => link.href.ja));
+
+    const siteHrefs = await page
+      .locator('footer nav[aria-label="サイト切替"] a')
+      .evaluateAll((items) => items.map((item) => item.getAttribute('href')));
+    expect(siteHrefs).toEqual(siteChrome.sites.map((site) => site.href));
+  });
+
+  test('1280px と 390px で横に 1px もはみ出さない', async ({ page }) => {
+    for (const width of [1280, 390]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/');
+      const widths = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(widths.scrollWidth, `${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+    }
+  });
 });

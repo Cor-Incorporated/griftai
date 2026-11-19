@@ -3,6 +3,8 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import StoryCard from '@/components/common/StoryCard.astro';
 import '@/styles/gmo-columns.css';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 import { siteConfig } from '@/config';
 
 const stories: CollectionEntry<'stories'>[] = (await getCollection('stories')).sort(
@@ -16,11 +18,13 @@ const description =
 
 <MarketingLayout title={title} description={description}>
   <section class="py-section">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-reading mx-auto px-4 sm:px-6 lg:px-8">
       <header class="mb-12">
-        <h1 class="text-4xl font-bold text-text">
-          AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧
-        </h1>
+        <LbHeading
+          as="h1"
+          class="text-4xl font-bold text-text"
+          text="AIを活用した要件定義・自動化ツールやAI開発などに関するコラム一覧"
+        />
       </header>
 
       <div class="prose prose-lg max-w-none dark:prose-invert">
@@ -47,13 +51,18 @@ const description =
 
             <!-- Grift のストーリー（架空の物語）ここから -->
             <section class="not-prose u-mt50" aria-labelledby="story-heading">
-              <h2 id="story-heading" class="text-2xl font-semibold text-text">
-                Griftのストーリー（架空の物語）
-              </h2>
+              <LbHeading
+                as="h2"
+                id="story-heading"
+                class="text-2xl font-semibold text-text"
+                text="Griftのストーリー（架空の物語）"
+              />
               <p class="mt-3 text-base leading-7 text-text-muted">
-                推薦する営業と、推薦されるエンジニアの「よくある場面」を、架空の物語にしました。登場する人物・会社は実在しません。
+                <LbText
+                  >推薦する営業と、推薦されるエンジニアの「よくある場面」を、架空の物語にしました。登場する人物・会社は実在しません。</LbText
+                >
               </p>
-              <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+              <ul class="mt-6 grid gap-4 grid-cols-1">
                 {
                   stories.map((story) => (
                     <li>

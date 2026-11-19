@@ -5,6 +5,8 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import { Icon } from 'astro-icon/components';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 
@@ -105,9 +107,11 @@ const trialSteps = [
   <section class="border-b border-border bg-background">
     <div class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
       <div class="rounded-3xl border border-border bg-surface p-6 sm:p-8">
-        <h2 class="text-xl font-bold text-text">料金の要点</h2>
-        <p class="mt-3 text-pretty text-sm leading-7 text-text-muted">
-          いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。
+        <LbHeading as="h2" class="text-xl font-bold text-text" text="料金の要点" />
+        <p class="mt-3 max-w-[40em] text-pretty text-sm leading-7 text-text-muted">
+          <LbText
+            >いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。</LbText
+          >
         </p>
         <dl class="mt-6 grid gap-4 sm:grid-cols-3">
           {
@@ -148,7 +152,9 @@ const trialSteps = [
                 </a>
               </p>
               <p class="mt-2 text-sm font-semibold text-primary">{item.target}</p>
-              <p class="mt-5 text-pretty text-sm leading-7 text-text-muted">{item.description}</p>
+              <p class="mt-5 text-pretty text-sm leading-7 text-text-muted">
+                <LbText>{item.description}</LbText>
+              </p>
               <div class="mt-6">
                 <p class="text-3xl font-bold text-text">{item.price}</p>
                 <p class="mt-1 text-sm text-text-muted">{item.priceNote}</p>
@@ -178,8 +184,12 @@ const trialSteps = [
           ))
         }
       </div>
-      <p class="mx-auto mt-6 max-w-3xl text-center text-sm leading-7 text-text-muted text-pretty">
-        以前ご案内していた Team Beta・Paid Trial・Estimate Audit は、2026年10月に取り下げました。
+      <p
+        class="mx-auto mt-6 max-w-[40em] text-center text-sm leading-7 text-text-muted text-pretty"
+      >
+        <LbText
+          >以前ご案内していた Team Beta・Paid Trial・Estimate Audit は、2026年10月に取り下げました。</LbText
+        >
       </p>
     </div>
   </section>
@@ -187,7 +197,11 @@ const trialSteps = [
   <section class="bg-background py-section">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
       <div class="mb-12 text-center">
-        <h2 class="text-2xl font-bold text-balance text-text sm:text-3xl">よくある質問</h2>
+        <LbHeading
+          as="h2"
+          class="text-2xl font-bold text-balance text-text sm:text-3xl"
+          text="よくある質問"
+        />
       </div>
       <div class="space-y-4">
         {
@@ -199,7 +213,11 @@ const trialSteps = [
                   <Icon name="lucide:chevron-down" class="size-5" />
                 </span>
               </summary>
-              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">{faq.answer}</div>
+              <div class="px-5 pb-5 text-pretty leading-7 text-text-muted">
+                <p class="max-w-[40em]">
+                  <LbText>{faq.answer}</LbText>
+                </p>
+              </div>
             </details>
           ))
         }
@@ -211,16 +229,20 @@ const trialSteps = [
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
       <div class="rounded-3xl border border-border bg-background p-8 sm:p-10">
         <p class="text-sm font-semibold text-primary">テスト導入の進め方</p>
-        <h2 class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl">
-          お問い合わせからテストまで、3ステップで進みます。
-        </h2>
+        <LbHeading
+          as="h2"
+          class="mt-3 text-balance text-3xl font-bold text-text sm:text-4xl"
+          text="お問い合わせからテストまで、3ステップで進みます。"
+        />
         <ol class="mt-8 grid gap-4 lg:grid-cols-3">
           {
             trialSteps.map((step, index) => (
               <li class="rounded-2xl border border-border bg-surface p-5">
                 <p class="text-sm font-semibold text-primary">STEP {index + 1}</p>
-                <h3 class="mt-2 text-lg font-semibold text-text">{step.title}</h3>
-                <p class="mt-2 text-pretty text-sm leading-7 text-text-muted">{step.body}</p>
+                <LbHeading as="h3" class="mt-2 text-lg font-semibold text-text" text={step.title} />
+                <p class="mt-2 text-pretty text-sm leading-7 text-text-muted">
+                  <LbText>{step.body}</LbText>
+                </p>
               </li>
             ))
           }

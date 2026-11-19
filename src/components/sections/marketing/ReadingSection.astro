@@ -1,4 +1,7 @@
 ---
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
+
 /**
  * ReadingSection - トップから「思想の記事」と「コラム」へ回遊させる読みものの入口
  *
@@ -19,19 +22,23 @@ const featuredColumns = columnArticles
 
 <section id="reading" class="section-animate landing-section border-y border-border bg-surface">
   <div class="landing-container">
-    <div class="fade-in-section max-w-3xl space-y-4">
+    <div class="fade-in-section max-w-[40em] space-y-4">
       <p class="section-kicker">思想とコラム</p>
-      <h2 class="type-heading text-3xl font-semibold text-text sm:text-4xl">
-        なぜ点数にしないのか。記事とコラムで、もう少し詳しく。
-      </h2>
+      <LbHeading
+        as="h2"
+        class="type-heading text-3xl font-semibold text-text sm:text-4xl"
+        text="なぜ点数にしないのか。記事とコラムで、もう少し詳しく。"
+      />
       <p class="type-copy text-lg text-text-muted">
-        Griftの考え方は記事で、受託開発の見積・要件定義の実務はコラムで紹介しています。
+        <LbText
+          >Griftの考え方は記事で、受託開発の見積・要件定義の実務はコラムで紹介しています。</LbText
+        >
       </p>
     </div>
 
     <div class="mt-10 grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
       <div>
-        <h3 class="text-lg font-semibold text-text">Griftの思想</h3>
+        <LbHeading as="h3" class="text-lg font-semibold text-text" text="Griftの思想" />
         <ul class="stagger-children mt-4 grid gap-3">
           {
             griftArticles.map((article) => (
@@ -61,7 +68,11 @@ const featuredColumns = columnArticles
       </div>
 
       <div>
-        <h3 class="text-lg font-semibold text-text">コラム（受託開発の見積・要件定義）</h3>
+        <LbHeading
+          as="h3"
+          class="text-lg font-semibold text-text"
+          text="コラム（受託開発の見積・要件定義）"
+        />
         <ol class="stagger-children mt-4 grid gap-3 sm:grid-cols-2">
           {
             featuredColumns.map((article) => (

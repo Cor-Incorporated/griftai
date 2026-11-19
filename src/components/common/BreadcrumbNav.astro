@@ -14,14 +14,21 @@ interface BreadcrumbItem {
 
 interface Props {
   items: BreadcrumbItem[];
+  /** 幅。既定は今のまま（max-w-7xl = 80rem）。reading で読み物の列（48rem）に揃える */
+  width?: 'default' | 'reading';
 }
 
-const { items } = Astro.props;
+const { items, width = 'default' } = Astro.props;
 const trail: BreadcrumbItem[] = [{ label: 'トップ', href: '/' }, ...items];
 ---
 
 <nav aria-label="パンくずリスト" class="bg-background">
-  <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+  <div
+    class:list={[
+      'mx-auto px-4 pt-6 sm:px-6 lg:px-8',
+      width === 'reading' ? 'max-w-reading' : 'max-w-7xl',
+    ]}
+  >
     <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-text-muted">
       {
         trail.map((item, index) => {

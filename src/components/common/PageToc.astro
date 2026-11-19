@@ -15,13 +15,20 @@ interface TocItem {
 interface Props {
   items: TocItem[];
   heading?: string;
+  /** 幅。既定は今のまま（max-w-7xl = 80rem）。reading で読み物の列（48rem）に揃える */
+  width?: 'default' | 'reading';
 }
 
-const { items, heading = 'このページの内容' } = Astro.props;
+const { items, heading = 'このページの内容', width = 'default' } = Astro.props;
 ---
 
 <nav aria-label="ページ内目次" class="border-y border-border bg-surface">
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+  <div
+    class:list={[
+      'mx-auto px-4 py-6 sm:px-6 lg:px-8',
+      width === 'reading' ? 'max-w-reading' : 'max-w-7xl',
+    ]}
+  >
     <p class="text-sm font-semibold text-primary">{heading}</p>
     <ol class="mt-3 flex flex-wrap gap-x-2 gap-y-2">
       {

@@ -1,0 +1,249 @@
+---
+/**
+ * LbText — 段落と箇条の文を、文（lb-sentence）と読点までの塊（lb-clause）の span で包む。
+ *
+ * slot で行の中の HTML（a・strong・em・code・CliName の code など）を受け取る。
+ * Astro.slots.render で文字列にしてから「割れない部品」と文字に分け、
+ * 文字の所だけを lib/line-breaks.ts の groupSentences に渡す（部品は塊の中にそのまま置く）。
+ * slot の中に p・ul・table などの block が在る時は、何もせずそのまま出す。
+ * 出力は escape 済みの slot の HTML を組み替えるだけなので、2 重に escape しない。
+ * span の間に空白も改行も出さない（文は 1 字も変えない）。
+ * このサイトは日本語だけ（lang="ja"）。
+ */
+import { groupSentences, type InlinePart } from '@/lib/line-breaks';
+
+const locale = 'ja';
+
+/** 割れない部品になる行の中の要素。CliName が出す code もここに含まれる。 */
+const ATOMIC_TAGS = new Set([
+  'a',
+  'abbr',
+  'b',
+  'br',
+  'cite',
+  'code',
+  'em',
+  'i',
+  'img',
+  'kbd',
+  'mark',
+  'q',
+  's',
+  'samp',
+  'small',
+  'span',
+  'strong',
+  'sub',
+  'sup',
+  'time',
+  'u',
+  'var',
+  'wbr',
+]);
+/** 在った時は何もせずそのまま出す block の要素。 */
+const BLOCK_TAGS = new Set([
+  'p',
+  'div',
+  'ul',
+  'ol',
+  'li',
+  'dl',
+  'dt',
+  'dd',
+  'table',
+  'thead',
+  'tbody',
+  'tfoot',
+  'tr',
+  'td',
+  'th',
+  'caption',
+  'figure',
+  'figcaption',
+  'blockquote',
+  'pre',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'section',
+  'article',
+  'aside',
+  'header',
+  'footer',
+  'nav',
+  'details',
+  'summary',
+  'hr',
+]);
+const VOID_TAGS = new Set(['br', 'img', 'wbr']);
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: '\u00a0',
+};
+
+/** slot の断片。atomic = 割れない部品（html をそのまま出す）。文字の断片は 1 字。 */
+type Piece = { html: string; text: string; atomic: boolean };
+type LbPart = InlinePart & { piece: Piece };
+
+/** tag 名を読む（< の直後の英字と - ）。 */
+function tagNameAt(html: string, start: number): string {
+  const match = /^<\/?([a-zA-Z][a-zA-Z0-9-]*)/.exec(html.slice(start, start + 12));
+  return match?.[1]?.toLowerCase() ?? '';
+}
+
+/** 部品（開き tag から一致する閉じ tag まで）の終わりの位置。 */
+function atomicEnd(html: string, start: number, tag: string): number {
+  const close = `</${tag}`;
+  let depth = 0;
+  let i = start;
+  while (i < html.length) {
+    const next = html.indexOf('<', i);
+    if (next < 0) return html.length;
+    if (html.startsWith(close, next)) {
+      depth -= 1;
+      if (depth <= 0) {
+        const end = html.indexOf('>', next);
+        return end < 0 ? html.length : end + 1;
+      }
+      i = next + close.length;
+      continue;
+    }
+    if (html.startsWith(`<${tag}`, next)) {
+      const after = html[next + tag.length + 1];
+      if (after === undefined || /[\s/>]/.test(after)) depth += 1;
+    }
+    i = next + 1;
+  }
+  return html.length;
+}
+
+/** entity（&amp; &#65; など）を 1 字として読む。entity でなければ null。 */
+function entityAt(html: string, start: number): { length: number; char: string } | null {
+  if (html[start] !== '&') return null;
+  const match = /^&(#[0-9]+|#[xX][0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);/.exec(
+    html.slice(start, start + 12)
+  );
+  if (!match?.[1]) return null;
+  const body = match[1];
+  if (body.startsWith('#')) {
+    const code =
+      body[1] === 'x' || body[1] === 'X'
+        ? Number.parseInt(body.slice(2), 16)
+        : Number.parseInt(body.slice(1), 10);
+    if (!Number.isFinite(code)) return null;
+    try {
+      return { length: match[0].length, char: String.fromCodePoint(code) };
+    } catch {
+      return null;
+    }
+  }
+  const named = NAMED_ENTITIES[body] ?? NAMED_ENTITIES[body.toLowerCase()];
+  return named ? { length: match[0].length, char: named } : null;
+}
+
+/** 部品の html から、tag を除いた文字を取り出す（切る位置を守るための目安に使う）。 */
+function innerTextOf(html: string): string {
+  let text = '';
+  for (let i = 0; i < html.length; ) {
+    if (html[i] === '<') {
+      const end = html.indexOf('>', i);
+      i = end < 0 ? html.length : end + 1;
+      continue;
+    }
+    const entity = entityAt(html, i);
+    if (entity) {
+      text += entity.char;
+      i += entity.length;
+      continue;
+    }
+    const code = html.codePointAt(i) ?? 0;
+    const length = code > 0xffff ? 2 : 1;
+    text += html.slice(i, i + length);
+    i += length;
+  }
+  return text;
+}
+
+/** slot の HTML を「割れない部品」と「1 字ごとの文字」に分ける。block が在った時は null。 */
+function parseSlot(html: string): Piece[] | null {
+  const pieces: Piece[] = [];
+  let i = 0;
+  while (i < html.length) {
+    if (html[i] !== '<') {
+      const entity = entityAt(html, i);
+      const length = entity?.length ?? (Number(html.codePointAt(i)) > 0xffff ? 2 : 1);
+      pieces.push({
+        html: html.slice(i, i + length),
+        text: entity?.char ?? html.slice(i, i + length),
+        atomic: false,
+      });
+      i += length;
+      continue;
+    }
+    if (html.startsWith('<!--', i)) {
+      const end = html.indexOf('-->', i);
+      const stop = end < 0 ? html.length : end + 3;
+      pieces.push({ html: html.slice(i, stop), text: '\u0000', atomic: true });
+      i = stop;
+      continue;
+    }
+    const tag = tagNameAt(html, i);
+    if (BLOCK_TAGS.has(tag)) return null; // block は分けずにそのまま出す
+    if (!ATOMIC_TAGS.has(tag)) {
+      // 知らない tag は、切って壊さないために 1 つの部品にする
+      const end = html.indexOf('>', i);
+      const stop = end < 0 ? html.length : end + 1;
+      pieces.push({ html: html.slice(i, stop), text: '\u0000', atomic: true });
+      i = stop;
+      continue;
+    }
+    const isClosing = html[i + 1] === '/';
+    const end = html.indexOf('>', i);
+    const selfEnd = end < 0 ? html.length : end + 1;
+    if (isClosing || VOID_TAGS.has(tag) || html.endsWith('/>', selfEnd)) {
+      pieces.push({ html: html.slice(i, selfEnd), text: '\u0000', atomic: true });
+      i = selfEnd;
+      continue;
+    }
+    const stop = atomicEnd(html, i, tag);
+    const pieceHtml = html.slice(i, stop);
+    pieces.push({ html: pieceHtml, text: innerTextOf(pieceHtml) || '\u0000', atomic: true });
+    i = stop;
+  }
+  return pieces;
+}
+
+const slotHtml = (await Astro.slots.render('default')) ?? '';
+const pieces = parseSlot(slotHtml);
+let html = slotHtml; // block が在った時・slot が空の時は、何もせずそのまま出す
+if (pieces) {
+  const parts: LbPart[] = pieces.map((piece) => ({
+    // 割れない部品は link と同じ扱いで、塊の途中で切らない
+    text: piece.text,
+    href: piece.atomic && piece.text.length > 1 ? '@lb-atomic' : undefined,
+    external: false,
+    piece,
+  }));
+  const sentences = groupSentences(parts, locale);
+  html = sentences
+    .map(
+      (sentence) =>
+        `<span class="lb-sentence">${sentence
+          .map(
+            (clause) =>
+              `<span class="lb-clause">${(clause as LbPart[]).map((part) => part.piece.html).join('')}</span>`
+          )
+          .join('')}</span>`
+    )
+    .join('');
+}
+---
+
+<Fragment set:html={html} />

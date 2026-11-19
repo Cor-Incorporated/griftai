@@ -5,6 +5,8 @@ import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
 import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
 import DocumentDownload from '@/components/common/DocumentDownload.astro';
 import NextStep from '@/components/common/NextStep.astro';
+import LbHeading from '@/components/common/LbHeading.astro';
+import LbText from '@/components/common/LbText.astro';
 import { griftCli, siteConfig } from '@/config';
 import { corCta } from '@/lib/cor-cta';
 import { articleCategoryLabel, formatCmsDate, isPublicCmsEntry } from '@/lib/cms-content';
@@ -49,17 +51,26 @@ const breadcrumbSchema = {
   tags={article.data.tags}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-  <BreadcrumbNav items={[{ label: '記事', href: '/articles/' }, { label: article.data.title }]} />
+  <BreadcrumbNav
+    items={[{ label: '記事', href: '/articles/' }, { label: article.data.title }]}
+    width="reading"
+  />
   <article class="pb-section">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-reading px-4 sm:px-6 lg:px-8">
       <header class="mt-8 space-y-4">
         <p class="text-sm font-semibold text-primary">
           {articleCategoryLabel(article.data.category)}・{formatCmsDate(article.data.pubDate)}
         </p>
-        <h1 class="text-3xl font-bold text-balance text-text sm:text-4xl">{article.data.title}</h1>
+        <LbHeading
+          as="h1"
+          class="text-3xl font-bold text-balance text-text sm:text-4xl"
+          text={article.data.title}
+        />
         {
           article.data.summary && (
-            <p class="text-lg leading-8 text-text-muted text-pretty">{article.data.summary}</p>
+            <p class="text-lg leading-8 text-text-muted text-pretty">
+              <LbText>{article.data.summary}</LbText>
+            </p>
           )
         }
       </header>
@@ -83,5 +94,7 @@ const breadcrumbSchema = {
       { label: '自社でテストしてみる', href: contactUrl, primary: true, isExternal: true },
       { label: 'GitHubでGrift CLIを見る', href: griftCli.github, isExternal: true },
     ]}
+    width="reading"
+    align="left"
   />
 </MarketingLayout>

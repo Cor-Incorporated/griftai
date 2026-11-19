@@ -32,6 +32,14 @@
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
+
+  /* 配置と改行の決まり（docs/design/layout-rules.md §4）。幅の値はこの 2 つだけ。
+     Tailwind 4 の max-w-* は --container-* の名前から生えるので、
+     max-w-content（80rem の rail）と max-w-reading（48rem の読み物の列）で使う。 */
+  --content-width: 80rem;
+  --reading-width: 48rem;
+  --container-content: var(--content-width);
+  --container-reading: var(--reading-width);
 }
 
 /* Dark mode overrides */
@@ -224,6 +232,55 @@ blockquote {
   text-wrap: balance;
 }
 
+/* ==========================================================================
+   行を替える印（lib/line-breaks.ts と LbText / LbHeading が付ける）
+   文は 1 行ずつ置き、塊の間だけで折る。塊が箱より長い時は、塊の中で折り返す
+   （word-break: auto-phrase は h1〜h3・p の今の定義が効く）。
+   ========================================================================== */
+
+.lb-sentence {
+  display: block;
+}
+
+.lb-clause {
+  display: inline-block;
+  max-width: 100%;
+  text-wrap: pretty;
+}
+
+/* 狭い画面（幅 640px 未満。本文の文字を 16px にする Tailwind の sm と同じ境）では、
+   本文は文の終わり（句点）でだけ行を替える（docs/design/layout-rules.md の R1）。
+   文の中の塊を通常の折り方に戻し、文に text-wrap: pretty を当てて
+   最後の行に 1〜2 字だけ残るのを減らす。塊は .lb-sentence の子孫すべてに当てる
+   （link などを挟んで直下に無い塊も、文の中の塊だから同様に流す）。
+   題の塊（.lb-heading の中の .lb-clause）は .lb-sentence の中に無いので
+   inline-block のまま（題は狭い画面でも読点で切る）。 */
+@media not all and (min-width: 640px) {
+  .lb-sentence .lb-clause {
+    display: inline;
+    max-width: none;
+  }
+
+  .lb-sentence {
+    text-wrap: pretty;
+  }
+}
+
+/* 塊を持つ題は、字数を等分する折り方（.type-heading・.type-action・.text-balance の text-wrap: balance）を止める。
+   要素の型と class を重ねて書き、出る順番に頼らず効かせる。 */
+h1.lb-heading,
+h2.lb-heading,
+h3.lb-heading,
+.type-heading.lb-heading {
+  text-wrap: wrap;
+}
+
+/* 段落の中の <br> は残す。直前で文が終わっている時（.lb-sentence の直後）は、
+   <br> の改行と文の block の改行で行が 2 つ空かないよう、<br> を消す。 */
+.lb-sentence + br {
+  display: none;
+}
+
 .landing-container {
   max-width: 80rem;
   margin-inline: auto;
@@ -249,7 +306,7 @@ blockquote {
 .surface-panel {
   border: 1px solid var(--color-border);
   border-radius: 1.25rem;
-  background: var(--color-background);
+  background: var(--color-surface);
   box-shadow: 0 10px 30px -24px oklch(0 0 0 / 0.28);
 }
 

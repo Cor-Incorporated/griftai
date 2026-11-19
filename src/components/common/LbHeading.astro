@@ -1,0 +1,33 @@
+---
+/**
+ * LbHeading — 題（h1〜h3）を読点・句点の後だけの塊に分ける（docs/design/layout-rules.md の R1）。
+ *
+ * 字数を等分する折り方（text-wrap: balance）には任せない。span の組み方は
+ * lib/line-breaks.ts の groupClauses。行の CSS は global.css の .lb-heading が
+ * .type-heading / .text-balance より後に置いてあり、後勝ちで balance を止める。
+ * このサイトは日本語だけ（lang="ja"）。span の間に空白も改行も出さない。
+ */
+import { groupClauses } from '@/lib/line-breaks';
+
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3';
+  class?: string;
+  /** 見出しに置く id（aria-labelledby と目次の合図に使う） */
+  id?: string;
+}
+
+const { text, as: Tag = 'h2', class: className, id }: Props = Astro.props;
+const locale = 'ja';
+const escapeHtml = (value: string) =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const html = groupClauses([{ text }], locale)
+  .map(
+    (clause) =>
+      `<span class="lb-clause">${clause.map((part) => escapeHtml(part.text)).join('')}</span>`
+  )
+  .join('');
+const classes = `${className ?? ''} lb-heading`.trim();
+---
+
+<Tag class={classes} id={id}><Fragment set:html={html} /></Tag>

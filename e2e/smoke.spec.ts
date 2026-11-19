@@ -680,3 +680,742 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     ]);
   });
 });
+
+// ==========================================================================
+// 読み物の列と行の替わり方（配置と改行の決まり R1〜R3）。手本は /tep/。
+// ==========================================================================
+
+const READING_COLUMN_MAX_PX = 768; // 48rem = 全角 40 字ぶん（18px のとき 720px 以下）
+const COLUMN_TOLERANCE_PX = 2;
+
+// font の違う環境（CI の Linux など）では、同じ字数でも英数字や等幅の字の幅が広い。
+// 字数で決めると、実際には箱に収まらない文を「1 行のはず」と誤って数える。
+// この関数を page.evaluate で仕込み、読み物と LP の試験で使い回す。
+type LineBreakProbe = {
+  lineCount: (element: Element) => number;
+  unwrappedWidth: (element: Element) => number;
+  contentWidth: (element: Element) => number;
+  sentenceFailures: () => string[];
+  judgedCount: () => number;
+};
+
+declare global {
+  interface Window {
+    __lineBreakProbe?: LineBreakProbe;
+  }
+}
+
+function installLineBreakProbe(): void {
+  // 行の数は、要素の高さを行の高さで割って数える。inline の code は、同じ行でも
+  // 上下の padding で Range の top が 9px ずれる事があり、top を 8px でまとめる数え方だと
+  // 1 行を 2 行と誤る。手で入れた <br> は折り返しではないので、その数だけ引く。
+  const lineCount = (element: Element): number => {
+    const manualBreaks = element.querySelectorAll('br').length;
+    const style = window.getComputedStyle(element);
+    const lineHeight = Number.parseFloat(style.lineHeight);
+    const height = element.getBoundingClientRect().height;
+    if (Number.isFinite(lineHeight) && lineHeight > 0 && height > 0) {
+      return Math.max(1, Math.round(height / lineHeight) - manualBreaks);
+    }
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const rects = Array.from(range.getClientRects()).filter(
+      (rect) => rect.width > 0 && rect.height > 0
+    );
+    const tops: number[] = [];
+    for (const rect of rects) {
+      if (!tops.some((top) => Math.abs(top - rect.top) <= 8)) tops.push(rect.top);
+    }
+    range.detach();
+    return Math.max(1, tops.length - manualBreaks);
+  };
+
+  // 折り返さない時の幅。複製を不可視・nowrap で親に置いて測り、終わったら必ず消す
+  // （元の要素の見た目は変えない）。手で入れた <br> は、折り返さない時の幅を測るため
+  // 空白に置き換える（<br> を残すと、複製の幅が長い方の行だけになる）。
+  const unwrappedWidth = (element: Element): number => {
+    const clone = element.cloneNode(true) as HTMLElement;
+    for (const br of Array.from(clone.querySelectorAll('br'))) br.replaceWith(' ');
+    clone.style.position = 'absolute';
+    clone.style.visibility = 'hidden';
+    clone.style.whiteSpace = 'nowrap';
+    clone.style.maxWidth = 'none';
+    clone.style.width = 'auto';
+    clone.style.display = 'inline-block';
+    element.parentElement?.appendChild(clone);
+    const width = clone.getBoundingClientRect().width;
+    clone.remove();
+    return width;
+  };
+
+  // 文を置く箱（親）の中身の幅。文字が流れるのは padding と border の内側だけなので、
+  // 親の矩形から左右の padding と border を引く。clientWidth は整数に丸めて返すので使わない
+  // （丸めた値と、折り返さない時の幅の小数が、境界でどちらにも転ぶ）。
+  const contentWidth = (element: Element): number => {
+    const parent = element.parentElement;
+    if (!parent) return document.documentElement.clientWidth;
+    const style = window.getComputedStyle(parent);
+    const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+    const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+    const borderLeft = Number.parseFloat(style.borderLeftWidth) || 0;
+    const borderRight = Number.parseFloat(style.borderRightWidth) || 0;
+    return (
+      parent.getBoundingClientRect().width - paddingLeft - paddingRight - borderLeft - borderRight
+    );
+  };
+
+  // 折り返さない時の幅が箱より 1px 以上小さい文だけを「1 行のはず」とし、2 行以上なら落とす。
+  // 箱との差が 1px 未満の文は、丸めでどちらにも転ぶので判定から外す（箱より広い文も、
+  // 折り返して当然なので同じく外す）。判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  const sentenceFailures = (): string[] => {
+    const failures: string[] = [];
+    let judged = 0;
+    const sentences = Array.from(document.querySelectorAll('.lb-sentence'));
+    if (sentences.length === 0) failures.push('.lb-sentence が 1 つも無い');
+    for (const sentence of sentences) {
+      const text = (sentence.textContent ?? '').replace(/\s+/g, '');
+      if (text.length === 0) continue;
+      const box = contentWidth(sentence);
+      const nowrapWidth = unwrappedWidth(sentence);
+      if (nowrapWidth > box - 1) continue;
+      judged += 1;
+      const lines = lineCount(sentence);
+      if (lines !== 1) {
+        const chars = Array.from(text).length;
+        failures.push(
+          `文が 1 行に収まらない（幅 ${nowrapWidth.toFixed(1)}px / 箱 ${box.toFixed(1)}px、${chars} 字）: ${text.slice(0, 40)}`
+        );
+      }
+    }
+    if (judged === 0)
+      failures.push('「1 行のはず」と判定した文が 0 個（幅の測り方が空振りしている）');
+    return failures;
+  };
+
+  // route ごとに「1 行のはず」と判定した文の数（報告用。合否は sentenceFailures が見る）。
+  const judgedCount = (): number => {
+    let judged = 0;
+    for (const sentence of Array.from(document.querySelectorAll('.lb-sentence'))) {
+      const text = (sentence.textContent ?? '').replace(/\s+/g, '');
+      if (text.length === 0) continue;
+      if (unwrappedWidth(sentence) > contentWidth(sentence) - 1) continue;
+      judged += 1;
+    }
+    return judged;
+  };
+
+  window.__lineBreakProbe = {
+    lineCount,
+    unwrappedWidth,
+    contentWidth,
+    sentenceFailures,
+    judgedCount,
+  };
+}
+
+interface ColumnBox {
+  name: string;
+  left: number;
+  right: number;
+  width: number;
+}
+
+test.describe('/tep/ reading column and line breaks', () => {
+  test('reading column boxes share one centered column on wide screens', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/tep/');
+      const result = await page.evaluate(() => {
+        const contentBox = (element: Element): ColumnBox => {
+          const style = window.getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+          const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+          return {
+            name: `${element.tagName.toLowerCase()}.${Array.from(element.classList)
+              .filter((className) => className.startsWith('max-w-'))
+              .join('.')}`,
+            left: rect.left + paddingLeft,
+            right: rect.right - paddingRight,
+            width: rect.width - paddingLeft - paddingRight,
+          };
+        };
+        const seen = new Set<Element>();
+        const boxes: ColumnBox[] = [];
+        for (const element of Array.from(document.querySelectorAll('main .mx-auto'))) {
+          if (seen.has(element)) continue;
+          seen.add(element);
+          const style = window.getComputedStyle(element);
+          if (style.display === 'none' || style.visibility === 'hidden') continue;
+          const box = contentBox(element);
+          if (box.width > 0) boxes.push(box);
+        }
+        return { boxes, center: document.documentElement.clientWidth / 2 };
+      });
+      const labels = result.boxes.map((box) => box.name).join(', ');
+      expect(
+        result.boxes.length,
+        `main の中に .mx-auto の箱がある (width=${width})`
+      ).toBeGreaterThan(0);
+      const first = result.boxes[0];
+      const misaligned = result.boxes.filter(
+        (box) =>
+          Math.abs(box.left - first.left) > COLUMN_TOLERANCE_PX ||
+          Math.abs(box.right - first.right) > COLUMN_TOLERANCE_PX
+      );
+      expect(
+        misaligned.map((box) => box.name),
+        `箱の左右の端がそろわない (width=${width}, boxes=${labels}): ${misaligned
+          .map((box) => `${box.name} left=${box.left.toFixed(1)} right=${box.right.toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+      const offCenter = result.boxes.filter(
+        (box) => Math.abs(box.left + box.width / 2 - result.center) > COLUMN_TOLERANCE_PX
+      );
+      expect(
+        offCenter.map((box) => box.name),
+        `箱が画面の中央にない (width=${width}, center=${result.center}): ${offCenter
+          .map((box) => `${box.name} center=${(box.left + box.width / 2).toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+      const tooWide = result.boxes.filter((box) => box.width > READING_COLUMN_MAX_PX + 0.5);
+      expect(
+        tooWide.map((box) => box.name),
+        `箱が ${READING_COLUMN_MAX_PX}px を超える (width=${width}): ${tooWide
+          .map((box) => `${box.name} width=${box.width.toFixed(1)}`)
+          .join('; ')}`
+      ).toEqual([]);
+    }
+  });
+
+  test('headings and sentences break at meaning boundaries on wide screens', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/tep/');
+      await page.evaluate(installLineBreakProbe);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const probe = window.__lineBreakProbe;
+        if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+
+        const heading = document.querySelector('main h1');
+        if (!heading) failures.push('h1 が無い');
+
+        const h1Clauses = Array.from(document.querySelectorAll('main h1 .lb-clause'));
+        if (h1Clauses.length < 2) {
+          failures.push(
+            `h1 の塊が ${h1Clauses.length} 個（2 個以上のはず）: ${heading?.textContent?.trim() ?? ''}`
+          );
+        }
+        for (const clause of h1Clauses) {
+          const box = probe.contentWidth(clause);
+          if (probe.unwrappedWidth(clause) > box + 1) continue;
+          const lines = probe.lineCount(clause);
+          if (lines !== 1) {
+            failures.push(`h1 の塊が ${lines} 行に割れている: ${clause.textContent ?? ''}`);
+          }
+        }
+
+        failures.push(...probe.sentenceFailures());
+
+        for (const paragraph of Array.from(document.querySelectorAll('main p')).filter((p) =>
+          p.querySelector('.lb-sentence')
+        )) {
+          const style = window.getComputedStyle(paragraph);
+          const fontSize = Number.parseFloat(style.fontSize) || 16;
+          const box = paragraph.clientWidth;
+          if (box > fontSize * 40 + 1) {
+            failures.push(
+              `本文の箱が全角 40 字を超える（${box.toFixed(1)}px / ${fontSize}px の ${(box / fontSize).toFixed(1)} 字）: ${(paragraph.textContent ?? '').slice(0, 30)}`
+            );
+          }
+        }
+
+        const inTables = document.querySelectorAll(
+          'main table .lb-sentence, main table .lb-clause'
+        );
+        if (inTables.length > 0) failures.push(`表の中に印がある（${inTables.length} 個）`);
+        const inCode = document.querySelectorAll('main pre .lb-sentence, main pre .lb-clause');
+        if (inCode.length > 0) failures.push(`code の中に印がある（${inCode.length} 個）`);
+
+        return failures;
+      });
+      expect(issues, `行の替わり方が決まりどおりでない (width=${width})`).toEqual([]);
+    }
+  });
+
+  test('reading column has no horizontal overflow on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/tep/');
+    const issues = await page.evaluate(() => {
+      const failures: string[] = [];
+      const root = document.documentElement;
+      const scrollWidth = Math.max(root.scrollWidth, document.body?.scrollWidth ?? 0);
+      if (scrollWidth > root.clientWidth + 2) {
+        failures.push(
+          `横 scroll が出る（scrollWidth=${scrollWidth} > clientWidth=${root.clientWidth}）`
+        );
+      }
+      const clauses = Array.from(document.querySelectorAll('.lb-clause'));
+      if (clauses.length === 0) failures.push('.lb-clause が 1 つも無い');
+      for (const clause of clauses) {
+        const box = clause.parentElement?.getBoundingClientRect();
+        const rect = clause.getBoundingClientRect();
+        if (!box) continue;
+        // 狭い画面で塊は inline になり、行の終わりの全角の閉じ括弧は親の箱の外へ数 px だけ
+        // はみ出してよい（日本語の行末のぶら下げ。横 scroll が出ない事は上の別の検査で見る）。
+        if (rect.left < box.left - 1 || rect.right > box.right + 4) {
+          failures.push(`塊が箱からはみ出す: ${(clause.textContent ?? '').slice(0, 30)}`);
+        }
+      }
+      // 狭い画面（幅 390）では、文の中の塊は通常の折り方に戻り、題の塊は inline-block のまま
+      // （docs/design/layout-rules.md の R1 と「確かめ」の 5）。
+      const displayOf = (element: Element): string => window.getComputedStyle(element).display;
+      const bodyClauses = Array.from(document.querySelectorAll('.lb-sentence .lb-clause'));
+      if (bodyClauses.length === 0)
+        failures.push('文の中の塊（.lb-sentence .lb-clause）が 1 つも無い');
+      for (const clause of bodyClauses) {
+        if (displayOf(clause) !== 'inline') {
+          failures.push(
+            `文の中の塊の display が ${displayOf(clause)}（inline のはず）: ${(clause.textContent ?? '').slice(0, 30)}`
+          );
+          break;
+        }
+      }
+      const headingClauses = Array.from(document.querySelectorAll('.lb-heading .lb-clause'));
+      if (headingClauses.length === 0)
+        failures.push('題の塊（.lb-heading .lb-clause）が 1 つも無い');
+      for (const clause of headingClauses) {
+        if (displayOf(clause) !== 'inline-block') {
+          failures.push(
+            `題の塊の display が ${displayOf(clause)}（inline-block のはず）: ${(clause.textContent ?? '').slice(0, 30)}`
+          );
+          break;
+        }
+      }
+      return failures;
+    });
+    expect(issues, '幅 390 で読み物の列がはみ出る').toEqual([]);
+  });
+
+  test('line-break marks keep their computed styles on wide screens', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/tep/');
+    const issues = await page.evaluate(() => {
+      const failures: string[] = [];
+      const displayOf = (element: Element | null): string =>
+        element ? window.getComputedStyle(element).display : '(要素が無い)';
+
+      const sentence = document.querySelector('.lb-sentence');
+      if (!sentence) failures.push('.lb-sentence が 1 つも無い');
+      else if (displayOf(sentence) !== 'block') {
+        failures.push(`.lb-sentence の display が ${displayOf(sentence)}（block のはず）`);
+      }
+
+      const clause = document.querySelector('.lb-clause');
+      if (!clause) failures.push('.lb-clause が 1 つも無い');
+      else if (displayOf(clause) !== 'inline-block') {
+        failures.push(`.lb-clause の display が ${displayOf(clause)}（inline-block のはず）`);
+      }
+
+      const headings = Array.from(document.querySelectorAll('.lb-heading'));
+      if (headings.length === 0) failures.push('.lb-heading が 1 つも無い');
+      for (const heading of headings) {
+        const style = window.getComputedStyle(heading);
+        const textWrap =
+          style.getPropertyValue('text-wrap') || style.getPropertyValue('text-wrap-mode');
+        if (textWrap.trim() === 'balance') {
+          failures.push(
+            `.lb-heading の text-wrap が balance: ${(heading.textContent ?? '').slice(0, 30)}`
+          );
+        }
+      }
+
+      return failures;
+    });
+    expect(issues, '行の替えの印の CSS が広い画面で効いていない').toEqual([]);
+  });
+});
+
+// ==========================================================================
+// 配置と改行の決まりを、読み物と LP の残りの page に広げた時の確かめ。
+// 測り方は /tep/ の describe と同じ（箱の端・中央・幅、題と文の塊、幅 390）。
+// ==========================================================================
+
+const READING_ROUTES = [
+  '/terms/',
+  '/privacy/',
+  '/faq/',
+  '/column/',
+  '/column/story-ai-activity/',
+  '/column/story-java-5-years/',
+  '/column/story-recommendation-reason/',
+  '/articles/',
+  '/articles/git-history-facts/',
+  '/news/',
+  '/news/cli-published/',
+];
+
+const LP_ROUTES = ['/', '/pricing/'];
+
+test.describe('reading column rollout (terms, privacy, faq, column, articles, news)', () => {
+  test('reading routes share one centered column on wide screens', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      for (const width of [1440, 1920]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(route);
+        const result = await page.evaluate(() => {
+          const contentBox = (element: Element): ColumnBox => {
+            const style = window.getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+            const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+            return {
+              name: `${element.tagName.toLowerCase()}.${Array.from(element.classList)
+                .filter((className) => className.startsWith('max-w-'))
+                .join('.')}`,
+              left: rect.left + paddingLeft,
+              right: rect.right - paddingRight,
+              width: rect.width - paddingLeft - paddingRight,
+            };
+          };
+          const seen = new Set<Element>();
+          const boxes: ColumnBox[] = [];
+          for (const element of Array.from(document.querySelectorAll('main .mx-auto'))) {
+            if (seen.has(element)) continue;
+            seen.add(element);
+            const style = window.getComputedStyle(element);
+            if (style.display === 'none' || style.visibility === 'hidden') continue;
+            const box = contentBox(element);
+            if (box.width > 0) boxes.push(box);
+          }
+          return { boxes, center: document.documentElement.clientWidth / 2 };
+        });
+        expect(
+          result.boxes.length,
+          `${route}: main の中に .mx-auto の箱がある (width=${width})`
+        ).toBeGreaterThan(0);
+        const first = result.boxes[0];
+        const misaligned = result.boxes.filter(
+          (box) =>
+            Math.abs(box.left - first.left) > COLUMN_TOLERANCE_PX ||
+            Math.abs(box.right - first.right) > COLUMN_TOLERANCE_PX
+        );
+        expect(
+          misaligned.map((box) => box.name),
+          `${route}: 箱の左右の端がそろわない (width=${width}): ${misaligned
+            .map((box) => `${box.name} left=${box.left.toFixed(1)} right=${box.right.toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+        const offCenter = result.boxes.filter(
+          (box) => Math.abs(box.left + box.width / 2 - result.center) > COLUMN_TOLERANCE_PX
+        );
+        expect(
+          offCenter.map((box) => box.name),
+          `${route}: 箱が画面の中央にない (width=${width}): ${offCenter
+            .map((box) => `${box.name} center=${(box.left + box.width / 2).toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+        const tooWide = result.boxes.filter((box) => box.width > READING_COLUMN_MAX_PX + 0.5);
+        expect(
+          tooWide.map((box) => box.name),
+          `${route}: 箱が ${READING_COLUMN_MAX_PX}px を超える (width=${width}): ${tooWide
+            .map((box) => `${box.name} width=${box.width.toFixed(1)}`)
+            .join('; ')}`
+        ).toEqual([]);
+      }
+    }
+  });
+
+  // 幅 1440 と 1920 で、折り返さない時の幅が箱に収まる文が 1 行かを見る。
+  // 判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  test('reading routes keep sentences on one line where they fit (line breaks)', async ({
+    page,
+  }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of READING_ROUTES) {
+        await page.goto(route);
+        await page.evaluate(installLineBreakProbe);
+        const issues = await page.evaluate(() => {
+          const probe = window.__lineBreakProbe;
+          if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+          return probe.sentenceFailures();
+        });
+        expect(issues, `${route}: 1 行に収まるはずの文 (width=${width})`).toEqual([]);
+      }
+    }
+  });
+
+  test('reading routes mark sentences and keep boxes within 40em', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const result = await page.evaluate(() => {
+        const failures: string[] = [];
+        const sentenceCount = document.querySelectorAll('main .lb-sentence').length;
+        if (sentenceCount === 0) failures.push('main に .lb-sentence が 1 つも無い');
+        // 表・code・summary・dt の中に印を付けない
+        const markedInExcluded = document.querySelectorAll(
+          'main table .lb-sentence, main pre .lb-sentence, main code .lb-sentence, main summary .lb-sentence, main dt .lb-sentence'
+        );
+        if (markedInExcluded.length > 0)
+          failures.push(
+            `表・code・summary・dt の中に .lb-sentence が ${markedInExcluded.length} 個ある`
+          );
+        // 文の箱は 40em まで
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          const width = sentence.getBoundingClientRect().width;
+          // 全角 40 字（18px のとき 720px。docs/design/layout-rules.md の R2）まで
+          if (width > 721)
+            failures.push(`文の箱が 40 字を超える: ${width.toFixed(0)}px（上限 720px）`);
+        }
+        return failures;
+      });
+      expect(result, `${route}: 印と箱の幅`).toEqual([]);
+    }
+  });
+
+  test('reading routes do not overflow at 390px', async ({ page }) => {
+    for (const route of READING_ROUTES) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const clientWidth = document.documentElement.clientWidth;
+        if (document.documentElement.scrollWidth > clientWidth + 1)
+          failures.push(
+            `横の scroll が出る: scrollWidth=${document.documentElement.scrollWidth} clientWidth=${clientWidth}`
+          );
+        for (const clause of Array.from(document.querySelectorAll('main .lb-clause'))) {
+          const box = clause.getBoundingClientRect();
+          if (box.width > 0 && (box.left < -1 || box.right > clientWidth + 1))
+            failures.push(`塊が画面からはみ出る: ${clause.textContent?.slice(0, 20) ?? ''}`);
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 幅 390`).toEqual([]);
+    }
+  });
+
+  // 印の CSS が効いていることを、計算値で見る。.lb-sentence を display: inline にすると落ちる
+  test('reading routes keep the computed styles of line-break marks', async ({ page }) => {
+    const failures: string[] = [];
+    for (const route of [...READING_ROUTES, ...LP_ROUTES]) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const displayOf = (element: Element | null): string =>
+          element ? window.getComputedStyle(element).display : '(要素が無い)';
+
+        const sentence = document.querySelector('main .lb-sentence');
+        if (!sentence) failures.push('.lb-sentence が 1 つも無い');
+        else if (displayOf(sentence) !== 'block') {
+          failures.push(`.lb-sentence の display が ${displayOf(sentence)}（block のはず）`);
+        }
+
+        const clause = document.querySelector('main .lb-clause');
+        if (!clause) failures.push('.lb-clause が 1 つも無い');
+        else if (displayOf(clause) !== 'inline-block') {
+          failures.push(`.lb-clause の display が ${displayOf(clause)}（inline-block のはず）`);
+        }
+
+        const headings = Array.from(document.querySelectorAll('main .lb-heading'));
+        if (headings.length === 0) failures.push('.lb-heading が 1 つも無い');
+        for (const heading of headings) {
+          const style = window.getComputedStyle(heading);
+          const textWrap =
+            style.getPropertyValue('text-wrap') || style.getPropertyValue('text-wrap-mode');
+          if (textWrap.trim() === 'balance') {
+            failures.push(
+              `.lb-heading の text-wrap が balance: ${(heading.textContent ?? '').slice(0, 30)}`
+            );
+          }
+        }
+        return failures;
+      });
+      failures.push(...issues.map((issue) => `${route}: ${issue}`));
+    }
+    expect(failures, '印の CSS の計算値が決まりどおりでない').toEqual([]);
+  });
+
+  // 全部の .lb-sentence で、開きの括弧と閉じの括弧の数が同じ。揃わない文は page と文の頭 30 字を出す
+  test('reading routes keep bracket pairs balanced inside sentences', async ({ page }) => {
+    const pairs = [
+      ['（', '）'],
+      ['「', '」'],
+      ['『', '』'],
+      ['(', ')'],
+    ];
+    const failures: string[] = [];
+    for (const route of [...READING_ROUTES, ...LP_ROUTES]) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate((bracketPairs: string[][]) => {
+        const failures: string[] = [];
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          const text = sentence.textContent ?? '';
+          for (const [open, close] of bracketPairs) {
+            const opens = text.split(open).length - 1;
+            const closes = text.split(close).length - 1;
+            if (opens !== closes) {
+              failures.push(
+                `括弧 ${open}${close} が ${opens} 個 / ${closes} 個: ${text.slice(0, 30)}`
+              );
+            }
+          }
+        }
+        return failures;
+      }, pairs);
+      failures.push(...issues.map((issue) => `${route}: ${issue}`));
+    }
+    expect(failures, '括弧の対が揃わない文がある').toEqual([]);
+  });
+});
+
+test.describe('LP headings and sentence marks (top, pricing)', () => {
+  test('LP headings with a comma split at the comma and keep one line per clause', async ({
+    page,
+  }) => {
+    for (const route of LP_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      await page.evaluate(installLineBreakProbe);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        const probe = window.__lineBreakProbe;
+        if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+        if (document.querySelectorAll('main .lb-sentence').length === 0)
+          failures.push('main に .lb-sentence が無い');
+        // 読点を含む題（手で改行を入れた hero・資料の案内の共有部品は除く）
+        for (const heading of Array.from(document.querySelectorAll('main h1, main h2, main h3'))) {
+          const text = heading.textContent ?? '';
+          if (!text.includes('、')) continue;
+          if (heading.querySelector('span.block')) continue; // 手動改行の題はそのまま
+          if (heading.querySelector('.whitespace-nowrap')) continue; // 折り返し防止を手で入れた題もそのまま
+          if (heading.closest('[data-testid="document-download"]')) continue; // 共有部品（GMO 納品枠でも使うため触らない）
+          const clauses = Array.from(heading.querySelectorAll('.lb-clause'));
+          // 「まずは、」のような 5 字以下の出だしは、次の塊と続けるのが決まり（R1）
+          const lead = text.split('、')[0] ?? '';
+          const minClauses = [...lead].length <= 5 ? 1 : 2;
+          if (clauses.length < minClauses)
+            failures.push(
+              `読点を含む題に塊が無い（${clauses.length} 個, 最低 ${minClauses}）: ${text.trim().slice(0, 24)}`
+            );
+          for (const clause of clauses) {
+            // 折り返さない時の幅が箱を超える塊は、塊の中で折り返して当然なので 1 行断言の外
+            const box = probe.contentWidth(clause);
+            if (probe.unwrappedWidth(clause) > box + 1) continue;
+            const lines = probe.lineCount(clause);
+            if (lines !== 1)
+              failures.push(
+                `題の塊が ${lines} 行: ${clause.textContent?.trim().slice(0, 24) ?? ''}`
+              );
+          }
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 題の塊`).toEqual([]);
+    }
+  });
+
+  // 幅 1440 と 1920 で、折り返さない時の幅が箱に収まる文が 1 行かを見る。
+  // 判定した文が 0 個の route は、測り方が空振りしているので落とす。
+  test('LP sentences stay on one line where they fit (line breaks)', async ({ page }) => {
+    for (const width of [1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of LP_ROUTES) {
+        await page.goto(route);
+        await page.evaluate(installLineBreakProbe);
+        const issues = await page.evaluate(() => {
+          const probe = window.__lineBreakProbe;
+          if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+          return probe.sentenceFailures();
+        });
+        expect(issues, `${route}: 1 行に収まるはずの文 (width=${width})`).toEqual([]);
+      }
+    }
+  });
+
+  test('LP description paragraphs stay within 40em', async ({ page }) => {
+    for (const route of LP_ROUTES) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(route);
+      const issues = await page.evaluate(() => {
+        const failures: string[] = [];
+        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+          // 全角 40 字（18px のとき 720px）まで
+          const width = sentence.getBoundingClientRect().width;
+          if (width > 721) failures.push(`文の箱が 40 字を超える: ${width.toFixed(0)}px`);
+        }
+        return failures;
+      });
+      expect(issues, `${route}: 説明の箱`).toEqual([]);
+    }
+  });
+});
+
+// 読み物と LP の試験が回る page の全部で、page の中の link（href="#…"）の飛び先の id が
+// 同じ page に在るかを見る。# だけの link は飛び先を持たないので除く。
+const INTERNAL_LINK_ROUTES = ['/tep/', ...READING_ROUTES, ...LP_ROUTES];
+
+test('page-internal links point to an id on the same page', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const failures: string[] = [];
+
+  for (const route of INTERNAL_LINK_ROUTES) {
+    await page.goto(route);
+    const missing = await page.evaluate(() => {
+      const missing: string[] = [];
+      for (const link of Array.from(document.querySelectorAll('main a[href^="#"]'))) {
+        const href = link.getAttribute('href') ?? '';
+        if (href === '#') continue;
+        const id = decodeURIComponent(href.slice(1));
+        if (!id) continue;
+        if (document.getElementById(id)) continue;
+        missing.push(href);
+      }
+      return Array.from(new Set(missing));
+    });
+    failures.push(...missing.map((href) => `${route}: 飛び先の id が無い ${href}`));
+  }
+
+  expect(failures, 'page 内の link の飛び先が無い').toEqual([]);
+});
+
+// Markdown の記事の本文の箱（main .prose）の中の p に、文の印（.lb-sentence）が在るかを見る。
+// 題や lead の LbText の印で緑にならないよう、本文の container（main .prose）に絞る。
+// plugin を astro.config.mjs の rehypePlugins から外すと、本文の印だけが消えるので落ちる。
+const MARKDOWN_BODY_ROUTES = [
+  { route: '/articles/git-history-facts/', label: 'articles' },
+  { route: '/news/cli-published/', label: 'news' },
+  { route: '/column/story-ai-activity/', label: 'stories' },
+];
+
+test('markdown body paragraphs carry line-break marks', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const failures: string[] = [];
+
+  for (const { route, label } of MARKDOWN_BODY_ROUTES) {
+    await page.goto(route);
+    const result = await page.evaluate(() => {
+      const prose = document.querySelector('main .prose');
+      if (!prose) return { paragraphs: 0, marked: 0 };
+      const paragraphs = Array.from(prose.querySelectorAll('p'));
+      const marked = paragraphs.filter((paragraph) =>
+        paragraph.querySelector('.lb-sentence')
+      ).length;
+      return { paragraphs: paragraphs.length, marked };
+    });
+    if (result.paragraphs === 0) {
+      failures.push(`${label} ${route}: 本文の箱（main .prose）の中に p が無い`);
+    } else if (result.marked === 0) {
+      failures.push(
+        `${label} ${route}: 本文の p ${result.paragraphs} 個のどれにも .lb-sentence が無い`
+      );
+    }
+  }
+
+  expect(failures, 'markdown の本文に文の印が無い').toEqual([]);
+});

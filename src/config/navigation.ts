@@ -79,9 +79,8 @@ export const navigation: Navigation = {
       { label: 'お問い合わせ', href: corCta.griftTrial('grift-nav-footer-company') },
       { label: 'GitHub', href: 'https://github.com/Cor-Incorporated' },
     ],
-    legal: [
-      { label: 'プライバシーポリシー', href: '/privacy' },
-      { label: '利用規約', href: '/terms' },
-    ],
+    // 下の帯を共通化したので footer.legal は使わない。
+    // Grift 自身の利用規約・プライバシーは resources の列に在る。
+    legal: [],
   },
 };

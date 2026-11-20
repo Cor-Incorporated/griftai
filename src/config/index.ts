@@ -18,6 +18,7 @@ export * from './author';
 export * from './documents';
 export * from './tep';
 export * from './analytics';
+export * from './site-chrome';
 
 // Re-export types for convenience
 export type {

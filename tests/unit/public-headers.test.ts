@@ -18,7 +18,10 @@ describe('public/_headers', () => {
     const startIndexes = lines.flatMap((line, index) => (line === '/*' ? [index] : []));
     const observed = JSON.stringify(lines);
 
-    expect(startIndexes.length, `行頭に空白の無い /* がありません。観測値: ${observed}`).toBeGreaterThan(0);
+    expect(
+      startIndexes.length,
+      `行頭に空白の無い /* がありません。観測値: ${observed}`
+    ).toBeGreaterThan(0);
 
     const hasRemoval = startIndexes.some((start) => {
       const block: string[] = [];
@@ -29,7 +32,10 @@ describe('public/_headers', () => {
       return block.some((line) => line.trim() === '! Access-Control-Allow-Origin');
     });
 
-    expect(hasRemoval, `/* の block に ! Access-Control-Allow-Origin がありません。観測値: ${observed}`).toBe(true);
+    expect(
+      hasRemoval,
+      `/* の block に ! Access-Control-Allow-Origin がありません。観測値: ${observed}`
+    ).toBe(true);
   });
 
   it('never gives Access-Control-Allow-Origin a value', () => {

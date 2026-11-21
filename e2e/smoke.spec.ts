@@ -1534,8 +1534,8 @@ test.describe('共通の header と下の帯', () => {
     expect(siteHrefs).toEqual(siteChrome.sites.map((site) => site.href));
   });
 
-  test('1280px と 390px で横に 1px もはみ出さない', async ({ page }) => {
-    for (const width of [1280, 390]) {
+  test('1280px、390px、320px で横に 1px もはみ出さない', async ({ page }) => {
+    for (const width of [1280, 390, 320]) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto('/');
       const widths = await page.evaluate(() => ({
@@ -1544,5 +1544,23 @@ test.describe('共通の header と下の帯', () => {
       }));
       expect(widths.scrollWidth, `${width}px`).toBeLessThanOrEqual(widths.clientWidth);
     }
+  });
+
+  test('320px で実績の本文とリンクがカードに収まる', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/');
+    const item = page.getByRole('listitem').filter({ hasText: 'OSSの開発・運用実績' });
+    await item.scrollIntoViewIfNeeded();
+    const overflow = await item.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      return Array.from(element.querySelectorAll('p, a')).flatMap((text) => {
+        const contents = document.createRange();
+        contents.selectNodeContents(text);
+        return Array.from(contents.getClientRects()).filter(
+          (rect) => rect.left < bounds.left || rect.right > bounds.right
+        );
+      }).length;
+    });
+    expect(overflow).toBe(0);
   });
 });

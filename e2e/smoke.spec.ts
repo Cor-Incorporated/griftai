@@ -1556,11 +1556,19 @@ test.describe('共通の header と下の帯', () => {
     for (const width of [1280, 390, 320]) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto('/');
+      await page.evaluate(() => document.fonts.ready);
       const widths = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth,
       }));
       expect(widths.scrollWidth, `${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      const audienceCards = await page
+        .locator('#scenarios article')
+        .evaluateAll((cards) => cards.map((card) => card.getBoundingClientRect().right));
+      expect(audienceCards).toHaveLength(3);
+      for (const right of audienceCards) {
+        expect(right, `読者別カード・画面幅 ${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      }
     }
   });
 

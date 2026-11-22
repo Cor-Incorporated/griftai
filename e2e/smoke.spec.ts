@@ -1556,11 +1556,19 @@ test.describe('共通の header と下の帯', () => {
     for (const width of [1280, 390, 320]) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto('/');
+      await page.evaluate(() => document.fonts.ready);
       const widths = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth,
       }));
       expect(widths.scrollWidth, `${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      const audienceCards = await page
+        .locator('#scenarios article')
+        .evaluateAll((cards) => cards.map((card) => card.getBoundingClientRect().right));
+      expect(audienceCards).toHaveLength(3);
+      for (const right of audienceCards) {
+        expect(right, `読者別カード・画面幅 ${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      }
     }
   });
 
@@ -1581,4 +1589,51 @@ test.describe('共通の header と下の帯', () => {
     });
     expect(overflow).toBe(0);
   });
+});
+
+test.describe('トップのクリック領域', () => {
+  for (const [width, height] of [
+    [320, 700],
+    [390, 844],
+    [1280, 800],
+  ]) {
+    test(`日本語 ${width}px で相談ボタンと実績カードをそれぞれ押せる`, async ({
+      page,
+      context,
+    }) => {
+      await page.setViewportSize({ width, height });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await context.route('https://cor-jp.com/**', (route) =>
+        route.fulfill({ contentType: 'text/html', body: '<title>遷移先を確認</title>' })
+      );
+      await page.goto('/');
+
+      const hero = page.locator('#hero');
+      const consult = hero.getByRole('link', { name: 'テスト導入を相談する' });
+      const [reception] = await Promise.all([
+        page.waitForEvent('popup'),
+        consult.click({ timeout: 1800 }),
+      ]);
+      await expect(reception).toHaveURL(
+        /\/contact\/chat\/?\?intent=grift-team-beta&source=grift-lp-hero/
+      );
+      await reception.close();
+
+      const deck = hero.getByRole('link', { name: /資料をダウンロード/ });
+      const [download] = await Promise.all([page.waitForEvent('download'), deck.click()]);
+      expect(download.suggestedFilename()).toBe('grift-cli-overview.pdf');
+
+      const proof = page.locator('#social-proof');
+      const caseCard = proof.getByRole('listitem').filter({
+        has: page.getByRole('link', { name: '事例を読む' }),
+      });
+      const [casePage] = await Promise.all([
+        page.waitForEvent('popup', { timeout: 5000 }),
+        caseCard.click({ position: { x: 8, y: 8 } }),
+      ]);
+      await expect(casePage).toHaveURL(/\/works\/engineer-cafe-navigator\/$/);
+      await casePage.close();
+      await expect(proof.getByRole('link', { name: '特設ページ' })).toBeVisible();
+    });
+  }
 });

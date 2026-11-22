@@ -301,7 +301,7 @@ const tocItems = [
   }
   <section id="hero" class="relative border-b border-border/60 bg-white dark:bg-background">
     <div class="landing-container py-8 sm:py-12 md:py-16 lg:py-20">
-      <div class="mx-auto flex max-w-4xl flex-col items-center gap-4 text-center sm:gap-5">
+      <div class="flex max-w-4xl flex-col items-start gap-4 sm:gap-5">
         {
           /* 最初の画面で「誰のための、何をするものか」が分かるように、読み手（紹介会社・SES の営業と、自社開発企業の採用担当）を
             先に書く。広告や直接アクセスで来た人は、ここだけを見て残るかどうかを決める（ADR-0006）。
@@ -309,7 +309,7 @@ const tocItems = [
         }
         <LbHeading
           as="h1"
-          class="hero-title type-heading max-w-[19em] font-semibold leading-[1.15] text-text"
+          class="hero-title type-heading max-w-[15em] font-bold leading-[1.15] text-text"
           text="gitの変更履歴から、推薦・採用の根拠を確かめる"
         />
         <p class="type-copy max-w-[40em] text-base leading-relaxed text-text-muted sm:text-lg">
@@ -339,7 +339,7 @@ const tocItems = [
           href={griftCli.github}
           target="_blank"
           rel="noreferrer"
-          class="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          class="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline-offset-4 hover:underline"
         >
           GitHubでGrift CLIを見る（エンジニアの方）
         </a>
@@ -502,7 +502,7 @@ const tocItems = [
 
   <div class="mx-auto h-px max-w-7xl bg-border" aria-hidden="true"></div>
 
-  <section id="value" class="section-animate border-y border-border bg-surface">
+  <section id="value" class="section-animate border-y border-border bg-white dark:bg-background">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <div class="fade-in-section max-w-[40em] space-y-4">
         <p class="text-sm font-semibold text-primary">3つの約束</p>
@@ -783,7 +783,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
         >
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+    <div class="stagger-children mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
       {
         audiences.map((item) => (
           <article

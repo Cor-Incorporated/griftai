@@ -102,37 +102,29 @@ const trialSteps = [
     title="Griftの料金と提供状況"
     subtitle="Grift CLI は無償。紹介会社さま・SES企業さま・自社開発企業さまのテスト導入（PoC）は、対象・件数に応じて個別にご案内します。"
     variant="landing"
+    align="left"
   />
 
   {/* AIO/回答エンジン向け: 料金の要点を自己完結の dl で先出しする */}
   <section class="border-b border-border bg-background">
-    <div class="mx-auto max-w-7xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 lg:px-8">
-      <div class="rounded-3xl border border-border bg-surface p-6 sm:p-8">
-        <LbHeading as="h2" class="text-xl font-bold text-text" text="料金の要点" />
-        <p class="mt-3 max-w-[40em] text-pretty text-sm leading-7 text-text-muted">
-          <LbText
-            >いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。</LbText
-          >
-        </p>
-        <dl class="mt-6 grid gap-4 sm:grid-cols-3">
-          {
-            offerings.map((item) => (
-              <div class="rounded-2xl border border-border bg-background p-4">
-                <dt class="text-sm font-semibold text-text">{item.name}</dt>
-                <dd class="mt-1 text-xs text-text-muted">{item.target}</dd>
-                <dd class="mt-2 text-base font-bold text-primary">{item.price}</dd>
-              </div>
-            ))
-          }
-          <div class="rounded-2xl border border-border bg-background p-4">
-            <dt class="text-sm font-semibold text-text">正式版</dt>
-            <dd class="mt-1 text-xs text-text-muted">
-              紹介会社さま・SES企業さま・自社開発企業さま
-            </dd>
-            <dd class="mt-2 text-base font-bold text-primary">2027年の提供開始を目指しています</dd>
-          </div>
-        </dl>
-      </div>
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <LbHeading as="h2" class="text-xl font-bold text-text" text="料金の要点" />
+      <dl class="mt-4 grid max-w-3xl gap-4 sm:grid-cols-2">
+        {
+          offerings.map((item) => (
+            <div class="rounded-2xl border border-border bg-background p-4 sm:p-6">
+              <dt class="font-semibold text-text">{item.name}</dt>
+              <dd class="mt-2 text-2xl font-bold text-text">{item.price}</dd>
+              <dd class="mt-2 text-sm text-text-muted">{item.target}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-6 max-w-[40em] text-pretty text-sm leading-7 text-text-muted">
+        <LbText
+          >いまはCLIを公開し、紹介会社さま向けの機能をテスト導入に向けて準備している段階です。正式版は2027年の提供開始を目指しており、価格は決まってからお知らせします。</LbText
+        >
+      </p>
     </div>
   </section>
 

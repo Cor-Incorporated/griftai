@@ -1219,6 +1219,23 @@ test.describe('reading column rollout (terms, privacy, faq, column, articles, ne
     }
   });
 
+  test('story breadcrumb links have 44px touch targets at narrow width', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await page.goto('/column/story-recommendation-reason/');
+
+    const breadcrumb = page.getByRole('navigation', { name: 'パンくずリスト' });
+    for (const [name, href] of [
+      ['トップ', '/'],
+      ['コラム一覧', '/column/'],
+    ]) {
+      const link = breadcrumb.getByRole('link', { name, exact: true });
+      await expect(link).toHaveAttribute('href', href);
+      const box = await link.boundingBox();
+      expect(box?.width ?? 0, name).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0, name).toBeGreaterThanOrEqual(44);
+    }
+  });
+
   // 印の CSS が効いていることを、計算値で見る。.lb-sentence を display: inline にすると落ちる
   test('reading routes keep the computed styles of line-break marks', async ({ page }) => {
     const failures: string[] = [];

@@ -59,3 +59,53 @@ test.describe('Accessibility — WCAG 2 AA', () => {
     expect(critical).toEqual([]);
   });
 });
+
+test.describe('Text resize', () => {
+  for (const { path, label } of [
+    { path: '/pricing/', label: 'テスト導入を相談する' },
+    { path: '/faq/', label: /推薦や採用の業務で使えるか/ },
+  ]) {
+    test(`${path} fits narrow screens at 200% text size`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 740 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(path);
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        const textElements = [...document.querySelectorAll<HTMLElement>('main *')].filter(
+          (element) =>
+            [...element.childNodes].some(
+              (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()
+            )
+        );
+        const sizes = textElements.map((element) => {
+          const style = getComputedStyle(element);
+          return [parseFloat(style.fontSize), parseFloat(style.lineHeight)];
+        });
+        for (const [index, element] of textElements.entries()) {
+          const [size, lineHeight] = sizes[index];
+          element.style.setProperty('font-size', `${size * 2}px`, 'important');
+          if (Number.isFinite(lineHeight)) {
+            element.style.setProperty('line-height', `${lineHeight * 2}px`, 'important');
+          }
+        }
+      });
+
+      const target = page
+        .getByRole(path === '/pricing/' ? 'link' : 'heading', { name: label })
+        .first();
+      if (path === '/pricing/') {
+        await target.focus();
+        await expect(target).toBeFocused();
+      } else {
+        await target.scrollIntoViewIfNeeded();
+      }
+      const dimensions = await target.evaluate((element) => ({
+        width: document.documentElement.scrollWidth,
+        right: element.getBoundingClientRect().right,
+        viewport: innerWidth,
+      }));
+      expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.right).toBeLessThanOrEqual(dimensions.viewport);
+    });
+  }
+});

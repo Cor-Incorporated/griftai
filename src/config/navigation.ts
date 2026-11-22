@@ -32,7 +32,7 @@ export const navigation: Navigation = {
     ],
     cta: [
       {
-        label: 'テストしてみる',
+        label: '導入を相談する',
         href: corCta.griftTrial('grift-nav-header'),
         variant: 'primary',
       },

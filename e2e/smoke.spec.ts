@@ -193,9 +193,7 @@ test.describe('First view for agency sales and in-house hiring teams (2026-10-26
     await page.goto('/');
     const viewportHeight = page.viewportSize()?.height ?? 0;
     const hero = page.locator('#hero');
-    await expect(hero.locator('.section-kicker').first()).toHaveText(
-      'エンジニアの紹介や採用に携わる方へ'
-    );
+    await expect(hero.getByText(/人材紹介会社・SESの営業や自社の採用担当/)).toBeVisible();
     for (const locator of [
       hero.locator('a[href*="intent=grift-team-beta"]'),
       hero.locator('a[href="/downloads/grift-cli-overview.pdf"]'),

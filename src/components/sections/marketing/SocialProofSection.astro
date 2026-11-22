@@ -55,7 +55,7 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
           </p>
           <p class="text-sm leading-7 text-text-muted text-pretty">
             <LbText
-              >生成AIで、経歴書も活動量もいくらでも整えられる時代です。それでも、確かめられる事実は盛れません。「経歴は盛れる。証拠は盛れない。」が、いまのGriftの起点です。</LbText
+              >生成AIで経歴書を整え、活動量を増やすことができます。Griftは、経歴を説明するときに、どんな仕事をしてきたかを確かめる材料をgit履歴から取り出します。</LbText
             >
           </p>
         </div>
@@ -103,7 +103,9 @@ const engineerCafeCaseUrl = getCorUrl('/works/engineer-cafe-navigator/');
               >で紹介されています。
             </p>
           </li>
-          <li class="flex items-start gap-4 rounded-xl border border-border bg-surface p-4">
+          <li
+            class="relative flex items-start gap-4 rounded-xl border border-border bg-surface p-4 transition hover:border-primary/45"
+          >
             {/* エンジニアカフェの公式ロゴ（黒の線画）。ダークモードでも読めるよう白地に置く。 */}
             <span class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-white p-1">
               <img

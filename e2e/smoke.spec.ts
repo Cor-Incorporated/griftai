@@ -150,6 +150,26 @@ test.describe('Landing page smoke tests', () => {
     expect(hasOverflow).toBe(false);
   });
 
+  test('philosophy links stay within the viewport with increased text spacing', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 640, height: 450 });
+    await page.addStyleTag({
+      content: `
+        main * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }
+        main p { margin-bottom: 2em !important; }
+      `,
+    });
+    const philosophyLinks = page.locator('#value').getByRole('link', { name: /Griftの思想を/ });
+    await expect(philosophyLinks).toHaveCount(2);
+    await philosophyLinks.last().scrollIntoViewIfNeeded();
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    expect(scrollWidth).toBe(clientWidth);
+  });
+
   test('reduced motion still reveals animated content', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
@@ -173,9 +193,7 @@ test.describe('First view for agency sales and in-house hiring teams (2026-10-26
     await page.goto('/');
     const viewportHeight = page.viewportSize()?.height ?? 0;
     const hero = page.locator('#hero');
-    await expect(hero.locator('.section-kicker').first()).toHaveText(
-      'エンジニアの紹介や採用に携わる方へ'
-    );
+    await expect(hero.getByText(/人材紹介会社・SESの営業や自社の採用担当/)).toBeVisible();
     for (const locator of [
       hero.locator('a[href*="intent=grift-team-beta"]'),
       hero.locator('a[href="/downloads/grift-cli-overview.pdf"]'),
@@ -253,14 +271,14 @@ test.describe('Grift CLI positioning (2026-10)', () => {
     await expect(page.locator('a[href="/team-beta/"], a[href="/estimate-audit/"]')).toHaveCount(0);
   });
 
-  test('agency CTA reads 自社でテストしてみる, not 試行', async ({ page }) => {
+  test('the trial CTA announces a consultation', async ({ page }) => {
     for (const path of ['/', '/tep/', '/pricing/', '/faq/', '/contact/']) {
       await page.goto(path);
       await expect(page.getByText(/試行/)).toHaveCount(0);
     }
     await page.goto('/');
     const heroCta = page.locator('#hero a[href*="intent=grift-team-beta"]');
-    await expect(heroCta).toHaveText('自社でテストしてみる');
+    await expect(heroCta).toHaveText('テスト導入を相談する');
   });
 
   test('home links to the articles on Grift philosophy', async ({ page }) => {
@@ -1443,7 +1461,7 @@ test.describe('共通の header と下の帯', () => {
     expect(backBox).not.toBeNull();
     expect(backBox!.height).toBeGreaterThanOrEqual(44);
 
-    await expect(header.getByRole('link', { name: 'テストしてみる' })).toBeVisible();
+    await expect(header.getByRole('link', { name: '導入を相談する' })).toBeVisible();
   });
 
   test('390px: header は 56px で、menu の先頭に戻る link が在る', async ({ page }) => {
@@ -1538,11 +1556,19 @@ test.describe('共通の header と下の帯', () => {
     for (const width of [1280, 390, 320]) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto('/');
+      await page.evaluate(() => document.fonts.ready);
       const widths = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth,
       }));
       expect(widths.scrollWidth, `${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      const audienceCards = await page
+        .locator('#scenarios article')
+        .evaluateAll((cards) => cards.map((card) => card.getBoundingClientRect().right));
+      expect(audienceCards).toHaveLength(3);
+      for (const right of audienceCards) {
+        expect(right, `読者別カード・画面幅 ${width}px`).toBeLessThanOrEqual(widths.clientWidth);
+      }
     }
   });
 
@@ -1563,4 +1589,51 @@ test.describe('共通の header と下の帯', () => {
     });
     expect(overflow).toBe(0);
   });
+});
+
+test.describe('トップのクリック領域', () => {
+  for (const [width, height] of [
+    [320, 700],
+    [390, 844],
+    [1280, 800],
+  ]) {
+    test(`日本語 ${width}px で相談ボタンと実績カードをそれぞれ押せる`, async ({
+      page,
+      context,
+    }) => {
+      await page.setViewportSize({ width, height });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await context.route('https://cor-jp.com/**', (route) =>
+        route.fulfill({ contentType: 'text/html', body: '<title>遷移先を確認</title>' })
+      );
+      await page.goto('/');
+
+      const hero = page.locator('#hero');
+      const consult = hero.getByRole('link', { name: 'テスト導入を相談する' });
+      const [reception] = await Promise.all([
+        page.waitForEvent('popup'),
+        consult.click({ timeout: 1800 }),
+      ]);
+      await expect(reception).toHaveURL(
+        /\/contact\/chat\/?\?intent=grift-team-beta&source=grift-lp-hero/
+      );
+      await reception.close();
+
+      const deck = hero.getByRole('link', { name: /資料をダウンロード/ });
+      const [download] = await Promise.all([page.waitForEvent('download'), deck.click()]);
+      expect(download.suggestedFilename()).toBe('grift-cli-overview.pdf');
+
+      const proof = page.locator('#social-proof');
+      const caseCard = proof.getByRole('listitem').filter({
+        has: page.getByRole('link', { name: '事例を読む' }),
+      });
+      const [casePage] = await Promise.all([
+        page.waitForEvent('popup', { timeout: 5000 }),
+        caseCard.click({ position: { x: 8, y: 8 } }),
+      ]);
+      await expect(casePage).toHaveURL(/\/works\/engineer-cafe-navigator\/$/);
+      await casePage.close();
+      await expect(proof.getByRole('link', { name: '特設ページ' })).toBeVisible();
+    });
+  }
 });

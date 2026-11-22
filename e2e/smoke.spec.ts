@@ -1592,12 +1592,19 @@ test.describe('共通の header と下の帯', () => {
 });
 
 test.describe('トップのクリック領域', () => {
-  for (const [width, height] of [[320, 700], [390, 844], [1280, 800]]) {
-    test(`日本語 ${width}px で相談ボタンと実績カードをそれぞれ押せる`, async ({ page, context }) => {
+  for (const [width, height] of [
+    [320, 700],
+    [390, 844],
+    [1280, 800],
+  ]) {
+    test(`日本語 ${width}px で相談ボタンと実績カードをそれぞれ押せる`, async ({
+      page,
+      context,
+    }) => {
       await page.setViewportSize({ width, height });
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await context.route('https://cor-jp.com/**', (route) =>
-        route.fulfill({ contentType: 'text/html', body: '<title>遷移先を確認</title>' }),
+        route.fulfill({ contentType: 'text/html', body: '<title>遷移先を確認</title>' })
       );
       await page.goto('/');
 
@@ -1607,7 +1614,9 @@ test.describe('トップのクリック領域', () => {
         page.waitForEvent('popup'),
         consult.click({ timeout: 1800 }),
       ]);
-      await expect(reception).toHaveURL(/\/contact\/chat\/?\?intent=grift-team-beta&source=grift-lp-hero/);
+      await expect(reception).toHaveURL(
+        /\/contact\/chat\/?\?intent=grift-team-beta&source=grift-lp-hero/
+      );
       await reception.close();
 
       const deck = hero.getByRole('link', { name: /資料をダウンロード/ });

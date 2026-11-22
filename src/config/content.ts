@@ -24,7 +24,7 @@ export const announcement: AnnouncementConfig = {
   href: corCta.griftTrial('grift-announcement'),
 
   /** Optional link text */
-  linkText: '自社でテストしてみる',
+  linkText: 'テスト導入を相談する',
 
   /** Visual style: 'primary' | 'secondary' | 'gradient' */
   variant: 'secondary',

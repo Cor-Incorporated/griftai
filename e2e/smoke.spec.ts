@@ -273,14 +273,14 @@ test.describe('Grift CLI positioning (2026-10)', () => {
     await expect(page.locator('a[href="/team-beta/"], a[href="/estimate-audit/"]')).toHaveCount(0);
   });
 
-  test('agency CTA reads 自社でテストしてみる, not 試行', async ({ page }) => {
+  test('the trial CTA announces a consultation', async ({ page }) => {
     for (const path of ['/', '/tep/', '/pricing/', '/faq/', '/contact/']) {
       await page.goto(path);
       await expect(page.getByText(/試行/)).toHaveCount(0);
     }
     await page.goto('/');
     const heroCta = page.locator('#hero a[href*="intent=grift-team-beta"]');
-    await expect(heroCta).toHaveText('自社でテストしてみる');
+    await expect(heroCta).toHaveText('テスト導入を相談する');
   });
 
   test('home links to the articles on Grift philosophy', async ({ page }) => {
@@ -1463,7 +1463,7 @@ test.describe('共通の header と下の帯', () => {
     expect(backBox).not.toBeNull();
     expect(backBox!.height).toBeGreaterThanOrEqual(44);
 
-    await expect(header.getByRole('link', { name: 'テストしてみる' })).toBeVisible();
+    await expect(header.getByRole('link', { name: '導入を相談する' })).toBeVisible();
   });
 
   test('390px: header は 56px で、menu の先頭に戻る link が在る', async ({ page }) => {

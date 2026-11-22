@@ -61,13 +61,21 @@ const breadcrumbSchema = {
   tags={['Grift', 'ストーリー', story.data.who]}
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-  <article class="py-section">
+  <article class="pt-8 pb-section">
     <div class="mx-auto max-w-reading px-4 sm:px-6 lg:px-8">
       <nav aria-label="パンくずリスト" class="text-sm text-text-muted">
         <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <li><a href="/" class="hover:text-primary hover:underline">トップ</a></li>
+          <li>
+            <a href="/" class="inline-flex items-center hover:text-primary hover:underline">
+              トップ
+            </a>
+          </li>
           <li aria-hidden="true">›</li>
-          <li><a href="/column/" class="hover:text-primary hover:underline">コラム一覧</a></li>
+          <li>
+            <a href="/column/" class="inline-flex items-center hover:text-primary hover:underline">
+              コラム一覧
+            </a>
+          </li>
           <li aria-hidden="true">›</li>
           <li aria-current="page" class="text-text">{story.data.title}</li>
         </ol>

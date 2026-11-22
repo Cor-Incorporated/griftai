@@ -1627,12 +1627,9 @@ test.describe('トップのクリック領域', () => {
       const caseCard = proof.getByRole('listitem').filter({
         has: page.getByRole('link', { name: '事例を読む' }),
       });
-      await caseCard.scrollIntoViewIfNeeded({ timeout: 3500 });
-      const bounds = await caseCard.boundingBox();
-      if (!bounds) throw new Error('実績カードの座標を取得できない');
       const [casePage] = await Promise.all([
-        page.waitForEvent('popup'),
-        page.mouse.click(bounds.x + 8, bounds.y + 8),
+        page.waitForEvent('popup', { timeout: 5000 }),
+        caseCard.click({ position: { x: 8, y: 8 } }),
       ]);
       await expect(casePage).toHaveURL(/\/works\/engineer-cafe-navigator\/$/);
       await casePage.close();

@@ -150,6 +150,26 @@ test.describe('Landing page smoke tests', () => {
     expect(hasOverflow).toBe(false);
   });
 
+  test('philosophy links stay within the viewport with increased text spacing', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 640, height: 450 });
+    await page.addStyleTag({
+      content: `
+        main * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }
+        main p { margin-bottom: 2em !important; }
+      `,
+    });
+    const philosophyLinks = page.locator('#value').getByRole('link', { name: /Griftの思想を/ });
+    await expect(philosophyLinks).toHaveCount(2);
+    await philosophyLinks.last().scrollIntoViewIfNeeded();
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    expect(scrollWidth).toBe(clientWidth);
+  });
+
   test('reduced motion still reveals animated content', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();

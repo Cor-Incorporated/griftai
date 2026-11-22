@@ -10,6 +10,7 @@
 import { getEntry } from 'astro:content';
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav.astro';
+import PageHeader from '@sections/content/PageHeader.astro';
 import PageToc from '@/components/common/PageToc.astro';
 import NextStep from '@/components/common/NextStep.astro';
 import ArticleAuthor from '@/components/common/ArticleAuthor.astro';
@@ -76,7 +77,7 @@ const rules = [
   },
   {
     title: '誰が何度実行しても同じ結果',
-    body: '計測にAI（LLM）を使わないので、同じリポジトリの同じ時点を同じ版のGriftで数えれば、誰が何度実行しても同じ数値になります。受け取った人は grift verify で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。保存したレポートを書き換えていれば、不一致として分かります。',
+    body: 'Grift CLIは、AI（LLM）を使わずに計測します。入力範囲とコミット、Grift CLIの版、計測の定義と設定をそろえると、同じ数値になります。受け取った人は grift verify で計算し直し、一致（VERIFIED）・不一致（MISMATCH）・検証不能（CANNOT_VERIFY）を確かめられます。保存したレポートを書き換えていれば、不一致として分かります。',
   },
   {
     title: '文にするときも、数字から決まった表で選ぶ',
@@ -202,35 +203,33 @@ const nextReads = [
   title="TEPとは"
   titleTag="TEPとは｜git履歴から確かめられる事実を取り出す方法｜Grift"
   ogTitle="TEPとは｜Grift"
-  description="TEP（Technical Evidence Pipeline）は、Griftが使っている方法の名前です。エンジニアのgit履歴から確かめられる事実を、誰が何度実行しても同じ結果になる形で取り出し、点数や順位はつけません。TEPが見るもの、数え方の決まり、しないこと、自己申告の診断との違い、紹介会社・SESの営業とエンジニアそれぞれの使い方をまとめています。"
+  description="TEP（Technical Evidence Pipeline）は、Griftがgit履歴から確かめられる事実を取り出す方法です。記録した条件で計測をやり直せます。点数や順位はつけません。TEPが見るもの、数え方の決まり、紹介会社・SESの営業や採用担当、エンジニア本人の使い方を説明します。"
   type="article"
   publishedDate={new Date('2026-10-26T00:00:00+09:00')}
   tags={['Grift', 'TEP', 'git', '利用規範']}
 >
   <BreadcrumbNav items={[{ label: 'TEPとは' }]} width="reading" />
 
-  <header class="bg-background">
-    <div class="mx-auto max-w-reading px-4 pb-10 pt-10 sm:px-6 sm:pt-14 lg:px-8">
-      <p class="section-kicker">TEP（Technical Evidence Pipeline）</p>
-      <LbHeading
-        as="h1"
-        class="mt-3 text-3xl font-bold text-balance text-text sm:text-5xl"
-        text="git履歴から、確かめられる事実を取り出す方法"
-      />
-      <div class="mt-6 space-y-3 text-base leading-8 text-text-muted text-pretty sm:text-lg">
-        <p>
-          <LbText
-            >TEPは、Griftが使っている方法の名前です。エンジニアのgit履歴から、確かめられる事実を取り出します。誰が何度実行しても、同じ結果になります。</LbText
-          >
-        </p>
-        <p>
-          <LbText
-            >点数や順位はつけず、案件で求められることと項目ごとに並べて、面談で聞くことを具体的にします。</LbText
-          >
-        </p>
-      </div>
+  <PageHeader
+    title="git履歴から、確かめられる事実を取り出す方法"
+    kicker="TEP（Technical Evidence Pipeline）"
+    width="reading"
+    align="left"
+    variant="landing"
+  >
+    <div class="mt-6 space-y-3 text-base leading-8 text-text-muted text-pretty sm:text-lg">
+      <p>
+        <LbText
+          >TEPは、Griftがgit履歴から確かめられる事実を取り出す方法です。どの記録をどう数えたかが分かり、受け取った側は同じ条件で検算できます。</LbText
+        >
+      </p>
+      <p>
+        <LbText
+          >点数や順位はつけず、案件で求められることと項目ごとに並べて、面談で聞くことを具体的にします。</LbText
+        >
+      </p>
     </div>
-  </header>
+  </PageHeader>
 
   <PageToc items={tocItems} width="reading" />
 

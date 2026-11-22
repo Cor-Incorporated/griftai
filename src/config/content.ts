@@ -18,7 +18,7 @@ export const announcement: AnnouncementConfig = {
   id: 'grift-beta-2026',
 
   /** Announcement text */
-  text: 'Grift｜経歴は盛れる。証拠は盛れない。テスト導入（PoC）を受付中',
+  text: 'Griftのテスト導入（PoC）のご相談を受け付けています。',
 
   /** Optional link URL */
   href: corCta.griftTrial('grift-announcement'),

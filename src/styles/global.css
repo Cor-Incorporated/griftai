@@ -218,6 +218,12 @@ blockquote {
   text-wrap: balance;
 }
 
+/* トップの h1。既存の h1 要素の font-size は unlayered で Tailwind の utility より
+   優先されるため、ここで 320px でも「推薦・採用」が割れない大きさに決める。 */
+.hero-title {
+  font-size: clamp(1.375rem, 6.5vw, 3.75rem);
+}
+
 .type-copy {
   word-break: auto-phrase;
   overflow-wrap: break-word;

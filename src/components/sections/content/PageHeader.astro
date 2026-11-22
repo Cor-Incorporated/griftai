@@ -42,6 +42,10 @@ interface Props {
   background?: 'default' | 'muted' | 'accent';
   /** Column width: 'reading' は読み物の列（48rem）に揃える。既定は今のまま */
   width?: 'default' | 'reading';
+  /** 公開5画面で共通にする淡い青の帯・見出しサイズ・余白（既定は今のまま） */
+  variant?: 'default' | 'landing';
+  /** 見出しの上に置く短いラベル */
+  kicker?: string;
 }
 
 const {
@@ -52,18 +56,29 @@ const {
   maxWidth = 'lg',
   background = 'default',
   width = 'default',
+  variant = 'default',
+  kicker,
 } = Astro.props;
 
-const bgClass = {
-  default: 'bg-background',
-  muted: 'bg-surface',
-  accent: 'bg-primary/5',
-}[background];
+const landing = variant === 'landing';
+
+const bgClass = landing
+  ? 'bg-primary/5'
+  : {
+      default: 'bg-background',
+      muted: 'bg-surface',
+      accent: 'bg-primary/5',
+    }[background];
+
+const sectionClass = landing ? 'border-b border-border/60 py-10 sm:py-14' : 'py-section';
 
 const alignClass = align === 'left' ? 'text-left' : 'text-center';
 
-const titleSizeClass =
-  size === 'large' ? 'text-4xl sm:text-5xl lg:text-6xl' : 'text-4xl sm:text-5xl';
+const titleSizeClass = landing
+  ? 'text-3xl sm:text-4xl lg:text-5xl'
+  : size === 'large'
+    ? 'text-4xl sm:text-5xl lg:text-6xl'
+    : 'text-4xl sm:text-5xl';
 
 const maxWidthClass = {
   sm: 'max-w-xl',
@@ -77,7 +92,7 @@ const containerClass = align === 'center' ? `${maxWidthClass} mx-auto` : maxWidt
 const reading = width === 'reading';
 ---
 
-<section class:list={['py-section', bgClass]}>
+<section class:list={[sectionClass, bgClass]}>
   <div
     class:list={[
       reading
@@ -86,6 +101,7 @@ const reading = width === 'reading';
     ]}
   >
     <div class:list={[reading ? '' : containerClass, alignClass]}>
+      {kicker && <p class="section-kicker mb-3">{kicker}</p>}
       <LbHeading
         as="h1"
         class={`font-bold text-balance text-text leading-[1.15] ${titleSizeClass}`}
@@ -93,7 +109,12 @@ const reading = width === 'reading';
       />
       {
         subtitle && (
-          <p class="mt-6 max-w-[40em] text-pretty text-lg leading-8 text-text-muted">
+          <p
+            class:list={[
+              'mt-6 max-w-[40em] text-pretty text-lg leading-8 text-text-muted',
+              landing && align === 'center' && 'mx-auto',
+            ]}
+          >
             <LbText>{subtitle}</LbText>
           </p>
         )

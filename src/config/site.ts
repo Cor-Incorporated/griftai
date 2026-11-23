@@ -47,6 +47,7 @@ export const griftCli = {
   metricsGuide: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/metrics-guide.md',
   packageName: 'grift-cli',
   installCommand: 'uv tool install grift-cli',
+  firstRunCommand: 'grift repo',
   version: '0.9.3',
   releasedOn: '2026-11-23',
   license: 'MIT',

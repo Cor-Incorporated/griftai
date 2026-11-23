@@ -199,7 +199,7 @@ const pricingCards = [
     name: 'Grift CLI',
     target: 'エンジニア本人・どなたでも',
     price: '無償（MITライセンス）',
-    description: `PyPI と GitHub で公開しています（${griftCli.packageName} v${griftCli.version}）。Python ${griftCli.pythonRequires}の環境で、${griftCli.installCommand} から始められます。`,
+    description: `PyPI と GitHub で公開しています（${griftCli.packageName} v${griftCli.version}）。${griftCli.installCommand} でインストールし、${griftCli.firstRunCommand} で試せます。`,
     cta: 'GitHubでGrift CLIを見る',
     href: griftCli.github,
     primary: false,
@@ -627,11 +627,14 @@ const tocItems = [
       >
         <div class="bg-text p-4 sm:p-6">
           <pre
-            class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール（Python 3.11以上）</span>
+            class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール</span>
 <span class="text-secondary">$</span> {griftCli.installCommand}
 
-<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
+<span class="text-background/60"># リポジトリ全体の記録を見る</span>
 <span class="text-secondary">$</span> cd your-repo
+<span class="text-secondary">$</span> {griftCli.firstRunCommand}
+
+<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
 <span class="text-secondary">$</span> grift report
 
 <span class="text-background/60"># 同じ条件で再計算し、書き換えや食い違いを検出</span>

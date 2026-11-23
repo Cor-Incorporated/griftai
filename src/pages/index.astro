@@ -199,7 +199,7 @@ const pricingCards = [
     name: 'Grift CLI',
     target: 'エンジニア本人・どなたでも',
     price: '無償（MITライセンス）',
-    description: `PyPI と GitHub で公開しています（${griftCli.packageName} v${griftCli.version}）。Python ${griftCli.pythonRequires}の環境で、${griftCli.installCommand} から始められます。`,
+    description: `PyPI と GitHub で公開しています（${griftCli.packageName} v${griftCli.version}）。${griftCli.installCommand} でインストールし、${griftCli.firstRunCommand} で試せます。`,
     cta: 'GitHubでGrift CLIを見る',
     href: griftCli.github,
     primary: false,
@@ -365,7 +365,7 @@ const tocItems = [
           「観測すること」の下に移した。 */
       }
       <aside class="mt-8 surface-card p-5 sm:mt-10 sm:p-6 lg:mt-12 lg:p-8">
-        <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p class="section-kicker">あなたに合う読み方</p>
             <LbHeading
@@ -377,7 +377,7 @@ const tocItems = [
               Griftを使うのは、候補者を企業へ推薦する営業の方、候補者本人が共有した記録から、どんな仕事をしてきたかを確かめたい自社開発企業の採用担当の方、そして自分の仕事を確かめられる形で示したいエンジニアの方です。
             </p>
           </div>
-          <div class="grid gap-3 sm:grid-cols-2">
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {
               audiences.map((audience) => (
                 <a
@@ -416,7 +416,7 @@ const tocItems = [
   }
   <section id="about" class="section-animate border-b border-border bg-background">
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-      <div class="fade-in-section grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div class="fade-in-section grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div class="space-y-4">
           <p class="text-sm font-semibold text-primary">Griftとは</p>
           <LbHeading
@@ -430,7 +430,7 @@ const tocItems = [
           </p>
           <p class="text-sm text-text-muted">情報は{asOfLabel}時点のものです。</p>
         </div>
-        <dl class="stagger-children grid gap-3 sm:grid-cols-2">
+        <dl class="stagger-children grid grid-cols-1 gap-3 sm:grid-cols-2">
           {
             griftFacts.map((fact) => (
               <div class="rounded-2xl border border-border bg-surface p-5">
@@ -470,7 +470,7 @@ const tocItems = [
         >
       </p>
     </div>
-    <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+    <div class="stagger-children mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
       {
         pains.map((item) => (
           <StoryCard
@@ -517,7 +517,7 @@ const tocItems = [
           >
         </p>
       </div>
-      <div class="stagger-children mt-10 grid gap-6 lg:grid-cols-3">
+      <div class="stagger-children mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {
           promises.map((item) => (
             <article class="card-lift rounded-2xl border border-border bg-background p-6">
@@ -627,11 +627,14 @@ const tocItems = [
       >
         <div class="bg-text p-4 sm:p-6">
           <pre
-            class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール（Python 3.11以上）</span>
+            class="text-xs leading-7 break-words whitespace-pre-wrap text-background sm:text-sm"><code><span class="text-background/60"># インストール</span>
 <span class="text-secondary">$</span> {griftCli.installCommand}
 
-<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
+<span class="text-background/60"># リポジトリ全体の記録を見る</span>
 <span class="text-secondary">$</span> cd your-repo
+<span class="text-secondary">$</span> {griftCli.firstRunCommand}
+
+<span class="text-background/60"># 計測して .grift/report.json と report.md に記録</span>
 <span class="text-secondary">$</span> grift report
 
 <span class="text-background/60"># 同じ条件で再計算し、書き換えや食い違いを検出</span>
@@ -663,7 +666,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
     id="proof"
     class="section-animate section-alt mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
   >
-    <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[0.95fr_1.05fr]">
       <div class="fade-in-section space-y-4">
         <p class="text-sm font-semibold text-primary">検証の公開</p>
         <LbHeading
@@ -695,7 +698,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
           </a>
         </div>
       </div>
-      <div class="stagger-children grid gap-4">
+      <div class="stagger-children grid grid-cols-1 gap-4">
         {
           proofItems.map((item) => (
             <article class="card-lift rounded-2xl border border-border bg-background p-6">
@@ -833,7 +836,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
           >
         </p>
       </div>
-      <div class="stagger-children mt-10 grid gap-5 lg:grid-cols-3">
+      <div class="stagger-children mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
         {
           pricingCards.map((item) => (
             <article class="card-lift relative flex h-full flex-col rounded-2xl border border-border bg-background p-6">
@@ -864,7 +867,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
                     rel="noreferrer"
                     class:list={[
                       item.primary ? 'cta-primary' : 'cta-secondary',
-                      'relative z-10 text-sm',
+                      'relative z-10 text-sm wrap-anywhere',
                     ]}
                   >
                     {item.cta}
@@ -887,7 +890,7 @@ test co-change: {example.ratio} ratio（{example.numerator} of {example.denomina
     id="faq"
     class="section-animate section-alt mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
   >
-    <div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[0.95fr_1.05fr]">
       <div class="fade-in-section space-y-4">
         <p class="text-sm font-semibold text-primary">よくある質問</p>
         <LbHeading

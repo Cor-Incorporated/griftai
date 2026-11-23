@@ -75,7 +75,7 @@ const isHome = Astro.url.pathname === '/';
       )
     }
     <Header />
-    <main id="main-content" class="flex-1">
+    <main id="main-content" tabindex="-1" class="flex-1 scroll-mt-14 lg:scroll-mt-16">
       <slot />
     </main>
     <Footer />

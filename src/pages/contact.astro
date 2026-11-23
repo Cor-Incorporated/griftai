@@ -30,8 +30,8 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
 
   <section class="bg-background py-10 sm:py-14">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <article class="rounded-3xl border border-border bg-surface p-8">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <article class="rounded-3xl border border-border bg-surface p-4 wrap-anywhere sm:p-8">
           <p class="text-sm font-semibold text-primary">相談窓口</p>
           <LbHeading
             as="h2"
@@ -47,20 +47,20 @@ const phoneUrl = `tel:${phone.replaceAll('-', '')}`;
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={phoneUrl}
-              class="inline-flex items-center justify-center rounded-md border border-border px-6 py-3 font-medium text-text transition-colors hover:bg-background"
+              class="inline-block rounded-md text-center border border-border px-6 py-3 font-medium text-text transition-colors hover:bg-background"
             >
               電話（{phone}）で相談する
             </a>
             <a
               href={corHomeUrl}
-              class="inline-flex items-center justify-center rounded-md border border-border px-6 py-3 font-medium text-text transition-colors hover:bg-background"
+              class="inline-block rounded-md text-center border border-border px-6 py-3 font-medium text-text transition-colors hover:bg-background"
             >
               Cor.株式会社 のサイトを見る
             </a>
           </div>
         </article>
 
-        <article class="rounded-3xl border border-border bg-surface p-8">
+        <article class="rounded-3xl border border-border bg-surface p-4 wrap-anywhere sm:p-8">
           <p class="text-sm font-semibold text-primary">事前にあるとよい情報</p>
           <LbHeading
             as="h2"

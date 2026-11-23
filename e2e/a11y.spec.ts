@@ -61,10 +61,13 @@ test.describe('Accessibility — WCAG 2 AA', () => {
 });
 
 test.describe('Text resize', () => {
-  for (const { path, label } of [
+  for (const { path, label, role = 'heading' } of [
     { path: '/', label: /推薦・採用の根拠/ },
     { path: '/tep/', label: '使い方' },
-    { path: '/pricing/', label: 'テスト導入を相談する' },
+    { path: '/pricing/', label: 'テスト導入を相談する', role: 'link' as const },
+    { path: '/contact/', label: /電話.*で相談する/, role: 'link' as const },
+    { path: '/column/', label: 'https://griftai.org', role: 'link' as const },
+    { path: '/market-price-ai-develop/', label: 'https://griftai.org', role: 'link' as const },
     { path: '/faq/', label: /推薦や採用の業務で使えるか/ },
   ]) {
     test(`${path} fits narrow screens at 200% text size`, async ({ page }) => {
@@ -92,10 +95,8 @@ test.describe('Text resize', () => {
         }
       });
 
-      const target = page
-        .getByRole(path === '/pricing/' ? 'link' : 'heading', { name: label })
-        .first();
-      if (path === '/pricing/') {
+      const target = page.getByRole(role, { name: label }).first();
+      if (role === 'link') {
         await target.focus();
         await expect(target).toBeFocused();
       } else {

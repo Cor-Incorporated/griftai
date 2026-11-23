@@ -30,6 +30,12 @@ npm run build
 npm run test:e2e   # build の後に。Playwright の smoke test
 ```
 
+紹介PDFを差し替えるときは、Popplerの `pdfinfo` とMuPDFの `mutool` を使い、次のコマンドで題名・言語・読み上げ順・図の説明・しおり・会社概要の行見出しを確認します。
+
+```bash
+python3 scripts/check-document-accessibility.py
+```
+
 ## 記事とお知らせの編集
 
 編集画面は Sveltia CMS です。cor-jp.com と同じく、本文は Git の Markdown のままです。手順と、まだ無いもの（OAuth App、認証 Worker のデプロイ、管理画面の公開ホスト）は [docs/cms.md](docs/cms.md) にあります。

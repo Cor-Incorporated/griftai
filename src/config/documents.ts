@@ -11,7 +11,7 @@ export const griftCliDeck = {
   title: 'Grift CLI 紹介資料',
   format: 'PDF',
   pages: 12,
-  sizeLabel: '約464KB',
+  sizeLabel: '約472KB',
   preparedOn: '2026-11-20',
   note: '2026年10月28日時点（Grift CLI v0.9.1）の資料です。最新の使い方はGitHubのREADMEをご覧ください。',
   contents: [

@@ -184,3 +184,30 @@ test.describe('Focused links beside the fixed home CTA', () => {
     });
   }
 });
+
+test('the floating CTA can be tabbed to and dismissed without losing focus', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 850 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const floatingCta = page.locator('#floating-cta');
+  const contact = floatingCta.getByRole('link', { name: 'テスト導入を相談する' });
+  const close = floatingCta.getByRole('button', { name: '閉じる' });
+  let previousFocus = null;
+
+  for (let step = 0; step < 85; step++) {
+    previousFocus = await page.evaluateHandle(() => document.activeElement);
+    await page.keyboard.press('Tab');
+    if (
+      (await contact.count()) &&
+      (await contact.evaluate((element) => element === document.activeElement))
+    )
+      break;
+  }
+  await expect(contact).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(floatingCta).toHaveAttribute('aria-hidden', 'true');
+  const restored = await previousFocus?.evaluate((element) => element === document.activeElement);
+  expect(restored).toBe(true);
+});

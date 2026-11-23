@@ -93,6 +93,7 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
 
     if (!heroSection) return;
 
+    let previousFocus: HTMLElement | null = null;
     let dismissed = false;
     let heroVisible = true;
     let suppressVisible = false;
@@ -130,6 +131,17 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
     };
 
     const hide = (): void => {
+      if (floatingCta.contains(document.activeElement)) {
+        const bounds = previousFocus?.getBoundingClientRect();
+        const destination =
+          previousFocus?.isConnected &&
+          bounds &&
+          bounds.bottom > 0 &&
+          bounds.top < window.innerHeight
+            ? previousFocus
+            : floatingCta.closest('main');
+        if (destination instanceof HTMLElement) destination.focus({ preventScroll: true });
+      }
       floatingCta.classList.add('translate-y-full');
       floatingCta.classList.add('invisible');
       floatingCta.classList.add('pointer-events-none');
@@ -177,7 +189,16 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
     }
 
     // Native Tab scrolling does not account for a fixed bar at the viewport edge.
-    document.body.addEventListener('focusin', () => requestAnimationFrame(revealFocusedControl));
+    document.body.addEventListener('focusin', (event) => {
+      if (
+        floatingCta.contains(document.activeElement) &&
+        event.relatedTarget instanceof HTMLElement &&
+        !floatingCta.contains(event.relatedTarget)
+      ) {
+        previousFocus = event.relatedTarget;
+      }
+      requestAnimationFrame(revealFocusedControl);
+    });
 
     closeButton.addEventListener('click', () => {
       dismissed = true;

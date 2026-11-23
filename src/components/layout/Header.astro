@@ -115,18 +115,7 @@ const corHomeUrl = siteLinkFor('cor').href;
             aria-controls="mobile-menu"
             class="inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <Icon
-              name="lucide:menu"
-              id="menu-icon-open"
-              class="h-6 w-6 text-text"
-              aria-hidden="true"
-            />
-            <Icon
-              name="lucide:x"
-              id="menu-icon-close"
-              class="hidden h-6 w-6 text-text"
-              aria-hidden="true"
-            />
+            <Icon name="lucide:menu" class="h-6 w-6 text-text" aria-hidden="true" />
           </button>
         )
       }
@@ -136,17 +125,23 @@ const corHomeUrl = siteLinkFor('cor').href;
 
 {
   hasMobileMenu && (
-    <div
+    <dialog
       id="mobile-menu"
-      class="fixed inset-0 z-40 hidden lg:hidden"
-      role="dialog"
-      aria-modal="true"
+      class="fixed inset-0 m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-transparent lg:hidden"
       aria-label="モバイルナビゲーション"
     >
-      <div id="mobile-menu-backdrop" class="absolute inset-0 bg-background/90" />
+      <div id="mobile-menu-backdrop" class="absolute inset-x-0 top-14 bottom-0 bg-background/90" />
+      <button
+        id="mobile-menu-close"
+        type="button"
+        aria-label="モバイルメニューを閉じる"
+        class="absolute top-1.5 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-background text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        <Icon name="lucide:x" class="h-6 w-6" aria-hidden="true" />
+      </button>
       <nav
         id="mobile-menu-panel"
-        class="absolute left-0 right-0 max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-b border-background bg-surface shadow-lg"
+        class="absolute inset-x-0 top-14 max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-b border-background bg-surface shadow-lg"
         aria-label="モバイルナビゲーション"
       >
         <div class="space-y-1 px-4 py-4">
@@ -193,7 +188,7 @@ const corHomeUrl = siteLinkFor('cor').href;
           )}
         </div>
       </nav>
-    </div>
+    </dialog>
   )
 }
 
@@ -209,80 +204,48 @@ const corHomeUrl = siteLinkFor('cor').href;
   import { onPageReady } from '@/lib/page-ready';
 
   function initHeader() {
-    const header = document.getElementById('site-header');
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
-    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-    const menuIconOpen = document.getElementById('menu-icon-open');
-    const menuIconClose = document.getElementById('menu-icon-close');
-
-    if (!mobileMenuButton || !mobileMenu || !mobileMenuPanel || !mobileMenuBackdrop) return;
-
-    function updateMenuPosition() {
-      if (header && mobileMenuPanel) {
-        const headerRect = header.getBoundingClientRect();
-        mobileMenuPanel.style.top = `${headerRect.bottom}px`;
-      }
-    }
-
-    function openMobileMenu() {
-      updateMenuPosition();
-      mobileMenu?.classList.remove('hidden');
-      mobileMenuButton?.setAttribute('aria-expanded', 'true');
-      menuIconOpen?.classList.add('hidden');
-      menuIconClose?.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
+    if (!mobileMenuButton || !(mobileMenu instanceof HTMLDialogElement)) return;
+    const dialog = mobileMenu;
 
     function closeMobileMenu() {
-      mobileMenu?.classList.add('hidden');
+      if (!dialog.open) return;
+      dialog.close();
       mobileMenuButton?.setAttribute('aria-expanded', 'false');
-      menuIconOpen?.classList.remove('hidden');
-      menuIconClose?.classList.add('hidden');
       document.body.style.overflow = '';
     }
 
     mobileMenuButton.addEventListener('click', () => {
-      const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-      if (isExpanded) {
-        closeMobileMenu();
-      } else {
-        openMobileMenu();
-      }
+      dialog.showModal();
+      mobileMenuButton.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
     });
 
-    mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
-
-    mobileMenu.querySelectorAll('a').forEach((link) => {
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeMobileMenu();
+    });
+    dialog.querySelector('#mobile-menu-close')?.addEventListener('click', closeMobileMenu);
+    dialog.querySelector('#mobile-menu-backdrop')?.addEventListener('click', closeMobileMenu);
+    dialog.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMobileMenu);
     });
+
+    const desktop = window.matchMedia('(min-width: 64rem)');
+    const closeOnDesktop = () => {
+      if (desktop.matches) closeMobileMenu();
+    };
+    desktop.addEventListener('change', closeOnDesktop);
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        closeMobileMenu();
+        desktop.removeEventListener('change', closeOnDesktop);
+      },
+      { once: true }
+    );
   }
 
-  // Escape は document リスナーなので、ページ遷移ごとの多重バインドを防ぐため一度だけ
-  let escapeBound = false;
-  function bindEscapeOnce() {
-    if (escapeBound) return;
-    document.addEventListener('keydown', (e) => {
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const menuIconOpen = document.getElementById('menu-icon-open');
-      const menuIconClose = document.getElementById('menu-icon-close');
-      if (e.key === 'Escape' && mobileMenuButton?.getAttribute('aria-expanded') === 'true') {
-        mobileMenu?.classList.add('hidden');
-        mobileMenuButton.setAttribute('aria-expanded', 'false');
-        menuIconOpen?.classList.remove('hidden');
-        menuIconClose?.classList.add('hidden');
-        document.body.style.overflow = '';
-        mobileMenuButton.focus();
-      }
-    });
-    escapeBound = true;
-  }
-
-  // 初回はすぐに、ClientRouter のページ遷移後は再バインド（DOM は差し替わるため毎回実行）
-  onPageReady(() => {
-    initHeader();
-    bindEscapeOnce();
-  });
+  onPageReady(initHeader);
 </script>

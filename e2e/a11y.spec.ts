@@ -62,6 +62,8 @@ test.describe('Accessibility — WCAG 2 AA', () => {
 
 test.describe('Text resize', () => {
   for (const { path, label } of [
+    { path: '/', label: /推薦・採用の根拠/ },
+    { path: '/tep/', label: '使い方' },
     { path: '/pricing/', label: 'テスト導入を相談する' },
     { path: '/faq/', label: /推薦や採用の業務で使えるか/ },
   ]) {
@@ -108,4 +110,44 @@ test.describe('Text resize', () => {
       expect(dimensions.right).toBeLessThanOrEqual(dimensions.viewport);
     });
   }
+});
+
+test('skip link is visible above the sticky header and moves focus to the content', async ({
+  page,
+}) => {
+  await page.goto('/tep/');
+  const skip = page.getByRole('link', { name: 'メインコンテンツへ移動' });
+  await page.keyboard.press('Tab');
+  await expect(skip).toBeFocused();
+  await skip.click({ trial: true });
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('main')).toBeFocused();
+  await page.keyboard.press('Tab');
+  const breadcrumb = page.getByRole('link', { name: 'トップ', exact: true }).first();
+  await expect(breadcrumb).toBeFocused();
+  await breadcrumb.click({ trial: true });
+});
+
+test('open mobile navigation keeps page links out of the tab order', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto('/');
+  const opener = page.getByRole('button', { name: 'モバイルメニューを開く' });
+  await opener.focus();
+  await page.keyboard.press('Enter');
+  const menu = page.getByRole('dialog', { name: 'モバイルナビゲーション' });
+  await expect(menu.getByRole('button', { name: 'モバイルメニューを閉じる' })).toBeFocused();
+  const menuItems = await menu.getByRole('link').count();
+  for (let index = 0; index <= menuItems + 1; index++) {
+    await page.keyboard.press('Tab');
+    expect(
+      await page.evaluate(() => {
+        const active = document.activeElement;
+        return active === document.body || active?.closest('dialog[open]') !== null;
+      })
+    ).toBe(true);
+  }
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(opener).toBeFocused();
+  await expect(opener).toHaveAttribute('aria-expanded', 'false');
 });

@@ -151,3 +151,36 @@ test('open mobile navigation keeps page links out of the tab order', async ({ pa
   await expect(opener).toBeFocused();
   await expect(opener).toHaveAttribute('aria-expanded', 'false');
 });
+
+test.describe('Focused links beside the fixed home CTA', () => {
+  for (const { width, names } of [
+    { width: 320, names: ['事例を読む', 'FAQをすべて見る'] },
+    { width: 1280, names: ['→ GitHubでGrift CLIを見る'] },
+  ]) {
+    test(`${width}px: the floating CTA leaves focused links visible`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 850 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto('/');
+      const floatingCta = page.locator('#floating-cta');
+
+      for (const name of names) {
+        const link = page.getByRole('link', { name, exact: true });
+        for (let step = 0; step < 85; step++) {
+          await page.keyboard.press('Tab');
+          if (await link.evaluate((element) => element === document.activeElement)) break;
+        }
+        await expect(link).toBeFocused();
+        await expect(floatingCta).toHaveAttribute('aria-hidden', 'false');
+        await expect
+          .poll(() =>
+            link.evaluate((element) => {
+              const bar = document.getElementById('floating-cta');
+              if (!bar) throw new Error('Floating CTA is missing');
+              return element.getBoundingClientRect().bottom - bar.getBoundingClientRect().top;
+            })
+          )
+          .toBeLessThanOrEqual(0);
+      }
+    });
+  }
+});

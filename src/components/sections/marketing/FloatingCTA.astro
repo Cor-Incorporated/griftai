@@ -98,6 +98,26 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
     let suppressVisible = false;
     const visibleSuppressSections = new Set<Element>();
 
+    const revealFocusedControl = (): void => {
+      const focused = document.activeElement;
+      if (
+        !floatingCta.isConnected ||
+        floatingCta.getAttribute('aria-hidden') === 'true' ||
+        !(focused instanceof HTMLElement) ||
+        !focused.matches(':focus-visible') ||
+        floatingCta.contains(focused) ||
+        focused.closest('dialog[open]')
+      ) {
+        return;
+      }
+
+      const bounds = focused.getBoundingClientRect();
+      const unobscuredBottom = window.innerHeight - floatingCta.offsetHeight;
+      if (bounds.top < window.innerHeight && bounds.bottom > unobscuredBottom) {
+        window.scrollBy({ top: bounds.bottom - unobscuredBottom + 8, behavior: 'instant' });
+      }
+    };
+
     const show = (): void => {
       if (dismissed) return;
       floatingCta.classList.remove('translate-y-full');
@@ -106,6 +126,7 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
       floatingCta.classList.add('pointer-events-auto');
       floatingCta.setAttribute('aria-hidden', 'false');
       for (const el of focusables) el.removeAttribute('tabindex');
+      revealFocusedControl();
     };
 
     const hide = (): void => {
@@ -154,6 +175,9 @@ const contactUrl = corCta.griftTrial('grift-lp-floating');
     for (const section of suppressSections) {
       suppressObserver.observe(section);
     }
+
+    // Native Tab scrolling does not account for a fixed bar at the viewport edge.
+    document.body.addEventListener('focusin', () => requestAnimationFrame(revealFocusedControl));
 
     closeButton.addEventListener('click', () => {
       dismissed = true;

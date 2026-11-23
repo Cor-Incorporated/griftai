@@ -46,9 +46,9 @@ export const griftCli = {
   norms: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/norms.md',
   metricsGuide: 'https://github.com/Cor-Incorporated/grift-cli/blob/main/docs/metrics-guide.md',
   packageName: 'grift-cli',
-  installCommand: 'pipx install grift-cli',
-  version: '0.9.2',
-  releasedOn: '2026-10-31',
+  installCommand: 'uv tool install grift-cli',
+  version: '0.9.3',
+  releasedOn: '2026-11-23',
   license: 'MIT',
   pythonRequires: '3.11以上',
 } as const;
@@ -73,7 +73,7 @@ export const griftArticles = [
  * LP に載せている情報の基準日。内容を更新したら合わせて更新する。
  * griftCli.releasedOn より前にしない（tests/unit/content-as-of.test.ts が検査する）。
  */
-export const contentAsOf = '2026-10-31';
+export const contentAsOf = '2026-11-23';
 
 /**
  * Legal configuration for privacy policy and terms pages.

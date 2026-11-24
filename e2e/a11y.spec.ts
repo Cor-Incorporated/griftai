@@ -1,5 +1,32 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type APIRequestContext } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag22aa'] as const;
+
+async function publishedPaths(request: APIRequestContext): Promise<string[]> {
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  return [...sitemap.matchAll(/<loc>https?:\/\/[^/<]+(\/[^<]*)<\/loc>/g)]
+    .map((match) => match[1])
+    .sort();
+}
+
+async function preparePageForAxe(
+  page: import('@playwright/test').Page,
+  path: string
+): Promise<void> {
+  await page.goto(path);
+  if (path === '/') {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(1500);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(500);
+  }
+  if (path === '/tep/') {
+    await page.locator('details#terms').evaluate((details) => {
+      (details as HTMLDetailsElement).open = true;
+    });
+  }
+}
 
 test.describe('Accessibility — WCAG 2 AA', () => {
   test('homepage has no critical a11y violations', async ({ page }) => {
@@ -211,4 +238,66 @@ test('the floating CTA can be tabbed to and dismissed without losing focus', asy
   await expect(floatingCta).toHaveAttribute('aria-hidden', 'true');
   const restored = await previousFocus?.evaluate((element) => element === document.activeElement);
   expect(restored).toBe(true);
+});
+
+test.describe('All sitemap routes at 390px (WCAG 2.2 AA)', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('every published route passes axe', async ({ page, request }) => {
+    const paths = await publishedPaths(request);
+    expect(paths.length).toBeGreaterThanOrEqual(27);
+    for (const path of paths) {
+      await preparePageForAxe(page, path);
+      const results = await new AxeBuilder({ page }).withTags([...AXE_TAGS]).analyze();
+      const blocking = results.violations.filter(
+        (v) => v.impact === 'critical' || v.impact === 'serious'
+      );
+      expect(blocking, path).toEqual([]);
+    }
+  });
+
+  test('every published route has exactly one h1 and no horizontal overflow', async ({
+    page,
+    request,
+  }) => {
+    const paths = await publishedPaths(request);
+    for (const path of paths) {
+      await page.goto(path);
+      await expect(page.locator('h1'), path).toHaveCount(1);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      );
+      expect(overflow, `${path}: 横スクロール`).toBe(false);
+    }
+  });
+
+  test('footer links meet 44px touch targets', async ({ page, request }) => {
+    const paths = await publishedPaths(request);
+    for (const path of paths) {
+      await page.goto(path);
+      const failures = await page.evaluate(() => {
+        const links = [...document.querySelectorAll('footer a')];
+        return links.flatMap((link) => {
+          const style = getComputedStyle(link);
+          if (style.display === 'none' || link.getAttribute('aria-hidden') === 'true') return [];
+          const rect = link.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return [];
+          if (rect.height < 44) {
+            const label = (link.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 40);
+            return [`${label} (h=${Math.round(rect.height)})`];
+          }
+          return [];
+        });
+      });
+      expect(failures, path).toEqual([]);
+    }
+  });
+
+  test('header mobile menu and primary controls meet 44px touch targets', async ({ page }) => {
+    await page.goto('/');
+    const menuButton = page.getByRole('button', { name: 'モバイルメニューを開く' });
+    const box = await menuButton.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+  });
 });

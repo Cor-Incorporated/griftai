@@ -60,7 +60,7 @@ const companyLinks = filterByFeature(footer.company);
               href={trialUrl}
               target="_blank"
               rel="noreferrer"
-              class="transition-colors hover:text-text"
+              class="inline-flex min-h-11 items-center transition-colors hover:text-text"
             >
               テスト導入を相談する（紹介会社さま・SES企業さま）
             </a>
@@ -70,7 +70,7 @@ const companyLinks = filterByFeature(footer.company);
               href={griftCli.github}
               target="_blank"
               rel="noreferrer"
-              class="transition-colors hover:text-text"
+              class="inline-flex min-h-11 items-center transition-colors hover:text-text"
             >
               GitHubでGrift CLIを見る（エンジニアの方）
             </a>
@@ -82,12 +82,12 @@ const companyLinks = filterByFeature(footer.company);
         productLinks.length > 0 && (
           <div>
             <h3 class="mb-4 text-sm font-semibold text-text">Grift</h3>
-            <ul class="space-y-3">
+            <ul class="space-y-1">
               {productLinks.map((link) => (
                 <li>
                   <a
                     href={link.href}
-                    class="text-sm text-text-muted transition-colors hover:text-text"
+                    class="inline-flex min-h-11 items-center text-sm text-text-muted transition-colors hover:text-text"
                   >
                     {link.label}
                   </a>
@@ -102,12 +102,12 @@ const companyLinks = filterByFeature(footer.company);
         solutionsLinks.length > 0 && (
           <div>
             <h3 class="mb-4 text-sm font-semibold text-text">使い方</h3>
-            <ul class="space-y-3">
+            <ul class="space-y-1">
               {solutionsLinks.map((link) => (
                 <li>
                   <a
                     href={link.href}
-                    class="text-sm text-text-muted transition-colors hover:text-text"
+                    class="inline-flex min-h-11 items-center text-sm text-text-muted transition-colors hover:text-text"
                   >
                     {link.label}
                   </a>
@@ -122,12 +122,12 @@ const companyLinks = filterByFeature(footer.company);
         resourcesLinks.length > 0 && (
           <div>
             <h3 class="mb-4 text-sm font-semibold text-text">案内</h3>
-            <ul class="space-y-3">
+            <ul class="space-y-1">
               {resourcesLinks.map((link) => (
                 <li>
                   <a
                     href={link.href}
-                    class="text-sm text-text-muted transition-colors hover:text-text"
+                    class="inline-flex min-h-11 items-center text-sm text-text-muted transition-colors hover:text-text"
                   >
                     {link.label}
                   </a>
@@ -142,14 +142,14 @@ const companyLinks = filterByFeature(footer.company);
         companyLinks.length > 0 && (
           <div>
             <h3 class="mb-4 text-sm font-semibold text-text">運営会社</h3>
-            <ul class="space-y-3">
+            <ul class="space-y-1">
               {companyLinks.map((link) => (
                 <li>
                   <a
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
-                    class="text-sm text-text-muted transition-colors hover:text-text"
+                    class="inline-flex min-h-11 items-center text-sm text-text-muted transition-colors hover:text-text"
                   >
                     {link.label}
                   </a>
@@ -177,7 +177,7 @@ const companyLinks = filterByFeature(footer.company);
             <a
               href={link.href}
               rel="noopener"
-              class="inline-flex min-h-6 items-center text-text no-underline transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              class="inline-flex min-h-11 items-center text-text no-underline transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {link.label}
             </a>
@@ -195,7 +195,7 @@ const companyLinks = filterByFeature(footer.company);
                 rel="noopener"
                 aria-current={current ? 'page' : undefined}
                 class:list={[
-                  'inline-flex min-h-6 items-center no-underline transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+                  'inline-flex min-h-11 items-center no-underline transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
                   current ? 'font-bold text-text' : 'text-text-muted',
                 ]}
               >

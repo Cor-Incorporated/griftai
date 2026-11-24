@@ -41,7 +41,10 @@ const trail: BreadcrumbItem[] = [{ label: 'トップ', href: '/' }, ...items];
                 </span>
               )}
               {item.href && !isLast ? (
-                <a href={item.href} class="transition-colors hover:text-primary">
+                <a
+                  href={item.href}
+                  class="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-primary"
+                >
                   {item.label}
                 </a>
               ) : (

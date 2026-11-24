@@ -3,15 +3,15 @@
 
 @theme {
   /* Brand Colors */
-  --color-primary: oklch(0.42 0.08 240);
+  --color-primary: oklch(0.36 0.08 240);
   --color-primary-dark: oklch(0.34 0.07 240);
   --color-secondary: oklch(0.74 0.05 225);
 
-  /* Semantic Colors */
+  /* Semantic Colors — primary / muted tuned for 4.5:1 on background & surface (#f8f6f3) */
   --color-background: oklch(0.985 0.004 80);
   --color-surface: oklch(0.97 0.005 80);
   --color-text: oklch(0.18 0.02 60);
-  --color-text-muted: oklch(0.4 0.02 60);
+  --color-text-muted: oklch(0.37 0.02 60);
   --color-border: oklch(0.9 0.01 80);
 
   /* Dashboard Status Colors - Light Mode */
@@ -557,12 +557,25 @@ html.scrolled .scroll-hint {
    ========================================================================== */
 
 @media (max-width: 768px) {
-  a,
+  footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    max-width: 100%;
+  }
+
+  main a.font-semibold,
+  main a.font-medium {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
   button,
   summary,
   [role='button'] {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
   }
 }
 

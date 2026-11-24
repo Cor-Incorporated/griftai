@@ -35,9 +35,9 @@
 
   /* 配置と改行の決まり（docs/design/layout-rules.md §4）。幅の値はこの 2 つだけ。
      Tailwind 4 の max-w-* は --container-* の名前から生えるので、
-     max-w-content（80rem の rail）と max-w-reading（48rem の読み物の列）で使う。 */
+     max-w-content（80rem の rail）と max-w-reading（64rem の読み物の列）で使う。 */
   --content-width: 80rem;
-  --reading-width: 48rem;
+  --reading-width: 64rem;
   --container-content: var(--content-width);
   --container-reading: var(--reading-width);
 }

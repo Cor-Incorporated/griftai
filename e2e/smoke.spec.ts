@@ -708,7 +708,8 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
 // 読み物の列と行の替わり方（配置と改行の決まり R1〜R3）。手本は /tep/。
 // ==========================================================================
 
-const READING_COLUMN_MAX_PX = 768; // 48rem = 全角 40 字ぶん（18px のとき 720px 以下）
+const READING_TEXT_MAX_EM = 54; // 列 64rem から左右の余白 2rem ずつを引いた 960px = 18px の 53.3 字
+const READING_COLUMN_MAX_PX = 1024; // 64rem（読み物の列。header の rail 80rem より狭く、/contact の 5xl と同じ）
 const COLUMN_TOLERANCE_PX = 2;
 
 // font の違う環境（CI の Linux など）では、同じ字数でも英数字や等幅の字の幅が広い。
@@ -916,53 +917,56 @@ test.describe('/tep/ reading column and line breaks', () => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/tep/');
       await page.evaluate(installLineBreakProbe);
-      const issues = await page.evaluate(() => {
-        const failures: string[] = [];
-        const probe = window.__lineBreakProbe;
-        if (!probe) return ['折り返しを測る関数が仕込まれていない'];
+      const issues = await page.evaluate(
+        (maxPx) => {
+          const failures: string[] = [];
+          const probe = window.__lineBreakProbe;
+          if (!probe) return ['折り返しを測る関数が仕込まれていない'];
 
-        const heading = document.querySelector('main h1');
-        if (!heading) failures.push('h1 が無い');
+          const heading = document.querySelector('main h1');
+          if (!heading) failures.push('h1 が無い');
 
-        const h1Clauses = Array.from(document.querySelectorAll('main h1 .lb-clause'));
-        if (h1Clauses.length < 2) {
-          failures.push(
-            `h1 の塊が ${h1Clauses.length} 個（2 個以上のはず）: ${heading?.textContent?.trim() ?? ''}`
-          );
-        }
-        for (const clause of h1Clauses) {
-          const box = probe.contentWidth(clause);
-          if (probe.unwrappedWidth(clause) > box + 1) continue;
-          const lines = probe.lineCount(clause);
-          if (lines !== 1) {
-            failures.push(`h1 の塊が ${lines} 行に割れている: ${clause.textContent ?? ''}`);
-          }
-        }
-
-        failures.push(...probe.sentenceFailures());
-
-        for (const paragraph of Array.from(document.querySelectorAll('main p')).filter((p) =>
-          p.querySelector('.lb-sentence')
-        )) {
-          const style = window.getComputedStyle(paragraph);
-          const fontSize = Number.parseFloat(style.fontSize) || 16;
-          const box = paragraph.clientWidth;
-          if (box > fontSize * 40 + 1) {
+          const h1Clauses = Array.from(document.querySelectorAll('main h1 .lb-clause'));
+          if (h1Clauses.length < 2) {
             failures.push(
-              `本文の箱が全角 40 字を超える（${box.toFixed(1)}px / ${fontSize}px の ${(box / fontSize).toFixed(1)} 字）: ${(paragraph.textContent ?? '').slice(0, 30)}`
+              `h1 の塊が ${h1Clauses.length} 個（2 個以上のはず）: ${heading?.textContent?.trim() ?? ''}`
             );
           }
-        }
+          for (const clause of h1Clauses) {
+            const box = probe.contentWidth(clause);
+            if (probe.unwrappedWidth(clause) > box + 1) continue;
+            const lines = probe.lineCount(clause);
+            if (lines !== 1) {
+              failures.push(`h1 の塊が ${lines} 行に割れている: ${clause.textContent ?? ''}`);
+            }
+          }
 
-        const inTables = document.querySelectorAll(
-          'main table .lb-sentence, main table .lb-clause'
-        );
-        if (inTables.length > 0) failures.push(`表の中に印がある（${inTables.length} 個）`);
-        const inCode = document.querySelectorAll('main pre .lb-sentence, main pre .lb-clause');
-        if (inCode.length > 0) failures.push(`code の中に印がある（${inCode.length} 個）`);
+          failures.push(...probe.sentenceFailures());
 
-        return failures;
-      });
+          for (const paragraph of Array.from(document.querySelectorAll('main p')).filter((p) =>
+            p.querySelector('.lb-sentence')
+          )) {
+            const style = window.getComputedStyle(paragraph);
+            const fontSize = Number.parseFloat(style.fontSize) || 16;
+            const box = paragraph.clientWidth;
+            if (box > maxPx) {
+              failures.push(
+                `本文の箱が ${maxPx}px を超える（${box.toFixed(1)}px / ${fontSize}px の ${(box / fontSize).toFixed(1)} 字）: ${(paragraph.textContent ?? '').slice(0, 30)}`
+              );
+            }
+          }
+
+          const inTables = document.querySelectorAll(
+            'main table .lb-sentence, main table .lb-clause'
+          );
+          if (inTables.length > 0) failures.push(`表の中に印がある（${inTables.length} 個）`);
+          const inCode = document.querySelectorAll('main pre .lb-sentence, main pre .lb-clause');
+          if (inCode.length > 0) failures.push(`code の中に印がある（${inCode.length} 個）`);
+
+          return failures;
+        },
+        READING_TEXT_MAX_EM * 18 + 1
+      );
       expect(issues, `行の替わり方が決まりどおりでない (width=${width})`).toEqual([]);
     }
   });
@@ -1170,31 +1174,37 @@ test.describe('reading column rollout (terms, privacy, faq, column, articles, ne
     }
   });
 
-  test('reading routes mark sentences and keep boxes within 40em', async ({ page }) => {
+  test('reading routes mark sentences and keep boxes within the reading measure', async ({
+    page,
+  }) => {
     for (const route of READING_ROUTES) {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(route);
-      const result = await page.evaluate(() => {
-        const failures: string[] = [];
-        const sentenceCount = document.querySelectorAll('main .lb-sentence').length;
-        if (sentenceCount === 0) failures.push('main に .lb-sentence が 1 つも無い');
-        // 表・code・summary・dt の中に印を付けない
-        const markedInExcluded = document.querySelectorAll(
-          'main table .lb-sentence, main pre .lb-sentence, main code .lb-sentence, main summary .lb-sentence, main dt .lb-sentence'
-        );
-        if (markedInExcluded.length > 0)
-          failures.push(
-            `表・code・summary・dt の中に .lb-sentence が ${markedInExcluded.length} 個ある`
+      const result = await page.evaluate(
+        ([maxEm, maxPx]) => {
+          const failures: string[] = [];
+          const sentenceCount = document.querySelectorAll('main .lb-sentence').length;
+          if (sentenceCount === 0) failures.push('main に .lb-sentence が 1 つも無い');
+          // 表・code・summary・dt の中に印を付けない
+          const markedInExcluded = document.querySelectorAll(
+            'main table .lb-sentence, main pre .lb-sentence, main code .lb-sentence, main summary .lb-sentence, main dt .lb-sentence'
           );
-        // 文の箱は 40em まで
-        for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
-          const width = sentence.getBoundingClientRect().width;
-          // 全角 40 字（18px のとき 720px。docs/design/layout-rules.md の R2）まで
-          if (width > 721)
-            failures.push(`文の箱が 40 字を超える: ${width.toFixed(0)}px（上限 720px）`);
-        }
-        return failures;
-      });
+          if (markedInExcluded.length > 0)
+            failures.push(
+              `表・code・summary・dt の中に .lb-sentence が ${markedInExcluded.length} 個ある`
+            );
+          for (const sentence of Array.from(document.querySelectorAll('main .lb-sentence'))) {
+            const width = sentence.getBoundingClientRect().width;
+            // 読み物の列の中の本文（docs/design/layout-rules.md の R2）。18px のとき 972px
+            if (width > maxPx)
+              failures.push(
+                `文の箱が ${maxEm} 字を超える: ${width.toFixed(0)}px（上限 ${maxPx}px）`
+              );
+          }
+          return failures;
+        },
+        [READING_TEXT_MAX_EM, READING_TEXT_MAX_EM * 18 + 1] as const
+      );
       expect(result, `${route}: 印と箱の幅`).toEqual([]);
     }
   });

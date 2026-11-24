@@ -79,6 +79,15 @@ main :where(section[id], div[id]) {
   }
 }
 
+/* 料金ページだけ。ホームの固定CTAは、フォーカスがヒーローを通り過ぎると出る。
+   html 全体の scroll-padding にすると、その境目のリンクで CTA が出ない。
+   header は 56px（lg は 64px）。4.5rem でどちらも隠さない。 */
+.pricing-page a:focus,
+body:has(.pricing-page) footer a:focus {
+  scroll-margin-top: 4.5rem;
+  scroll-margin-bottom: 1rem;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text);

@@ -1656,3 +1656,138 @@ test.describe('トップのクリック領域', () => {
     });
   }
 });
+
+// 料金ページを 320px・文字200%にしたとき、カードの中で欠けていた4行と、
+// 固定ヘッダーの下に隠れていた相談リンク。15行は、そのページで押すリンクの行き先。
+const PRICING_LINES_AT_200 = [
+  'uv tool install grift-cli でインストールし、grift repo で試せます',
+  '候補者の同意と共有の手順を含めて設計します',
+  '費用は範囲が決まってから個別にお見積りします',
+  'テスト導入を相談する',
+] as const;
+
+const GITHUB_CLI = 'https://github.com/Cor-Incorporated/grift-cli';
+
+const PRICING_TAP_TARGETS: Array<{
+  name: string | RegExp;
+  exact?: boolean;
+  nth?: number;
+  href: string | RegExp;
+  menu?: boolean;
+}> = [
+  { name: 'トップ', exact: true, href: '/' },
+  { name: 'Grift CLI', exact: true, href: GITHUB_CLI },
+  { name: 'GitHubでGrift CLIを見る', exact: true, nth: 0, href: GITHUB_CLI },
+  { name: 'テスト導入（PoC）', exact: true, href: /source=grift-pricing/ },
+  { name: 'テスト導入を相談する', exact: true, nth: 0, href: /source=grift-pricing/ },
+  { name: /紹介資料をダウンロード/, href: '/downloads/grift-cli-overview.pdf' },
+  { name: 'テスト導入を相談する', exact: true, nth: 1, href: /source=grift-pricing/ },
+  { name: 'GitHubでGrift CLIを見る', exact: true, nth: 1, href: GITHUB_CLI },
+  { name: 'よくある質問を見る', exact: true, href: '/faq/' },
+  {
+    name: 'テスト導入を相談する（紹介会社さま・SES企業さま）',
+    href: /source=grift-nav-footer(&|$)/,
+  },
+  { name: 'GitHubでGrift CLIを見る（エンジニアの方）', href: GITHUB_CLI },
+  { name: '紹介会社・SESの営業の方へ', href: '/#for-sales' },
+  { name: '導入を相談する', menu: true, href: /source=grift-nav-header/ },
+  { name: '料金', exact: true, menu: true, href: '/pricing' },
+  { name: 'Cor. のサイトへ', menu: true, href: 'https://cor-jp.com/' },
+];
+
+test('pricing page keeps four lines and fifteen tap targets at 320px and 200% text', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/pricing/');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    const textElements = [...document.querySelectorAll<HTMLElement>('body *')].filter((element) =>
+      [...element.childNodes].some(
+        (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()
+      )
+    );
+    for (const element of textElements) {
+      const style = getComputedStyle(element);
+      const size = Number.parseFloat(style.fontSize);
+      const lineHeight = Number.parseFloat(style.lineHeight);
+      element.style.setProperty('font-size', `${size * 2}px`, 'important');
+      if (Number.isFinite(lineHeight)) {
+        element.style.setProperty('line-height', `${lineHeight * 2}px`, 'important');
+      }
+    }
+  });
+
+  const clipped = await page.evaluate(
+    (lines) => {
+      const failures: string[] = [];
+      for (const line of lines) {
+        const element = [...document.querySelectorAll('main *')].find(
+          (node) =>
+            node.childNodes.length > 0 &&
+            (node.textContent ?? '').replace(/\s+/g, ' ').trim() === line
+        );
+        if (!element) {
+          failures.push(`行が無い: ${line}`);
+          continue;
+        }
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const rects = [...range.getClientRects()].filter(
+          (rect) => rect.width > 1 && rect.height > 1
+        );
+        range.detach();
+        const box = (element.closest('li, a') ?? element).getBoundingClientRect();
+        for (const rect of rects) {
+          if (rect.right > innerWidth + 0.5 || rect.left < -0.5) {
+            failures.push(`画面の外: ${line}`);
+          }
+          if (rect.right > box.right + 1 || rect.left < box.left - 1) {
+            failures.push(`箱の外: ${line}`);
+          }
+        }
+      }
+      return failures;
+    },
+    [...PRICING_LINES_AT_200]
+  );
+  expect(clipped).toEqual([]);
+
+  const openMenu = async () => {
+    const opener = page.locator('#mobile-menu-button');
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#mobile-menu-panel')).toBeVisible();
+  };
+
+  expect(PRICING_TAP_TARGETS).toHaveLength(15);
+  for (const target of PRICING_TAP_TARGETS) {
+    if (target.menu) await openMenu();
+    const scope = target.menu ? page.locator('#mobile-menu-panel') : page.locator('main, footer');
+    const link = scope
+      .getByRole('link', { name: target.name, exact: target.exact })
+      .nth(target.nth ?? 0);
+    await link.focus();
+    const href = await link.getAttribute('href');
+    expect(href, String(target.name)).toMatch(
+      target.href instanceof RegExp
+        ? target.href
+        : new RegExp(`^${target.href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)
+    );
+    const covered = await link.evaluate((element) => {
+      const header = document.getElementById('site-header');
+      if (!header) return true;
+      const linkBox = element.getBoundingClientRect();
+      const headerBox = header.getBoundingClientRect();
+      const x = Math.min(innerWidth - 4, Math.max(4, linkBox.left + 12));
+      const y = Math.min(linkBox.bottom - 4, Math.max(linkBox.top + 4, headerBox.bottom + 2));
+      const hit = document.elementFromPoint(x, y);
+      const hitsLink = hit === element || element.contains(hit);
+      return linkBox.top < headerBox.bottom - 1 || !hitsLink;
+    });
+    expect(covered, String(target.name)).toBe(false);
+    await link.click({ trial: true });
+    if (target.menu) await page.keyboard.press('Escape');
+  }
+});

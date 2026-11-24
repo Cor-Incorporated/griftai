@@ -40,6 +40,7 @@ const {
 
 const { announcement } = siteConfig;
 const isHome = Astro.url.pathname === '/';
+const isPricing = Astro.url.pathname === '/pricing' || Astro.url.pathname === '/pricing/';
 ---
 
 <BaseLayout
@@ -75,7 +76,11 @@ const isHome = Astro.url.pathname === '/';
       )
     }
     <Header />
-    <main id="main-content" tabindex="-1" class="flex-1 scroll-mt-14 lg:scroll-mt-16">
+    <main
+      id="main-content"
+      tabindex="-1"
+      class:list={['flex-1 scroll-mt-14 lg:scroll-mt-16', isPricing && 'pricing-page']}
+    >
       <slot />
     </main>
     <Footer />

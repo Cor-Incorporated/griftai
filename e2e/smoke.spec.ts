@@ -37,7 +37,9 @@ test.describe('Landing page smoke tests', () => {
     const page = await context.newPage();
     await page.route(/\.(?:jpe?g|png|avif|webp|svg)(?:\?|$)/, () => {});
     await page.route(/googletagmanager\.com|clarity\.ms|cloudflareinsights\.com/, () => {});
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    // 本番では Cloudflare が Web Analytics の beacon を type="module" で差し込む。module は
+    // DOMContentLoaded を待たせるので、beacon を止めると domcontentloaded は来ない。応答の受信から測る
+    await page.goto('/', { waitUntil: 'commit' });
 
     expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
     await expect(page.locator('#hero')).toHaveCSS('opacity', '1', { timeout: 3000 });
@@ -590,6 +592,13 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
   const clarityId = process.env.PUBLIC_CLARITY_ID ?? '';
   const hasIds = ga4Id !== '' && clarityId !== '';
 
+  // ホスト名とビルドの ID を見る 3 件は手元のビルドが前提。E2E_BASE_URL で公開中のサイトを照合するときは動かさない
+  const skipUnlessLocalBuild = (baseURL: string | undefined) =>
+    test.skip(
+      !/^http:\/\/(?:127\.0\.0\.1|localhost)[:/]/.test(baseURL ?? ''),
+      '手元のビルド（127.0.0.1 / localhost）を開くときだけ動かす'
+    );
+
   // 手元のビルドを https://griftai.org/ として返す（ホスト名が本番のときの振る舞いを確かめるため）
   async function serveLocalBuildAsProductionHost(
     page: import('@playwright/test').Page,
@@ -610,7 +619,8 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     return tagRequests;
   }
 
-  test('localhost loads neither GA4 nor Clarity', async ({ page }) => {
+  test('localhost loads neither GA4 nor Clarity', async ({ page, baseURL }) => {
+    skipUnlessLocalBuild(baseURL);
     // 手元の開発・CI の e2e・プレビューで開いたページを、本番のプロパティに送らない
     const tagRequests: string[] = [];
     page.on('request', (request) => {
@@ -626,6 +636,7 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     page,
     baseURL,
   }) => {
+    skipUnlessLocalBuild(baseURL);
     if (process.env.REQUIRE_ANALYTICS_IDS === '1') {
       // CI で ID を渡すはずの実行。渡っていないときに skip すると、検査が動かないまま緑になる
       expect(
@@ -658,6 +669,7 @@ test.describe('Analytics: tags only on the production host, events for CTAs and 
     page,
     baseURL,
   }) => {
+    skipUnlessLocalBuild(baseURL);
     test.skip(
       ga4Id !== '' || clarityId !== '',
       'ID を付けずにビルドしたときだけ動かす（片方だけのときは「ID あり」も動かない）'

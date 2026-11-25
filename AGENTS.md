@@ -23,6 +23,7 @@ npm run check:terms  # Plain words for non-engineers (scripts/check-plain-terms.
 npm run test:unit    # Vitest
 npm run test:e2e     # Playwright smoke test (e2e/smoke.spec.ts); run after a build
 npm run test:e2e:a11y # Playwright accessibility test (e2e/a11y.spec.ts)
+npm run test:e2e:production # smoke + a11y against the live https://griftai.org/ (E2E_BASE_URL; no local preview; 3 local-build analytics tests skip)
 npm run test         # test:unit + build + test:e2e
 ```
 

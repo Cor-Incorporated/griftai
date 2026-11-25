@@ -21,7 +21,7 @@ Grift の管理画面で「GitHub にログイン」するとき、GitHub OAuth 
 ## まだ置いていないもの
 
 - Cloudflare の `account_id`（リポジトリに書かない）
-- `GITHUB_CLIENT_ID` と `GITHUB_CLIENT_SECRET`（`wrangler secret put`。ファイルに書かない）
+- `GITHUB_CLIENT_ID` と `GITHUB_CLIENT_SECRET` の値（2026-11-25 に配備先の Worker へ secret として登録済み。ファイルに書かない）
 
 手元で Worker を動かすとき:
 

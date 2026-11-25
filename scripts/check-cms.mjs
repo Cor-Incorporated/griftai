@@ -118,6 +118,9 @@ const config = parse(configText);
 same(config.backend?.name, cmsBackend.name, 'backend.name');
 same(config.backend?.repo, cmsBackend.repo, 'backend.repo');
 same(config.backend?.branch, cmsBackend.branch, 'backend.branch');
+// main は develop からの release PR だけで変える（ADR-0007）。CMS の公開で main へ直接入れない
+if (cmsBackend.branch !== 'develop')
+  fail(`backend.branch is ${cmsBackend.branch}, expected develop`);
 same(config.backend?.base_url, cmsBackend.baseUrl, 'backend.base_url');
 same(config.backend?.auth_methods, [...cmsBackend.authMethods], 'backend.auth_methods');
 same(config.backend?.auth_scope, cmsBackend.authScope, 'backend.auth_scope');

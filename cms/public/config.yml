@@ -6,7 +6,7 @@
 backend:
   name: github
   repo: Cor-Incorporated/griftai
-  branch: main
+  branch: develop
   base_url: http://127.0.0.1:8787
   auth_methods: [oauth]
   auth_scope: public_repo
@@ -18,7 +18,8 @@ backend:
     uploadMedia: 'docs(cms): 画像 {{path}} を追加'
     deleteMedia: 'docs(cms): 画像 {{path}} を削除'
 
-# 下書き = PR、レビュー = PR のラベル、公開 = PR の merge（base は上の branch）。
+# 下書き = PR、レビュー = PR のラベル、公開 = PR の merge（base は上の branch = develop）。
+# 本番の griftai.org へは、develop → main の release PR を人が merge したときに出る。
 # 手元の「ローカルリポジトリで作業」はファイルへ直接書く。公開サイトは isDraft でも隠す。
 publish_mode: editorial_workflow
 

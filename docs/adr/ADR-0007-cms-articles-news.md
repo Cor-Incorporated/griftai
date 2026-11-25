@@ -1,6 +1,6 @@
 # ADR-0007 記事とお知らせを Sveltia CMS（Git・別オリジン）で編集する
 
-## ステータス: Accepted (2026-10-28)
+## ステータス: Accepted (2026-10-28)、改訂 2026-11-25（公開先を develop に変更）
 
 ## 背景
 
@@ -11,7 +11,7 @@
 ## 決定
 
 1. 記事は `src/content/articles`、お知らせは `src/content/news` の Markdown とする。公開ページは `/articles/` と `/news/`。`isDraft: true` のファイルは公開ページとサイトマップに出さない。
-2. 編集画面は Sveltia CMS（npm 版、cor-jp.com と同じ 0.221.7）とする。設定は `cms/`。`publish_mode: editorial_workflow` とし、GitHub 上では下書きを PR、公開を main への merge とする。削除は CMS からできる。翻訳ファイルが無いため、cor-jp.com のように削除を止めない。
+2. 編集画面は Sveltia CMS（npm 版、cor-jp.com と同じ 0.221.7）とする。設定は `cms/`。`publish_mode: editorial_workflow` とし、GitHub 上では下書きを develop 宛の PR、CMS の「公開」をその PR の develop への merge とする。本番の main へは、ほかの変更と同じく develop → main の release PR を人が merge して出す。CMS から main へ直接入れない。削除は CMS からできる。翻訳ファイルが無いため、cor-jp.com のように削除を止めない。
 3. 管理画面は公開サイトと同じオリジンに置かない。GitHub のトークンが localStorage に入るため。配信先のホストは未確定で、この決定ではデプロイしない。
 4. GitHub ログインの仲介は `workers/sveltia-cms-auth` とする。`src/index.js` は上流 sveltia/sveltia-cms-auth のコミット `4fd08b5d4e009a85fa473fd523824ca9dfee9533` のまま置く。`GITHUB_CLIENT_ID` と `GITHUB_CLIENT_SECRET` と Cloudflare の `account_id` はリポジトリに書かない。`ALLOWED_DOMAINS` は空にせず、`[vars]` に書く。
 5. 項目の正本は `src/config/cms-contract.ts` とする。`cms/public/config.yml` と Zod（`src/config/cms-schema.ts`）のずれは `npm run check:cms` が止める。
@@ -26,11 +26,18 @@
 
 ## 影響
 
-- 公開サイトへの反映は、main に入ったあとの Cloudflare Pages のビルドである。CMS の「公開」だけでは本番に出ない。
+- 公開サイトへの反映は、release PR で main に入ったあとの Cloudflare Pages のビルドである。CMS の「公開」は develop に入るだけで、本番には出ない。
+- `npm run check:cms` は、`backend.branch` が develop 以外なら失敗する。
 - 編集者には GitHub アカウントと、このリポジトリへの書き込みが要る。トークンの範囲は `public_repo,user` で、その人が書き込める公開リポジトリ全体に及ぶ。
 - 本番の管理画面ホスト、OAuth App、Worker のデプロイ、`ALLOWED_DOMAINS` をそのホストだけにすること、`backend.base_url` をその Worker にすること、ブランチ保護の確認は、まだ終わっていない。手順は `docs/cms.md`。
 
+## 改訂（2026-11-25）
+
+当初は CMS の「公開」を main への merge としていた。2026-10-30 に、main は develop からの release PR だけで変える運用に決めた（PR #102）。CMS だけが main へ直接入る経路が残るため、2026-11-25 に寺田が公開先を develop に改めた。
+
 ## 代替案
+
+- CMS の「公開」を main への merge にする（当初の決定）: release PR を通らずに本番へ出る。2026-11-25 に取りやめた。
 
 - 公開サイトと同じオリジンに `/admin` を置く: 公開ページのスクリプトからトークンを読める。採らない。
 - microCMS など本文が Git の外に出る CMS: いまのビルドと記事ファイルを作り直す。採らない。

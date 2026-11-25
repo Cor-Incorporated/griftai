@@ -34,7 +34,7 @@ npm run build:cms
 
 ## GitHub で下書きと公開を分ける
 
-`cms/public/config.yml` の `publish_mode` は `editorial_workflow` です。GitHub にログインした編集では、下書きが main 宛の PR になり、公開はその PR の merge です。merge のあと、Cloudflare Pages が本番をビルドします。
+`cms/public/config.yml` の `publish_mode` は `editorial_workflow` です。GitHub にログインした編集では、下書きが develop 宛の PR になり、CMS の「公開」はその PR を develop へ merge することです。本番の griftai.org には、develop → main の release PR を人が merge したあと、Cloudflare Pages のビルドで出ます。CMS から main へ直接は入りません（ADR-0007 の 2026-11-25 改訂）。
 
 このログインはまだ使えません。`backend.base_url` は手元の Worker である `http://127.0.0.1:8787` を指しています。Netlify の認証（`api.netlify.com`）は使いません。
 
@@ -73,7 +73,7 @@ CMS から LLM の API は呼びません。
 2. 認証 Worker のデプロイ。終わったら `cms/public/config.yml` の `backend.base_url` を、その Worker の URL に変える。`http://127.0.0.1:8787` のままでは本番のログインはできません。
 3. 管理画面のホスト。`cms/dist` を griftai.org とは別のオリジンで配信する。同じオリジンに置くと、公開サイトのスクリプトからトークンを読める。
 4. そのホスト名だけを `ALLOWED_DOMAINS` に書く。`localhost,127.0.0.1` は外す。`cms/public/_headers` の `connect-src` に、https の Worker のオリジンを足す。`npm run check:cms` が、契約とこれらのファイルの一致を見ます。
-5. main のブランチ保護で、CMS から main へ直接 push できないことの確認。editorial workflow の「公開」が merge になることの確認。
+5. develop と main のブランチ保護で、CMS から直接 push できないことの確認。editorial workflow の「公開」が develop への merge になることの確認。
 6. プレビュー URL を CMS の「プレビューを表示」へ渡す設定。Cloudflare Pages のプレビューは、まだ `preview_context` に繋いでいません。
 
 項目を変えるときは `src/config/cms-contract.ts` と `cms/public/config.yml` と `src/config/cms-schema.ts` を一緒に直し、`npm run check:cms` を通します。

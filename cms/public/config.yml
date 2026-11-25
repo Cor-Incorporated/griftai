@@ -1,13 +1,13 @@
 # Sveltia CMS の設定（ADR-0007）。項目の正本は src/config/cms-contract.ts。
 # scripts/check-cms.mjs が、このファイルと契約・認証 Worker・公開スキーマのずれを止める。
-# 本番の管理画面ホストと認証 Worker の URL は未設定。backend.base_url は手元の wrangler dev。
+# 認証 Worker は workers.dev に配備済み（2026-11-25）。本番の管理画面ホストは未設定で、ALLOWED_DOMAINS は手元だけ。
 # Netlify の認証ホストは書かない。
 
 backend:
   name: github
   repo: Cor-Incorporated/griftai
   branch: develop
-  base_url: http://127.0.0.1:8787
+  base_url: https://grift-sveltia-cms-auth.company-997.workers.dev
   auth_methods: [oauth]
   auth_scope: public_repo
   squash_merges: false

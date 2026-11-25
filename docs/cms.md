@@ -36,7 +36,7 @@ npm run build:cms
 
 `cms/public/config.yml` の `publish_mode` は `editorial_workflow` です。GitHub にログインした編集では、下書きが develop 宛の PR になり、CMS の「公開」はその PR を develop へ merge することです。本番の griftai.org には、develop → main の release PR を人が merge したあと、Cloudflare Pages のビルドで出ます。CMS から main へ直接は入りません（ADR-0007 の 2026-11-25 改訂）。
 
-このログインはまだ使えません。`backend.base_url` は手元の Worker である `http://127.0.0.1:8787` を指しています。Netlify の認証（`api.netlify.com`）は使いません。
+`backend.base_url` は、配備済みの認証 Worker `https://grift-sveltia-cms-auth.company-997.workers.dev` を指しています。GitHub OAuth App の client id と client secret を Worker に入れるまで、ログインはできません。入れたあとも、トークンを渡すのは `ALLOWED_DOMAINS` のホスト（いまは手元の `localhost` と `127.0.0.1`）だけです。Netlify の認証（`api.netlify.com`）は使いません。
 
 ## 認証 Worker
 
@@ -70,9 +70,9 @@ CMS から LLM の API は呼びません。
 本番で GitHub ログインと、管理画面の配信をするには、次が残っています。
 
 1. GitHub OAuth App（client id と client secret）。secret は `wrangler secret put` だけで、ファイルには置かない。
-2. 認証 Worker のデプロイ。終わったら `cms/public/config.yml` の `backend.base_url` を、その Worker の URL に変える。`http://127.0.0.1:8787` のままでは本番のログインはできません。
+2. 認証 Worker のデプロイ。2026-11-25 に `https://grift-sveltia-cms-auth.company-997.workers.dev` へ配備し、`backend.base_url` と `cms/public/_headers` の `connect-src` をその URL にした。残りは 1 の secret を入れること。
 3. 管理画面のホスト。`cms/dist` を griftai.org とは別のオリジンで配信する。同じオリジンに置くと、公開サイトのスクリプトからトークンを読める。
-4. そのホスト名だけを `ALLOWED_DOMAINS` に書く。`localhost,127.0.0.1` は外す。`cms/public/_headers` の `connect-src` に、https の Worker のオリジンを足す。`npm run check:cms` が、契約とこれらのファイルの一致を見ます。
+4. そのホスト名だけを `ALLOWED_DOMAINS` に書く。`localhost,127.0.0.1` は外す。`npm run check:cms` が、契約とこれらのファイルの一致を見ます。
 5. develop と main のブランチ保護で、CMS から直接 push できないことの確認。editorial workflow の「公開」が develop への merge になることの確認。
 6. プレビュー URL を CMS の「プレビューを表示」へ渡す設定。Cloudflare Pages のプレビューは、まだ `preview_context` に繋いでいません。
 

@@ -14,11 +14,14 @@ Grift の管理画面で「GitHub にログイン」するとき、GitHub OAuth 
 
 `src/index.js` と `LICENSE.txt` は上流のファイルそのままです。`scripts/check-cms.mjs` が git の blob SHA を照合します。変えてよいのは `wrangler.toml` と、この README と `.gitignore` だけです。
 
+## 配備先
+
+`https://grift-sveltia-cms-auth.company-997.workers.dev`（2026-11-25。Cloudflare の Workers 無料枠、workers.dev、プレビュー URL なし）。`cms/public/config.yml` の `backend.base_url` はこの URL です。OAuth App のコールバック URL は `https://grift-sveltia-cms-auth.company-997.workers.dev/callback` です。
+
 ## まだ置いていないもの
 
 - Cloudflare の `account_id`（リポジトリに書かない）
 - `GITHUB_CLIENT_ID` と `GITHUB_CLIENT_SECRET`（`wrangler secret put`。ファイルに書かない）
-- 本番の workers.dev URL。`cms/public/config.yml` の `backend.base_url` は `http://127.0.0.1:8787` のまま
 
 手元で Worker を動かすとき:
 

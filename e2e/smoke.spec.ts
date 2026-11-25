@@ -255,7 +255,7 @@ test.describe('Grift CLI positioning (2026-10)', () => {
     await expect(demo).toBeVisible();
     await expect(demo).toContainText('uv tool install grift-cli');
     await expect(demo).toContainText('grift repo');
-    await expect(page.locator('#pricing')).toContainText('v0.9.3');
+    await expect(page.locator('#pricing')).toContainText('v0.9.6');
     await expect(demo).toContainText('grift verify');
 
     const github = page.locator('#hero a[href="https://github.com/Cor-Incorporated/grift-cli"]');

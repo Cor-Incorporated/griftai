@@ -48,8 +48,8 @@ export const griftCli = {
   packageName: 'grift-cli',
   installCommand: 'uv tool install grift-cli',
   firstRunCommand: 'grift repo',
-  version: '0.9.3',
-  releasedOn: '2026-11-23',
+  version: '0.9.6',
+  releasedOn: '2026-11-25',
   license: 'MIT',
   pythonRequires: '3.11以上',
 } as const;
@@ -74,7 +74,7 @@ export const griftArticles = [
  * LP に載せている情報の基準日。内容を更新したら合わせて更新する。
  * griftCli.releasedOn より前にしない（tests/unit/content-as-of.test.ts が検査する）。
  */
-export const contentAsOf = '2026-11-23';
+export const contentAsOf = '2026-11-25';
 
 /**
  * Legal configuration for privacy policy and terms pages.

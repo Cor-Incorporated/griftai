@@ -39,12 +39,13 @@ export interface CmsCollection {
 export const cmsBackend = {
   name: 'github',
   repo: 'Cor-Incorporated/griftai',
-  branch: 'main',
+  /** CMS の PR の宛先。本番の main へは develop からの release PR だけで出す（ADR-0007 2026-11-25 改訂）。 */
+  branch: 'develop',
   /**
-   * 認証 Worker の URL。本番の workers.dev は未デプロイなので、手元の wrangler dev だけを指す。
+   * 認証 Worker の URL（Cloudflare workers.dev、2026-11-25 配備）。トークンを渡す先は authWorker.allowedDomains だけ。
    * api.netlify.com は使わない（トークンを Netlify に渡さない）。
    */
-  baseUrl: 'http://127.0.0.1:8787',
+  baseUrl: 'https://grift-sveltia-cms-auth.company-997.workers.dev',
   authMethods: ['oauth'] as const,
   authScope: 'public_repo',
   squashMerges: false,

@@ -1749,7 +1749,6 @@ test('pricing page keeps four lines and fifteen tap targets at 320px and 200% te
         const rects = [...range.getClientRects()].filter(
           (rect) => rect.width > 1 && rect.height > 1
         );
-        range.detach();
         const box = (element.closest('li, a') ?? element).getBoundingClientRect();
         for (const rect of rects) {
           if (rect.right > innerWidth + 0.5 || rect.left < -0.5) {
@@ -1803,3 +1802,68 @@ test('pricing page keeps four lines and fifteen tap targets at 320px and 200% te
     if (target.menu) await page.keyboard.press('Escape');
   }
 });
+
+// 320px・文字200%で、ページ全体の文字が、固定の 320 より右（または左）へ出ない事を、3 頁で測る。
+// 箱ではなく文字の矩形（text node の Range）で測る。文字が箱の外へ出る形では、箱の位置を見ても 0 件に見えるため。
+// 文字を 2 倍にすると、モバイルの表示領域が 320 から広がる事があるので、判定は innerWidth ではなく固定の 320 と比べる。
+const TEXT_FIT_PAGES = ['/', '/pricing/', '/faq/'] as const;
+
+for (const path of TEXT_FIT_PAGES) {
+  test(`${path} keeps every text run inside 320px at 200% text`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(path);
+    const outside = await page.evaluate(async () => {
+      await document.fonts.ready;
+      // 閉じた質問の答えも測る。
+      document.querySelectorAll('details').forEach((details) => {
+        details.open = true;
+      });
+      // 文字を持つ要素の計算値を先に集め、そのあとで 2 倍にする（親の 2 倍を子が継いで 4 倍にならないように）。
+      const textElements = [...document.querySelectorAll<HTMLElement>('body *')].filter((element) =>
+        [...element.childNodes].some(
+          (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()
+        )
+      );
+      const sizes = textElements.map((element) => {
+        const style = getComputedStyle(element);
+        return [Number.parseFloat(style.fontSize), Number.parseFloat(style.lineHeight)];
+      });
+      textElements.forEach((element, index) => {
+        const [size, lineHeight] = sizes[index];
+        element.style.setProperty('font-size', `${size * 2}px`, 'important');
+        if (Number.isFinite(lineHeight)) {
+          element.style.setProperty('line-height', `${lineHeight * 2}px`, 'important');
+        }
+      });
+      const failures: string[] = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const text = node.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+        const parent = node.parentElement;
+        if (!text || !parent) continue;
+        // 読み上げ専用の文字・比較表の専用の横 scroll の中・隠してある物（閉じたメニューなど）は測らない。
+        // 固定の header や下の帯のように、いつも見えている物は測る。
+        if (
+          parent.closest(
+            '.sr-only, [role="region"][tabindex="0"], [hidden], [inert], [aria-hidden="true"]'
+          )
+        )
+          continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) {
+          if (rect.width < 1 || rect.height < 1) continue;
+          if (rect.right > 320.5 || rect.left < -0.5) {
+            failures.push(
+              `${text.slice(0, 24)} (left ${Math.round(rect.left)}, right ${Math.round(rect.right)})`
+            );
+            break;
+          }
+        }
+      }
+      return failures;
+    });
+    expect(outside).toEqual([]);
+  });
+}
